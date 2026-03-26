@@ -1,4 +1,4 @@
-INSERT INTO users (id, username, password, name, surname, birthday) VALUES
+﻿INSERT INTO users(id, username, password, name, surname, birthday) VALUES
 (-1, 'marko', 'marko123', 'Marko', 'Marković', '2000-05-15'),
 (-2, 'ana', 'ana123', 'Ana', 'Anić', '1998-08-22'),
 (-3, 'petar', 'petar123', 'Petar', 'Petrović', '2001-03-10'),
@@ -8,7 +8,7 @@ INSERT INTO users (id, username, password, name, surname, birthday) VALUES
 (-7, 'nikola', 'nikola123', 'Nikola', 'Nikolić', '1997-12-18'),
 (-8, 'ivana', 'ivana123', 'Ivana', 'Ivanović', '2001-09-05');
 
-INSERT INTO posts (id, title, content, created_at, user_id) VALUES
+INSERT INTO posts(id, title, content, created_at, user_id) VALUES
 (-1, 'Moj prvi post', 'Ovo je moj prvi post na platformi!', '2024-01-15 10:30:00', -1),
 (-2, 'Zanimljiv dan', 'Danas sam imao vrlo zanimljiv dan na fakultetu.', '2024-01-17 09:15:00', -1),
 (-3, 'Programiranje', 'Učim C# i WPF, jako je interesantno!', '2024-01-20 14:30:00', -1),

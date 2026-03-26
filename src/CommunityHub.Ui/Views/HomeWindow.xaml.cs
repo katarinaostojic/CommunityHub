@@ -25,4 +25,11 @@ public partial class HomeWindow : Window
         loginForm.Show();
         this.Close();
     }
+
+    /*private void CountriesButton_Click(object sender, RoutedEventArgs e)
+    {
+        CountriesWindow countriesWindow = new CountriesWindow(_userId);
+        CountriesWindow.Show();
+        this.Close();
+    }*/
 }
