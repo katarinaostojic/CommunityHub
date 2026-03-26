@@ -1,0 +1,33 @@
+﻿INSERT INTO countries (id, name, code) VALUES
+(-1, 'Srbija', 'RS'),
+(-2, 'Italija', 'IT'),
+(-3, 'Nemačka', 'DE'),
+(-4, 'Francuska', 'FR'),
+(-5, 'Španija', 'ES'),
+(-6, 'Austrija', 'AT'),
+(-7, 'Grčka', 'GR'),
+(-8, 'Crna Gora', 'ME'),
+(-9, 'Slovenija', 'SI'),
+(-10, 'Hrvatska', 'HR');
+
+INSERT INTO cities (id, name, country_id) VALUES
+(-1, 'Beograd', -1),
+(-2, 'Novi Sad', -1),
+(-3, 'Niš', -1),
+(-4, 'Rim', -2),
+(-5, 'Milano', -2),
+(-6, 'Napulj', -2),
+(-7, 'Berlin', -3),
+(-8, 'Minhen', -3),
+(-9, 'Hamburg', -3),
+(-10, 'Pariz', -4),
+(-11, 'Lion', -4),
+(-12, 'Marseille', -4),
+(-13, 'Madrid', -5),
+(-14, 'Barselona', -5),
+(-15, 'Valensija', -5),
+(-16, 'Beč', -6),
+(-17, 'Salzburg', -6),
+(-18, 'Grac', -6),
+(-19, 'Atina', -7),
+(-20, 'Solun', -7);

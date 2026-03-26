@@ -19,6 +19,13 @@
                         Padding="15,8"
                         Margin="0,0,10,0"
                         FontSize="14"/>
+
+                <Button Content="Drzave"
+                        Click="CountriesButton_Click"
+                        Padding="15,8"
+                        Margin="0,0,10,0"
+                        FontSize="14"
+                        
                 <Button Content="Odjavi se"
                         Click="LogoutButton_Click"
                         Padding="15,8"

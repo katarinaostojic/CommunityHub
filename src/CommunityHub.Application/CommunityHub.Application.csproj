@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Database\Scripts\Shema\01_users_posts.sql" />
+    <Compile Include="Database\Scripts\Seeds\02_countries_cities.sql" />
+    <Compile Include="Database\Scripts\Seeds\01_user_posts.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Npgsql" Version="10.0.1" />
   </ItemGroup>
 
