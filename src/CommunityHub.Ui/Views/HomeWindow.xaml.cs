@@ -28,9 +28,15 @@ public partial class HomeWindow : Window
 
     private void CountriesButton_Click(object sender, RoutedEventArgs e)
     {
-        CountriesWindow countriesWindow = new CountriesWindow();
+        CountriesWindow countriesWindow = new CountriesWindow(this);
         countriesWindow.Show();
-        this.Close();
+        this.Hide();
+    }
+
+    private void CitiesButton_Click(object sender, RoutedEventArgs e)
+    {
+        CitiesWindow citiesWindow = new CitiesWindow();
+        citiesWindow.Show();
     }
 
 }

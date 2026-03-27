@@ -100,7 +100,6 @@ public class CityDbRepository
     public void Update(City city)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-        connection.Open();
 
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
@@ -129,7 +128,6 @@ public class CityDbRepository
     public void Delete(long id)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-        connection.Open();
 
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = "DELETE FROM cities WHERE id = @id";
