@@ -84,7 +84,6 @@ public class CountryDbRepository
     public void Update(Country country)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-        connection.Open();
 
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = "UPDATE countries SET name = @name, code = @code WHERE id = @id";
@@ -112,7 +111,6 @@ public class CountryDbRepository
     public bool Delete(long id)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-        connection.Open();
 
         // Proveravam da li drzava ima gradove
         using IDbCommand checkCmd = connection.CreateCommand();
