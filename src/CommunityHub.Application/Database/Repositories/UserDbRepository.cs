@@ -5,13 +5,13 @@ namespace CommunityHub.Application.Database.Repositories;
 
 public class UserDbRepository
 {
-    public long? GetIdByCredentials(string username, string password)
+    public User? GetByCredentials(string username, string password)
     {
         // using blok automatski zatvara konekciju na kraju bloka u kom je pozvan
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = "SELECT id FROM users WHERE username = @username AND password = @password";
+        command.CommandText = "SELECT id, username, password, name, surname, birthday, role FROM users WHERE username = @username AND password = @password";
 
         // Parametrizovani upiti sprečavaju SQL injection napade
         IDbDataParameter usernameParam = command.CreateParameter();
@@ -24,12 +24,20 @@ public class UserDbRepository
         passwordParam.Value = password;
         command.Parameters.Add(passwordParam);
 
-        // ExecuteScalar vraća prvu kolonu prvog reda (id u ovom slučaju)
-        object? result = command.ExecuteScalar();
+        // ExecuteReader vraća IDataReader za čitanje više redova
+        using IDataReader reader = command.ExecuteReader();
 
-        if (result != null)
+        if (reader.Read())
         {
-            return Convert.ToInt64(result);
+            return new User(
+                Convert.ToInt64(reader["id"]),
+                reader["username"].ToString(),
+                reader["password"].ToString(),
+                reader["name"].ToString(),
+                reader["surname"].ToString(),
+                Convert.ToDateTime(reader["birthday"].ToString()),
+                reader["role"].ToString()
+            );
         }
 
         return null;
@@ -43,7 +51,7 @@ public class UserDbRepository
         // LEFT JOIN vraća korisnika čak i ako nema objave
         // Rezultat: ako korisnik ima 3 objave, dobijamo 3 reda sa istim korisnikom
         command.CommandText = @"
-            SELECT u.id, u.username, u.password, u.name, u.surname, u.birthday,
+            SELECT u.id, u.username, u.password, u.name, u.surname, u.birthday, u.role,
                    p.id AS post_id, p.title, p.content, p.created_at
             FROM users u
             LEFT JOIN posts p ON u.id = p.user_id
@@ -70,27 +78,28 @@ public class UserDbRepository
             // Kreiramo User objekat samo jednom (prvi red)
             if (user == null)
             {
-                // Indeksi kolona odgovaraju redosledu u SELECT listi (0-based)
-                long id = reader.GetInt64(0);
-                string username = reader.GetString(1);
-                string password = reader.GetString(2);
-                string name = reader.GetString(3);
-                string surname = reader.GetString(4);
-                DateTime birthday = reader.GetDateTime(5);
-
-                user = new User(id, username, password, name, surname, birthday);
+                user = new User(
+                    Convert.ToInt64(reader["id"]),
+                    reader["username"].ToString(),
+                    reader["password"].ToString(),
+                    reader["name"].ToString(),
+                    reader["surname"].ToString(),
+                    Convert.ToDateTime(reader["birthday"].ToString()),
+                    reader["role"].ToString()
+                );
             }
 
             // IsDBNull proverava da li je vrednost NULL u bazi
             // Ako korisnik nema objave, post_id će biti NULL
-            if (reader.IsDBNull(6)) continue;
+            if (reader.IsDBNull(reader.GetOrdinal("post_id"))) continue;
 
-            long postId = reader.GetInt64(6);
-            string title = reader.GetString(7);
-            string content = reader.GetString(8);
-            DateTime createdAt = reader.GetDateTime(9);
+            Post post = new Post(
+                Convert.ToInt64(reader["post_id"]),
+                reader["title"].ToString(),
+                reader["content"].ToString(),
+                Convert.ToDateTime(reader["created_at"])
+            );
 
-            Post post = new Post(postId, title, content, createdAt);
             // AddPost metoda povezuje objavu sa korisnikom
             user.AddPost(post);
         }

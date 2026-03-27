@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Profil" Height="600" Width="900"
+        Title="Profile" Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -21,17 +21,17 @@
                            HorizontalAlignment="Left"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Nova objava"
+                    <Button Content="New Post"
                             Click="NewPostButton_Click"
                             Padding="15,8"
                             Margin="0,0,10,0"
                             FontSize="14"/>
-                    <Button Content="Početna"
+                    <Button Content="Home"
                             Click="HomeButton_Click"
                             Padding="15,8"
                             Margin="0,0,10,0"
                             FontSize="14"/>
-                    <Button Content="Odjavi se"
+                    <Button Content="Log Out"
                             Click="LogoutButton_Click"
                             Padding="15,8"
                             FontSize="14"/>

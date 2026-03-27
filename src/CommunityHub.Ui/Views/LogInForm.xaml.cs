@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views;
 
@@ -15,21 +16,42 @@ public partial class LogInForm : Window
 
     private void LoginButton_Click(object sender, RoutedEventArgs e)
     {
-        string username = UsernameTextBox.Text;
-        string password = PasswordBox.Password;
+        string username = UsernameTextBox.Text.Trim();
+        string password = PasswordBox.Password.Trim();
 
-        long? userId = _userRepository.GetIdByCredentials(username, password);
+        User? user = _userRepository.GetByCredentials(username, password);
 
-        if (userId != null)
+        if (user == null)
         {
-            HomeWindow homeWindow = new HomeWindow(userId.Value);
-            homeWindow.Show();
-            this.Close();
-        }
-        else
-        {
-            ErrorMessageTextBlock.Text = "Neispravno korisničko ime ili lozinka.";
+            ErrorMessageTextBlock.Text = "Invalid username or password.";
             ErrorMessageTextBlock.Visibility = Visibility.Visible;
+            return;
         }
+
+        switch (user.Role)
+        {
+            case "tenant":
+                //TenantWindow tenantWindow = new TenantWindow(user);
+                //tenantWindow.Show();
+                break;
+            case "manager":
+                // ManagerWindow managerWindow = new ManagerWindow(user);
+                // managerWindow.Show();
+                break;
+            case "coordinator":
+                // CoordinatorWindow coordinatorWindow = new CoordinatorWindow(user);
+                // coordinatorWindow.Show();
+                break;
+            case "citizen":
+                // CitizenWindow citizenWindow = new CitizenWindow(user);
+                // citizenWindow.Show();
+                break;
+            default:
+                ErrorMessageTextBlock.Text = "Unknown user role.";
+                ErrorMessageTextBlock.Visibility = Visibility.Visible;
+                return;
+        }
+
+        this.Hide();
     }
 }

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Početna" Height="600" Width="900"
+        Title="Home" Height="600" Width="900"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -14,19 +14,31 @@
 
         <Border Grid.Row="0" Background="#2C3E50" Padding="15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Profil"
+                <Button Content="Profile"
                         Click="ProfileButton_Click"
                         Padding="15,8"
                         Margin="0,0,10,0"
                         FontSize="14"/>
 
-                <Button Content="Drzave"
+                <Button Content="Countries"
                         Click="CountriesButton_Click"
                         Padding="15,8"
                         Margin="0,0,10,0"
+<<<<<<< Updated upstream
                         FontSize="14"
                         
                 <Button Content="Odjavi se"
+=======
+                        FontSize="14"/>
+
+                <Button Content="Cities"
+                        Click="CitiesButton_Click"
+                        Padding="15,8"
+                        Margin="0,0,10,0"
+                        FontSize="14"/>
+
+                <Button Content="Log Out"
+>>>>>>> Stashed changes
                         Click="LogoutButton_Click"
                         Padding="15,8"
                         FontSize="14"/>
