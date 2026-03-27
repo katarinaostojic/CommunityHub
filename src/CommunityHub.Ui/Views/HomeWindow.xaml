@@ -24,11 +24,6 @@
                         Click="CountriesButton_Click"
                         Padding="15,8"
                         Margin="0,0,10,0"
-<<<<<<< Updated upstream
-                        FontSize="14"
-                        
-                <Button Content="Odjavi se"
-=======
                         FontSize="14"/>
 
                 <Button Content="Cities"
@@ -38,7 +33,6 @@
                         FontSize="14"/>
 
                 <Button Content="Log Out"
->>>>>>> Stashed changes
                         Click="LogoutButton_Click"
                         Padding="15,8"
                         FontSize="14"/>

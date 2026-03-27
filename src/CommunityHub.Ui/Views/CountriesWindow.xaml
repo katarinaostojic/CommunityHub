@@ -3,13 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CommunityHub.Ui.Views"
         mc:Ignorable="d"
-<<<<<<< Updated upstream
-        Title="CountriesWindow" Height="450" Width="800">
-    <Grid>
-        
-=======
         Title="Countries" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen">
     <Grid>
@@ -130,6 +124,5 @@
                 </StackPanel>
             </Border>
         </Grid>
->>>>>>> Stashed changes
     </Grid>
 </Window>

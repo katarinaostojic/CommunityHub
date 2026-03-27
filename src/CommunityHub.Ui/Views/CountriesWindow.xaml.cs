@@ -1,26 +1,14 @@
-﻿using System;
+﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace CommunityHub.Ui.Views;
-/// <summary>
-/// Interaction logic for CountriesWindow.xaml
-/// </summary>
-public partial class CountriesWindow : Window
+namespace CommunityHub.Ui.Views
 {
-    public CountriesWindow()
+    public partial class CountriesWindow : Window
     {
-<<<<<<< Updated upstream
-        InitializeComponent();
-=======
         private readonly CountryDbRepository _countryRepository;
         private readonly HomeWindow _homeWindow;
         private Country _selectedCountry;
@@ -152,6 +140,5 @@ public partial class CountriesWindow : Window
             _homeWindow.Show();
             this.Close();
         }
->>>>>>> Stashed changes
     }
 }
