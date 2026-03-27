@@ -19,13 +19,6 @@ public partial class HomeWindow : Window
         this.Close();
     }
 
-    private void LogoutButton_Click(object sender, RoutedEventArgs e)
-    {
-        LogInForm loginForm = new LogInForm();
-        loginForm.Show();
-        this.Close();
-    }
-
     private void CountriesButton_Click(object sender, RoutedEventArgs e)
     {
         CountriesWindow countriesWindow = new CountriesWindow(this);
@@ -37,6 +30,13 @@ public partial class HomeWindow : Window
     {
         CitiesWindow citiesWindow = new CitiesWindow();
         citiesWindow.Show();
+        this.Hide();
     }
 
+    private void LogoutButton_Click(object sender, RoutedEventArgs e)
+    {
+        LogInForm loginForm = new LogInForm();
+        loginForm.Show();
+        this.Close();
+    }
 }

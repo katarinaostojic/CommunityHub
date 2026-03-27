@@ -58,13 +58,13 @@ namespace CommunityHub.Ui.Views
 
             if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show("Unesite naziv grada.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a city name.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (selectedCountry == null)
             {
-                MessageBox.Show("Izaberite državu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a country.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace CommunityHub.Ui.Views
         {
             if (_selectedCity == null)
             {
-                MessageBox.Show("Izaberite grad za izmenu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a city to update.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -87,13 +87,13 @@ namespace CommunityHub.Ui.Views
 
             if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show("Unesite naziv grada.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a city name.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (selectedCountry == null)
             {
-                MessageBox.Show("Izaberite državu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a country.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -107,13 +107,13 @@ namespace CommunityHub.Ui.Views
         {
             if (_selectedCity == null)
             {
-                MessageBox.Show("Izaberite grad za brisanje.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a city to delete.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             MessageBoxResult result = MessageBox.Show(
-                $"Da li ste sigurni da zelite da obrisete grad '{_selectedCity.Name}'?",
-                "Potvrda brisanja",
+                $"Are you sure you want to delete the city '{_selectedCity.Name}'?",
+                "Confirm Delete",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 

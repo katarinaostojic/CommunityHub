@@ -49,13 +49,13 @@ namespace CommunityHub.Ui.Views
 
             if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show("Unesite naziv države.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a country name.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrEmpty(code))
             {
-                MessageBox.Show("Unesite kod države.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a country code.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace CommunityHub.Ui.Views
         {
             if (_selectedCountry == null)
             {
-                MessageBox.Show("Izaberite državu za izmenu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a country to update.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -78,13 +78,13 @@ namespace CommunityHub.Ui.Views
 
             if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show("Unesite naziv države.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a country name.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrEmpty(code))
             {
-                MessageBox.Show("Unesite kod države.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please enter a country code.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -98,13 +98,13 @@ namespace CommunityHub.Ui.Views
         {
             if (_selectedCountry == null)
             {
-                MessageBox.Show("Izaberite državu za brisanje.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a country to delete.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             MessageBoxResult result = MessageBox.Show(
-                $"Da li ste sigurni da zelite da obrisete državu '{_selectedCountry.Name}'?",
-                "Potvrda brisanja",
+                $"Are you sure you want to delete the country '{_selectedCountry.Name}'?",
+                "Confirm Delete",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 
@@ -115,8 +115,8 @@ namespace CommunityHub.Ui.Views
                 if (!deleted)
                 {
                     MessageBox.Show(
-                        $"Nije moguće obrisati državu '{_selectedCountry.Name}' jer ima povezanih gradova.",
-                        "Brisanje nije moguće",
+                        $"Cannot delete country '{_selectedCountry.Name}' because it has associated cities.",
+                        "Delete Not Allowed",
                         MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return;
