@@ -26,10 +26,11 @@ public partial class HomeWindow : Window
         this.Close();
     }
 
-    /*private void CountriesButton_Click(object sender, RoutedEventArgs e)
+    private void CountriesButton_Click(object sender, RoutedEventArgs e)
     {
-        CountriesWindow countriesWindow = new CountriesWindow(_userId);
-        CountriesWindow.Show();
+        CountriesWindow countriesWindow = new CountriesWindow();
+        countriesWindow.Show();
         this.Close();
-    }*/
+    }
+
 }
