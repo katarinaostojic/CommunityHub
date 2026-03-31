@@ -32,19 +32,19 @@ public partial class RegisterNeighborhoodWindow : Window
 
         if (string.IsNullOrEmpty(streetName) || string.IsNullOrEmpty(startText) || string.IsNullOrEmpty(endText))
         {
-            MessageBox.Show("Popunite sve podatke za ulicu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Please fill in all street fields.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (!int.TryParse(startText, out int startNumber) || !int.TryParse(endText, out int endNumber))
         {
-            MessageBox.Show("Početni i krajnji broj moraju biti celi brojevi.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Start and end numbers must be integers.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (startNumber >= endNumber)
         {
-            MessageBox.Show("Početni broj mora biti manji od krajnjeg.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Start number must be less than end number.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -65,19 +65,19 @@ public partial class RegisterNeighborhoodWindow : Window
 
         if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
         {
-            MessageBox.Show("Naziv i opis su obavezni.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Name and description are required.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (selectedCity == null)
         {
-            MessageBox.Show("Odaberite grad.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Please select a city.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (_streets.Count == 0)
         {
-            MessageBox.Show("Dodajte bar jednu ulicu.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Please add at least one street.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -88,7 +88,7 @@ public partial class RegisterNeighborhoodWindow : Window
             _neighborhoodRepository.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
         }
 
-        MessageBox.Show("Kvart je uspešno registrovan!", "Uspeh", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show("Neighborhood registered successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         this.Close();
     }
 }

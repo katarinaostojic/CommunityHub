@@ -40,8 +40,8 @@ public partial class LogInForm : Window
                 // managerWindow.Show();
                 break;
             case "coordinator":
-                // CoordinatorWindow coordinatorWindow = new CoordinatorWindow(user);
-                // coordinatorWindow.Show();
+                HomeWindow coordinatorWindow = new HomeWindow(user.Id);
+                coordinatorWindow.Show();
                 break;
             case "citizen":
                 // CitizenWindow citizenWindow = new CitizenWindow(user);
