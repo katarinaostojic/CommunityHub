@@ -31,8 +31,9 @@ public partial class LogInForm : Window
         switch (user.Role)
         {
             case "tenant":
-                //TenantWindow tenantWindow = new TenantWindow(user);
-                //tenantWindow.Show();
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                mainWindow.NavigateTo(new BrowseBuildingsPage(user));
                 break;
             case "manager":
                 // ManagerWindow managerWindow = new ManagerWindow(user);
