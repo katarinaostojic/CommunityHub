@@ -7,6 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\buildings\champs_elysees_1.jpg" />
+    <None Remove="images\buildings\champs_elysees_2.jpg" />
+    <None Remove="images\buildings\champs_elysees_3.jpg" />
+    <None Remove="images\buildings\knez_mihailova_1.jpg" />
+    <None Remove="images\buildings\knez_mihailova_2.jpg" />
+    <None Remove="images\buildings\knez_mihailova_3.jpg" />
+    <None Remove="images\buildings\kurfurstendamm_1.jpg" />
+    <None Remove="images\buildings\kurfurstendamm_2.jpg" />
+    <None Remove="images\buildings\kurfurstendamm_3.jpg" />
+    <None Remove="images\buildings\la_rambla_1.jpg" />
+    <None Remove="images\buildings\la_rambla_2.jpeg" />
+    <None Remove="images\buildings\la_rambla_3.jpg" />
+    <None Remove="images\buildings\terazije_1.jpg" />
+    <None Remove="images\buildings\terazije_2.jpg" />
+    <None Remove="images\buildings\terazije_3.jpg" />
+    <None Remove="images\buildings\via_dei_condotti_1.jpg" />
+    <None Remove="images\buildings\via_dei_condotti_2.jpg" />
+    <None Remove="images\buildings\via_dei_condotti_3.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Npgsql" Version="10.0.1" />
   </ItemGroup>
 
@@ -17,7 +38,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="images\buildings\" />
+    <Resource Include="images\buildings\champs_elysees_1.jpg" />
+    <Resource Include="images\buildings\champs_elysees_2.jpg" />
+    <Resource Include="images\buildings\champs_elysees_3.jpg" />
+    <Resource Include="images\buildings\knez_mihailova_1.jpg" />
+    <Resource Include="images\buildings\knez_mihailova_2.jpg" />
+    <Resource Include="images\buildings\knez_mihailova_3.jpg" />
+    <Resource Include="images\buildings\kurfurstendamm_1.jpg" />
+    <Resource Include="images\buildings\kurfurstendamm_2.jpg" />
+    <Resource Include="images\buildings\kurfurstendamm_3.jpg" />
+    <Resource Include="images\buildings\la_rambla_1.jpg" />
+    <Resource Include="images\buildings\la_rambla_2.jpeg" />
+    <Resource Include="images\buildings\la_rambla_3.jpg" />
+    <Resource Include="images\buildings\terazije_1.jpg" />
+    <Resource Include="images\buildings\terazije_2.jpg" />
+    <Resource Include="images\buildings\terazije_3.jpg" />
+    <Resource Include="images\buildings\via_dei_condotti_1.jpg" />
+    <Resource Include="images\buildings\via_dei_condotti_2.jpg" />
+    <Resource Include="images\buildings\via_dei_condotti_3.jpg" />
   </ItemGroup>
 
 </Project>

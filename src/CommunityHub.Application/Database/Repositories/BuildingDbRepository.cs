@@ -130,21 +130,25 @@ public class BuildingDbRepository
         IDbDataParameter streetParam = command.CreateParameter();
         streetParam.ParameterName = "@street";
         streetParam.Value = (object?)street ?? DBNull.Value;
+        streetParam.DbType = DbType.String;
         command.Parameters.Add(streetParam);
 
         IDbDataParameter neighborhoodParam = command.CreateParameter();
         neighborhoodParam.ParameterName = "@neighborhood";
         neighborhoodParam.Value = (object?)neighborhood ?? DBNull.Value;
+        neighborhoodParam.DbType = DbType.String;
         command.Parameters.Add(neighborhoodParam);
 
         IDbDataParameter cityParam = command.CreateParameter();
         cityParam.ParameterName = "@city";
         cityParam.Value = (object?)city ?? DBNull.Value;
+        cityParam.DbType = DbType.String;
         command.Parameters.Add(cityParam);
 
         IDbDataParameter countryParam = command.CreateParameter();
         countryParam.ParameterName = "@country";
         countryParam.Value = (object?)country ?? DBNull.Value;
+        countryParam.DbType = DbType.String;
         command.Parameters.Add(countryParam);
 
         using IDataReader reader = command.ExecuteReader();
