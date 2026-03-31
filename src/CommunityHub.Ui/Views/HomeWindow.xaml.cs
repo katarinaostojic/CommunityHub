@@ -1,4 +1,5 @@
 using System.Windows;
+using CommunityHub.Ui.Views.CoordinatorViews;
 
 namespace CommunityHub.Ui.Views;
 
@@ -38,5 +39,17 @@ public partial class HomeWindow : Window
         LogInForm loginForm = new LogInForm();
         loginForm.Show();
         this.Close();
+    }
+    private void RegisterNeighborhoodButton_Click(object sender, RoutedEventArgs e)
+    {
+        RegisterNeighborhoodWindow window = new RegisterNeighborhoodWindow(_userId);
+        window.Show();
+        this.Hide();
+    }
+    private void ManageRequestsButton_Click(object sender, RoutedEventArgs e)
+    {
+        ManageRequestsWindow window = new ManageRequestsWindow(_userId);
+        window.Show();
+        this.Hide();
     }
 }
