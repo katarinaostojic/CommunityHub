@@ -6,10 +6,13 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace CommunityHub.Ui.Views;
 
+//za putanje za slike
 public class FirstImagePathConverter : IValueConverter
 {
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -38,6 +41,7 @@ public partial class BrowseBuildingsPage : Page
     private List<Building> _filteredBuildings;
     private int _currentPage = 1;
     private const int PageSize = 3;
+    private bool _filterPanelOpen = false;
 
     public BrowseBuildingsPage(User user)
     {
@@ -82,16 +86,85 @@ public partial class BrowseBuildingsPage : Page
         DisplayBuildings();
     }
 
-    private void ResetButton_Click(object sender, RoutedEventArgs e)
+    private void FilterButton_Click(object sender, RoutedEventArgs e)
     {
-        SearchTextBox.Text = string.Empty;
+        if (_filterPanelOpen)
+            CloseFilterPanel();
+        else
+            OpenFilterPanel();
+    }
+
+    private void OpenFilterPanel()
+    {
+        Overlay.Visibility = Visibility.Visible;
+        DoubleAnimation animation = new DoubleAnimation
+        {
+            From = -300,
+            To = 0,
+            Duration = TimeSpan.FromMilliseconds(250),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        FilterPanelTranslate.BeginAnimation(TranslateTransform.XProperty, animation);
+        _filterPanelOpen = true;
+    }
+
+    private void CloseFilterPanel()
+    {
+        DoubleAnimation animation = new DoubleAnimation
+        {
+            From = 0,
+            To = -300,
+            Duration = TimeSpan.FromMilliseconds(250),
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+        };
+        animation.Completed += (s, e) => Overlay.Visibility = Visibility.Collapsed;
+        FilterPanelTranslate.BeginAnimation(TranslateTransform.XProperty, animation);
+        _filterPanelOpen = false;
+    }
+
+    private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        CloseFilterPanel();
+    }
+
+    private void ApplyFiltersButton_Click(object sender, RoutedEventArgs e)
+    {
+        string? street = string.IsNullOrWhiteSpace(FilterStreetTextBox.Text) ? null : FilterStreetTextBox.Text.Trim();
+        string? neighborhood = string.IsNullOrWhiteSpace(FilterNeighborhoodTextBox.Text) ? null : FilterNeighborhoodTextBox.Text.Trim();
+        string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
+        string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
+
+        if (street == null && neighborhood == null && city == null && country == null)
+            _filteredBuildings = _allBuildings;
+        else
+            _filteredBuildings = _buildingRepository.Search(street, neighborhood, city, country);
+
+        _currentPage = 1;
+        DisplayBuildings();
+        CloseFilterPanel();
+    }
+
+    private void ResetFiltersButton_Click(object sender, RoutedEventArgs e)
+    {
+        FilterStreetTextBox.Text = string.Empty;
+        FilterNeighborhoodTextBox.Text = string.Empty;
+        FilterCityTextBox.Text = string.Empty;
+        FilterCountryTextBox.Text = string.Empty;
         _filteredBuildings = _allBuildings;
         _currentPage = 1;
         DisplayBuildings();
     }
 
-    private void FilterButton_Click(object sender, RoutedEventArgs e)
+    private void ResetButton_Click(object sender, RoutedEventArgs e)
     {
+        SearchTextBox.Text = string.Empty;
+        FilterStreetTextBox.Text = string.Empty;
+        FilterNeighborhoodTextBox.Text = string.Empty;
+        FilterCityTextBox.Text = string.Empty;
+        FilterCountryTextBox.Text = string.Empty;
+        _filteredBuildings = _allBuildings;
+        _currentPage = 1;
+        DisplayBuildings();
     }
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
