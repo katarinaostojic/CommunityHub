@@ -127,4 +127,105 @@ public class NeighborhoodDbRepository
 
         return neighborhoods.Values.ToList();
     }
+    public List<NeighborhoodAccessRequest> GetRequestsByCoordinator(long coordinatorId, string? statusFilter = null)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT r.id, r.citizen_id, u.name AS citizen_name, u.surname AS citizen_surname,
+               r.neighborhood_id, n.name AS neighborhood_name,
+               r.created_at, r.status, r.rejection_reason
+        FROM neighborhood_access_requests r
+        JOIN users u ON r.citizen_id = u.id
+        JOIN neighborhoods n ON r.neighborhood_id = n.id
+        WHERE n.coordinator_id = @coordinatorId";
+
+        IDbDataParameter coordParam = command.CreateParameter();
+        coordParam.ParameterName = "@coordinatorId";
+        coordParam.Value = coordinatorId;
+        command.Parameters.Add(coordParam);
+
+        if (!string.IsNullOrEmpty(statusFilter))
+        {
+            command.CommandText += " AND r.status = @status";
+            IDbDataParameter statusParam = command.CreateParameter();
+            statusParam.ParameterName = "@status";
+            statusParam.Value = statusFilter;
+            command.Parameters.Add(statusParam);
+        }
+
+        command.CommandText += " ORDER BY r.created_at DESC";
+
+        using IDataReader reader = command.ExecuteReader();
+
+        var requests = new List<NeighborhoodAccessRequest>();
+
+        while (reader.Read())
+        {
+            requests.Add(new NeighborhoodAccessRequest(
+                Convert.ToInt64(reader["id"]),
+                Convert.ToInt64(reader["citizen_id"]),
+                reader["citizen_name"].ToString(),
+                reader["citizen_surname"].ToString(),
+                Convert.ToInt64(reader["neighborhood_id"]),
+                reader["neighborhood_name"].ToString(),
+                Convert.ToDateTime(reader["created_at"]),
+                reader["status"].ToString(),
+                reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader["rejection_reason"].ToString()
+            ));
+        }
+
+        return requests;
+    }
+
+    public void ApproveRequest(long requestId, long citizenId, long neighborhoodId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = "UPDATE neighborhood_access_requests SET status = 'prihvaćen' WHERE id = @id";
+        IDbDataParameter idParam = updateCmd.CreateParameter();
+        idParam.ParameterName = "@id";
+        idParam.Value = requestId;
+        updateCmd.Parameters.Add(idParam);
+        updateCmd.ExecuteNonQuery();
+
+        IDbCommand memberCmd = connection.CreateCommand();
+        memberCmd.CommandText = @"
+        INSERT INTO neighborhood_memberships (citizen_id, neighborhood_id, joined_at)
+        VALUES (@citizenId, @neighborhoodId, CURRENT_DATE)";
+        IDbDataParameter citizenParam = memberCmd.CreateParameter();
+        citizenParam.ParameterName = "@citizenId";
+        citizenParam.Value = citizenId;
+        memberCmd.Parameters.Add(citizenParam);
+        IDbDataParameter nIdParam = memberCmd.CreateParameter();
+        nIdParam.ParameterName = "@neighborhoodId";
+        nIdParam.Value = neighborhoodId;
+        memberCmd.Parameters.Add(nIdParam);
+        memberCmd.ExecuteNonQuery();
+    }
+
+    public void RejectRequest(long requestId, string? rejectionReason)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        UPDATE neighborhood_access_requests 
+        SET status = 'odbijen', rejection_reason = @reason 
+        WHERE id = @id";
+
+        IDbDataParameter idParam = command.CreateParameter();
+        idParam.ParameterName = "@id";
+        idParam.Value = requestId;
+        command.Parameters.Add(idParam);
+
+        IDbDataParameter reasonParam = command.CreateParameter();
+        reasonParam.ParameterName = "@reason";
+        reasonParam.Value = (object?)rejectionReason ?? DBNull.Value;
+        command.Parameters.Add(reasonParam);
+
+        command.ExecuteNonQuery();
+    }
 }

@@ -46,4 +46,10 @@ public partial class HomeWindow : Window
         window.Show();
         this.Hide();
     }
+    private void ManageRequestsButton_Click(object sender, RoutedEventArgs e)
+    {
+        ManageRequestsWindow window = new ManageRequestsWindow(_userId);
+        window.Show();
+        this.Hide();
+    }
 }
