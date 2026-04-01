@@ -44,7 +44,7 @@ public partial class LogInForm : Window
                 coordinatorWindow.Show();
                 break;
             case "citizen":
-                // CitizenWindow citizenWindow = new CitizenWindow(user);
+                //CitizenWindow citizenWindow = new CitizenWindow(user);
                 // citizenWindow.Show();
                 break;
             default:

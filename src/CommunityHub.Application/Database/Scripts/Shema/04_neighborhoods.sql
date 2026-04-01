@@ -37,3 +37,5 @@ CREATE TABLE neighborhood_memberships (
     FOREIGN KEY (citizen_id) REFERENCES users(id),
     FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods(id)
 );
+
+
