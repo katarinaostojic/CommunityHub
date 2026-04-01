@@ -18,4 +18,12 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Remove="images\NewFolder1\**" />
+	  <Content Remove="images\NewFolder1\**" />
+	  <EmbeddedResource Remove="images\NewFolder1\**" />
+	  <None Remove="images\NewFolder1\**" />
+	  <Page Remove="images\NewFolder1\**" />
+	</ItemGroup>
+
 </Project>

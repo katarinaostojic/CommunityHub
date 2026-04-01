@@ -13,3 +13,5 @@ INSERT INTO neighborhood_access_requests (id, citizen_id, neighborhood_id, creat
 (-2, -8, -1, '2024-01-21 11:00:00', 'ceka odobrenje', NULL),
 (-3, -7, -2, '2024-01-22 12:00:00', 'odbijen', 'Adresa se ne podudara sa kvartom');
 
+
+
