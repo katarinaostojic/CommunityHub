@@ -9,29 +9,9 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using CommunityHub.Ui.Converters;
 
 namespace CommunityHub.Ui.Views;
-
-//za putanje za slike
-public class FirstImagePathConverter : IValueConverter
-{
-    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    {
-        if (value is List<AppImage> images && images.Count > 0)
-        {
-            string fullPath = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                images[0].Path.Replace('/', Path.DirectorySeparatorChar)
-            );
-            try { return new BitmapImage(new Uri(fullPath, UriKind.Absolute)); }
-            catch { return null; }
-        }
-        return null;
-    }
-
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        => throw new NotImplementedException();
-}
 
 public partial class BrowseBuildingsPage : Page
 {
