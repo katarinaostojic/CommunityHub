@@ -17,20 +17,21 @@ public class BuildingDbRepository
                    co.id AS country_id, co.name AS country_name, co.code AS country_code,
                    f.id AS floor_id, f.floor_number,
                    u.id AS unit_id, u.unit_number,
-                   bi.image_path
+                   i.id AS image_id, i.path AS image_path
             FROM buildings b
             JOIN cities c ON b.city_id = c.id
             JOIN countries co ON c.country_id = co.id
             LEFT JOIN floors f ON f.building_id = b.id
             LEFT JOIN units u ON u.floor_id = f.id
-            LEFT JOIN building_images bi ON bi.building_id = b.id
+            LEFT JOIN images i ON i.resource_id = b.id AND i.resource = 'building'
             ORDER BY b.id, f.floor_number, u.unit_number";
 
         using IDataReader reader = command.ExecuteReader();
 
         Dictionary<long, Building> buildings = new Dictionary<long, Building>();
         Dictionary<long, Floor> floors = new Dictionary<long, Floor>();
-        HashSet<string> addedImages = new HashSet<string>();
+        HashSet<long> addedImages = new HashSet<long>();
+        HashSet<long> addedUnits = new HashSet<long>();
 
         while (reader.Read())
         {
@@ -78,23 +79,27 @@ public class BuildingDbRepository
                 if (!reader.IsDBNull(reader.GetOrdinal("unit_id")))
                 {
                     long unitId = Convert.ToInt64(reader["unit_id"]);
-                    Unit unit = new Unit(
-                        unitId,
-                        floors[floorId],
-                        reader["unit_number"].ToString()
-                    );
-                    floors[floorId].AddUnit(unit);
+                    if (!addedUnits.Contains(unitId))
+                    {
+                        Unit unit = new Unit(
+                            unitId,
+                            floors[floorId],
+                            reader["unit_number"].ToString()
+                        );
+                        floors[floorId].AddUnit(unit);
+                        addedUnits.Add(unitId);
+                    }
                 }
             }
 
-            if (!reader.IsDBNull(reader.GetOrdinal("image_path")))
+            if (!reader.IsDBNull(reader.GetOrdinal("image_id")))
             {
-                string imagePath = reader["image_path"].ToString();
-                string imageKey = $"{buildingId}_{imagePath}";
-                if (!addedImages.Contains(imageKey))
+                long imageId = Convert.ToInt64(reader["image_id"]);
+                if (!addedImages.Contains(imageId))
                 {
-                    buildings[buildingId].AddImagePath(imagePath);
-                    addedImages.Add(imageKey);
+                    AppImage image = new AppImage(imageId, reader["image_path"].ToString());
+                    buildings[buildingId].AddImage(image);
+                    addedImages.Add(imageId);
                 }
             }
         }
@@ -113,13 +118,13 @@ public class BuildingDbRepository
                    co.id AS country_id, co.name AS country_name, co.code AS country_code,
                    f.id AS floor_id, f.floor_number,
                    u.id AS unit_id, u.unit_number,
-                   bi.image_path
+                   i.id AS image_id, i.path AS image_path
             FROM buildings b
             JOIN cities c ON b.city_id = c.id
             JOIN countries co ON c.country_id = co.id
             LEFT JOIN floors f ON f.building_id = b.id
             LEFT JOIN units u ON u.floor_id = f.id
-            LEFT JOIN building_images bi ON bi.building_id = b.id
+            LEFT JOIN images i ON i.resource_id = b.id AND i.resource = 'building'
             WHERE (@street IS NULL OR b.street ILIKE '%' || @street || '%'
                    OR b.street_number ILIKE '%' || @street || '%')
               AND (@neighborhood IS NULL OR b.neighborhood ILIKE '%' || @neighborhood || '%')
@@ -155,7 +160,7 @@ public class BuildingDbRepository
 
         Dictionary<long, Building> buildings = new Dictionary<long, Building>();
         Dictionary<long, Floor> floors = new Dictionary<long, Floor>();
-        HashSet<string> addedImages = new HashSet<string>();
+        HashSet<long> addedImages = new HashSet<long>();
 
         while (reader.Read())
         {
@@ -212,14 +217,14 @@ public class BuildingDbRepository
                 }
             }
 
-            if (!reader.IsDBNull(reader.GetOrdinal("image_path")))
+            if (!reader.IsDBNull(reader.GetOrdinal("image_id")))
             {
-                string imagePath = reader["image_path"].ToString();
-                string imageKey = $"{buildingId}_{imagePath}";
-                if (!addedImages.Contains(imageKey))
+                long imageId = Convert.ToInt64(reader["image_id"]);
+                if (!addedImages.Contains(imageId))
                 {
-                    buildings[buildingId].AddImagePath(imagePath);
-                    addedImages.Add(imageKey);
+                    AppImage image = new AppImage(imageId, reader["image_path"].ToString());
+                    buildings[buildingId].AddImage(image);
+                    addedImages.Add(imageId);
                 }
             }
         }

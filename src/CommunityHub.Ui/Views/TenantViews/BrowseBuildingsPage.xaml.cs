@@ -17,11 +17,11 @@ public class FirstImagePathConverter : IValueConverter
 {
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is List<string> paths && paths.Count > 0)
+        if (value is List<AppImage> images && images.Count > 0)
         {
             string fullPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                paths[0].Replace('/', Path.DirectorySeparatorChar)
+                images[0].Path.Replace('/', Path.DirectorySeparatorChar)
             );
             try { return new BitmapImage(new Uri(fullPath, UriKind.Absolute)); }
             catch { return null; }
