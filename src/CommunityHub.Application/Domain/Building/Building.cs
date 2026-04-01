@@ -9,7 +9,7 @@ public class Building
     public City City { get; private set; }
     public int NumberOfFloors { get; private set; }
     public List<Floor> Floors { get; private set; }
-    public List<string> ImagePaths { get; private set; }
+    public List<AppImage> Images { get; private set; }
 
     public Building(long id, string street, string streetNumber, string neighborhood, City city, int numberOfFloors)
     {
@@ -20,7 +20,7 @@ public class Building
         City = city;
         NumberOfFloors = numberOfFloors;
         Floors = new List<Floor>();
-        ImagePaths = new List<string>();
+        Images = new List<AppImage>();
     }
 
     public void AddFloor(Floor floor)
@@ -28,9 +28,9 @@ public class Building
         Floors.Add(floor);
     }
 
-    public void AddImagePath(string imagePath)
+    public void AddImage(AppImage image)
     {
-        ImagePaths.Add(imagePath);
+        Images.Add(image);
     }
 
     public int TotalUnits => Floors.Sum(f => f.Units.Count);

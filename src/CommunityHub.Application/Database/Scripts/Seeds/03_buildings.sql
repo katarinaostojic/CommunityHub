@@ -54,24 +54,3 @@ VALUES
     (-121, -28, '16'), (-122, -28, '17'), (-123, -28, '18'), (-124, -28, '19'), (-125, -28, '20'),
     (-126, -29, '21'), (-127, -29, '22'), (-128, -29, '23'), (-129, -29, '24'), (-130, -29, '25'),
     (-131, -30, '26'), (-132, -30, '27'), (-133, -30, '28'), (-134, -30, '29'), (-135, -30, '30');
-
-INSERT INTO building_images (id, building_id, image_path)
-VALUES
-    (-1, -1, 'images/buildings/knez_mihailova_1.jpg'),
-    (-2, -1, 'images/buildings/knez_mihailova_2.jpg'),
-    (-3, -1, 'images/buildings/knez_mihailova_3.jpg'),
-    (-4, -2, 'images/buildings/terazije_1.jpg'),
-    (-5, -2, 'images/buildings/terazije_2.jpg'),
-    (-6, -2, 'images/buildings/terazije_3.jpg'),
-    (-7, -3, 'images/buildings/via_condotti_1.jpg'),
-    (-8, -3, 'images/buildings/via_condotti_2.jpg'),
-    (-9, -3, 'images/buildings/via_condotti_3.jpg'),
-    (-10, -4, 'images/buildings/champs_elysees_1.jpg'),
-    (-11, -4, 'images/buildings/champs_elysees_2.jpg'),
-    (-12, -4, 'images/buildings/champs_elysees_3.jpg'),
-    (-13, -5, 'images/buildings/kurfurstendamm_1.jpg'),
-    (-14, -5, 'images/buildings/kurfurstendamm_2.jpg'),
-    (-15, -5, 'images/buildings/kurfurstendamm_3.jpg'),
-    (-16, -6, 'images/buildings/la_rambla_1.jpg'),
-    (-17, -6, 'images/buildings/la_rambla_2.jpg'),
-    (-18, -6, 'images/buildings/la_rambla_3.jpg');
