@@ -10,7 +10,7 @@ public class BuildingDbRepository
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
-        using IDbCommand command = connection.CreateCommand();
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
                    c.id AS city_id, c.name AS city_name,
@@ -111,7 +111,7 @@ public class BuildingDbRepository
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
-        using IDbCommand command = connection.CreateCommand();
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
                    c.id AS city_id, c.name AS city_name,

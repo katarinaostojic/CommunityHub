@@ -1,10 +1,9 @@
-﻿<Page x:Class="CommunityHub.Ui.Views.BrowseBuildingsPage"
-      xmlns:converters="clr-namespace:CommunityHub.Ui.Converters"
+﻿<Page x:Class="CommunityHub.Ui.Views.TenantViews.BrowseBuildingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:local="clr-namespace:CommunityHub.Ui.Views"
+      xmlns:converters="clr-namespace:CommunityHub.Ui.Converters"
       mc:Ignorable="d"
       Title="Browse Buildings">
 
@@ -14,6 +13,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -26,6 +26,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -48,7 +49,7 @@
                         Click="FilterButton_Click"
                         Padding="10,6" Margin="0,0,8,0" FontSize="13"/>
 
-                <TextBlock Grid.Column="4" Text="Gorana"
+                <TextBlock Grid.Column="4" x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
                            Foreground="White" FontSize="13"
                            Margin="0,0,8,0"/>
@@ -56,11 +57,32 @@
                 <TextBlock Grid.Column="5" Text="👤"
                            VerticalAlignment="Center"
                            Foreground="White" FontSize="15"/>
+
+                <!-- OVO JE PRIVREMENO SAMO DA TESTIRAM -->
+                <Button Grid.Column="6" Content="My Requests"
+        Click="MyRequestsButton_Click"
+        Padding="10,6" FontSize="13"
+        Foreground="White" Background="Transparent"/>
+            </Grid>
+        </Border>
+
+        <!-- Success banner -->
+        <Border x:Name="SuccessBanner" Grid.Row="1"
+                Background="#DFF0D8" Padding="12,8"
+                Visibility="Collapsed">
+            <Grid>
+                <TextBlock x:Name="SuccessTextBlock"
+                           Foreground="#3C763D" FontSize="13"
+                           VerticalAlignment="Center"/>
+                <Button Content="✕" HorizontalAlignment="Right"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="#3C763D"
+                        Click="CloseBannerButton_Click"/>
             </Grid>
         </Border>
 
         <!-- Title row -->
-        <Grid Grid.Row="1" Margin="16,12,16,8">
+        <Grid Grid.Row="2" Margin="16,12,16,8">
             <TextBlock Text="Browse Buildings"
                        FontSize="20" FontWeight="Bold"
                        VerticalAlignment="Center"/>
@@ -70,7 +92,7 @@
         </Grid>
 
         <!-- Building list -->
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="16,0,16,0">
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" Margin="16,0,16,0">
             <ItemsControl x:Name="BuildingsPanel">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -132,7 +154,7 @@
         </ScrollViewer>
 
         <!-- Pagination -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal"
+        <StackPanel Grid.Row="4" Orientation="Horizontal"
                     HorizontalAlignment="Center" Margin="0,10,0,10">
             <Button Content="&lt;" Click="PrevPageButton_Click"
                     Padding="10,6" Margin="0,0,4,0" FontSize="13"/>
@@ -142,15 +164,15 @@
                     Padding="10,6" Margin="4,0,0,0" FontSize="13"/>
         </StackPanel>
 
-        <!-- Overlay kada je filter otvoren -->
-        <Grid Grid.Row="0" Grid.RowSpan="4"
+        <!-- Overlay -->
+        <Grid Grid.Row="0" Grid.RowSpan="5"
               x:Name="Overlay"
               Background="#66000000"
               Visibility="Collapsed"
               MouseLeftButtonDown="Overlay_MouseLeftButtonDown"/>
 
         <!-- Filter panel -->
-        <Border Grid.Row="0" Grid.RowSpan="4"
+        <Border Grid.Row="0" Grid.RowSpan="5"
                 x:Name="FilterPanel"
                 Width="300"
                 HorizontalAlignment="Left"
@@ -162,7 +184,6 @@
             </Border.RenderTransform>
             <StackPanel Margin="20">
 
-                <!-- Header -->
                 <Grid Margin="0,0,0,20">
                     <TextBlock Text="Filter" FontSize="18" FontWeight="Bold"
                                VerticalAlignment="Center"/>
@@ -171,35 +192,26 @@
                             FontSize="16" Click="FilterButton_Click"/>
                 </Grid>
 
-                <!-- Street Address -->
                 <TextBlock Text="Street Address:" FontSize="13"
                            FontWeight="SemiBold" Margin="0,0,0,4"/>
                 <TextBox x:Name="FilterStreetTextBox"
-                         Padding="8,6" FontSize="13"
-                         Margin="0,0,0,16"/>
+                         Padding="8,6" FontSize="13" Margin="0,0,0,16"/>
 
-                <!-- Neighborhood -->
                 <TextBlock Text="Neighborhood:" FontSize="13"
                            FontWeight="SemiBold" Margin="0,0,0,4"/>
                 <TextBox x:Name="FilterNeighborhoodTextBox"
-                         Padding="8,6" FontSize="13"
-                         Margin="0,0,0,16"/>
+                         Padding="8,6" FontSize="13" Margin="0,0,0,16"/>
 
-                <!-- City -->
                 <TextBlock Text="City:" FontSize="13"
                            FontWeight="SemiBold" Margin="0,0,0,4"/>
                 <TextBox x:Name="FilterCityTextBox"
-                         Padding="8,6" FontSize="13"
-                         Margin="0,0,0,16"/>
+                         Padding="8,6" FontSize="13" Margin="0,0,0,16"/>
 
-                <!-- Country -->
                 <TextBlock Text="Country:" FontSize="13"
                            FontWeight="SemiBold" Margin="0,0,0,4"/>
                 <TextBox x:Name="FilterCountryTextBox"
-                         Padding="8,6" FontSize="13"
-                         Margin="0,0,0,24"/>
+                         Padding="8,6" FontSize="13" Margin="0,0,0,24"/>
 
-                <!-- Dugmad -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>

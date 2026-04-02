@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
+using CommunityHub.Ui.Converters;
+using CommunityHub.Ui.Views.TenantViews;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -9,9 +11,9 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using CommunityHub.Ui.Converters;
+using System.Windows.Threading;
 
-namespace CommunityHub.Ui.Views;
+namespace CommunityHub.Ui.Views.TenantViews;
 
 public partial class BrowseBuildingsPage : Page
 {
@@ -29,6 +31,7 @@ public partial class BrowseBuildingsPage : Page
         _buildingRepository = new BuildingDbRepository();
         _user = user;
         LoadBuildings();
+        UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
     }
 
     private void LoadBuildings()
@@ -150,7 +153,29 @@ public partial class BrowseBuildingsPage : Page
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
         Building building = (Building)((Button)sender).Tag;
-        // NavigationService.Navigate(new RequestAccessPage(building, _user));
+        RequestAccessDialog dialog = new RequestAccessDialog(building, _user);
+        dialog.Owner = Window.GetWindow(this);
+        bool? result = dialog.ShowDialog();
+
+        if (result == true)
+        {
+            SuccessTextBlock.Text = $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.";
+            SuccessBanner.Visibility = Visibility.Visible;
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(3);
+            timer.Tick += (s, args) =>
+            {
+                SuccessBanner.Visibility = Visibility.Collapsed;
+                timer.Stop();
+            };
+            timer.Start();
+        }
+    }
+
+    private void CloseBannerButton_Click(object sender, RoutedEventArgs e)
+    {
+        SuccessBanner.Visibility = Visibility.Collapsed;
     }
 
     private void PrevPageButton_Click(object sender, RoutedEventArgs e)
@@ -179,5 +204,6 @@ public partial class BrowseBuildingsPage : Page
 
     private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
     {
+        NavigationService.Navigate(new MyRequestsPage(_user));
     }
 }
