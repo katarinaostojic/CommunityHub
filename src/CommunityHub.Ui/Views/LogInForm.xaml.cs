@@ -4,6 +4,8 @@ using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views;
 
+using CommunityHub.Ui.Views.TenantViews;
+
 public partial class LogInForm : Window
 {
     private readonly UserDbRepository _userRepository;
