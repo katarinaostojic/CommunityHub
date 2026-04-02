@@ -204,5 +204,6 @@ public partial class BrowseBuildingsPage : Page
 
     private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
     {
+        NavigationService.Navigate(new MyRequestsPage(_user));
     }
 }

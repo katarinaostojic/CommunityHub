@@ -114,7 +114,7 @@ public class BuildingAccessRequestDbRepository
                 reader["password"].ToString(),
                 reader["name"].ToString(),
                 reader["surname"].ToString(),
-                Convert.ToDateTime(reader["birthday"]),
+                DateTime.Parse(reader["birthday"].ToString()),
                 reader["role"].ToString()
             );
 
@@ -127,7 +127,7 @@ public class BuildingAccessRequestDbRepository
                 user,
                 building,
                 reader["unit_number"].ToString(),
-                Convert.ToDateTime(reader["created_at"]),
+                DateTime.Parse(reader["created_at"].ToString()),
                 reader["status"].ToString(),
                 rejectionReason
             ));
