@@ -4,24 +4,23 @@ using CommunityHub.Application.Domain.Building;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using CommunityHub.Application.Services.TenantServices;
+using CommunityHub.Ui.Helpers;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
-using CommunityHub.Ui.ViewModels;
-
 public partial class MyRequestsPage : Page
 {
-    private readonly BuildingAccessRequestDbRepository _requestRepository;
     private readonly User _user;
-    private List<BuildingAccessRequestViewModel> _allRequests;
-    private List<BuildingAccessRequestViewModel> _filteredRequests;
+    private List<BuildingAccessRequest> _allRequests;
+    private List<BuildingAccessRequest> _filteredRequests;
     private string _currentFilter = "all";
     private bool _sortDescending = true;
-
+    private readonly BuildingAccessRequestService _requestService;
     public MyRequestsPage(User user)
     {
         InitializeComponent();
-        _requestRepository = new BuildingAccessRequestDbRepository();
+        _requestService = new BuildingAccessRequestService();
         _user = user;
         UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
         LoadRequests();
@@ -30,17 +29,7 @@ public partial class MyRequestsPage : Page
 
     private void LoadRequests()
     {
-        var requests = _requestRepository.GetAllByTenant(_user.Id);
-        _allRequests = requests.Select(r => new BuildingAccessRequestViewModel
-        {
-            Id = r.Id,
-            Building = r.Building,
-            UnitNumber = r.UnitNumber,
-            CreatedAt = r.CreatedAt,
-            Status = r.Status,
-            RejectionReason = r.RejectionReason
-        }).ToList();
-
+        _allRequests = _requestService.GetAllByTenant(_user.Id);
         ApplyFilterAndSort();
     }
 
@@ -61,15 +50,15 @@ public partial class MyRequestsPage : Page
 
     private void UpdateFilterButtons()
     {
-        int all = _allRequests.Count;
-        int pending = _allRequests.Count(r => r.Status == "pending approval");
-        int accepted = _allRequests.Count(r => r.Status == "accepted");
-        int rejected = _allRequests.Count(r => r.Status == "rejected");
+        UpdateFilterButton(FilterAllButton, "All", _allRequests.Count);
+        UpdateFilterButton(FilterPendingButton, "Pending approval", _allRequests.Count(r => r.Status == "pending approval"));
+        UpdateFilterButton(FilterAcceptedButton, "Accepted", _allRequests.Count(r => r.Status == "accepted"));
+        UpdateFilterButton(FilterRejectedButton, "Rejected", _allRequests.Count(r => r.Status == "rejected"));
+    }
 
-        FilterAllButton.Content = $"All ({all})";
-        FilterPendingButton.Content = $"Pending approval ({pending})";
-        FilterAcceptedButton.Content = $"Accepted ({accepted})";
-        FilterRejectedButton.Content = $"Rejected ({rejected})";
+    private void UpdateFilterButton(Button filterButton, string label, int count)
+    {
+        filterButton.Content = $"{label} ({count})";
     }
 
     private void FilterAllButton_Click(object sender, RoutedEventArgs e)
@@ -105,29 +94,20 @@ public partial class MyRequestsPage : Page
 
     private void CancelRequestButton_Click(object sender, RoutedEventArgs e)
     {
-        BuildingAccessRequestViewModel request = (BuildingAccessRequestViewModel)((Button)sender).Tag;
+        BuildingAccessRequest request = (BuildingAccessRequest)((Button)sender).Tag;
 
-        CancelConfirmDialog confirmDialog = new CancelConfirmDialog(request.Building.Street, request.Building.StreetNumber);
-        confirmDialog.Owner = Window.GetWindow(this);
-        bool? result = confirmDialog.ShowDialog();
+        if (!ConfirmCancellation(request)) return;
 
-        if (result == true)
-        {
-            _requestRepository.Delete(request.Id);
-            LoadRequests();
-            UpdateFilterButtons();
+        _requestService.Delete(request.Id);
+        LoadRequests();
+        UpdateFilterButtons();
+        Banner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
+    }
 
-            SuccessTextBlock.Text = "✔ Request cancelled successfully.";
-            SuccessBanner.Visibility = Visibility.Visible;
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(3);
-            timer.Tick += (s, args) =>
-            {
-                SuccessBanner.Visibility = Visibility.Collapsed;
-                timer.Stop();
-            };
-            timer.Start();
-        }
+    private bool ConfirmCancellation(BuildingAccessRequest request)
+    {
+        CancelConfirmDialog dialog = new CancelConfirmDialog(request.Building.Street, request.Building.StreetNumber);
+        dialog.Owner = Window.GetWindow(this);
+        return dialog.ShowDialog() == true;
     }
 }

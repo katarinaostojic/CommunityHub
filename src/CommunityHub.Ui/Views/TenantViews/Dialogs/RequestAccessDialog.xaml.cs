@@ -3,6 +3,7 @@ using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.Services.TenantServices;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -10,23 +11,23 @@ public partial class RequestAccessDialog : Window
 {
     private readonly Building _building;
     private readonly User _user;
-    private readonly BuildingAccessRequestDbRepository _requestRepository;
+    private readonly BuildingAccessRequestService _requestService;
 
     public RequestAccessDialog(Building building, User user)
     {
         InitializeComponent();
         _building = building;
         _user = user;
-        _requestRepository = new BuildingAccessRequestDbRepository();
+        _requestService = new BuildingAccessRequestService();
 
         TitleTextBlock.Text = $"REQUEST ACCESS: {building.Street} {building.StreetNumber}";
         BuildingInfoTextBlock.Text = $"Building: {building.Street} {building.StreetNumber}, {building.City.Name}, {building.Neighborhood}";
 
         UnitComboBox.ItemsSource = _building.Floors
-         .SelectMany(f => f.Units)
-         .Select(u => u.UnitNumber)
-         .OrderBy(u => int.TryParse(u, out int n) ? n : int.MaxValue)
-         .ToList();
+            .SelectMany(f => f.Units)
+            .Select(u => u.UnitNumber)
+            .OrderBy(u => int.TryParse(u, out int n) ? n : int.MaxValue)
+            .ToList();
     }
 
     private void CheckUnitOccupied()
@@ -38,16 +39,11 @@ public partial class RequestAccessDialog : Window
             return;
         }
 
-        bool isOccupied = _requestRepository.IsUnitOccupied(_building.Id, unitNumber);
-        if (isOccupied)
-        {
-            WarningTextBlock.Text = $"Warning: Apartment {unitNumber} is already occupied by another user.";
-            WarningPanel.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            WarningPanel.Visibility = Visibility.Collapsed;
-        }
+        bool isOccupied = _requestService.IsUnitOccupied(_building.Id, unitNumber);
+        WarningTextBlock.Text = isOccupied
+            ? $"Warning: Apartment {unitNumber} is already occupied by another user."
+            : string.Empty;
+        WarningPanel.Visibility = isOccupied ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void UnitComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -70,7 +66,7 @@ public partial class RequestAccessDialog : Window
             return;
         }
 
-        _requestRepository.Create(_user.Id, _building.Id, unitNumber);
+        _requestService.Create(_user.Id, _building.Id, unitNumber);
         DialogResult = true;
         Close();
     }
