@@ -144,4 +144,18 @@ public class BuildingAccessRequestDbRepository
         param.Value = value;
         command.Parameters.Add(param);
     }
+
+    public int GetPendingRequestsCount(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT COUNT(*) FROM building_access_requests
+        WHERE building_id = @buildingId
+        AND status = 'pending approval'";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
 }

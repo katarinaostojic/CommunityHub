@@ -12,7 +12,7 @@ public static class Banner
         banner.Visibility = Visibility.Visible;
 
         DispatcherTimer timer = new DispatcherTimer();
-        timer.Interval = TimeSpan.FromSeconds(3);
+        timer.Interval = TimeSpan.FromSeconds(4);
         timer.Tick += (s, args) =>
         {
             banner.Visibility = Visibility.Collapsed;

@@ -148,12 +148,29 @@ public class BuildingDbRepository
         addedImages.Add(imageId);
     }
 
-    private void AddParameter(IDbCommand command, string name, string? value)
+    private void AddParameter(IDbCommand command, string name, object value)
     {
         IDbDataParameter param = command.CreateParameter();
         param.ParameterName = name;
-        param.Value = (object?)value ?? DBNull.Value;
-        param.DbType = DbType.String;
+        param.Value = value;
         command.Parameters.Add(param);
+    }
+
+    public List<string> GetOccupiedUnits(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT unit_number FROM building_memberships
+        WHERE building_id = @buildingId";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<string> occupiedUnits = new List<string>();
+        while (reader.Read())
+            occupiedUnits.Add(reader["unit_number"].ToString());
+
+        return occupiedUnits;
     }
 }
