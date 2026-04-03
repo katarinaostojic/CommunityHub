@@ -31,4 +31,8 @@ public class BuildingAccessRequestService
     {
         return _repository.IsUnitOccupied(buildingId, unitNumber);
     }
+    public int GetPendingRequestsCount(long buildingId)
+    {
+        return _repository.GetPendingRequestsCount(buildingId);
+    }
 }
