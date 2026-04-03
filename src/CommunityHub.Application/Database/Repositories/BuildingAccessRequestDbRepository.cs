@@ -14,15 +14,8 @@ public class BuildingAccessRequestDbRepository
             SELECT COUNT(*) FROM building_memberships
             WHERE building_id = @buildingId AND unit_number = @unitNumber";
 
-        IDbDataParameter buildingIdParam = command.CreateParameter();
-        buildingIdParam.ParameterName = "@buildingId";
-        buildingIdParam.Value = buildingId;
-        command.Parameters.Add(buildingIdParam);
-
-        IDbDataParameter unitNumberParam = command.CreateParameter();
-        unitNumberParam.ParameterName = "@unitNumber";
-        unitNumberParam.Value = unitNumber;
-        command.Parameters.Add(unitNumberParam);
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@unitNumber", unitNumber);
 
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
     }
@@ -35,25 +28,10 @@ public class BuildingAccessRequestDbRepository
             INSERT INTO building_access_requests (user_id, building_id, unit_number, created_at, status)
             VALUES (@userId, @buildingId, @unitNumber, @createdAt, 'pending approval')";
 
-        IDbDataParameter userIdParam = command.CreateParameter();
-        userIdParam.ParameterName = "@userId";
-        userIdParam.Value = userId;
-        command.Parameters.Add(userIdParam);
-
-        IDbDataParameter buildingIdParam = command.CreateParameter();
-        buildingIdParam.ParameterName = "@buildingId";
-        buildingIdParam.Value = buildingId;
-        command.Parameters.Add(buildingIdParam);
-
-        IDbDataParameter unitNumberParam = command.CreateParameter();
-        unitNumberParam.ParameterName = "@unitNumber";
-        unitNumberParam.Value = unitNumber;
-        command.Parameters.Add(unitNumberParam);
-
-        IDbDataParameter createdAtParam = command.CreateParameter();
-        createdAtParam.ParameterName = "@createdAt";
-        createdAtParam.Value = DateTime.Today;
-        command.Parameters.Add(createdAtParam);
+        AddParameter(command, "@userId", userId);
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@unitNumber", unitNumber);
+        AddParameter(command, "@createdAt", DateTime.Today);
 
         command.ExecuteNonQuery();
     }
@@ -76,64 +54,10 @@ public class BuildingAccessRequestDbRepository
             WHERE r.user_id = @userId
             ORDER BY r.created_at DESC";
 
-        IDbDataParameter userIdParam = command.CreateParameter();
-        userIdParam.ParameterName = "@userId";
-        userIdParam.Value = userId;
-        command.Parameters.Add(userIdParam);
+        AddParameter(command, "@userId", userId);
 
         using IDataReader reader = command.ExecuteReader();
-
-        List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
-
-        while (reader.Read())
-        {
-            Country country = new Country(
-                Convert.ToInt64(reader["country_id"]),
-                reader["country_name"].ToString(),
-                reader["country_code"].ToString()
-            );
-
-            City city = new City(
-                Convert.ToInt64(reader["city_id"]),
-                reader["city_name"].ToString(),
-                country
-            );
-
-            Building building = new Building(
-                Convert.ToInt64(reader["building_id"]),
-                reader["street"].ToString(),
-                reader["street_number"].ToString(),
-                reader["neighborhood"].ToString(),
-                city,
-                Convert.ToInt32(reader["number_of_floors"])
-            );
-
-            User user = new User(
-                Convert.ToInt64(reader["user_id"]),
-                reader["username"].ToString(),
-                reader["password"].ToString(),
-                reader["name"].ToString(),
-                reader["surname"].ToString(),
-                DateTime.Parse(reader["birthday"].ToString()),
-                reader["role"].ToString()
-            );
-
-            string? rejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
-                ? null
-                : reader["rejection_reason"].ToString();
-
-            requests.Add(new BuildingAccessRequest(
-                Convert.ToInt64(reader["id"]),
-                user,
-                building,
-                reader["unit_number"].ToString(),
-                DateTime.Parse(reader["created_at"].ToString()),
-                reader["status"].ToString(),
-                rejectionReason
-            ));
-        }
-
-        return requests;
+        return ReadRequests(reader);
     }
 
     public void Delete(long requestId)
@@ -142,11 +66,82 @@ public class BuildingAccessRequestDbRepository
         IDbCommand command = connection.CreateCommand();
         command.CommandText = "DELETE FROM building_access_requests WHERE id = @id";
 
-        IDbDataParameter idParam = command.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = requestId;
-        command.Parameters.Add(idParam);
+        AddParameter(command, "@id", requestId);
 
         command.ExecuteNonQuery();
+    }
+
+    private List<BuildingAccessRequest> ReadRequests(IDataReader reader)
+    {
+        List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
+
+        while (reader.Read())
+            requests.Add(MapRequest(reader));
+
+        return requests;
+    }
+
+    private BuildingAccessRequest MapRequest(IDataReader reader)
+    {
+        Building building = MapBuilding(reader);
+        User user = MapUser(reader);
+        string? rejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
+            ? null
+            : reader["rejection_reason"].ToString();
+
+        return new BuildingAccessRequest(
+            Convert.ToInt64(reader["id"]),
+            user,
+            building,
+            reader["unit_number"].ToString(),
+            DateTime.Parse(reader["created_at"].ToString()),
+            reader["status"].ToString(),
+            rejectionReason
+        );
+    }
+
+    private Building MapBuilding(IDataReader reader)
+    {
+        Country country = new Country(
+            Convert.ToInt64(reader["country_id"]),
+            reader["country_name"].ToString(),
+            reader["country_code"].ToString()
+        );
+
+        City city = new City(
+            Convert.ToInt64(reader["city_id"]),
+            reader["city_name"].ToString(),
+            country
+        );
+
+        return new Building(
+            Convert.ToInt64(reader["building_id"]),
+            reader["street"].ToString(),
+            reader["street_number"].ToString(),
+            reader["neighborhood"].ToString(),
+            city,
+            Convert.ToInt32(reader["number_of_floors"])
+        );
+    }
+
+    private User MapUser(IDataReader reader)
+    {
+        return new User(
+            Convert.ToInt64(reader["user_id"]),
+            reader["username"].ToString(),
+            reader["password"].ToString(),
+            reader["name"].ToString(),
+            reader["surname"].ToString(),
+            DateTime.Parse(reader["birthday"].ToString()),
+            reader["role"].ToString()
+        );
+    }
+
+    private void AddParameter(IDbCommand command, string name, object value)
+    {
+        IDbDataParameter param = command.CreateParameter();
+        param.ParameterName = name;
+        param.Value = value;
+        command.Parameters.Add(param);
     }
 }

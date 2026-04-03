@@ -6,6 +6,10 @@
       mc:Ignorable="d"
       Title="My Requests">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -148,7 +152,7 @@
                                            Text="{Binding RejectionReasonDisplay}"
                                            FontSize="12" Foreground="Gray" FontStyle="Italic"
                                            Margin="0,0,0,6"
-                                           Visibility="{Binding RejectionReasonVisibility}"/>
+                                           Visibility="{Binding RejectionReasonVisible, Converter={StaticResource BoolToVis}}"/>
 
                                 <!-- Akcije -->
                                 <Grid Grid.Row="5">
@@ -156,7 +160,7 @@
                                         Padding="10,6" FontSize="13"
                                         HorizontalAlignment="Right"
                                         Tag="{Binding}"
-                                        Visibility="{Binding CancelButtonVisibility}"
+                                        Visibility="{Binding CancelButtonVisible, Converter={StaticResource BoolToVis}}"
                                         Click="CancelRequestButton_Click"/>
                                 </Grid>
                             </Grid>

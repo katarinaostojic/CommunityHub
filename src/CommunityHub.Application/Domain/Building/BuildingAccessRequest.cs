@@ -20,4 +20,22 @@ public class BuildingAccessRequest
         Status = status;
         RejectionReason = rejectionReason;
     }
+
+    //nije bas najbolje da stoji u domenskoj klasi
+
+    public string StatusDisplay => Status switch
+    {
+        "pending approval" => "⏳ Pending approval",
+        "accepted" => "✔ Accepted",
+        "rejected" => "✕ Rejected",
+        _ => Status
+    };
+
+    public string RejectionReasonDisplay => RejectionReason != null
+        ? $"Note: {RejectionReason}"
+        : string.Empty;
+
+    public bool CancelButtonVisible => Status == "pending approval";
+
+    public bool RejectionReasonVisible => Status == "rejected" && RejectionReason != null;
 }

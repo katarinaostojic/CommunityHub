@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Services.TenantServices;
+using CommunityHub.Ui.Helpers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 using CommunityHub.Ui.Converters;
@@ -17,18 +18,18 @@ namespace CommunityHub.Ui.Views.TenantViews;
 
 public partial class BrowseBuildingsPage : Page
 {
-    private readonly BuildingDbRepository _buildingRepository;
     private readonly User _user;
     private List<Building> _allBuildings;
     private List<Building> _filteredBuildings;
     private int _currentPage = 1;
     private const int PageSize = 3;
     private bool _filterPanelOpen = false;
+    private readonly BuildingService _buildingService;
 
     public BrowseBuildingsPage(User user)
     {
         InitializeComponent();
-        _buildingRepository = new BuildingDbRepository();
+        _buildingService = new BuildingService();
         _user = user;
         LoadBuildings();
         UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
@@ -36,7 +37,7 @@ public partial class BrowseBuildingsPage : Page
 
     private void LoadBuildings()
     {
-        _allBuildings = _buildingRepository.GetAll();
+        _allBuildings = _buildingService.GetAll();
         _filteredBuildings = _allBuildings;
         _currentPage = 1;
         DisplayBuildings();
@@ -64,7 +65,7 @@ public partial class BrowseBuildingsPage : Page
         string search = SearchTextBox.Text.Trim();
         _filteredBuildings = string.IsNullOrEmpty(search)
             ? _allBuildings
-            : _buildingRepository.Search(search, null, null, null);
+            : _buildingService.Search(search, null, null, null);
         _currentPage = 1;
         DisplayBuildings();
     }
@@ -117,10 +118,9 @@ public partial class BrowseBuildingsPage : Page
         string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
         string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
 
-        if (street == null && neighborhood == null && city == null && country == null)
-            _filteredBuildings = _allBuildings;
-        else
-            _filteredBuildings = _buildingRepository.Search(street, neighborhood, city, country);
+        _filteredBuildings = (street == null && neighborhood == null && city == null && country == null)
+            ? _allBuildings
+            : _buildingService.Search(street, neighborhood, city, country);
 
         _currentPage = 1;
         DisplayBuildings();
@@ -153,24 +153,18 @@ public partial class BrowseBuildingsPage : Page
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
         Building building = (Building)((Button)sender).Tag;
+
+        if (!ShowRequestAccessDialog(building)) return;
+
+        Banner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+            $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
+    }
+
+    private bool ShowRequestAccessDialog(Building building)
+    {
         RequestAccessDialog dialog = new RequestAccessDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
-        bool? result = dialog.ShowDialog();
-
-        if (result == true)
-        {
-            SuccessTextBlock.Text = $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.";
-            SuccessBanner.Visibility = Visibility.Visible;
-
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(3);
-            timer.Tick += (s, args) =>
-            {
-                SuccessBanner.Visibility = Visibility.Collapsed;
-                timer.Stop();
-            };
-            timer.Start();
-        }
+        return dialog.ShowDialog() == true;
     }
 
     private void CloseBannerButton_Click(object sender, RoutedEventArgs e)
