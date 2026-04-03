@@ -11,6 +11,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Instance = this;
+        Width = 1024;
+        Height = 768;
     }
 
     public void NavigateTo(Page page)
