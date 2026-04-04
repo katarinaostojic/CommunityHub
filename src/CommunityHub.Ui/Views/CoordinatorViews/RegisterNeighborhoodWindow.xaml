@@ -4,23 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Registracija kvarta" Height="600" Width="500"
+        Title="Add New District" Height="700" Width="500"
         WindowStartupLocation="CenterScreen">
     <ScrollViewer>
         <StackPanel Margin="20">
 
-            <TextBlock Text="Register Neighborhood" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+            <TextBlock Text="Add New District" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
 
-            <TextBlock Text="Name"/>
+            <TextBlock Text="District Name"/>
             <TextBox x:Name="NameTextBox" Margin="0,5,0,15" Padding="5"/>
-
-            <TextBlock Text="Description"/>
-            <TextBox x:Name="DescriptionTextBox" Margin="0,5,0,15" Padding="5" Height="80"
-                     TextWrapping="Wrap" AcceptsReturn="True"/>
 
             <TextBlock Text="City"/>
             <ComboBox x:Name="CityComboBox" Margin="0,5,0,15" Padding="5"
                       DisplayMemberPath="Name"/>
+
+            <TextBlock Text="Description"/>
+            <TextBox x:Name="DescriptionTextBox" Margin="0,5,0,15" Padding="5" Height="80"
+                     TextWrapping="Wrap" AcceptsReturn="True"/>
 
             <TextBlock Text="Streets" FontWeight="Bold" Margin="0,10,0,5"/>
 
@@ -29,22 +29,28 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="StreetNameTextBox" Grid.Column="0" Margin="0,0,5,0"
-                         Padding="5" Tag="Naziv ulice"/>
-                <TextBox x:Name="StartNumberTextBox" Grid.Column="1" Margin="0,0,5,0"
-                         Padding="5" Tag="Od"/>
-                <TextBox x:Name="EndNumberTextBox" Grid.Column="2" Margin="0,0,5,0"
-                         Padding="5" Tag="Do"/>
-                <Button Content="+" Grid.Column="3" Click="AddStreet_Click" Padding="5"/>
+                <TextBox x:Name="StreetNameTextBox" Grid.Column="0" Margin="0,0,5,0" Padding="5"/>
+                <TextBox x:Name="StartNumberTextBox" Grid.Column="1" Margin="0,0,5,0" Padding="5"/>
+                <TextBox x:Name="EndNumberTextBox" Grid.Column="2" Padding="5"/>
             </Grid>
 
-            <ListBox x:Name="StreetsListBox" Margin="0,10,0,15" Height="150"/>
+            <Button Content="Add Street" Click="AddStreet_Click"
+                    Padding="10,8" Margin="0,5,0,10" HorizontalAlignment="Right"/>
 
-            <Button Content="Register Neighborhood" Click="RegisterButton_Click"
-                    Padding="10,8" FontSize="14" Margin="0,10,0,0"/>
+            <ListBox x:Name="StreetsListBox" Margin="0,0,0,15" Height="120"/>
+
+            <TextBlock Text="Images" FontWeight="Bold" Margin="0,10,0,5"/>
+            <Button Content="Add Image" Click="AddImage_Click"
+                    Padding="10,8" Margin="0,5,0,5" HorizontalAlignment="Left"/>
+            <ListBox x:Name="ImagesListBox" Margin="0,0,0,15" Height="80"/>
+
+            <Button Content="Add District" Click="RegisterButton_Click"
+                    Padding="10,8" FontSize="14" Margin="0,5,0,5"/>
+
+            <Button Content="Cancel" Click="CancelButton_Click"
+                    Padding="10,8" FontSize="14"/>
 
         </StackPanel>
     </ScrollViewer>

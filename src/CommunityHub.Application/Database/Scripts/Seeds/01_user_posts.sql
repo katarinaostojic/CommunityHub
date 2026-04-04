@@ -1,12 +1,12 @@
-﻿INSERT INTO users(id, username, password, name, surname, birthday, role) VALUES
-(-1, 'marko', 'marko123', 'Marko', 'Marković', '2000-05-15', 'tenant'),
-(-2, 'ana', 'ana123', 'Ana', 'Anić', '1998-08-22', 'tenant'),
-(-3, 'petar', 'petar123', 'Petar', 'Petrović', '2001-03-10', 'manager'),
-(-4, 'jovana', 'jovana123', 'Jovana', 'Jovanović', '1999-11-30', 'manager'),
-(-5, 'stefan', 'stefan123', 'Stefan', 'Stefanović', '2002-01-25', 'coordinator'),
-(-6, 'milica', 'milica123', 'Milica', 'Milić', '2000-07-08', 'coordinator'),
-(-7, 'nikola', 'nikola123', 'Nikola', 'Nikolić', '1997-12-18', 'citizen'),
-(-8, 'ivana', 'ivana123', 'Ivana', 'Ivanović', '2001-09-05', 'citizen');
+﻿INSERT INTO users(id, username, password, name, surname, birthday, role, address) VALUES
+(-1, 'marko', 'marko123', 'Marko', 'Marković', '2000-05-15', 'tenant', 'Bulevar oslobođenja 15'),
+(-2, 'ana', 'ana123', 'Ana', 'Anić', '1998-08-22', 'tenant', 'Kisačka 22'),
+(-3, 'petar', 'petar123', 'Petar', 'Petrović', '2001-03-10', 'manager', 'Cara Dušana 5'),
+(-4, 'jovana', 'jovana123', 'Jovana', 'Jovanović', '1999-11-30', 'manager', 'Gospodar Jevremova 18'),
+(-5, 'stefan', 'stefan123', 'Stefan', 'Stefanović', '2002-01-25', 'coordinator', 'Bulevar oslobođenja 42'),
+(-6, 'milica', 'milica123', 'Milica', 'Milić', '2000-07-08', 'coordinator', 'Cara Dušana 31'),
+(-7, 'nikola', 'nikola123', 'Nikola', 'Nikolić', '1997-12-18', 'citizen', 'Kisačka 10'),
+(-8, 'ivana', 'ivana123', 'Ivana', 'Ivanović', '2001-09-05', 'citizen', 'Gospodar Jevremova 45');
 
 INSERT INTO posts(id, title, content, created_at, user_id) VALUES
 (-1, 'Moj prvi post', 'Ovo je moj prvi post na platformi!', '2024-01-15 10:30:00', -1),

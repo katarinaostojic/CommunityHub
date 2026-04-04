@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Microsoft.Win32;
 using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
 
@@ -10,6 +11,7 @@ public partial class RegisterNeighborhoodWindow : Window
     private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
     private readonly CityDbRepository _cityRepository = new();
     private readonly List<Street> _streets = new();
+    private readonly List<string> _imagePaths = new();
 
     public RegisterNeighborhoodWindow(long coordinatorId)
     {
@@ -57,6 +59,25 @@ public partial class RegisterNeighborhoodWindow : Window
         EndNumberTextBox.Clear();
     }
 
+    private void AddImage_Click(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog dialog = new OpenFileDialog();
+        dialog.Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp";
+        dialog.Multiselect = true;
+
+        if (dialog.ShowDialog() == true)
+        {
+            foreach (string path in dialog.FileNames)
+            {
+                if (!_imagePaths.Contains(path))
+                {
+                    _imagePaths.Add(path);
+                    ImagesListBox.Items.Add(path);
+                }
+            }
+        }
+    }
+
     private void RegisterButton_Click(object sender, RoutedEventArgs e)
     {
         string name = NameTextBox.Text.Trim();
@@ -81,6 +102,12 @@ public partial class RegisterNeighborhoodWindow : Window
             return;
         }
 
+        if (_imagePaths.Count == 0)
+        {
+            MessageBox.Show("Please add at least one image.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity.Id, _coordinatorId);
 
         foreach (Street street in _streets)
@@ -88,7 +115,17 @@ public partial class RegisterNeighborhoodWindow : Window
             _neighborhoodRepository.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
         }
 
+        foreach (string path in _imagePaths)
+        {
+            _neighborhoodRepository.AddImage(neighborhoodId, path);
+        }
+
         MessageBox.Show("Neighborhood registered successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        this.Close();
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
         this.Close();
     }
 }

@@ -4,45 +4,49 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Manage Access Requests" Height="600" Width="800"
+        Title="Requests" Height="600" Width="500"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Manage Access Requests" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+        <TextBlock Grid.Row="0" Text="Requests" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"/>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Filter by status:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <ComboBox x:Name="StatusFilterComboBox" Width="200" Padding="5"
+            <TextBlock Text="Filter by Status:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="StatusFilterComboBox" Width="150" Padding="5"
                       SelectionChanged="StatusFilterComboBox_SelectionChanged"/>
+            <TextBlock Text="Sort by Date:" VerticalAlignment="Center" Margin="15,0,10,0"/>
+            <ComboBox x:Name="SortComboBox" Width="120" Padding="5"
+                      SelectionChanged="SortComboBox_SelectionChanged"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="2" x:Name="RequestsDataGrid"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  SelectionMode="Single"
-                  Margin="0,0,0,10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Citizen" Binding="{Binding CitizenFullName}" Width="150"/>
-                <DataGridTextColumn Header="Neighborhood" Binding="{Binding NeighborhoodName}" Width="150"/>
-                <DataGridTextColumn Header="Date" Binding="{Binding CreatedAt, StringFormat=dd.MM.yyyy}" Width="100"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="130"/>
-                <DataGridTextColumn Header="Rejection Reason" Binding="{Binding RejectionReason}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Approve" Click="ApproveButton_Click"
-                    Padding="15,8" Margin="0,0,10,0" FontSize="14"/>
-            <Button Content="Reject" Click="RejectButton_Click"
-                    Padding="15,8" Margin="0,0,10,0" FontSize="14"/>
-            <Button Content="Back" Click="BackButton_Click"
-                    Padding="15,8" FontSize="14"/>
-        </StackPanel>
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl x:Name="RequestsItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5"
+                                Margin="0,0,0,10" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Citizen.Name, StringFormat='Citizen: {0}'}"
+                                           FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Neighborhood.Name, StringFormat='District: {0}'}"/>
+                                <TextBlock Text="{Binding CreatedAt, StringFormat='Date: {0:dd.MM.yyyy.}'}"/>
+                                <TextBlock Text="{Binding Status, StringFormat='Status: {0}'}"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <Button Content="Approve" Padding="10,5" Margin="0,0,10,0"
+                                            Click="ApproveButton_Click" Tag="{Binding}"/>
+                                    <Button Content="Decline" Padding="10,5"
+                                            Click="RejectButton_Click" Tag="{Binding}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -13,24 +13,17 @@ public partial class HomeWindow : Window
         _userId = userId;
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    private void MyDistrictsButton_Click(object sender, RoutedEventArgs e)
     {
-        ProfileWindow profileWindow = new ProfileWindow(_userId);
-        profileWindow.Show();
-        this.Close();
-    }
-
-    private void CountriesButton_Click(object sender, RoutedEventArgs e)
-    {
-        CountriesWindow countriesWindow = new CountriesWindow(this);
-        countriesWindow.Show();
+        RegisterNeighborhoodWindow window = new RegisterNeighborhoodWindow(_userId);
+        window.Show();
         this.Hide();
     }
 
-    private void CitiesButton_Click(object sender, RoutedEventArgs e)
+    private void RequestsButton_Click(object sender, RoutedEventArgs e)
     {
-        CitiesWindow citiesWindow = new CitiesWindow();
-        citiesWindow.Show();
+        ManageRequestsWindow window = new ManageRequestsWindow(_userId);
+        window.Show();
         this.Hide();
     }
 
@@ -39,17 +32,5 @@ public partial class HomeWindow : Window
         LogInForm loginForm = new LogInForm();
         loginForm.Show();
         this.Close();
-    }
-    private void RegisterNeighborhoodButton_Click(object sender, RoutedEventArgs e)
-    {
-        RegisterNeighborhoodWindow window = new RegisterNeighborhoodWindow(_userId);
-        window.Show();
-        this.Hide();
-    }
-    private void ManageRequestsButton_Click(object sender, RoutedEventArgs e)
-    {
-        ManageRequestsWindow window = new ManageRequestsWindow(_userId);
-        window.Show();
-        this.Hide();
     }
 }
