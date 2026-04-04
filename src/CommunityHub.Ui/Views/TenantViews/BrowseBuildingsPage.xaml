@@ -4,8 +4,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:converters="clr-namespace:CommunityHub.Ui.Converters"
-      mc:Ignorable="d"
-      Title="Browse Buildings">
+      xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
+      mc:Ignorable="d">
 
     <Page.Resources>
         <converters:ImagePathConverter x:Key="ImageConverter"/>
@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="#2C3E50" Padding="10,8">
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -30,66 +30,82 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="☰ Menu"
-                        Padding="10,6" Margin="0,0,10,0"
-                        FontSize="13" Foreground="White" Background="Transparent"/>
+                <Button Grid.Column="0" Content="☰  Menu"
+                        Style="{StaticResource GhostWhiteButton}"
+                        Margin="0,0,10,0"
+                        Click="MenuButton_Click"/>
 
-                <TextBox Grid.Column="1" x:Name="SearchTextBox"
-                         Padding="8,6" FontSize="13" Margin="0,0,8,0"
+                <Grid Grid.Column="1" Margin="0,0,8,0">
+                    <TextBox x:Name="SearchTextBox"
+                         Padding="8,6" FontSize="13"
                          TextChanged="SearchTextBox_TextChanged"/>
+                    <TextBlock Text="Search address..."
+                           Foreground="Gray" FontSize="13"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
 
                 <Button Grid.Column="2" Content="Reset All"
-                        Click="ResetButton_Click"
-                        Padding="10,6" Margin="0,0,8,0" FontSize="13"/>
+                        Style="{StaticResource OutlineButton}"
+                        Margin="0,0,8,0"
+                        Click="ResetButton_Click"/>
 
-                <Button Grid.Column="3" Content="▼ Filter"
-                        Click="FilterButton_Click"
-                        Padding="10,6" Margin="0,0,8,0" FontSize="13"/>
+                <Button Grid.Column="3" Content="Filter  ▼"
+                        Style="{StaticResource OutlineButton}"
+                        Margin="0,0,8,0"
+                        Click="FilterButton_Click"/>
 
                 <TextBlock Grid.Column="4" x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="13"
+                           Foreground="White" FontSize="15"
                            Margin="0,0,8,0"/>
 
                 <TextBlock Grid.Column="5" Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"/>
-
-                <!-- OVO JE PRIVREMENO SAMO DA TESTIRAM -->
-                <Button Grid.Column="6" Content="My Requests"
-        Click="MyRequestsButton_Click"
-        Padding="10,6" FontSize="13"
-        Foreground="White" Background="Transparent"/>
+                           Foreground="White" FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Success banner -->
         <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="#DFF0D8" Padding="12,8"
+                Background="{StaticResource SuccessBrush}" Padding="12,8"
                 Visibility="Collapsed">
             <Grid>
-                <TextBlock x:Name="SuccessTextBlock" Foreground="#3C763D" FontSize="13"
-                    VerticalAlignment="Center"/>
+                <TextBlock x:Name="SuccessTextBlock"
+                           Foreground="{StaticResource SuccessTextBrush}" FontSize="13"
+                           VerticalAlignment="Center"/>
                 <Button x:Name="ViewRequestsButton" Content="View Requests →"
-                    HorizontalAlignment="Right"
-                    Background="Transparent" BorderThickness="0"
-                    Foreground="#3C763D" FontWeight="Bold"
-                    Visibility="Collapsed"
-                    Click="ViewRequestsButton_Click"/>
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource GhostButton}"
+                        Foreground="{StaticResource SuccessTextBrush}"
+                        FontWeight="Bold"
+                        Visibility="Collapsed"
+                        Click="ViewRequestsButton_Click"/>
             </Grid>
         </Border>
 
         <!-- Title row -->
         <Grid Grid.Row="2" Margin="16,12,16,8">
             <TextBlock Text="Browse Buildings"
-                       FontSize="20" FontWeight="Bold"
+                       Style="{StaticResource PageTitle}"
                        VerticalAlignment="Center"/>
             <Button Content="📍 Near me"
-                    HorizontalAlignment="Right"
-                    Padding="12,6" FontSize="13"/>
+                    Style="{StaticResource OutlineButton}"
+                    HorizontalAlignment="Right"/>
         </Grid>
 
         <!-- Building list -->
@@ -101,11 +117,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Gray" BorderThickness="1"
-                        CornerRadius="6" Margin="0,0,0,10" Padding="10"
-                        Cursor="Hand"
-                        Tag="{Binding}"
-                        MouseLeftButtonDown="BuildingCard_Click">
+                    <Border Style="{StaticResource CardBorder}"
+                            Cursor="Hand"
+                            Tag="{Binding}"
+                            MouseLeftButtonDown="BuildingCard_Click">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="220"/>
@@ -115,12 +130,14 @@
 
                             <!-- Slika -->
                             <Border Grid.Column="0" Width="210"
-                                BorderBrush="Gray" BorderThickness="1"
-                                Margin="0,0,10,0" Background="LightGray"
-                                VerticalAlignment="Stretch">
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    Margin="0,0,10,0"
+                                    Background="{StaticResource BackgroundLightBrush}"
+                                    VerticalAlignment="Stretch">
                                 <Image Source="{Binding Images, Converter={StaticResource ImageConverter}}"
-                                   Stretch="UniformToFill"
-                                   MaxHeight="160"/>
+                                       Stretch="UniformToFill"
+                                       MaxHeight="160"/>
                             </Border>
 
                             <!-- Info -->
@@ -134,7 +151,7 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <TextBlock FontSize="13" Margin="0,0,0,4">
+                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,0,4">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="📍 {0}, {1}">
                                             <Binding Path="City.Name"/>
@@ -142,23 +159,23 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <TextBlock FontSize="13" Margin="0,0,0,4"
-                                    Text="{Binding NumberOfFloors, StringFormat='Number of floors: {0}'}"/>
-                                <TextBlock FontSize="13"
-                                    Text="{Binding TotalUnits, StringFormat='Total units: {0}'}"/>
+                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,0,4"
+                                           Text="{Binding NumberOfFloors, StringFormat='Number of floors: {0}'}"/>
+                                <TextBlock Style="{StaticResource SecondaryText}"
+                                           Text="{Binding TotalUnits, StringFormat='Total units: {0}'}"/>
                             </StackPanel>
 
                             <!-- Desna strana -->
                             <Grid Grid.Column="2" Margin="10,0,0,0">
-                                <TextBlock Text="›" FontSize="20" 
-                                   HorizontalAlignment="Center" 
-                                   VerticalAlignment="Center"/> 
+                                <TextBlock Text="›" FontSize="20"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
                                 <Button Content="Request Access"
-                                    Padding="12,6" FontSize="13"
-                                    VerticalAlignment="Bottom"
-                                    HorizontalAlignment="Right"
-                                    Tag="{Binding}"
-                                    Click="RequestAccessButton_Click"/>
+                                        Style="{StaticResource OutlineButton}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Tag="{Binding}"
+                                        Click="RequestAccessButton_Click"/>
                             </Grid>
                         </Grid>
                     </Border>
@@ -169,12 +186,14 @@
         <!-- Pagination -->
         <StackPanel Grid.Row="4" Orientation="Horizontal"
                     HorizontalAlignment="Center" Margin="0,10,0,10">
-            <Button Content="&lt;" Click="PrevPageButton_Click"
-                    Padding="10,6" Margin="0,0,4,0" FontSize="13"/>
+            <Button Content="&lt;" Style="{StaticResource OutlineButton}"
+                    Margin="0,0,4,0"
+                    Click="PrevPageButton_Click"/>
             <TextBlock x:Name="PageLabel" Text="Page 1 of 1"
                        VerticalAlignment="Center" Margin="8,0" FontSize="13"/>
-            <Button Content="&gt;" Click="NextPageButton_Click"
-                    Padding="10,6" Margin="4,0,0,0" FontSize="13"/>
+            <Button Content="&gt;" Style="{StaticResource OutlineButton}"
+                    Margin="4,0,0,0"
+                    Click="NextPageButton_Click"/>
         </StackPanel>
 
         <!-- Overlay -->
@@ -190,7 +209,7 @@
                 Width="300"
                 HorizontalAlignment="Left"
                 Background="White"
-                BorderBrush="#CCCCCC"
+                BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,0,1,0">
             <Border.RenderTransform>
                 <TranslateTransform x:Name="FilterPanelTranslate" X="-300"/>
@@ -201,7 +220,7 @@
                     <TextBlock Text="Filter" FontSize="18" FontWeight="Bold"
                                VerticalAlignment="Center"/>
                     <Button Content="✕" HorizontalAlignment="Right"
-                            Background="Transparent" BorderThickness="0"
+                            Style="{StaticResource GhostButton}"
                             FontSize="16" Click="FilterButton_Click"/>
                 </Grid>
 
@@ -232,14 +251,15 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Content="Reset Filters"
-                            Padding="0,8" FontSize="13"
+                            Style="{StaticResource OutlineButton}"
                             Click="ResetFiltersButton_Click"/>
                     <Button Grid.Column="2" Content="Apply Filters"
-                            Padding="0,8" FontSize="13"
-                            Background="#2C3E50" Foreground="White"
+                            Style="{StaticResource PrimaryButton}"
                             Click="ApplyFiltersButton_Click"/>
                 </Grid>
             </StackPanel>
         </Border>
+
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="5" x:Name="AppMenu"/>
     </Grid>
 </Page>

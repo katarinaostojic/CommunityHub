@@ -25,6 +25,7 @@ public partial class MyRequestsPage : Page
         UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
         LoadRequests();
         UpdateFilterButtons();
+        AppMenu.Initialize(_user);
     }
 
     private void LoadRequests()
@@ -101,7 +102,7 @@ public partial class MyRequestsPage : Page
         _requestService.Delete(request.Id);
         LoadRequests();
         UpdateFilterButtons();
-        Banner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
+        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
     private bool ConfirmCancellation(BuildingAccessRequest request)
@@ -109,5 +110,10 @@ public partial class MyRequestsPage : Page
         CancelConfirmDialog dialog = new CancelConfirmDialog(request.Building.Street, request.Building.StreetNumber);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
+    }
+
+    private void MenuButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppMenu.Open();
     }
 }

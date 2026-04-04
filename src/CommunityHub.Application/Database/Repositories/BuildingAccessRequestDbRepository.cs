@@ -31,7 +31,7 @@ public class BuildingAccessRequestDbRepository
         AddParameter(command, "@userId", userId);
         AddParameter(command, "@buildingId", buildingId);
         AddParameter(command, "@unitNumber", unitNumber);
-        AddParameter(command, "@createdAt", DateTime.Today);
+        AddParameter(command, "@createdAt", DateTime.UtcNow);
 
         command.ExecuteNonQuery();
     }
@@ -142,6 +142,16 @@ public class BuildingAccessRequestDbRepository
         IDbDataParameter param = command.CreateParameter();
         param.ParameterName = name;
         param.Value = value;
+        command.Parameters.Add(param);
+    }
+
+    //DateTime
+    private void AddParameter(IDbCommand command, string name, DateTime value)
+    {
+        IDbDataParameter param = command.CreateParameter();
+        param.ParameterName = name;
+        param.Value = value;
+        param.DbType = DbType.DateTime;
         command.Parameters.Add(param);
     }
 

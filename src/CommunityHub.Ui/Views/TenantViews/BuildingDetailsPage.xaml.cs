@@ -21,10 +21,10 @@ public partial class BuildingDetailsPage : Page
     public BuildingDetailsPage(Building building, User user)
     {
         InitializeComponent();
-        _building = building;
-        _user = user;
         _buildingService = new BuildingService();
         _requestService = new BuildingAccessRequestService();
+        _building = _buildingService.GetById(building.Id) ?? building;
+        _user = user;
         LoadBuildingDetails();
     }
 
@@ -34,6 +34,7 @@ public partial class BuildingDetailsPage : Page
         DisplayInfoCards();
         DisplayCurrentImage();
         UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
+        AppMenu.Initialize(_user);
     }
 
     private void DisplayAddress()
@@ -97,10 +98,10 @@ public partial class BuildingDetailsPage : Page
     {
         if (!ShowRequestAccessDialog(_building)) return;
 
-        Banner.ShowSuccess(SuccessBanner, SuccessTextBlock,
-            $"✔ Request Sent! ");
-
+        DisplayInfoCards();
         ViewRequestsButton.Visibility = Visibility.Visible;
+        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+            $"✔ Request Sent Successfully!");
     }
 
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e)
@@ -118,5 +119,10 @@ public partial class BuildingDetailsPage : Page
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
         NavigationService.GoBack();
+    }
+
+    private void MenuButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppMenu.Open();
     }
 }

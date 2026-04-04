@@ -14,7 +14,7 @@ CREATE TABLE building_access_requests (
     user_id BIGINT NOT NULL,
     building_id BIGINT NOT NULL,
     unit_number VARCHAR(20) NOT NULL,
-    created_at DATE NOT NULL,
+    created_at TIMESTAMP NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'pending approval',
     rejection_reason VARCHAR(500),
     FOREIGN KEY (user_id) REFERENCES users(id),

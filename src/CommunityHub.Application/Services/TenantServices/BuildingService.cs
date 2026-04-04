@@ -29,4 +29,14 @@ public class BuildingService
         List<string> occupiedUnits = _repository.GetOccupiedUnits(building.Id);
         return building.TotalUnits - occupiedUnits.Count;
     }
+
+    public List<BuildingMembership> GetMembershipsByTenant(long userId)
+    {
+        return _repository.GetMembershipsByTenant(userId);
+    }
+
+    public Building? GetById(long buildingId)
+    {
+        return _repository.GetById(buildingId);
+    }
 }

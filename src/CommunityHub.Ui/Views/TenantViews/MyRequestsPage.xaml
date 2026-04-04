@@ -3,8 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      mc:Ignorable="d"
-      Title="My Requests">
+      xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
+      mc:Ignorable="d">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="#2C3E50" Padding="10,8">
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -32,36 +32,39 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="☰ Menu"
-                        Padding="10,6" Margin="0,0,10,0"
-                        FontSize="13" Foreground="White" Background="Transparent"/>
+                <Button Grid.Column="0" Content="☰  Menu"
+                        Style="{StaticResource GhostWhiteButton}"
+                        Margin="0,0,10,0"
+                        Click="MenuButton_Click"/>
 
                 <TextBlock Grid.Column="4" x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="13"
+                           Foreground="White" FontSize="15"
                            Margin="0,0,8,0"/>
 
                 <TextBlock Grid.Column="5" Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"/>
+                           Foreground="White" FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Success banner -->
         <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="#DFF0D8" Padding="12,8"
+                Background="{StaticResource SuccessBrush}" Padding="12,8"
                 Visibility="Collapsed">
             <TextBlock x:Name="SuccessTextBlock"
-                       Foreground="#3C763D" FontSize="13"/>
+                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
         </Border>
 
         <!-- Title i sort -->
         <Grid Grid.Row="2" Margin="16,12,16,8">
-            <TextBlock Text="My Requests" FontSize="20" FontWeight="Bold"
-                       TextDecorations="Underline" VerticalAlignment="Center"/>
+            <TextBlock Text="My Requests"
+                       Style="{StaticResource PageTitle}"
+                       TextDecorations="Underline"
+                       VerticalAlignment="Center"/>
             <Button x:Name="SortButton" Content="Sort by Date ↓"
+                    Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Right"
-                    Padding="12,6" FontSize="13"
                     Click="SortButton_Click"/>
         </Grid>
 
@@ -70,30 +73,33 @@
             <TextBlock Text="Filters:" FontSize="13" FontWeight="SemiBold"
                        VerticalAlignment="Center" Margin="0,0,8,0"/>
             <Button x:Name="FilterAllButton" Content="All"
-                    Padding="12,6" Margin="0,0,6,0" FontSize="13"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
                     Click="FilterAllButton_Click"/>
             <Button x:Name="FilterPendingButton" Content="Pending approval"
-                    Padding="12,6" Margin="0,0,6,0" FontSize="13"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
                     Click="FilterPendingButton_Click"/>
             <Button x:Name="FilterAcceptedButton" Content="Accepted"
-                    Padding="12,6" Margin="0,0,6,0" FontSize="13"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
                     Click="FilterAcceptedButton_Click"/>
             <Button x:Name="FilterRejectedButton" Content="Rejected"
-                    Padding="12,6" FontSize="13"
+                    Style="{StaticResource FilterChipButton}"
                     Click="FilterRejectedButton_Click"/>
         </StackPanel>
 
         <!-- Showing X results -->
         <TextBlock Grid.Row="4" x:Name="ResultsCountText"
-           FontSize="12" Foreground="Gray" Margin="16,0,16,8"/>
+                   Style="{StaticResource SecondaryText}"
+                   Margin="16,0,16,8"/>
 
         <!-- Lista zahteva -->
         <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
             <ItemsControl x:Name="RequestsPanel">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="#CCCCCC" BorderThickness="1"
-                                CornerRadius="6" Margin="0,0,0,10" Padding="16">
+                        <Border Style="{StaticResource CardBorder}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -105,11 +111,8 @@
 
                                 <!-- Status badge -->
                                 <Border Grid.Row="0" HorizontalAlignment="Right"
-                                        BorderBrush="#CCCCCC" BorderThickness="1,1,1,1"
-                                        CornerRadius="4" Padding="8,4"
-                                        Background="Transparent">
-                                    <TextBlock Text="{Binding StatusDisplay}"
-                                               FontSize="12"/>
+                                        Style="{StaticResource StatusBadge}">
+                                    <TextBlock Text="{Binding StatusDisplay}" FontSize="13"/>
                                 </Border>
 
                                 <!-- Adresa -->
@@ -121,7 +124,8 @@
                                            Text="{Binding Building.Neighborhood}"/>
 
                                 <!-- Grad, Drzava -->
-                                <TextBlock Grid.Row="2" FontSize="13" Margin="0,2,0,8">
+                                <TextBlock Grid.Row="2" Style="{StaticResource SecondaryText}"
+                                           Margin="0,2,0,8">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0}, {1}">
                                             <Binding Path="Building.City.Name"/>
@@ -138,30 +142,31 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Unit:" FontSize="12" Foreground="Gray"/>
+                                        <TextBlock Text="Unit:" Style="{StaticResource SecondaryText}"/>
                                         <TextBlock Text="{Binding UnitNumber}" FontSize="13"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
-                                        <TextBlock Text="Submission Date:" FontSize="12" Foreground="Gray"/>
+                                        <TextBlock Text="Submission Date:" Style="{StaticResource SecondaryText}"/>
                                         <TextBlock Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy}" FontSize="13"/>
                                     </StackPanel>
                                 </Grid>
 
                                 <!-- Rejection reason -->
-                                <TextBlock Grid.Row="4" x:Name="RejectionReasonText"
+                                <TextBlock Grid.Row="4"
                                            Text="{Binding RejectionReasonDisplay}"
-                                           FontSize="12" Foreground="Gray" FontStyle="Italic"
+                                           Style="{StaticResource SecondaryText}"
+                                           FontStyle="Italic"
                                            Margin="0,0,0,6"
                                            Visibility="{Binding RejectionReasonVisible, Converter={StaticResource BoolToVis}}"/>
 
                                 <!-- Akcije -->
                                 <Grid Grid.Row="5">
                                     <Button Content="Cancel request"
-                                        Padding="10,6" FontSize="13"
-                                        HorizontalAlignment="Right"
-                                        Tag="{Binding}"
-                                        Visibility="{Binding CancelButtonVisible, Converter={StaticResource BoolToVis}}"
-                                        Click="CancelRequestButton_Click"/>
+                                            Style="{StaticResource DangerButton}"
+                                            HorizontalAlignment="Right"
+                                            Tag="{Binding}"
+                                            Visibility="{Binding CancelButtonVisible, Converter={StaticResource BoolToVis}}"
+                                            Click="CancelRequestButton_Click"/>
                                 </Grid>
                             </Grid>
                         </Border>
@@ -169,5 +174,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
     </Grid>
 </Page>

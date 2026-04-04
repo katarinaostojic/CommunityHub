@@ -66,9 +66,22 @@ public partial class RequestAccessDialog : Window
             return;
         }
 
+        if (!IsValidUnit(unitNumber))
+        {
+            MessageBox.Show("Please select a valid apartment number from the list.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         _requestService.Create(_user.Id, _building.Id, unitNumber);
         DialogResult = true;
         Close();
+    }
+
+    private bool IsValidUnit(string unitNumber)
+    {
+        return _building.Floors
+            .SelectMany(f => f.Units)
+            .Any(u => u.UnitNumber == unitNumber);
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
