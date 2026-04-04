@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
       mc:Ignorable="d"
       Title="My Requests">
 
@@ -34,7 +35,8 @@
 
                 <Button Grid.Column="0" Content="☰ Menu"
                         Padding="10,6" Margin="0,0,10,0"
-                        FontSize="13" Foreground="White" Background="Transparent"/>
+                        FontSize="13" Foreground="White" Background="Transparent"
+                        Click="MenuButton_Click"/>
 
                 <TextBlock Grid.Column="4" x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
@@ -169,5 +171,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
     </Grid>
 </Page>

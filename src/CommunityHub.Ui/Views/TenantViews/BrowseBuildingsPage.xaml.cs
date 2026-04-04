@@ -33,6 +33,7 @@ public partial class BrowseBuildingsPage : Page
         _user = user;
         LoadBuildings();
         UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
+        AppMenu.Initialize(_user);
     }
 
     private void LoadBuildings()
@@ -68,6 +69,11 @@ public partial class BrowseBuildingsPage : Page
             : _buildingService.Search(search, null, null, null);
         _currentPage = 1;
         DisplayBuildings();
+    }
+
+    private void MenuButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppMenu.Open();
     }
 
     private void FilterButton_Click(object sender, RoutedEventArgs e)
