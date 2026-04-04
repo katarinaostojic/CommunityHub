@@ -5,7 +5,8 @@
     name VARCHAR(100) NOT NULL,
     surname VARCHAR(100) NOT NULL,
     birthday DATE NOT NULL,
-    role VARCHAR(20) NOT NULL
+    role VARCHAR(20) NOT NULL,
+    address VARCHAR(200)
 );
 
 CREATE TABLE posts (

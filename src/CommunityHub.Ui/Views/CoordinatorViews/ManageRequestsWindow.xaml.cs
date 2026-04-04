@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
 
@@ -20,10 +21,14 @@ public partial class ManageRequestsWindow : Window
     private void LoadStatusFilter()
     {
         StatusFilterComboBox.Items.Add("All");
-        StatusFilterComboBox.Items.Add("ceka odobrenje");
-        StatusFilterComboBox.Items.Add("prihvaćen");
-        StatusFilterComboBox.Items.Add("odbijen");
+        StatusFilterComboBox.Items.Add(RequestStatus.PendingApproval.ToString());
+        StatusFilterComboBox.Items.Add(RequestStatus.Approved.ToString());
+        StatusFilterComboBox.Items.Add(RequestStatus.Rejected.ToString());
         StatusFilterComboBox.SelectedIndex = 0;
+
+        SortComboBox.Items.Add("Newest First");
+        SortComboBox.Items.Add("Oldest First");
+        SortComboBox.SelectedIndex = 0;
     }
 
     private void LoadRequests()
@@ -33,17 +38,28 @@ public partial class ManageRequestsWindow : Window
             : StatusFilterComboBox.SelectedItem?.ToString();
 
         var requests = _repository.GetRequestsByCoordinator(_coordinatorId, filter);
-        RequestsDataGrid.ItemsSource = requests;
+
+        if (SortComboBox.SelectedItem?.ToString() == "Oldest First")
+            requests = requests.OrderBy(r => r.CreatedAt).ToList();
+        else
+            requests = requests.OrderByDescending(r => r.CreatedAt).ToList();
+
+        RequestsItemsControl.ItemsSource = requests;
     }
 
-    private void StatusFilterComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        LoadRequests();
+    }
+
+    private void SortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         LoadRequests();
     }
 
     private void ApproveButton_Click(object sender, RoutedEventArgs e)
     {
-        NeighborhoodAccessRequest? selected = RequestsDataGrid.SelectedItem as NeighborhoodAccessRequest;
+        NeighborhoodAccessRequest? selected = (sender as Button)?.Tag as NeighborhoodAccessRequest;
 
         if (selected == null)
         {
@@ -51,20 +67,20 @@ public partial class ManageRequestsWindow : Window
             return;
         }
 
-        if (selected.Status != "ceka odobrenje")
+        if (selected.Status != RequestStatus.PendingApproval)
         {
             MessageBox.Show("Only pending requests can be approved.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        _repository.ApproveRequest(selected.Id, selected.CitizenId, selected.NeighborhoodId);
+        _repository.ApproveRequest(selected.Id, selected.Citizen.Id, selected.Neighborhood.Id);
         MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         LoadRequests();
     }
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        NeighborhoodAccessRequest? selected = RequestsDataGrid.SelectedItem as NeighborhoodAccessRequest;
+        NeighborhoodAccessRequest? selected = (sender as Button)?.Tag as NeighborhoodAccessRequest;
 
         if (selected == null)
         {
@@ -72,7 +88,7 @@ public partial class ManageRequestsWindow : Window
             return;
         }
 
-        if (selected.Status != "ceka odobrenje")
+        if (selected.Status != RequestStatus.PendingApproval)
         {
             MessageBox.Show("Only pending requests can be rejected.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;

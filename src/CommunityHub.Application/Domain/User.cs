@@ -9,9 +9,10 @@ public class User
     public string Surname { get; private set; }
     public DateTime BirthDay { get; private set; }
     public string Role { get; private set; }
+    public string? Address { get; private set; }
     public List<Post>? Posts { get; private set; }
 
-    public User(long id, string username, string password, string name, string surname, DateTime birthDay, string role)
+    public User(long id, string username, string password, string name, string surname, DateTime birthDay, string role, string? address = null)
     {
         Id = id;
         Username = username;
@@ -20,6 +21,7 @@ public class User
         Surname = surname;
         BirthDay = birthDay;
         Role = role;
+        Address = address;
         Posts = null;
     }
 
