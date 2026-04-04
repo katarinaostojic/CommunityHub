@@ -1,7 +1,6 @@
 ﻿<Window x:Class="CommunityHub.Ui.Views.TenantViews.RequestAccessDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Request Access"
         Width="500" SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">

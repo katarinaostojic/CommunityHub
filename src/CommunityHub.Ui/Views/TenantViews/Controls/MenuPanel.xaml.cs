@@ -26,6 +26,10 @@ public partial class MenuPanel : UserControl
     public void Initialize(User user)
     {
         _user = user;
+        //reset za my buildings na my building details stranici
+        MyBuildingsToggle.IsChecked = false;
+        MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
+        MyBuildingsArrow.Text = "∨";
         LoadMemberships();
     }
 
@@ -95,14 +99,19 @@ public partial class MenuPanel : UserControl
     private void MyBuildingsToggle_Checked(object sender, RoutedEventArgs e)
     {
         MyBuildingsScrollViewer.Visibility = Visibility.Visible;
-        MyBuildingsArrow.Text = "∧";
+        MyBuildingsArrow.Text = "▲";
     }
 
     private void MyBuildingsToggle_Unchecked(object sender, RoutedEventArgs e)
     {
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
-        MyBuildingsArrow.Text = "∨";
+        MyBuildingsArrow.Text = "▼";
     }
 
-
+    private void BuildingName_Click(object sender, MouseButtonEventArgs e)
+    {
+        BuildingMembership membership = (BuildingMembership)((Border)sender).Tag;
+        Close();
+        NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(membership.Building, _user));
+    }
 }

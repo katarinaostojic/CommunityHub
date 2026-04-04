@@ -1,7 +1,6 @@
 ﻿<Window x:Class="CommunityHub.Ui.Views.TenantViews.CancelConfirmDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Cancel Request"
         Width="450" SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
@@ -24,7 +23,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Cancel Request"
-                    Style="{StaticResource OutlineButtonBold}"
+                    Style="{StaticResource PrimaryButton}"
                     HorizontalAlignment="Stretch"
                     Click="ConfirmButton_Click"/>
             <Button Grid.Column="2" Content="Go back"

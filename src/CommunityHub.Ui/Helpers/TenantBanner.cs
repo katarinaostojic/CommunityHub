@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace CommunityHub.Ui.Helpers;
 
-public static class Banner
+public static class TenantBanner
 {
     public static void ShowSuccess(Border banner, TextBlock text, string message)
     {

@@ -102,7 +102,7 @@ public partial class MyRequestsPage : Page
         _requestService.Delete(request.Id);
         LoadRequests();
         UpdateFilterButtons();
-        Banner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
+        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
     private bool ConfirmCancellation(BuildingAccessRequest request)

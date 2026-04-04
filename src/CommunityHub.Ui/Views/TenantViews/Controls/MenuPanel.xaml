@@ -71,7 +71,7 @@
                 <!-- Header bar -->
                 <Border Background="#2C3E50" Padding="16,12">
                     <Grid>
-                        <TextBlock Text="☰ Menu"
+                        <TextBlock Text="☰  Menu"
                                    Foreground="White" FontSize="16" FontWeight="Bold"
                                    VerticalAlignment="Center"/>
                         <Button Content="✕"
@@ -120,7 +120,10 @@
                             <DataTemplate>
                                 <StackPanel Margin="0,4,0,8">
                                     <Border Background="#F5F5F5" Margin="16,0,16,4"
-                                            CornerRadius="4" Padding="12,8">
+                                            CornerRadius="4" Padding="12,8"
+                                            Cursor="Hand"
+                                            Tag="{Binding}"
+                                            MouseLeftButtonDown="BuildingName_Click">
                                         <TextBlock FontSize="13" FontWeight="SemiBold">
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} {1}">

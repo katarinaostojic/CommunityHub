@@ -162,7 +162,7 @@ public partial class BrowseBuildingsPage : Page
 
         if (!ShowRequestAccessDialog(building)) return;
 
-        Banner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
 
         ViewRequestsButton.Visibility = Visibility.Visible;

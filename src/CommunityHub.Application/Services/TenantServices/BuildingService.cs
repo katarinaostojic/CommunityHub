@@ -34,4 +34,9 @@ public class BuildingService
     {
         return _repository.GetMembershipsByTenant(userId);
     }
+
+    public Building? GetById(long buildingId)
+    {
+        return _repository.GetById(buildingId);
+    }
 }
