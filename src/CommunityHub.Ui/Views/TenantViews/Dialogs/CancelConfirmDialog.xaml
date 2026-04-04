@@ -24,10 +24,12 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Cancel Request"
-                    Padding="0,10" FontSize="13"
+                    Style="{StaticResource OutlineButtonBold}"
+                    HorizontalAlignment="Stretch"
                     Click="ConfirmButton_Click"/>
             <Button Grid.Column="2" Content="Go back"
-                    Padding="0,10" FontSize="13"
+                    Style="{StaticResource OutlineButton}"
+                    HorizontalAlignment="Stretch"
                     Click="GoBackButton_Click"/>
         </Grid>
     </StackPanel>

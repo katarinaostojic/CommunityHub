@@ -10,7 +10,7 @@
 
         <!-- Naslov -->
         <TextBlock x:Name="TitleTextBlock"
-                   FontSize="18" FontWeight="Bold"
+                   Style="{StaticResource PageTitle}"
                    Margin="0,0,0,20"/>
 
         <!-- Ikonica i opis -->
@@ -23,7 +23,8 @@
 
         <!-- Info o zgradi -->
         <TextBlock x:Name="BuildingInfoTextBlock"
-                   FontSize="13" Margin="0,0,0,16"/>
+                   Style="{StaticResource SecondaryText}"
+                   Margin="0,0,0,16"/>
 
         <!-- Unos broja stana -->
         <TextBlock Text="Enter Apartment Number:" FontWeight="SemiBold"
@@ -40,13 +41,15 @@
                     Visibility="Collapsed" Margin="0,0,0,12">
             <TextBlock Text="⚠️" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Top"/>
             <TextBlock x:Name="WarningTextBlock"
-                       Foreground="Red" FontSize="13"
+                       Foreground="{StaticResource DangerBrush}"
+                       FontSize="13"
                        TextWrapping="Wrap" Width="380"/>
         </StackPanel>
 
         <!-- Napomena -->
         <TextBlock Text="Make sure to provide correct details as your request must be approved by the building administrator."
-                   FontSize="12" Foreground="Gray" FontStyle="Italic"
+                   Style="{StaticResource SecondaryText}"
+                   FontStyle="Italic"
                    TextWrapping="Wrap" Margin="0,0,0,24"/>
 
         <!-- Dugmad -->
@@ -57,11 +60,12 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Send Request"
-                    Padding="0,10" FontSize="13"
-                    Background="#2C3E50" Foreground="White"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Stretch"
                     Click="SendRequestButton_Click"/>
             <Button Grid.Column="2" Content="Cancel"
-                    Padding="0,10" FontSize="13"
+                    Style="{StaticResource OutlineButton}"
+                    HorizontalAlignment="Stretch"
                     Click="CancelButton_Click"/>
         </Grid>
 

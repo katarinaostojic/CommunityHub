@@ -69,6 +69,7 @@ public partial class MenuPanel : UserControl
     private void BrowseBuildingsMenuItem_Click(object sender, RoutedEventArgs e)
     {
         Close();
+        NavigationService.GetNavigationService(this)?.Navigate(new BrowseBuildingsPage(_user));
     }
 
     private void MyRequestsMenuItem_Click(object sender, RoutedEventArgs e)
@@ -102,4 +103,6 @@ public partial class MenuPanel : UserControl
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
         MyBuildingsArrow.Text = "∨";
     }
+
+
 }
