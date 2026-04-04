@@ -30,7 +30,6 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0" Content="☰ Menu"
@@ -57,12 +56,6 @@
                 <TextBlock Grid.Column="5" Text="👤"
                            VerticalAlignment="Center"
                            Foreground="White" FontSize="15"/>
-
-                <!-- OVO JE PRIVREMENO SAMO DA TESTIRAM -->
-                <Button Grid.Column="6" Content="My Requests"
-        Click="MyRequestsButton_Click"
-        Padding="10,6" FontSize="13"
-        Foreground="White" Background="Transparent"/>
             </Grid>
         </Border>
 

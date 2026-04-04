@@ -173,4 +173,65 @@ public class BuildingDbRepository
 
         return occupiedUnits;
     }
+
+    //Building membership
+
+    public List<BuildingMembership> GetMembershipsByTenant(long userId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
+               b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+               c.id AS city_id, c.name AS city_name,
+               co.id AS country_id, co.name AS country_name, co.code AS country_code,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM building_memberships bm
+        JOIN buildings b ON bm.building_id = b.id
+        JOIN cities c ON b.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        JOIN users u ON bm.user_id = u.id
+        WHERE bm.user_id = @userId
+        ORDER BY bm.approved_at DESC";
+
+        AddParameter(command, "@userId", userId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadMemberships(reader);
+    }
+
+    private List<BuildingMembership> ReadMemberships(IDataReader reader)
+    {
+        List<BuildingMembership> memberships = new List<BuildingMembership>();
+        while (reader.Read())
+            memberships.Add(MapMembership(reader));
+        return memberships;
+    }
+
+    private User MapUser(IDataReader reader)
+    {
+        return new User(
+            Convert.ToInt64(reader["user_id"]),
+            reader["username"].ToString(),
+            reader["password"].ToString(),
+            reader["name"].ToString(),
+            reader["surname"].ToString(),
+            DateTime.Parse(reader["birthday"].ToString()),
+            reader["role"].ToString()
+        );
+    }
+
+    private BuildingMembership MapMembership(IDataReader reader)
+    {
+        Building building = MapBuilding(reader);
+        User user = MapUser(reader);
+        return new BuildingMembership(
+            Convert.ToInt64(reader["id"]),
+            building,
+            user,
+            reader["unit_number"].ToString(),
+            Convert.ToInt32(reader["floor_number"]),
+            DateTime.Parse(reader["approved_at"].ToString())
+        );
+    }
 }
