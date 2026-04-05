@@ -7,10 +7,10 @@ public class BuildingAccessRequest
     public Building Building { get; private set; }
     public string UnitNumber { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public string Status { get; private set; }
+    public RequestStatus Status { get; private set; }
     public string? RejectionReason { get; private set; }
 
-    public BuildingAccessRequest(long id, User user, Building building, string unitNumber, DateTime createdAt, string status, string? rejectionReason = null)
+    public BuildingAccessRequest(long id, User user, Building building, string unitNumber, DateTime createdAt, RequestStatus status, string? rejectionReason = null)
     {
         Id = id;
         User = user;
@@ -21,21 +21,19 @@ public class BuildingAccessRequest
         RejectionReason = rejectionReason;
     }
 
-    //nije bas najbolje da stoji u domenskoj klasi
-
     public string StatusDisplay => Status switch
     {
-        "pending approval" => "⏳ Pending approval",
-        "accepted" => "✔ Accepted",
-        "rejected" => "✕ Rejected",
-        _ => Status
+        RequestStatus.PendingApproval => "⏳ Pending approval",
+        RequestStatus.Approved => "✔ Approved",
+        RequestStatus.Rejected => "✕ Rejected",
+        _ => Status.ToString()
     };
 
     public string RejectionReasonDisplay => RejectionReason != null
         ? $"Note: {RejectionReason}"
         : string.Empty;
 
-    public bool CancelButtonVisible => Status == "pending approval";
+    public bool CancelButtonVisible => Status == RequestStatus.PendingApproval;
 
-    public bool RejectionReasonVisible => Status == "rejected" && RejectionReason != null;
+    public bool RejectionReasonVisible => Status == RequestStatus.Rejected && RejectionReason != null;
 }

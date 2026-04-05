@@ -80,10 +80,10 @@
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterPendingButton_Click"/>
-            <Button x:Name="FilterAcceptedButton" Content="Accepted"
+            <Button x:Name="FilterApprovedButton" Content="Approved"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
-                    Click="FilterAcceptedButton_Click"/>
+                    Click="FilterApprovedButton_Click"/>
             <Button x:Name="FilterRejectedButton" Content="Rejected"
                     Style="{StaticResource FilterChipButton}"
                     Click="FilterRejectedButton_Click"/>

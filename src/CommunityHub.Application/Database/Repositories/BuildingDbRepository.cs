@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Mappers;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 using System.Data;
 
@@ -6,6 +7,13 @@ namespace CommunityHub.Application.Database.Repositories;
 
 public class BuildingDbRepository
 {
+    private readonly ImageDbRepository _imageRepository;
+
+    public BuildingDbRepository()
+    {
+        _imageRepository = new ImageDbRepository();
+    }
+
     public List<Building> GetAll()
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -15,18 +23,18 @@ public class BuildingDbRepository
                    c.id AS city_id, c.name AS city_name,
                    co.id AS country_id, co.name AS country_name, co.code AS country_code,
                    f.id AS floor_id, f.floor_number,
-                   u.id AS unit_id, u.unit_number,
-                   i.id AS image_id, i.path AS image_path
+                   u.id AS unit_id, u.unit_number
             FROM buildings b
             JOIN cities c ON b.city_id = c.id
             JOIN countries co ON c.country_id = co.id
             LEFT JOIN floors f ON f.building_id = b.id
             LEFT JOIN units u ON u.floor_id = f.id
-            LEFT JOIN images i ON i.resource_id = b.id AND i.resource = 'building'
             ORDER BY b.id, f.floor_number, u.unit_number";
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadBuildings(reader);
+        List<Building> buildings = ReadBuildings(reader);
+        AttachImages(buildings);
+        return buildings;
     }
 
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
@@ -34,24 +42,22 @@ public class BuildingDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-                SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                       c.id AS city_id, c.name AS city_name,
-                       co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                       f.id AS floor_id, f.floor_number,
-                       u.id AS unit_id, u.unit_number,
-                       i.id AS image_id, i.path AS image_path
-                FROM buildings b
-                JOIN cities c ON b.city_id = c.id
-                JOIN countries co ON c.country_id = co.id
-                LEFT JOIN floors f ON f.building_id = b.id
-                LEFT JOIN units u ON u.floor_id = f.id
-                LEFT JOIN images i ON i.resource_id = b.id AND i.resource = 'building'
-                WHERE (@street IS NULL OR b.street ILIKE '%' || @street || '%'
-                       OR b.street_number ILIKE '%' || @street || '%')
-                  AND (@neighborhood IS NULL OR b.neighborhood ILIKE '%' || @neighborhood || '%')
-                  AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
-                  AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
-                ORDER BY b.id, f.floor_number, u.unit_number";
+            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+                   c.id AS city_id, c.name AS city_name,
+                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
+                   f.id AS floor_id, f.floor_number,
+                   u.id AS unit_id, u.unit_number
+            FROM buildings b
+            JOIN cities c ON b.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            LEFT JOIN floors f ON f.building_id = b.id
+            LEFT JOIN units u ON u.floor_id = f.id
+            WHERE (@street IS NULL OR b.street ILIKE '%' || @street || '%'
+                   OR b.street_number ILIKE '%' || @street || '%')
+              AND (@neighborhood IS NULL OR b.neighborhood ILIKE '%' || @neighborhood || '%')
+              AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
+              AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
+            ORDER BY b.id, f.floor_number, u.unit_number";
 
         AddParameter(command, "@street", street);
         AddParameter(command, "@neighborhood", neighborhood);
@@ -59,14 +65,109 @@ public class BuildingDbRepository
         AddParameter(command, "@country", country);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadBuildings(reader);
+        List<Building> buildings = ReadBuildings(reader);
+        AttachImages(buildings);
+        return buildings;
+    }
+
+    public Building? GetById(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+                   c.id AS city_id, c.name AS city_name,
+                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
+                   f.id AS floor_id, f.floor_number,
+                   u.id AS unit_id, u.unit_number
+            FROM buildings b
+            JOIN cities c ON b.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            LEFT JOIN floors f ON f.building_id = b.id
+            LEFT JOIN units u ON u.floor_id = f.id
+            WHERE b.id = @buildingId
+            ORDER BY f.floor_number, u.unit_number";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<Building> buildings = ReadBuildings(reader);
+
+        if (buildings.Count == 0) return null;
+
+        Building building = buildings[0];
+        foreach (AppImage image in _imageRepository.GetByResource("building", buildingId))
+            building.AddImage(image);
+
+        return building;
+    }
+
+    public List<BuildingMembership> GetMembershipsByTenant(long userId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
+                   b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+                   c.id AS city_id, c.name AS city_name,
+                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
+                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+            FROM building_memberships bm
+            JOIN buildings b ON bm.building_id = b.id
+            JOIN cities c ON b.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            JOIN users u ON bm.user_id = u.id
+            WHERE bm.user_id = @userId
+            ORDER BY bm.approved_at DESC";
+
+        AddParameter(command, "@userId", userId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<BuildingMembership> memberships = ReadMemberships(reader);
+
+        Dictionary<long, List<AppImage>> imageMap =
+            _imageRepository.GetByResources("building", memberships.Select(m => m.Building.Id));
+        foreach (BuildingMembership m in memberships)
+            foreach (AppImage image in imageMap[m.Building.Id])
+                m.Building.AddImage(image);
+
+        return memberships;
+    }
+
+    public List<string> GetOccupiedUnits(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT unit_number FROM building_memberships
+            WHERE building_id = @buildingId";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<string> occupiedUnits = new List<string>();
+        while (reader.Read())
+            occupiedUnits.Add(reader["unit_number"].ToString()!);
+
+        return occupiedUnits;
+    }
+
+    private void AttachImages(List<Building> buildings)
+    {
+        if (buildings.Count == 0) return;
+
+        Dictionary<long, List<AppImage>> imageMap =
+            _imageRepository.GetByResources("building", buildings.Select(b => b.Id));
+
+        foreach (Building building in buildings)
+            foreach (AppImage image in imageMap[building.Id])
+                building.AddImage(image);
     }
 
     private List<Building> ReadBuildings(IDataReader reader)
     {
         Dictionary<long, Building> buildings = new Dictionary<long, Building>();
         Dictionary<long, Floor> floors = new Dictionary<long, Floor>();
-        HashSet<long> addedImages = new HashSet<long>();
         HashSet<long> addedUnits = new HashSet<long>();
 
         while (reader.Read())
@@ -74,38 +175,34 @@ public class BuildingDbRepository
             long buildingId = Convert.ToInt64(reader["id"]);
 
             if (!buildings.ContainsKey(buildingId))
-                buildings[buildingId] = MapBuilding(reader);
+                buildings[buildingId] = BuildingMapper.Map(reader);
 
             AddFloorIfMissing(reader, buildings, floors);
             AddUnitIfMissing(reader, floors, addedUnits);
-            AddImageIfMissing(reader, buildings, addedImages);
         }
 
         return buildings.Values.ToList();
     }
 
-    private Building MapBuilding(IDataReader reader)
+    private List<BuildingMembership> ReadMemberships(IDataReader reader)
     {
-        Country country = new Country(
-            Convert.ToInt64(reader["country_id"]),
-            reader["country_name"].ToString(),
-            reader["country_code"].ToString()
-        );
+        Dictionary<long, BuildingMembership> memberships = new Dictionary<long, BuildingMembership>();
 
-        City city = new City(
-            Convert.ToInt64(reader["city_id"]),
-            reader["city_name"].ToString(),
-            country
-        );
+        while (reader.Read())
+        {
+            long buildingId = Convert.ToInt64(reader["building_id"]);
+            if (!memberships.ContainsKey(buildingId))
+                memberships[buildingId] = new BuildingMembership(
+                    Convert.ToInt64(reader["id"]),
+                    BuildingMapper.MapFromJoin(reader),
+                    UserMapper.Map(reader),
+                    reader["unit_number"].ToString()!,
+                    Convert.ToInt32(reader["floor_number"]),
+                    DateTime.Parse(reader["approved_at"].ToString()!)
+                );
+        }
 
-        return new Building(
-            Convert.ToInt64(reader["id"]),
-            reader["street"].ToString(),
-            reader["street_number"].ToString(),
-            reader["neighborhood"].ToString(),
-            city,
-            Convert.ToInt32(reader["number_of_floors"])
-        );
+        return memberships.Values.ToList();
     }
 
     private void AddFloorIfMissing(IDataReader reader, Dictionary<long, Building> buildings, Dictionary<long, Floor> floors)
@@ -131,24 +228,11 @@ public class BuildingDbRepository
         if (addedUnits.Contains(unitId)) return;
 
         long floorId = Convert.ToInt64(reader["floor_id"]);
-        Unit unit = new Unit(unitId, floors[floorId], reader["unit_number"].ToString());
+        Unit unit = new Unit(unitId, floors[floorId], reader["unit_number"].ToString()!);
         floors[floorId].AddUnit(unit);
         addedUnits.Add(unitId);
     }
 
-    private void AddImageIfMissing(IDataReader reader, Dictionary<long, Building> buildings, HashSet<long> addedImages)
-    {
-        if (reader.IsDBNull(reader.GetOrdinal("image_id"))) return;
-
-        long imageId = Convert.ToInt64(reader["image_id"]);
-        if (addedImages.Contains(imageId)) return;
-
-        long buildingId = Convert.ToInt64(reader["id"]);
-        buildings[buildingId].AddImage(new AppImage(imageId, reader["image_path"].ToString()));
-        addedImages.Add(imageId);
-    }
-
-    //string
     private void AddParameter(IDbCommand command, string name, string? value)
     {
         IDbDataParameter param = command.CreateParameter();
@@ -158,143 +242,11 @@ public class BuildingDbRepository
         command.Parameters.Add(param);
     }
 
-    //long
     private void AddParameter(IDbCommand command, string name, long value)
     {
         IDbDataParameter param = command.CreateParameter();
         param.ParameterName = name;
         param.Value = value;
         command.Parameters.Add(param);
-    }
-
-    public List<string> GetOccupiedUnits(long buildingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT unit_number FROM building_memberships
-        WHERE building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<string> occupiedUnits = new List<string>();
-        while (reader.Read())
-            occupiedUnits.Add(reader["unit_number"].ToString());
-
-        return occupiedUnits;
-    }
-
-    //Building membership
-
-    public List<BuildingMembership> GetMembershipsByTenant(long userId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
-               b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-               c.id AS city_id, c.name AS city_name,
-               co.id AS country_id, co.name AS country_name, co.code AS country_code,
-               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role,
-               i.id AS image_id, i.path AS image_path
-        FROM building_memberships bm
-        JOIN buildings b ON bm.building_id = b.id
-        JOIN cities c ON b.city_id = c.id
-        JOIN countries co ON c.country_id = co.id
-        JOIN users u ON bm.user_id = u.id
-        LEFT JOIN images i ON i.resource_id = b.id AND i.resource = 'building'
-        WHERE bm.user_id = @userId
-        ORDER BY bm.approved_at DESC";
-
-        AddParameter(command, "@userId", userId);
-
-        using IDataReader reader = command.ExecuteReader();
-        return ReadMemberships(reader);
-    }
-
-    private List<BuildingMembership> ReadMemberships(IDataReader reader)
-    {
-        Dictionary<long, BuildingMembership> memberships = new Dictionary<long, BuildingMembership>();
-        HashSet<long> addedImages = new HashSet<long>();
-
-        while (reader.Read())
-        {
-            long buildingId = Convert.ToInt64(reader["building_id"]);
-
-            if (!memberships.ContainsKey(buildingId))
-                memberships[buildingId] = MapMembership(reader);
-
-            AddImageToBuilding(reader, memberships[buildingId].Building, addedImages);
-        }
-
-        return memberships.Values.ToList();
-    }
-
-    private void AddImageToBuilding(IDataReader reader, Building building, HashSet<long> addedImages)
-    {
-        if (reader.IsDBNull(reader.GetOrdinal("image_id"))) return;
-
-        long imageId = Convert.ToInt64(reader["image_id"]);
-        if (addedImages.Contains(imageId)) return;
-
-        building.AddImage(new AppImage(imageId, reader["image_path"].ToString()));
-        addedImages.Add(imageId);
-    }
-
-    private User MapUser(IDataReader reader)
-    {
-        return new User(
-            Convert.ToInt64(reader["user_id"]),
-            reader["username"].ToString(),
-            reader["password"].ToString(),
-            reader["name"].ToString(),
-            reader["surname"].ToString(),
-            DateTime.Parse(reader["birthday"].ToString()),
-            reader["role"].ToString()
-        );
-    }
-
-    private BuildingMembership MapMembership(IDataReader reader)
-    {
-        Building building = MapBuildingFromMembership(reader);
-        User user = MapUser(reader);
-        return new BuildingMembership(
-            Convert.ToInt64(reader["id"]),
-            building,
-            user,
-            reader["unit_number"].ToString(),
-            Convert.ToInt32(reader["floor_number"]),
-            DateTime.Parse(reader["approved_at"].ToString())
-        );
-    }
-
-    private Building MapBuildingFromMembership(IDataReader reader)
-    {
-        Country country = new Country(
-            Convert.ToInt64(reader["country_id"]),
-            reader["country_name"].ToString(),
-            reader["country_code"].ToString()
-        );
-
-        City city = new City(
-            Convert.ToInt64(reader["city_id"]),
-            reader["city_name"].ToString(),
-            country
-        );
-
-        return new Building(
-            Convert.ToInt64(reader["building_id"]),
-            reader["street"].ToString(),
-            reader["street_number"].ToString(),
-            reader["neighborhood"].ToString(),
-            city,
-            Convert.ToInt32(reader["number_of_floors"])
-        );
-    }
-
-    public Building? GetById(long buildingId)
-    {
-        return GetAll().FirstOrDefault(b => b.Id == buildingId);
     }
 }

@@ -22,14 +22,14 @@
                 <ColumnDefinition Width="12"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Cancel Request"
-                    Style="{StaticResource PrimaryButton}"
-                    HorizontalAlignment="Stretch"
-                    Click="ConfirmButton_Click"/>
-            <Button Grid.Column="2" Content="Go back"
+            <Button Grid.Column="0" Content="Go back"
                     Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Stretch"
                     Click="GoBackButton_Click"/>
+            <Button Grid.Column="2" Content="Cancel Request"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Stretch"
+                    Click="ConfirmButton_Click"/>
         </Grid>
     </StackPanel>
 </Window>

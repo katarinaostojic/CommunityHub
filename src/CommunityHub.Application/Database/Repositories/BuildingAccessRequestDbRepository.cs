@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Mappers;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 using System.Data;
 
@@ -71,71 +72,51 @@ public class BuildingAccessRequestDbRepository
         command.ExecuteNonQuery();
     }
 
+    public int GetPendingRequestsCount(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT COUNT(*) FROM building_access_requests
+            WHERE building_id = @buildingId AND status = 'pending approval'";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
+
     private List<BuildingAccessRequest> ReadRequests(IDataReader reader)
     {
         List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
-
         while (reader.Read())
             requests.Add(MapRequest(reader));
-
         return requests;
     }
 
     private BuildingAccessRequest MapRequest(IDataReader reader)
     {
-        Building building = MapBuilding(reader);
-        User user = MapUser(reader);
         string? rejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
             ? null
             : reader["rejection_reason"].ToString();
 
         return new BuildingAccessRequest(
             Convert.ToInt64(reader["id"]),
-            user,
-            building,
-            reader["unit_number"].ToString(),
-            DateTime.Parse(reader["created_at"].ToString()),
-            reader["status"].ToString(),
+            UserMapper.Map(reader),
+            BuildingMapper.MapFromJoin(reader),
+            reader["unit_number"].ToString()!,
+            DateTime.Parse(reader["created_at"].ToString()!),
+            ParseStatus(reader["status"].ToString()!),
             rejectionReason
         );
     }
 
-    private Building MapBuilding(IDataReader reader)
+    private static RequestStatus ParseStatus(string status) => status switch
     {
-        Country country = new Country(
-            Convert.ToInt64(reader["country_id"]),
-            reader["country_name"].ToString(),
-            reader["country_code"].ToString()
-        );
-
-        City city = new City(
-            Convert.ToInt64(reader["city_id"]),
-            reader["city_name"].ToString(),
-            country
-        );
-
-        return new Building(
-            Convert.ToInt64(reader["building_id"]),
-            reader["street"].ToString(),
-            reader["street_number"].ToString(),
-            reader["neighborhood"].ToString(),
-            city,
-            Convert.ToInt32(reader["number_of_floors"])
-        );
-    }
-
-    private User MapUser(IDataReader reader)
-    {
-        return new User(
-            Convert.ToInt64(reader["user_id"]),
-            reader["username"].ToString(),
-            reader["password"].ToString(),
-            reader["name"].ToString(),
-            reader["surname"].ToString(),
-            DateTime.Parse(reader["birthday"].ToString()),
-            reader["role"].ToString()
-        );
-    }
+        "pending approval" => RequestStatus.PendingApproval,
+        "accepted" => RequestStatus.Approved,
+        "rejected" => RequestStatus.Rejected,
+        _ => throw new ArgumentException($"Unknown request status: '{status}'")
+    };
 
     private void AddParameter(IDbCommand command, string name, object value)
     {
@@ -145,7 +126,6 @@ public class BuildingAccessRequestDbRepository
         command.Parameters.Add(param);
     }
 
-    //DateTime
     private void AddParameter(IDbCommand command, string name, DateTime value)
     {
         IDbDataParameter param = command.CreateParameter();
@@ -153,19 +133,5 @@ public class BuildingAccessRequestDbRepository
         param.Value = value;
         param.DbType = DbType.DateTime;
         command.Parameters.Add(param);
-    }
-
-    public int GetPendingRequestsCount(long buildingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT COUNT(*) FROM building_access_requests
-        WHERE building_id = @buildingId
-        AND status = 'pending approval'";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        return Convert.ToInt32(command.ExecuteScalar());
     }
 }

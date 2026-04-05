@@ -14,9 +14,10 @@ public partial class MyRequestsPage : Page
     private readonly User _user;
     private List<BuildingAccessRequest> _allRequests;
     private List<BuildingAccessRequest> _filteredRequests;
-    private string _currentFilter = "all";
+    private RequestStatus? _currentFilter = null; // null = "all"
     private bool _sortDescending = true;
     private readonly BuildingAccessRequestService _requestService;
+
     public MyRequestsPage(User user)
     {
         InitializeComponent();
@@ -36,7 +37,7 @@ public partial class MyRequestsPage : Page
 
     private void ApplyFilterAndSort()
     {
-        _filteredRequests = _currentFilter == "all"
+        _filteredRequests = _currentFilter == null
             ? _allRequests.ToList()
             : _allRequests.Where(r => r.Status == _currentFilter).ToList();
 
@@ -45,16 +46,15 @@ public partial class MyRequestsPage : Page
             : _filteredRequests.OrderBy(r => r.CreatedAt).ToList();
 
         RequestsPanel.ItemsSource = _filteredRequests;
-
         ResultsCountText.Text = $"Showing {_filteredRequests.Count} results";
     }
 
     private void UpdateFilterButtons()
     {
         UpdateFilterButton(FilterAllButton, "All", _allRequests.Count);
-        UpdateFilterButton(FilterPendingButton, "Pending approval", _allRequests.Count(r => r.Status == "pending approval"));
-        UpdateFilterButton(FilterAcceptedButton, "Accepted", _allRequests.Count(r => r.Status == "accepted"));
-        UpdateFilterButton(FilterRejectedButton, "Rejected", _allRequests.Count(r => r.Status == "rejected"));
+        UpdateFilterButton(FilterPendingButton, "Pending approval", _allRequests.Count(r => r.Status == RequestStatus.PendingApproval));
+        UpdateFilterButton(FilterApprovedButton, "Approved", _allRequests.Count(r => r.Status == RequestStatus.Approved));
+        UpdateFilterButton(FilterRejectedButton, "Rejected", _allRequests.Count(r => r.Status == RequestStatus.Rejected));
     }
 
     private void UpdateFilterButton(Button filterButton, string label, int count)
@@ -64,25 +64,25 @@ public partial class MyRequestsPage : Page
 
     private void FilterAllButton_Click(object sender, RoutedEventArgs e)
     {
-        _currentFilter = "all";
+        _currentFilter = null;
         ApplyFilterAndSort();
     }
 
     private void FilterPendingButton_Click(object sender, RoutedEventArgs e)
     {
-        _currentFilter = "pending approval";
+        _currentFilter = RequestStatus.PendingApproval;
         ApplyFilterAndSort();
     }
 
-    private void FilterAcceptedButton_Click(object sender, RoutedEventArgs e)
+    private void FilterApprovedButton_Click(object sender, RoutedEventArgs e)
     {
-        _currentFilter = "accepted";
+        _currentFilter = RequestStatus.Approved;
         ApplyFilterAndSort();
     }
 
     private void FilterRejectedButton_Click(object sender, RoutedEventArgs e)
     {
-        _currentFilter = "rejected";
+        _currentFilter = RequestStatus.Rejected;
         ApplyFilterAndSort();
     }
 

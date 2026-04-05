@@ -58,14 +58,14 @@
                 <ColumnDefinition Width="12"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Send Request"
-                    Style="{StaticResource PrimaryButton}"
-                    HorizontalAlignment="Stretch"
-                    Click="SendRequestButton_Click"/>
-            <Button Grid.Column="2" Content="Cancel"
+            <Button Grid.Column="0" Content="Cancel"
                     Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Stretch"
                     Click="CancelButton_Click"/>
+            <Button Grid.Column="2" Content="Send Request"
+                    Style="{StaticResource PrimaryButton}"
+                    HorizontalAlignment="Stretch"
+                    Click="SendRequestButton_Click"/>
         </Grid>
 
     </StackPanel>
