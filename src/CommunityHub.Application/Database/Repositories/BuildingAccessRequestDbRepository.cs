@@ -105,10 +105,18 @@ public class BuildingAccessRequestDbRepository
             BuildingMapper.MapFromJoin(reader),
             reader["unit_number"].ToString()!,
             DateTime.Parse(reader["created_at"].ToString()!),
-            reader["status"].ToString()!,
+            ParseStatus(reader["status"].ToString()!),
             rejectionReason
         );
     }
+
+    private static RequestStatus ParseStatus(string status) => status switch
+    {
+        "pending approval" => RequestStatus.PendingApproval,
+        "accepted" => RequestStatus.Approved,
+        "rejected" => RequestStatus.Rejected,
+        _ => throw new ArgumentException($"Unknown request status: '{status}'")
+    };
 
     private void AddParameter(IDbCommand command, string name, object value)
     {
