@@ -5,12 +5,12 @@ using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
-public partial class ManageRequestsWindow : Window
+public partial class ManageRequestsPage : Page
 {
     private readonly long _coordinatorId;
     private readonly NeighborhoodDbRepository _repository = new();
 
-    public ManageRequestsWindow(long coordinatorId)
+    public ManageRequestsPage(long coordinatorId)
     {
         InitializeComponent();
         _coordinatorId = coordinatorId;
@@ -61,11 +61,7 @@ public partial class ManageRequestsWindow : Window
     {
         NeighborhoodAccessRequest? selected = (sender as Button)?.Tag as NeighborhoodAccessRequest;
 
-        if (selected == null)
-        {
-            MessageBox.Show("Please select a request.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        if (selected == null) return;
 
         if (selected.Status != RequestStatus.PendingApproval)
         {
@@ -82,11 +78,7 @@ public partial class ManageRequestsWindow : Window
     {
         NeighborhoodAccessRequest? selected = (sender as Button)?.Tag as NeighborhoodAccessRequest;
 
-        if (selected == null)
-        {
-            MessageBox.Show("Please select a request.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        if (selected == null) return;
 
         if (selected.Status != RequestStatus.PendingApproval)
         {
@@ -103,10 +95,5 @@ public partial class ManageRequestsWindow : Window
             MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             LoadRequests();
         }
-    }
-
-    private void BackButton_Click(object sender, RoutedEventArgs e)
-    {
-        this.Close();
     }
 }

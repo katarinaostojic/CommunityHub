@@ -26,4 +26,8 @@
 	  <Page Remove="images\NewFolder1\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="images\neighborhoods\" />
+	</ItemGroup>
+
 </Project>

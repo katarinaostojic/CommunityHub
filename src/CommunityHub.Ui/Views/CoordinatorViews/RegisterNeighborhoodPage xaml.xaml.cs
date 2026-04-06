@@ -1,11 +1,12 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Win32;
 using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
-public partial class RegisterNeighborhoodWindow : Window
+public partial class RegisterNeighborhoodPage : Page
 {
     private readonly long _coordinatorId;
     private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
@@ -13,7 +14,7 @@ public partial class RegisterNeighborhoodWindow : Window
     private readonly List<Street> _streets = new();
     private readonly List<string> _imagePaths = new();
 
-    public RegisterNeighborhoodWindow(long coordinatorId)
+    public RegisterNeighborhoodPage(long coordinatorId)
     {
         InitializeComponent();
         _coordinatorId = coordinatorId;
@@ -111,21 +112,17 @@ public partial class RegisterNeighborhoodWindow : Window
         long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity.Id, _coordinatorId);
 
         foreach (Street street in _streets)
-        {
             _neighborhoodRepository.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
-        }
 
         foreach (string path in _imagePaths)
-        {
             _neighborhoodRepository.AddImage(neighborhoodId, path);
-        }
 
         MessageBox.Show("Neighborhood registered successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        this.Close();
+        CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_coordinatorId), "My Districts");
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_coordinatorId), "My Districts");
     }
 }
