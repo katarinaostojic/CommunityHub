@@ -127,6 +127,13 @@ public class NeighborhoodDbRepository
             }
         }
 
+        foreach (var neighborhood in neighborhoods.Values)
+        {
+            var images = GetImages(neighborhood.Id);
+            foreach (var image in images)
+                neighborhood.AddImage(image);
+        }
+
         return neighborhoods.Values.ToList();
     }
 
@@ -177,7 +184,7 @@ public class NeighborhoodDbRepository
                 reader["password"].ToString(),
                 reader["citizen_name"].ToString(),
                 reader["citizen_surname"].ToString(),
-                Convert.ToDateTime(reader["birthday"]),
+                ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
                 reader["role"].ToString(),
                 reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
             );
@@ -471,7 +478,7 @@ public class NeighborhoodDbRepository
                 reader["password"].ToString(),
                 reader["citizen_name"].ToString(),
                 reader["citizen_surname"].ToString(),
-                Convert.ToDateTime(reader["birthday"]),
+                ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
                 reader["role"].ToString(),
                 reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
             );

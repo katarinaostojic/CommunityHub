@@ -16,4 +16,7 @@ INSERT INTO images (id, path, resource, resource_id) VALUES
     (-15, 'images/buildings/kurfurstendamm_3.jpg', 'building', -5),
     (-16, 'images/buildings/la_rambla_1.jpg', 'building', -6),
     (-17, 'images/buildings/la_rambla_2.jpg', 'building', -6),
-    (-18, 'images/buildings/la_rambla_3.jpg', 'building', -6);
+    (-18, 'images/buildings/la_rambla_3.jpg', 'building', -6),
+    (-19, 'images/neighborhoods/liman.jpg', 'neighborhood', -1),
+    (-20, 'images/neighborhoods/dorcol.jpg', 'neighborhood', -2),
+    (-21,'images/neighborhoods/podbara.jpg', 'neighborhood', 1);

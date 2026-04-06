@@ -42,7 +42,8 @@ public partial class LogInForm : Window
                 // managerWindow.Show();
                 break;
             case "coordinator":
-                HomeWindow coordinatorWindow = new HomeWindow(user.Id);
+
+                CoordinatorViews.CoordinatorMainWindow coordinatorWindow = new CoordinatorViews.CoordinatorMainWindow(user.Id);
                 coordinatorWindow.Show();
                 break;
             case "citizen":
