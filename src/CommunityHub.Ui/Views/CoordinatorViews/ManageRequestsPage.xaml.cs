@@ -63,15 +63,17 @@ public partial class ManageRequestsPage : Page
 
         if (selected == null) return;
 
-        if (selected.Status != RequestStatus.PendingApproval)
+        try
         {
-            MessageBox.Show("Only pending requests can be approved.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            selected.Approve();
+            _repository.ApproveRequest(selected.Id, selected.Citizen.Id, selected.Neighborhood.Id);
+            MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            LoadRequests();
         }
-
-        _repository.ApproveRequest(selected.Id, selected.Citizen.Id, selected.Neighborhood.Id);
-        MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        LoadRequests();
+        catch (InvalidOperationException ex)
+        {
+            MessageBox.Show(ex.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
@@ -80,20 +82,22 @@ public partial class ManageRequestsPage : Page
 
         if (selected == null) return;
 
-        if (selected.Status != RequestStatus.PendingApproval)
+        try
         {
-            MessageBox.Show("Only pending requests can be rejected.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            RejectReasonWindow rejectWindow = new RejectReasonWindow();
+            rejectWindow.ShowDialog();
+
+            if (rejectWindow.Confirmed)
+            {
+                selected.Reject(rejectWindow.Reason);
+                _repository.RejectRequest(selected.Id, rejectWindow.Reason);
+                MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadRequests();
+            }
         }
-
-        RejectReasonWindow rejectWindow = new RejectReasonWindow();
-        rejectWindow.ShowDialog();
-
-        if (rejectWindow.Confirmed)
+        catch (InvalidOperationException ex)
         {
-            _repository.RejectRequest(selected.Id, rejectWindow.Reason);
-            MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-            LoadRequests();
+            MessageBox.Show(ex.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 }
