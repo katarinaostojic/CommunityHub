@@ -12,8 +12,8 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class MyBuildingRequestsPage : Page
 {
     private readonly User _user;
-    private List<BuildingAccessRequest> _allRequests;
-    private List<BuildingAccessRequest> _filteredRequests;
+    private List<BuildingAccessRequestDisplay> _allRequests;
+    private List<BuildingAccessRequestDisplay> _filteredRequests;
     private RequestStatus? _currentFilter = null; // null = "all"
     private bool _sortDescending = true;
     private readonly BuildingAccessRequestService _requestService;
@@ -31,7 +31,9 @@ public partial class MyBuildingRequestsPage : Page
 
     private void LoadRequests()
     {
-        _allRequests = _requestService.GetAllByTenant(_user.Id);
+        _allRequests = _requestService.GetAllByTenant(_user.Id)
+        .Select(r => new BuildingAccessRequestDisplay(r))
+        .ToList();
         ApplyFilterAndSort();
     }
 
@@ -95,19 +97,18 @@ public partial class MyBuildingRequestsPage : Page
 
     private void CancelRequestButton_Click(object sender, RoutedEventArgs e)
     {
-        BuildingAccessRequest request = (BuildingAccessRequest)((Button)sender).Tag;
+        var display = (BuildingAccessRequestDisplay)((Button)sender).Tag;
+        if (!ConfirmCancellation(display.Building.Street, display.Building.StreetNumber)) return;
+        _requestService.Delete(display.Id);
 
-        if (!ConfirmCancellation(request)) return;
-
-        _requestService.Delete(request.Id);
         LoadRequests();
         UpdateFilterButtons();
         TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
-    private bool ConfirmCancellation(BuildingAccessRequest request)
+    private bool ConfirmCancellation(string street, string streetNumber)
     {
-        CancelBuildingAccessRequestDialog dialog = new CancelBuildingAccessRequestDialog(request.Building.Street, request.Building.StreetNumber);
+        CancelBuildingAccessRequestDialog dialog = new CancelBuildingAccessRequestDialog(street, streetNumber);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
     }
@@ -115,5 +116,39 @@ public partial class MyBuildingRequestsPage : Page
     private void MenuButton_Click(object sender, RoutedEventArgs e)
     {
         AppMenu.Open();
+    }
+
+    //klasa za displej
+    private class BuildingAccessRequestDisplay
+    {
+        private readonly BuildingAccessRequest _request;
+
+        public BuildingAccessRequestDisplay(BuildingAccessRequest request)
+        {
+            _request = request;
+        }
+
+        public long Id => _request.Id;
+        public Building Building => _request.Building;
+        public string UnitNumber => _request.UnitNumber;
+        public DateTime CreatedAt => _request.CreatedAt;
+        public RequestStatus Status => _request.Status;
+
+        public string StatusDisplay => _request.Status switch
+        {
+            RequestStatus.PendingApproval => "⏳ Pending approval",
+            RequestStatus.Approved => "✔ Approved",
+            RequestStatus.Rejected => "✕ Rejected",
+            _ => _request.Status.ToString()
+        };
+
+        public string RejectionReasonDisplay => _request.RejectionReason != null
+            ? $"Note: {_request.RejectionReason}"
+            : string.Empty;
+
+        public bool CancelButtonVisible => _request.Status == RequestStatus.PendingApproval;
+
+        public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
+                                           && _request.RejectionReason != null;
     }
 }
