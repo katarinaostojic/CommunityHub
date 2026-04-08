@@ -14,29 +14,6 @@ public class BuildingDbRepository
         _imageRepository = new ImageDbRepository();
     }
 
-    public List<Building> GetAll()
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   f.id AS floor_id, f.floor_number,
-                   u.id AS unit_id, u.unit_number
-            FROM buildings b
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            LEFT JOIN floors f ON f.building_id = b.id
-            LEFT JOIN units u ON u.floor_id = f.id
-            ORDER BY b.id, f.floor_number, u.unit_number";
-
-        using IDataReader reader = command.ExecuteReader();
-        List<Building> buildings = ReadBuildings(reader);
-        AttachImages(buildings);
-        return buildings;
-    }
-
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

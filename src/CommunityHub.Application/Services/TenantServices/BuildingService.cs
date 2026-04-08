@@ -14,11 +14,6 @@ public class BuildingService
         _repository = new BuildingDbRepository();
     }
 
-    public List<Building> GetAll()
-    {
-        return _repository.GetAll();
-    }
-
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
     {
         return _repository.Search(street, neighborhood, city, country);

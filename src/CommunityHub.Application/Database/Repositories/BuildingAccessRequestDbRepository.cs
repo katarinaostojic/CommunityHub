@@ -53,28 +53,45 @@ public class BuildingAccessRequestDbRepository
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
     }
 
-    public List<BuildingAccessRequest> GetAllByTenant(long userId)
+    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, string? status, bool sortDescending)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = $@"
+        SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
+               b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+               c.id AS city_id, c.name AS city_name,
+               co.id AS country_id, co.name AS country_name, co.code AS country_code,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM building_access_requests r
+        JOIN buildings b ON r.building_id = b.id
+        JOIN cities c ON b.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        JOIN users u ON r.user_id = u.id
+        WHERE r.user_id = @userId
+          AND (@status IS NULL OR r.status = @status)
+        ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
+
+        AddParameter(command, "@userId", tenantId);
+        AddParameter(command, "@status", status);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadRequests(reader);
+    }
+
+    public int CountByTenantAndStatus(long tenantId, string? status)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
-                   b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-            FROM building_access_requests r
-            JOIN buildings b ON r.building_id = b.id
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            JOIN users u ON r.user_id = u.id
-            WHERE r.user_id = @userId
-            ORDER BY r.created_at DESC";
+        SELECT COUNT(*) FROM building_access_requests
+        WHERE user_id = @userId
+          AND (@status IS NULL OR status = @status)";
 
-        AddParameter(command, "@userId", userId);
+        AddParameter(command, "@userId", tenantId);
+        AddParameter(command, "@status", status);
 
-        using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
+        return Convert.ToInt32(command.ExecuteScalar());
     }
 
     public void Delete(long requestId)
@@ -148,6 +165,15 @@ public class BuildingAccessRequestDbRepository
         param.ParameterName = name;
         param.Value = value;
         param.DbType = DbType.DateTime;
+        command.Parameters.Add(param);
+    }
+
+    private void AddParameter(IDbCommand command, string name, string? value)
+    {
+        IDbDataParameter param = command.CreateParameter();
+        param.ParameterName = name;
+        param.Value = (object?)value ?? DBNull.Value;
+        param.DbType = DbType.String;
         command.Parameters.Add(param);
     }
 }

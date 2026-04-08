@@ -12,7 +12,6 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class MyBuildingRequestsPage : Page
 {
     private readonly User _user;
-    private List<BuildingAccessRequestDisplay> _allRequests;
     private List<BuildingAccessRequestDisplay> _filteredRequests;
     private RequestStatus? _currentFilter = null; // null = "all"
     private bool _sortDescending = true;
@@ -31,32 +30,29 @@ public partial class MyBuildingRequestsPage : Page
 
     private void LoadRequests()
     {
-        _allRequests = _requestService.GetAllByTenant(_user.Id)
-        .Select(r => new BuildingAccessRequestDisplay(r))
-        .ToList();
-        ApplyFilterAndSort();
-    }
-
-    private void ApplyFilterAndSort()
-    {
-        _filteredRequests = _currentFilter == null
-            ? _allRequests.ToList()
-            : _allRequests.Where(r => r.Status == _currentFilter).ToList();
-
-        _filteredRequests = _sortDescending
-            ? _filteredRequests.OrderByDescending(r => r.CreatedAt).ToList()
-            : _filteredRequests.OrderBy(r => r.CreatedAt).ToList();
+        string? statusFilter = _currentFilter == null ? null : StatusToString(_currentFilter.Value);
+        _filteredRequests = _requestService.GetAllByTenant(_user.Id, statusFilter, _sortDescending)
+            .Select(r => new BuildingAccessRequestDisplay(r))
+            .ToList();
 
         RequestsPanel.ItemsSource = _filteredRequests;
         ResultsCountText.Text = $"Showing {_filteredRequests.Count} results";
     }
 
+    private string StatusToString(RequestStatus status) => status switch
+    {
+        RequestStatus.PendingApproval => "pending approval",
+        RequestStatus.Approved => "accepted",
+        RequestStatus.Rejected => "rejected",
+        _ => throw new ArgumentException($"Unknown status: {status}")
+    };
+
     private void UpdateFilterButtons()
     {
-        UpdateFilterButton(FilterAllButton, "All", _allRequests.Count);
-        UpdateFilterButton(FilterPendingButton, "Pending approval", _allRequests.Count(r => r.Status == RequestStatus.PendingApproval));
-        UpdateFilterButton(FilterApprovedButton, "Approved", _allRequests.Count(r => r.Status == RequestStatus.Approved));
-        UpdateFilterButton(FilterRejectedButton, "Rejected", _allRequests.Count(r => r.Status == RequestStatus.Rejected));
+        UpdateFilterButton(FilterAllButton, "All", _requestService.CountByTenantAndStatus(_user.Id, null));
+        UpdateFilterButton(FilterPendingButton, "Pending approval", _requestService.CountByTenantAndStatus(_user.Id, "pending approval"));
+        UpdateFilterButton(FilterApprovedButton, "Approved", _requestService.CountByTenantAndStatus(_user.Id, "accepted"));
+        UpdateFilterButton(FilterRejectedButton, "Rejected", _requestService.CountByTenantAndStatus(_user.Id, "rejected"));
     }
 
     private void UpdateFilterButton(Button filterButton, string label, int count)
@@ -67,32 +63,32 @@ public partial class MyBuildingRequestsPage : Page
     private void FilterAllButton_Click(object sender, RoutedEventArgs e)
     {
         _currentFilter = null;
-        ApplyFilterAndSort();
+        LoadRequests();
     }
 
     private void FilterPendingButton_Click(object sender, RoutedEventArgs e)
     {
         _currentFilter = RequestStatus.PendingApproval;
-        ApplyFilterAndSort();
+        LoadRequests();
     }
 
     private void FilterApprovedButton_Click(object sender, RoutedEventArgs e)
     {
         _currentFilter = RequestStatus.Approved;
-        ApplyFilterAndSort();
+        LoadRequests();
     }
 
     private void FilterRejectedButton_Click(object sender, RoutedEventArgs e)
     {
         _currentFilter = RequestStatus.Rejected;
-        ApplyFilterAndSort();
+        LoadRequests();
     }
 
     private void SortButton_Click(object sender, RoutedEventArgs e)
     {
         _sortDescending = !_sortDescending;
         SortButton.Content = _sortDescending ? "Sort by Date ↓" : "Sort by Date ↑";
-        ApplyFilterAndSort();
+        LoadRequests();
     }
 
     private void CancelRequestButton_Click(object sender, RoutedEventArgs e)

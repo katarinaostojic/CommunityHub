@@ -12,9 +12,14 @@ public class BuildingAccessRequestService
         _repository = new BuildingAccessRequestDbRepository();
     }
 
-    public List<BuildingAccessRequest> GetAllByTenant(long userId)
+    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, string? status, bool sortDescending)
     {
-        return _repository.GetAllByTenant(userId);
+        return _repository.GetAllByTenant(tenantId, status, sortDescending);
+    }
+
+    public int CountByTenantAndStatus(long tenantId, string? status)
+    {
+        return _repository.CountByTenantAndStatus(tenantId, status);
     }
 
     public void Delete(long id)
