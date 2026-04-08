@@ -3,7 +3,7 @@ using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Services.TenantServices;
+using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

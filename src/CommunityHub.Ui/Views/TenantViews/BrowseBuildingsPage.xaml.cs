@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Services.TenantServices;
+﻿using CommunityHub.Application.Services;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;

@@ -10,7 +10,7 @@ public class ImagePathConverter : IValueConverter
 {
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is List<AppImage> images && images.Count > 0)
+        if (value is List<Image> images && images.Count > 0)
         {
             string fullPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,

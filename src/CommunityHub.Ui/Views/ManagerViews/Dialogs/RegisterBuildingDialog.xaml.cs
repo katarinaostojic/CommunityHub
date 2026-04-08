@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Services.ManagerServices;
+using CommunityHub.Application.Services;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -10,7 +10,7 @@ namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 public partial class RegisterBuildingDialog : Window
 {
     private readonly User _currentUser;
-    private readonly ManagerBuildingService _buildingService;
+    private readonly BuildingService _buildingService;
     private readonly CityDbRepository _cityRepository;
     private readonly CountryDbRepository _countryRepository;
     private List<string> _selectedImagePaths = new List<string>();
@@ -19,7 +19,7 @@ public partial class RegisterBuildingDialog : Window
     {
         InitializeComponent();
         _currentUser = user;
-        _buildingService = new ManagerBuildingService();
+        _buildingService = new BuildingService();
         _cityRepository = new CityDbRepository();
         _countryRepository = new CountryDbRepository();
         LoadCountries();

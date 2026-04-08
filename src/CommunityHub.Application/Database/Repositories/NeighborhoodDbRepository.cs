@@ -546,7 +546,7 @@ public class NeighborhoodDbRepository
         command.ExecuteNonQuery();
     }
 
-    public List<AppImage> GetImages(long neighborhoodId)
+    public List<Image> GetImages(long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
@@ -562,10 +562,10 @@ public class NeighborhoodDbRepository
 
         using IDataReader reader = command.ExecuteReader();
 
-        var images = new List<AppImage>();
+        var images = new List<Image>();
         while (reader.Read())
         {
-            images.Add(new AppImage(
+            images.Add(new Image(
                 Convert.ToInt64(reader["id"]),
                 reader["path"].ToString()
             ));

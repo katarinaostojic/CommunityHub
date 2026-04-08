@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
-using CommunityHub.Application.Services.TenantServices;
 using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using CommunityHub.Ui.Helpers;
 using System.IO;
+using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

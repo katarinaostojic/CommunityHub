@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
-using CommunityHub.Application.Services.TenantServices;
+using CommunityHub.Application.Services;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;

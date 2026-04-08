@@ -4,8 +4,8 @@ using CommunityHub.Application.Domain.Building;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using CommunityHub.Application.Services.TenantServices;
 using CommunityHub.Ui.Helpers;
+using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

@@ -5,7 +5,7 @@ namespace CommunityHub.Application.Database.Repositories;
 
 public class ImageDbRepository
 {
-    public List<AppImage> GetByResource(string resource, long resourceId)
+    public List<Image> GetByResource(string resource, long resourceId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -21,10 +21,10 @@ public class ImageDbRepository
         return ReadImages(reader);
     }
 
-    public Dictionary<long, List<AppImage>> GetByResources(string resource, IEnumerable<long> resourceIds)
+    public Dictionary<long, List<Image>> GetByResources(string resource, IEnumerable<long> resourceIds)
     {
         List<long> ids = resourceIds.Distinct().ToList();
-        Dictionary<long, List<AppImage>> result = ids.ToDictionary(id => id, _ => new List<AppImage>());
+        Dictionary<long, List<Image>> result = ids.ToDictionary(id => id, _ => new List<Image>());
 
         if (ids.Count == 0) return result;
 
@@ -50,7 +50,7 @@ public class ImageDbRepository
         while (reader.Read())
         {
             long resourceId = Convert.ToInt64(reader["resource_id"]);
-            AppImage image = new AppImage(
+            Image image = new Image(
                 Convert.ToInt64(reader["id"]),
                 reader["path"].ToString()!
             );
@@ -60,12 +60,12 @@ public class ImageDbRepository
         return result;
     }
 
-    private List<AppImage> ReadImages(IDataReader reader)
+    private List<Image> ReadImages(IDataReader reader)
     {
-        List<AppImage> images = new List<AppImage>();
+        List<Image> images = new List<Image>();
         while (reader.Read())
         {
-            images.Add(new AppImage(
+            images.Add(new Image(
                 Convert.ToInt64(reader["id"]),
                 reader["path"].ToString()!
             ));

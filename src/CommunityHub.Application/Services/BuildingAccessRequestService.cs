@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain.Building;
 
-namespace CommunityHub.Application.Services.TenantServices;
+namespace CommunityHub.Application.Services;
 
 public class BuildingAccessRequestService
 {

@@ -1,15 +1,36 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain.Building;
 
-namespace CommunityHub.Application.Services.ManagerServices;
+namespace CommunityHub.Application.Services;
 
-public class ManagerBuildingService
+public class BuildingService
 {
     private readonly BuildingDbRepository _repository;
 
-    public ManagerBuildingService()
+    public BuildingService()
     {
         _repository = new BuildingDbRepository();
+    }
+
+    public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
+    {
+        return _repository.Search(street, neighborhood, city, country);
+    }
+
+    public int GetVacancies(Building building)
+    {
+        List<string> occupiedUnits = _repository.GetOccupiedUnits(building.Id);
+        return building.TotalUnits - occupiedUnits.Count;
+    }
+
+    public List<BuildingMembership> GetMembershipsByTenant(long userId)
+    {
+        return _repository.GetMembershipsByTenant(userId);
+    }
+
+    public Building? GetById(long buildingId)
+    {
+        return _repository.GetById(buildingId);
     }
 
     public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors)

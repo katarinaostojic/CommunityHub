@@ -73,7 +73,7 @@ public class BuildingDbRepository
         if (buildings.Count == 0) return null;
 
         Building building = buildings[0];
-        foreach (AppImage image in _imageRepository.GetByResource("building", buildingId))
+        foreach (Image image in _imageRepository.GetByResource("building", buildingId))
             building.AddImage(image);
 
         return building;
@@ -102,10 +102,10 @@ public class BuildingDbRepository
         using IDataReader reader = command.ExecuteReader();
         List<BuildingMembership> memberships = ReadMemberships(reader);
 
-        Dictionary<long, List<AppImage>> imageMap =
+        Dictionary<long, List<Image>> imageMap =
             _imageRepository.GetByResources("building", memberships.Select(m => m.Building.Id));
         foreach (BuildingMembership m in memberships)
-            foreach (AppImage image in imageMap[m.Building.Id])
+            foreach (Image image in imageMap[m.Building.Id])
                 m.Building.AddImage(image);
 
         return memberships;
@@ -133,11 +133,11 @@ public class BuildingDbRepository
     {
         if (buildings.Count == 0) return;
 
-        Dictionary<long, List<AppImage>> imageMap =
+        Dictionary<long, List<Image>> imageMap =
             _imageRepository.GetByResources("building", buildings.Select(b => b.Id));
 
         foreach (Building building in buildings)
-            foreach (AppImage image in imageMap[building.Id])
+            foreach (Image image in imageMap[building.Id])
                 building.AddImage(image);
     }
 

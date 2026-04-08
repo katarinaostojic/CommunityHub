@@ -9,7 +9,7 @@ public class Neighborhood
     public decimal Budget { get; private set; }
     public long CoordinatorId { get; private set; }
     public List<Street> Streets { get; private set; }
-    public List<AppImage> Images { get; private set; }
+    public List<Image> Images { get; private set; }
 
     public Neighborhood(long id, string name, string description, Location location, decimal budget, long coordinatorId)
     {
@@ -20,7 +20,7 @@ public class Neighborhood
         Budget = budget;
         CoordinatorId = coordinatorId;
         Streets = new List<Street>();
-        Images = new List<AppImage>();
+        Images = new List<Image>();
     }
 
     public void AddStreet(Street street)
@@ -28,7 +28,7 @@ public class Neighborhood
         Streets.Add(street);
     }
 
-    public void AddImage(AppImage image)
+    public void AddImage(Image image)
     {
         Images.Add(image);
     }
