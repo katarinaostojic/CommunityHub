@@ -1,5 +1,6 @@
-using System.Data;
+using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
+using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
@@ -36,7 +37,7 @@ public class UserDbRepository
                 reader["name"].ToString(),
                 reader["surname"].ToString(),
                 Convert.ToDateTime(reader["birthday"].ToString()),
-                reader["role"].ToString()
+                UserMapper.ParseRole(reader["role"].ToString()!)
             );
         }
 
@@ -85,7 +86,7 @@ public class UserDbRepository
                     reader["name"].ToString(),
                     reader["surname"].ToString(),
                     Convert.ToDateTime(reader["birthday"].ToString()),
-                    reader["role"].ToString()
+                    UserMapper.ParseRole(reader["role"].ToString()!)
                 );
             }
 

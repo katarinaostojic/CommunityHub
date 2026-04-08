@@ -14,7 +14,16 @@ public static class UserMapper
             reader["name"].ToString()!,
             reader["surname"].ToString()!,
             DateTime.Parse(reader["birthday"].ToString()!),
-            reader["role"].ToString()!
+            ParseRole(reader["role"].ToString()!)
         );
     }
+
+    public static UserRole ParseRole(string role) => role switch
+    {
+        "tenant" => UserRole.Tenant,
+        "manager" => UserRole.Manager,
+        "coordinator" => UserRole.Coordinator,
+        "citizen" => UserRole.Citizen,
+        _ => throw new ArgumentException($"Unknown role: '{role}'")
+    };
 }
