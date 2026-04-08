@@ -1,11 +1,13 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using System.Data;
+using System.Linq;
 
 namespace CommunityHub.Application.Database.Repositories;
 
 public class NeighborhoodDbRepository
 {
+    private readonly ImageDbRepository _imageRepository = new();
     public long Create(string name, string description, long cityId, long coordinatorId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -355,6 +357,127 @@ public class NeighborhoodDbRepository
         }
 
         return neighborhoods.Values.ToList();
+    }
+
+    public List<Neighborhood> SearchForCitizen(string? name, string? address, string? city, string? country)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
+               co.name AS country_name, n.budget, n.coordinator_id,
+               s.id AS street_id, s.street_name, s.start_number, s.end_number
+        FROM neighborhoods n
+        JOIN cities c ON n.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
+        WHERE (@name IS NULL OR n.name ILIKE '%' || @name || '%')
+          AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
+          AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
+        ORDER BY n.id";
+
+        IDbDataParameter nameParam = command.CreateParameter();
+        nameParam.ParameterName = "@name";
+        nameParam.Value = string.IsNullOrWhiteSpace(name) ? DBNull.Value : name;
+        nameParam.DbType = DbType.String;
+        command.Parameters.Add(nameParam);
+
+        IDbDataParameter cityParam = command.CreateParameter();
+        cityParam.ParameterName = "@city";
+        cityParam.Value = string.IsNullOrWhiteSpace(city) ? DBNull.Value : city;
+        cityParam.DbType = DbType.String;
+        command.Parameters.Add(cityParam);
+
+        IDbDataParameter countryParam = command.CreateParameter();
+        countryParam.ParameterName = "@country";
+        countryParam.Value = string.IsNullOrWhiteSpace(country) ? DBNull.Value : country;
+        countryParam.DbType = DbType.String;
+        command.Parameters.Add(countryParam);
+
+        using IDataReader reader = command.ExecuteReader();
+
+        Dictionary<long, Neighborhood> neighborhoods = new();
+        HashSet<long> addedStreets = new();
+
+        while (reader.Read())
+        {
+            long id = Convert.ToInt64(reader["id"]);
+
+            if (!neighborhoods.ContainsKey(id))
+            {
+                neighborhoods[id] = new Neighborhood(
+                    id,
+                    reader["name"].ToString()!,
+                    reader["description"].ToString()!,
+                    new Location(
+                        Convert.ToInt64(reader["city_id"]),
+                        reader["city_name"].ToString()!,
+                        reader["country_name"].ToString()!
+                    ),
+                    Convert.ToDecimal(reader["budget"]),
+                    Convert.ToInt64(reader["coordinator_id"])
+                );
+            }
+
+            if (!reader.IsDBNull(reader.GetOrdinal("street_id")))
+            {
+                long streetId = Convert.ToInt64(reader["street_id"]);
+
+                if (!addedStreets.Contains(streetId))
+                {
+                    addedStreets.Add(streetId);
+
+                    neighborhoods[id].AddStreet(new Street(
+                        streetId,
+                        id,
+                        reader["street_name"].ToString()!,
+                        Convert.ToInt32(reader["start_number"]),
+                        Convert.ToInt32(reader["end_number"])
+                    ));
+                }
+            }
+        }
+
+        List<Neighborhood> result = neighborhoods.Values.ToList();
+
+        Dictionary<long, List<Image>> imagesByNeighborhood =
+            _imageRepository.GetByEntities("neighborhood", result.Select(n => n.Id));
+
+        foreach (Neighborhood neighborhood in result)
+        {
+            if (imagesByNeighborhood.TryGetValue(neighborhood.Id, out List<Image>? images))
+            {
+                foreach (Image image in images)
+                {
+                    neighborhood.AddImage(image);
+                }
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(address))
+        {
+            string loweredAddress = address.ToLower().Trim();
+
+            int? number = null;
+            string streetPart = loweredAddress;
+
+            string[] parts = loweredAddress.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 1 && int.TryParse(parts[^1], out int parsedNumber))
+            {
+                number = parsedNumber;
+                streetPart = string.Join(" ", parts.Take(parts.Length - 1));
+            }
+
+            result = result.Where(n =>
+                n.Streets.Any(s =>
+                    s.StreetName.ToLower().Contains(streetPart) &&
+                    (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber))
+                )
+            ).ToList();
+        }
+
+        return result;
     }
 
     public bool CheckAddressMatch(string streetName, int streetNumber, long neighborhoodId)

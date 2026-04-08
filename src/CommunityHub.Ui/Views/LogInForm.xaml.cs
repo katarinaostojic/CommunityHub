@@ -1,11 +1,12 @@
-﻿using System.Windows;
-using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
+using System.Windows;
 
 namespace CommunityHub.Ui.Views;
 
-using CommunityHub.Ui.Views.TenantViews;
+using CommunityHub.Ui.Views.CitizenViews;
 using CommunityHub.Ui.Views.ManagerViews;
+using CommunityHub.Ui.Views.TenantViews;
 
 public partial class LogInForm : Window
 {
@@ -48,8 +49,8 @@ public partial class LogInForm : Window
                 coordinatorWindow.Show();
                 break;
             case UserRole.Citizen:
-                //CitizenWindow citizenWindow = new CitizenWindow(user);
-                // citizenWindow.Show();
+                BrowseNeighborhoodPage citizenWindow = new BrowseNeighborhoodPage(user);
+                citizenWindow.Show();
                 break;
             default:
                 ErrorMessageTextBlock.Text = "Unknown user role.";
