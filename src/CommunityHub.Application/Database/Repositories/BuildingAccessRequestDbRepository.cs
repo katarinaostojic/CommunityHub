@@ -5,7 +5,7 @@ using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class BuildingAccessRequestDbRepository
+public class BuildingAccessRequestDbRepository : BaseDbRepository
 {
     public bool IsUnitOccupied(long buildingId, string unitNumber)
     {
@@ -150,30 +150,4 @@ public class BuildingAccessRequestDbRepository
         "rejected" => RequestStatus.Rejected,
         _ => throw new ArgumentException($"Unknown request status: '{status}'")
     };
-
-    private void AddParameter(IDbCommand command, string name, object value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = value;
-        command.Parameters.Add(param);
-    }
-
-    private void AddParameter(IDbCommand command, string name, DateTime value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = value;
-        param.DbType = DbType.DateTime;
-        command.Parameters.Add(param);
-    }
-
-    private void AddParameter(IDbCommand command, string name, string? value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = (object?)value ?? DBNull.Value;
-        param.DbType = DbType.String;
-        command.Parameters.Add(param);
-    }
 }

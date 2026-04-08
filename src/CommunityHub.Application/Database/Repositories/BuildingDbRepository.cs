@@ -5,7 +5,7 @@ using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class BuildingDbRepository
+public class BuildingDbRepository : BaseDbRepository
 {
     private readonly ImageDbRepository _imageRepository;
 
@@ -73,13 +73,13 @@ public class BuildingDbRepository
         if (buildings.Count == 0) return null;
 
         Building building = buildings[0];
-        foreach (Image image in _imageRepository.GetByResource("building", buildingId))
+        foreach (Image image in _imageRepository.GetByEntity("building", buildingId))
             building.AddImage(image);
 
         return building;
     }
 
-    public List<BuildingMembership> GetMembershipsByTenant(long userId)
+    public List<BuildingMembership> GetMembershipsByTenant(long tenantId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -97,13 +97,13 @@ public class BuildingDbRepository
             WHERE bm.user_id = @userId
             ORDER BY bm.approved_at DESC";
 
-        AddParameter(command, "@userId", userId);
+        AddParameter(command, "@userId", tenantId);
 
         using IDataReader reader = command.ExecuteReader();
         List<BuildingMembership> memberships = ReadMemberships(reader);
 
         Dictionary<long, List<Image>> imageMap =
-            _imageRepository.GetByResources("building", memberships.Select(m => m.Building.Id));
+            _imageRepository.GetByEntities("building", memberships.Select(m => m.Building.Id));
         foreach (BuildingMembership m in memberships)
             foreach (Image image in imageMap[m.Building.Id])
                 m.Building.AddImage(image);
@@ -129,12 +129,59 @@ public class BuildingDbRepository
         return occupiedUnits;
     }
 
+    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO buildings (street, street_number, neighborhood, city_id, number_of_floors)
+        VALUES (@street, @streetNumber, @neighborhood, @cityId, @numberOfFloors)
+        RETURNING id";
+
+        AddParameter(command, "@street", street);
+        AddParameter(command, "@streetNumber", streetNumber);
+        AddParameter(command, "@neighborhood", neighborhood);
+        AddParameter(command, "@cityId", cityId);
+        AddParameter(command, "@numberOfFloors", numberOfFloors);
+
+        return Convert.ToInt64(command.ExecuteScalar());
+    }
+
+    public long CreateFloorReturningId(long buildingId, int floorNumber)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO floors (building_id, floor_number)
+        VALUES (@buildingId, @floorNumber)
+        RETURNING id";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@floorNumber", floorNumber);
+
+        return Convert.ToInt64(command.ExecuteScalar());
+    }
+
+    public void CreateUnit(long floorId, string unitNumber)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO units (floor_id, unit_number)
+        VALUES (@floorId, @unitNumber)";
+
+        AddParameter(command, "@floorId", floorId);
+        AddParameter(command, "@unitNumber", unitNumber);
+
+        command.ExecuteNonQuery();
+    }
+
     private void AttachImages(List<Building> buildings)
     {
         if (buildings.Count == 0) return;
 
         Dictionary<long, List<Image>> imageMap =
-            _imageRepository.GetByResources("building", buildings.Select(b => b.Id));
+            _imageRepository.GetByEntities("building", buildings.Select(b => b.Id));
 
         foreach (Building building in buildings)
             foreach (Image image in imageMap[building.Id])
@@ -208,69 +255,5 @@ public class BuildingDbRepository
         Unit unit = new Unit(unitId, floors[floorId], reader["unit_number"].ToString()!);
         floors[floorId].AddUnit(unit);
         addedUnits.Add(unitId);
-    }
-
-    private void AddParameter(IDbCommand command, string name, string? value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = (object?)value ?? DBNull.Value;
-        param.DbType = DbType.String;
-        command.Parameters.Add(param);
-    }
-
-    private void AddParameter(IDbCommand command, string name, long value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = value;
-        command.Parameters.Add(param);
-    }
-
-    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        INSERT INTO buildings (street, street_number, neighborhood, city_id, number_of_floors)
-        VALUES (@street, @streetNumber, @neighborhood, @cityId, @numberOfFloors)
-        RETURNING id";
-
-        AddParameter(command, "@street", street);
-        AddParameter(command, "@streetNumber", streetNumber);
-        AddParameter(command, "@neighborhood", neighborhood);
-        AddParameter(command, "@cityId", cityId);
-        AddParameter(command, "@numberOfFloors", numberOfFloors);
-
-        return Convert.ToInt64(command.ExecuteScalar());
-    }
-
-    public long CreateFloorReturningId(long buildingId, int floorNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        INSERT INTO floors (building_id, floor_number)
-        VALUES (@buildingId, @floorNumber)
-        RETURNING id";
-
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@floorNumber", floorNumber);
-
-        return Convert.ToInt64(command.ExecuteScalar());
-    }
-
-    public void CreateUnit(long floorId, string unitNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        INSERT INTO units (floor_id, unit_number)
-        VALUES (@floorId, @unitNumber)";
-
-        AddParameter(command, "@floorId", floorId);
-        AddParameter(command, "@unitNumber", unitNumber);
-
-        command.ExecuteNonQuery();
     }
 }

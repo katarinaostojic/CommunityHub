@@ -14,7 +14,7 @@ public class ImageService
 
     public List<Image> GetForBuilding(long buildingId)
     {
-        return _repository.GetByResource("building", buildingId);
+        return _repository.GetByEntity("building", buildingId);
     }
 
     // Kada dodate slike za kvartove:

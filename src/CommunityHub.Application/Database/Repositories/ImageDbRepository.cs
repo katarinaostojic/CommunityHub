@@ -3,27 +3,27 @@ using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class ImageDbRepository
+public class ImageDbRepository : BaseDbRepository
 {
-    public List<Image> GetByResource(string resource, long resourceId)
+    public List<Image> GetByEntity(string entity, long entityId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT id, path
             FROM images
-            WHERE resource = @resource AND resource_id = @resourceId";
+            WHERE entity = @entity AND entity_id = @entityId";
 
-        AddParameter(command, "@resource", resource);
-        AddParameter(command, "@resourceId", resourceId);
+        AddParameter(command, "@entity", entity);
+        AddParameter(command, "@entityId", entityId);
 
         using IDataReader reader = command.ExecuteReader();
         return ReadImages(reader);
     }
 
-    public Dictionary<long, List<Image>> GetByResources(string resource, IEnumerable<long> resourceIds)
+    public Dictionary<long, List<Image>> GetByEntities(string entity, IEnumerable<long> entityIds)
     {
-        List<long> ids = resourceIds.Distinct().ToList();
+        List<long> ids = entityIds.Distinct().ToList();
         Dictionary<long, List<Image>> result = ids.ToDictionary(id => id, _ => new List<Image>());
 
         if (ids.Count == 0) return result;
@@ -40,21 +40,21 @@ public class ImageDbRepository
         }
 
         command.CommandText = $@"
-            SELECT id, path, resource_id
+            SELECT id, path, entity_id
             FROM images
-            WHERE resource = @resource AND resource_id IN ({string.Join(", ", paramNames)})";
+            WHERE entity = @entity AND entity_id IN ({string.Join(", ", paramNames)})";
 
-        AddParameter(command, "@resource", resource);
+        AddParameter(command, "@entity", entity);
 
         using IDataReader reader = command.ExecuteReader();
         while (reader.Read())
         {
-            long resourceId = Convert.ToInt64(reader["resource_id"]);
+            long entityId = Convert.ToInt64(reader["entity_id"]);
             Image image = new Image(
                 Convert.ToInt64(reader["id"]),
                 reader["path"].ToString()!
             );
-            result[resourceId].Add(image);
+            result[entityId].Add(image);
         }
 
         return result;
@@ -71,22 +71,5 @@ public class ImageDbRepository
             ));
         }
         return images;
-    }
-
-    private void AddParameter(IDbCommand command, string name, string value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = value;
-        param.DbType = DbType.String;
-        command.Parameters.Add(param);
-    }
-
-    private void AddParameter(IDbCommand command, string name, long value)
-    {
-        IDbDataParameter param = command.CreateParameter();
-        param.ParameterName = name;
-        param.Value = value;
-        command.Parameters.Add(param);
     }
 }

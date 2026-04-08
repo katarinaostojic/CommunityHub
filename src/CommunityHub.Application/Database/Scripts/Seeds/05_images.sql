@@ -1,4 +1,4 @@
-INSERT INTO images (id, path, resource, resource_id) VALUES
+INSERT INTO images (id, path, entity, entity_id) VALUES
     (-1, 'images/buildings/knez_mihailova_1.jpg', 'building', -1),
     (-2, 'images/buildings/knez_mihailova_2.jpg', 'building', -1),
     (-3, 'images/buildings/knez_mihailova_3.jpg', 'building', -1),
