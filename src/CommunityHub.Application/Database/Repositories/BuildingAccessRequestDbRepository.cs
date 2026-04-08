@@ -21,7 +21,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
     }
 
-    public void Create(long userId, long buildingId, string unitNumber)
+    public void Create(User user, Building building, string unitNumber)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -29,8 +29,8 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
             INSERT INTO building_access_requests (user_id, building_id, unit_number, created_at, status)
             VALUES (@userId, @buildingId, @unitNumber, @createdAt, 'pending approval')";
 
-        AddParameter(command, "@userId", userId);
-        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@userId", user.Id);
+        AddParameter(command, "@buildingId", building.Id);
         AddParameter(command, "@unitNumber", unitNumber);
         AddParameter(command, "@createdAt", DateTime.UtcNow);
 
@@ -38,7 +38,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
     }
 
     //ne moze u istoj zgradi za isti stan da posalje zahtev opet
-    public bool HasExistingRequest(long userId, long buildingId, string unitNumber)
+    public bool HasExistingRequest(User user, Building building, string unitNumber)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -46,8 +46,8 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         SELECT COUNT(*) FROM building_access_requests
         WHERE user_id = @userId AND building_id = @buildingId AND unit_number = @unitNumber";
 
-        AddParameter(command, "@userId", userId);
-        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@userId", user.Id);
+        AddParameter(command, "@buildingId", building.Id);
         AddParameter(command, "@unitNumber", unitNumber);
 
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
@@ -138,16 +138,8 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
             BuildingMapper.MapFromJoin(reader),
             reader["unit_number"].ToString()!,
             DateTime.Parse(reader["created_at"].ToString()!),
-            ParseStatus(reader["status"].ToString()!),
+            RequestStatusMapper.Parse(reader["status"].ToString()!),
             rejectionReason
         );
     }
-
-    private static RequestStatus ParseStatus(string status) => status switch
-    {
-        "pending approval" => RequestStatus.PendingApproval,
-        "accepted" => RequestStatus.Approved,
-        "rejected" => RequestStatus.Rejected,
-        _ => throw new ArgumentException($"Unknown request status: '{status}'")
-    };
 }

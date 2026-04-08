@@ -72,13 +72,13 @@ public partial class BuildingAccessRequestDialog : Window
             return;
         }
 
-        if (_requestService.HasExistingRequest(_user.Id, _building.Id, unitNumber))
+        if (_requestService.HasExistingRequest(_user, _building, unitNumber))
         {
             MessageBox.Show("You already have a request for this apartment.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
-        _requestService.Create(_user.Id, _building.Id, unitNumber);
+        _requestService.Create(_user, _building, unitNumber);
         DialogResult = true;
         Close();
     }

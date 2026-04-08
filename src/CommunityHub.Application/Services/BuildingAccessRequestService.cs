@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 
 namespace CommunityHub.Application.Services;
@@ -27,19 +28,21 @@ public class BuildingAccessRequestService
         _repository.Delete(id);
     }
 
-    public void Create(long userId, long buildingId, string unitNumber)
+    public void Create(User user, Building building, string unitNumber)
     {
-        _repository.Create(userId, buildingId, unitNumber);
+        _repository.Create(user, building, unitNumber);
     }
-    public bool HasExistingRequest(long userId, long buildingId, string unitNumber)
+
+    public bool HasExistingRequest(User user, Building building, string unitNumber)
     {
-        return _repository.HasExistingRequest(userId, buildingId, unitNumber);
+        return _repository.HasExistingRequest(user, building, unitNumber);
     }
 
     public bool IsUnitOccupied(long buildingId, string unitNumber)
     {
         return _repository.IsUnitOccupied(buildingId, unitNumber);
     }
+
     public int GetPendingRequestsCount(long buildingId)
     {
         return _repository.GetPendingRequestsCount(buildingId);
