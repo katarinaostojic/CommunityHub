@@ -249,4 +249,51 @@ public class BuildingDbRepository
         param.Value = value;
         command.Parameters.Add(param);
     }
+
+    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO buildings (street, street_number, neighborhood, city_id, number_of_floors)
+        VALUES (@street, @streetNumber, @neighborhood, @cityId, @numberOfFloors)
+        RETURNING id";
+
+        AddParameter(command, "@street", street);
+        AddParameter(command, "@streetNumber", streetNumber);
+        AddParameter(command, "@neighborhood", neighborhood);
+        AddParameter(command, "@cityId", cityId);
+        AddParameter(command, "@numberOfFloors", numberOfFloors);
+
+        return Convert.ToInt64(command.ExecuteScalar());
+    }
+
+    public long CreateFloorReturningId(long buildingId, int floorNumber)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO floors (building_id, floor_number)
+        VALUES (@buildingId, @floorNumber)
+        RETURNING id";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@floorNumber", floorNumber);
+
+        return Convert.ToInt64(command.ExecuteScalar());
+    }
+
+    public void CreateUnit(long floorId, string unitNumber)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO units (floor_id, unit_number)
+        VALUES (@floorId, @unitNumber)";
+
+        AddParameter(command, "@floorId", floorId);
+        AddParameter(command, "@unitNumber", unitNumber);
+
+        command.ExecuteNonQuery();
+    }
 }
