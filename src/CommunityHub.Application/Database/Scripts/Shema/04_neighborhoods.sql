@@ -25,7 +25,7 @@ CREATE TABLE neighborhood_access_requests (
     citizen_id BIGINT NOT NULL,
     neighborhood_id BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    status request_status NOT NULL DEFAULT 'ceka odobrenje',
+    status request_status NOT NULL DEFAULT 'pending approval',
     rejection_reason TEXT,
     FOREIGN KEY (citizen_id) REFERENCES users(id),
     FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods(id)

@@ -9,9 +9,9 @@ INSERT INTO neighborhood_streets (id, neighborhood_id, street_name, start_number
 (-4, -2, 'Gospodar Jevremova', 1, 60);
 
 INSERT INTO neighborhood_access_requests (id, citizen_id, neighborhood_id, created_at, status, rejection_reason) VALUES
-(-1, -7, -1, '2024-01-20 10:00:00', 'ceka odobrenje', NULL),
-(-2, -8, -1, '2024-01-21 11:00:00', 'ceka odobrenje', NULL),
-(-3, -7, -2, '2024-01-22 12:00:00', 'odbijen', 'Adresa se ne podudara sa kvartom');
+(-1, -7, -1, '2024-01-20 10:00:00', 'pending approval', NULL),
+(-2, -8, -1, '2024-01-21 11:00:00', 'pending approval', NULL),
+(-3, -7, -2, '2024-01-22 12:00:00', 'rejected', 'Adresa se ne podudara sa kvartom');
 
 
 
