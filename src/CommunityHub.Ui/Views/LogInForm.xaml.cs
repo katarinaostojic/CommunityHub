@@ -5,6 +5,7 @@ using CommunityHub.Application.Domain;
 namespace CommunityHub.Ui.Views;
 
 using CommunityHub.Ui.Views.TenantViews;
+using CommunityHub.Ui.Views.ManagerViews;
 
 public partial class LogInForm : Window
 {
@@ -38,8 +39,8 @@ public partial class LogInForm : Window
                 mainWindow.NavigateTo(new BrowseBuildingsPage(user));
                 break;
             case "manager":
-                // ManagerWindow managerWindow = new ManagerWindow(user);
-                // managerWindow.Show();
+                ManagerMainWindow managerWindow = new ManagerMainWindow(user);
+                managerWindow.Show();
                 break;
             case "coordinator":
 
