@@ -3,17 +3,17 @@ using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Services.TenantServices;
+using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
-public partial class RequestAccessDialog : Window
+public partial class BuildingAccessRequestDialog : Window
 {
     private readonly Building _building;
     private readonly User _user;
     private readonly BuildingAccessRequestService _requestService;
 
-    public RequestAccessDialog(Building building, User user)
+    public BuildingAccessRequestDialog(Building building, User user)
     {
         InitializeComponent();
         _building = building;
@@ -72,7 +72,13 @@ public partial class RequestAccessDialog : Window
             return;
         }
 
-        _requestService.Create(_user.Id, _building.Id, unitNumber);
+        if (_requestService.HasExistingRequest(_user, _building, unitNumber))
+        {
+            MessageBox.Show("You already have a request for this apartment.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        _requestService.Create(_user, _building, unitNumber);
         DialogResult = true;
         Close();
     }

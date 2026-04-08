@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Services.TenantServices;
+﻿using CommunityHub.Application.Services;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
@@ -19,7 +19,6 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class BrowseBuildingsPage : Page
 {
     private readonly User _user;
-    private List<Building> _allBuildings;
     private List<Building> _filteredBuildings;
     private int _currentPage = 1;
     private const int PageSize = 3;
@@ -38,8 +37,7 @@ public partial class BrowseBuildingsPage : Page
 
     private void LoadBuildings()
     {
-        _allBuildings = _buildingService.GetAll();
-        _filteredBuildings = _allBuildings;
+        _filteredBuildings = _buildingService.Search(null, null, null, null);
         _currentPage = 1;
         DisplayBuildings();
     }
@@ -58,15 +56,14 @@ public partial class BrowseBuildingsPage : Page
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        Search();
+        SearchAddress();
     }
 
-    private void Search()
+    private void SearchAddress()
     {
         string search = SearchTextBox.Text.Trim();
-        _filteredBuildings = string.IsNullOrEmpty(search)
-            ? _allBuildings
-            : _buildingService.Search(search, null, null, null);
+        _filteredBuildings = _buildingService.Search(
+            string.IsNullOrEmpty(search) ? null : search, null, null, null);
         _currentPage = 1;
         DisplayBuildings();
     }
@@ -124,10 +121,7 @@ public partial class BrowseBuildingsPage : Page
         string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
         string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
 
-        _filteredBuildings = (street == null && neighborhood == null && city == null && country == null)
-            ? _allBuildings
-            : _buildingService.Search(street, neighborhood, city, country);
-
+        _filteredBuildings = _buildingService.Search(street, neighborhood, city, country);
         _currentPage = 1;
         DisplayBuildings();
         CloseFilterPanel();
@@ -139,7 +133,7 @@ public partial class BrowseBuildingsPage : Page
         FilterNeighborhoodTextBox.Text = string.Empty;
         FilterCityTextBox.Text = string.Empty;
         FilterCountryTextBox.Text = string.Empty;
-        _filteredBuildings = _allBuildings;
+        _filteredBuildings = _buildingService.Search(null, null, null, null);
         _currentPage = 1;
         DisplayBuildings();
     }
@@ -151,7 +145,7 @@ public partial class BrowseBuildingsPage : Page
         FilterNeighborhoodTextBox.Text = string.Empty;
         FilterCityTextBox.Text = string.Empty;
         FilterCountryTextBox.Text = string.Empty;
-        _filteredBuildings = _allBuildings;
+        _filteredBuildings = _buildingService.Search(null, null, null, null);
         _currentPage = 1;
         DisplayBuildings();
     }
@@ -160,7 +154,7 @@ public partial class BrowseBuildingsPage : Page
     {
         Building building = (Building)((Button)sender).Tag;
 
-        if (!ShowRequestAccessDialog(building)) return;
+        if (!ShowBuildingRequestAccessDialog(building)) return;
 
         TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
@@ -170,12 +164,12 @@ public partial class BrowseBuildingsPage : Page
 
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService.Navigate(new MyRequestsPage(_user));
+        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
-    private bool ShowRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(Building building)
     {
-        RequestAccessDialog dialog = new RequestAccessDialog(building, _user);
+        BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
     }
@@ -211,7 +205,7 @@ public partial class BrowseBuildingsPage : Page
 
     private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService.Navigate(new MyRequestsPage(_user));
+        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
     private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

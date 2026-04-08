@@ -1,9 +1,7 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain.Building;
 
-namespace CommunityHub.Application.Services.TenantServices;
-
-using CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Services;
 
 public class BuildingService
 {
@@ -12,11 +10,6 @@ public class BuildingService
     public BuildingService()
     {
         _repository = new BuildingDbRepository();
-    }
-
-    public List<Building> GetAll()
-    {
-        return _repository.GetAll();
     }
 
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
@@ -30,13 +23,28 @@ public class BuildingService
         return building.TotalUnits - occupiedUnits.Count;
     }
 
-    public List<BuildingMembership> GetMembershipsByTenant(long userId)
+    public List<BuildingMembership> GetMembershipsByTenant(long tenantId)
     {
-        return _repository.GetMembershipsByTenant(userId);
+        return _repository.GetMembershipsByTenant(tenantId);
     }
 
     public Building? GetById(long buildingId)
     {
         return _repository.GetById(buildingId);
+    }
+
+    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors)
+    {
+        return _repository.CreateBuilding(street, streetNumber, neighborhood, cityId, numberOfFloors);
+    }
+
+    public long CreateFloorReturningId(long buildingId, int floorNumber)
+    {
+        return _repository.CreateFloorReturningId(buildingId, floorNumber);
+    }
+
+    public void CreateUnit(long floorId, string unitNumber)
+    {
+        _repository.CreateUnit(floorId, unitNumber);
     }
 }

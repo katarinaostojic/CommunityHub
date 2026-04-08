@@ -9,7 +9,7 @@ public class Building
     public City City { get; private set; }
     public int NumberOfFloors { get; private set; }
     public List<Floor> Floors { get; private set; }
-    public List<AppImage> Images { get; private set; }
+    public List<Image> Images { get; private set; }
 
     public Building(long id, string street, string streetNumber, string neighborhood, City city, int numberOfFloors)
     {
@@ -20,7 +20,7 @@ public class Building
         City = city;
         NumberOfFloors = numberOfFloors;
         Floors = new List<Floor>();
-        Images = new List<AppImage>();
+        Images = new List<Image>();
     }
 
     public void AddFloor(Floor floor)
@@ -28,7 +28,7 @@ public class Building
         Floors.Add(floor);
     }
 
-    public void AddImage(AppImage image)
+    public void AddImage(Image image)
     {
         Images.Add(image);
     }

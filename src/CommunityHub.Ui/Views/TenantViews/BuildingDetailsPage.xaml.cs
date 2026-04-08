@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
-using CommunityHub.Application.Services.TenantServices;
 using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using CommunityHub.Ui.Helpers;
 using System.IO;
+using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -96,7 +96,7 @@ public partial class BuildingDetailsPage : Page
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!ShowRequestAccessDialog(_building)) return;
+        if (!ShowBuildingRequestAccessDialog(_building)) return;
 
         DisplayInfoCards();
         ViewRequestsButton.Visibility = Visibility.Visible;
@@ -106,12 +106,12 @@ public partial class BuildingDetailsPage : Page
 
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService.Navigate(new MyRequestsPage(_user));
+        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
-    private bool ShowRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(Building building)
     {
-        RequestAccessDialog dialog = new RequestAccessDialog(building, _user);
+        BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
     }

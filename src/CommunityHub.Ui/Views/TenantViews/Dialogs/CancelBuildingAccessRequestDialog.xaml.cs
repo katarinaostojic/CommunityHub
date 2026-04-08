@@ -2,9 +2,9 @@
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
-public partial class CancelConfirmDialog : Window
+public partial class CancelBuildingAccessRequestDialog : Window
 {
-    public CancelConfirmDialog(string street, string streetNumber)
+    public CancelBuildingAccessRequestDialog(string street, string streetNumber)
     {
         InitializeComponent();
         MessageTextBlock.Text = $"This will permanently delete your request for {street} {streetNumber}.\nThis action cannot be undone.";

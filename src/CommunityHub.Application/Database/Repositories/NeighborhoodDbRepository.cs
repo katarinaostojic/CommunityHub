@@ -1,5 +1,6 @@
-﻿using System.Data;
+﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
+using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
@@ -185,7 +186,7 @@ public class NeighborhoodDbRepository
                 reader["citizen_name"].ToString(),
                 reader["citizen_surname"].ToString(),
                 ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
-                reader["role"].ToString(),
+                UserMapper.ParseRole(reader["role"].ToString()!),
                 reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
             );
 
@@ -479,7 +480,7 @@ public class NeighborhoodDbRepository
                 reader["citizen_name"].ToString(),
                 reader["citizen_surname"].ToString(),
                 ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
-                reader["role"].ToString(),
+                UserMapper.ParseRole(reader["role"].ToString()!),
                 reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
             );
 
@@ -546,7 +547,7 @@ public class NeighborhoodDbRepository
         command.ExecuteNonQuery();
     }
 
-    public List<AppImage> GetImages(long neighborhoodId)
+    public List<Image> GetImages(long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
@@ -562,10 +563,10 @@ public class NeighborhoodDbRepository
 
         using IDataReader reader = command.ExecuteReader();
 
-        var images = new List<AppImage>();
+        var images = new List<Image>();
         while (reader.Read())
         {
-            images.Add(new AppImage(
+            images.Add(new Image(
                 Convert.ToInt64(reader["id"]),
                 reader["path"].ToString()
             ));

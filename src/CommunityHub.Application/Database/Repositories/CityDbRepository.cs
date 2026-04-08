@@ -3,27 +3,19 @@ using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class CityDbRepository
+public class CityDbRepository : BaseDbRepository
 {
     public City Create(City city)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             INSERT INTO cities(name, country_id)
             VALUES (@name, @country_id)
             RETURNING id";
 
-        IDbDataParameter nameParam = command.CreateParameter();
-        nameParam.ParameterName = "@name";
-        nameParam.Value = city.Name;
-        command.Parameters.Add(nameParam);
-
-        IDbDataParameter countryIdParam = command.CreateParameter();
-        countryIdParam.ParameterName = "@country_id";
-        countryIdParam.Value = city.Country.Id;
-        command.Parameters.Add(countryIdParam);
+        AddParameter(command, "@name", city.Name);
+        AddParameter(command, "@country_id", city.Country.Id);
 
         // ExecuteScalar vraća prvu kolonu prvog reda (id u ovom slučaju)
         long id = Convert.ToInt64(command.ExecuteScalar());
@@ -33,10 +25,8 @@ public class CityDbRepository
 
     public List<City> GetAll()
     {
-        List<City> cities = new List<City>();
         using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT ci.id, ci.name, co.id as country_id, co.name as country_name, co.code as country_code
             FROM cities ci 
@@ -46,18 +36,15 @@ public class CityDbRepository
         // ExecuteReader vraća IDataReader za čitanje više redova
         using IDataReader reader = command.ExecuteReader();
 
+        List<City> cities = new List<City>();
         while (reader.Read())
         {
-            long id = Convert.ToInt64(reader["id"]);
-            string name = reader["name"].ToString();
-
-            long countryId = Convert.ToInt64(reader["country_id"]);
-            string countryName = reader["country_name"].ToString();
-            string countryCode = reader["country_code"].ToString();
-
-            Country country = new Country(countryId, countryName, countryCode);
-
-            cities.Add(new City(id, name, country));
+            Country country = new Country(
+                Convert.ToInt64(reader["country_id"]),
+                reader["country_name"].ToString()!,
+                reader["country_code"].ToString()!
+            );
+            cities.Add(new City(Convert.ToInt64(reader["id"]), reader["name"].ToString()!, country));
         }
 
         return cities;
@@ -66,18 +53,14 @@ public class CityDbRepository
     public City? GetById(long id)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        SELECT ci.id, ci.name, co.id as country_id, co.name as country_name, co.code as country_code
-        FROM cities ci 
-        JOIN countries co ON ci.country_id = co.id
-        WHERE ci.id = @id";
+            SELECT ci.id, ci.name, co.id as country_id, co.name as country_name, co.code as country_code
+            FROM cities ci 
+            JOIN countries co ON ci.country_id = co.id
+            WHERE ci.id = @id";
 
-        IDbDataParameter idParam = command.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = id;
-        command.Parameters.Add(idParam);
+        AddParameter(command, "@id", id);
 
         using IDataReader reader = command.ExecuteReader();
 
@@ -85,11 +68,11 @@ public class CityDbRepository
         {
             return new City(
                 Convert.ToInt64(reader["id"]),
-                reader["name"].ToString(),
+                reader["name"].ToString()!,
                 new Country(
                     Convert.ToInt64(reader["country_id"]),
-                    reader["country_name"].ToString(),
-                    reader["country_code"].ToString()
+                    reader["country_name"].ToString()!,
+                    reader["country_code"].ToString()!
                 )
             );
         }
@@ -100,27 +83,15 @@ public class CityDbRepository
     public void Update(City city)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        UPDATE cities 
-        SET name = @name, country_id = @country_id 
-        WHERE id = @id";
+            UPDATE cities 
+            SET name = @name, country_id = @country_id 
+            WHERE id = @id";
 
-        var nameParam = command.CreateParameter();
-        nameParam.ParameterName = "@name";
-        nameParam.Value = city.Name;
-        command.Parameters.Add(nameParam);
-
-        var countryIdParam = command.CreateParameter();
-        countryIdParam.ParameterName = "@country_id";
-        countryIdParam.Value = city.Country.Id;
-        command.Parameters.Add(countryIdParam);
-
-        var idParam = command.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = city.Id;
-        command.Parameters.Add(idParam);
+        AddParameter(command, "@name", city.Name);
+        AddParameter(command, "@country_id", city.Country.Id);
+        AddParameter(command, "@id", city.Id);
 
         command.ExecuteNonQuery();
     }
@@ -128,14 +99,10 @@ public class CityDbRepository
     public void Delete(long id)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = "DELETE FROM cities WHERE id = @id";
 
-        IDbDataParameter idParam = command.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = id;
-        command.Parameters.Add(idParam);
+        AddParameter(command, "@id", id);
 
         command.ExecuteNonQuery();
     }

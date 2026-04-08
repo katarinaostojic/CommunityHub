@@ -12,9 +12,9 @@ public class ImageService
         _repository = new ImageDbRepository();
     }
 
-    public List<AppImage> GetForBuilding(long buildingId)
+    public List<Image> GetForBuilding(long buildingId)
     {
-        return _repository.GetByResource("building", buildingId);
+        return _repository.GetByEntity("building", buildingId);
     }
 
     // Kada dodate slike za kvartove:

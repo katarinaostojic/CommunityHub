@@ -1,5 +1,12 @@
 namespace CommunityHub.Application.Domain;
 
+public enum UserRole
+{
+    Tenant,
+    Manager,
+    Coordinator,
+    Citizen
+}
 public class User
 {
     public long Id { get; private set; }
@@ -8,11 +15,11 @@ public class User
     public string Name { get; private set; }
     public string Surname { get; private set; }
     public DateTime BirthDay { get; private set; }
-    public string Role { get; private set; }
+    public UserRole Role { get; private set; }
     public string? Address { get; private set; }
     public List<Post>? Posts { get; private set; }
 
-    public User(long id, string username, string password, string name, string surname, DateTime birthDay, string role, string? address = null)
+    public User(long id, string username, string password, string name, string surname, DateTime birthDay, UserRole role, string? address = null)
     {
         Id = id;
         Username = username;

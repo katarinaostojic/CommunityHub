@@ -103,9 +103,6 @@
             <TextBlock Text="Browse Buildings"
                        Style="{StaticResource PageTitle}"
                        VerticalAlignment="Center"/>
-            <Button Content="📍 Near me"
-                    Style="{StaticResource OutlineButton}"
-                    HorizontalAlignment="Right"/>
         </Grid>
 
         <!-- Building list -->

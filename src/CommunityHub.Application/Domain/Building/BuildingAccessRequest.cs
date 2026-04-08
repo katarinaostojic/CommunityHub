@@ -20,20 +20,4 @@ public class BuildingAccessRequest
         Status = status;
         RejectionReason = rejectionReason;
     }
-
-    public string StatusDisplay => Status switch
-    {
-        RequestStatus.PendingApproval => "⏳ Pending approval",
-        RequestStatus.Approved => "✔ Approved",
-        RequestStatus.Rejected => "✕ Rejected",
-        _ => Status.ToString()
-    };
-
-    public string RejectionReasonDisplay => RejectionReason != null
-        ? $"Note: {RejectionReason}"
-        : string.Empty;
-
-    public bool CancelButtonVisible => Status == RequestStatus.PendingApproval;
-
-    public bool RejectionReasonVisible => Status == RequestStatus.Rejected && RejectionReason != null;
 }
