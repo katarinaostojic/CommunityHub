@@ -79,7 +79,7 @@ public partial class MenuPanel : UserControl
     private void MyRequestsMenuItem_Click(object sender, RoutedEventArgs e)
     {
         Close();
-        NavigationService.GetNavigationService(this)?.Navigate(new MyRequestsPage(_user));
+        NavigationService.GetNavigationService(this)?.Navigate(new MyBuildingRequestsPage(_user));
     }
 
     private void LogoutButton_Click(object sender, RoutedEventArgs e)

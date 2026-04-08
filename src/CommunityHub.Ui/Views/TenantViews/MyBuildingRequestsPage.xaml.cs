@@ -9,7 +9,7 @@ using CommunityHub.Ui.Helpers;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
-public partial class MyRequestsPage : Page
+public partial class MyBuildingRequestsPage : Page
 {
     private readonly User _user;
     private List<BuildingAccessRequest> _allRequests;
@@ -18,7 +18,7 @@ public partial class MyRequestsPage : Page
     private bool _sortDescending = true;
     private readonly BuildingAccessRequestService _requestService;
 
-    public MyRequestsPage(User user)
+    public MyBuildingRequestsPage(User user)
     {
         InitializeComponent();
         _requestService = new BuildingAccessRequestService();
@@ -107,7 +107,7 @@ public partial class MyRequestsPage : Page
 
     private bool ConfirmCancellation(BuildingAccessRequest request)
     {
-        CancelConfirmDialog dialog = new CancelConfirmDialog(request.Building.Street, request.Building.StreetNumber);
+        CancelBuildingAccessRequestDialog dialog = new CancelBuildingAccessRequestDialog(request.Building.Street, request.Building.StreetNumber);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
     }

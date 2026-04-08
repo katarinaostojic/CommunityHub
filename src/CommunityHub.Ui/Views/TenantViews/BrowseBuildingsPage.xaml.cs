@@ -160,7 +160,7 @@ public partial class BrowseBuildingsPage : Page
     {
         Building building = (Building)((Button)sender).Tag;
 
-        if (!ShowRequestAccessDialog(building)) return;
+        if (!ShowBuildingRequestAccessDialog(building)) return;
 
         TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
@@ -170,12 +170,12 @@ public partial class BrowseBuildingsPage : Page
 
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService.Navigate(new MyRequestsPage(_user));
+        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
-    private bool ShowRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(Building building)
     {
-        RequestAccessDialog dialog = new RequestAccessDialog(building, _user);
+        BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
     }
@@ -211,7 +211,7 @@ public partial class BrowseBuildingsPage : Page
 
     private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
     {
-        NavigationService.Navigate(new MyRequestsPage(_user));
+        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
     private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -7,13 +7,13 @@ using CommunityHub.Application.Services.TenantServices;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
-public partial class RequestAccessDialog : Window
+public partial class BuildingAccessRequestDialog : Window
 {
     private readonly Building _building;
     private readonly User _user;
     private readonly BuildingAccessRequestService _requestService;
 
-    public RequestAccessDialog(Building building, User user)
+    public BuildingAccessRequestDialog(Building building, User user)
     {
         InitializeComponent();
         _building = building;
