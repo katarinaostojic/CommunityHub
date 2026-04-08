@@ -6,6 +6,7 @@ CREATE TABLE buildings (
     city_id BIGINT NOT NULL,
     number_of_floors INT NOT NULL,
     FOREIGN KEY (city_id) REFERENCES cities(id)
+    FOREIGN KEY (manager_id) REFERENCES users(id)
 );
 
 CREATE TABLE floors (

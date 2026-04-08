@@ -33,9 +33,9 @@ public class BuildingService
         return _repository.GetById(buildingId);
     }
 
-    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors)
+    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId)
     {
-        return _repository.CreateBuilding(street, streetNumber, neighborhood, cityId, numberOfFloors);
+        return _repository.CreateBuilding(street, streetNumber, neighborhood, cityId, numberOfFloors, managerId);
     }
 
     public long CreateFloorReturningId(long buildingId, int floorNumber)
@@ -46,5 +46,16 @@ public class BuildingService
     public void CreateUnit(long floorId, string unitNumber)
     {
         _repository.CreateUnit(floorId, unitNumber);
+    }
+
+    public List<Building> GetAllByManager(long managerId)
+    {
+        return _repository.GetAllByManager(managerId);
+    }
+
+    public void SaveBuildingImage(long buildingId, string path)
+    {
+        ImageDbRepository imageRepository = new ImageDbRepository();
+        imageRepository.SaveImage("building", buildingId, path);
     }
 }

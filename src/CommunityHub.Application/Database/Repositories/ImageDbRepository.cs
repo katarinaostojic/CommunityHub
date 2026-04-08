@@ -72,4 +72,19 @@ public class ImageDbRepository : BaseDbRepository
         }
         return images;
     }
+
+    public void SaveImage(string entity, long entityId, string path)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO images (entity, entity_id, path)
+        VALUES (@entity, @entityId, @path)";
+
+        AddParameter(command, "@entity", entity);
+        AddParameter(command, "@entityId", entityId);
+        AddParameter(command, "@path", path);
+
+        command.ExecuteNonQuery();
+    }
 }

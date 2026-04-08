@@ -1,11 +1,11 @@
-﻿INSERT INTO buildings (id, street, street_number, neighborhood, city_id, number_of_floors)
+﻿INSERT INTO buildings (id, street, street_number, neighborhood, city_id, number_of_floors, manager_id)
 VALUES
-    (-1, 'Knez Mihailova', '10', 'Stari grad', -1, 5),
-    (-2, 'Terazije', '23', 'Terazije', -1, 4),
-    (-3, 'Via Condotti', '3', 'Centro Storico', -4, 6),
-    (-4, 'Champs-Élysées', '52', '8ème arrondissement', -10, 5),
-    (-5, 'Kurfürstendamm', '18', 'Charlottenburg', -7, 4),
-    (-6, 'La Rambla', '77', 'Ciutat Vella', -14, 6);
+    (-1, 'Knez Mihailova', '10', 'Stari grad', -1, 5, -3),
+    (-2, 'Terazije', '23', 'Terazije', -1, 4, -3),
+    (-3, 'Via Condotti', '3', 'Centro Storico', -4, 6, -3),
+    (-4, 'Champs-Élysées', '52', '8ème arrondissement', -10, 5, -3),
+    (-5, 'Kurfürstendamm', '18', 'Charlottenburg', -7, 4, -3),
+    (-6, 'La Rambla', '77', 'Ciutat Vella', -14, 6, -3);
 
 INSERT INTO floors (id, building_id, floor_number)
 VALUES

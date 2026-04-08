@@ -1,9 +1,10 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
+using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -107,7 +108,8 @@ public partial class RegisterBuildingDialog : Window
             NumberTextBox.Text,
             SettlementTextBox.Text,
             selectedCity.Id,
-            numberOfFloors
+            numberOfFloors,
+            _currentUser.Id
         );
 
         foreach (Grid floorGrid in FloorsStackPanel.Children)
@@ -126,6 +128,20 @@ public partial class RegisterBuildingDialog : Window
             }
         }
 
+        string imagesFolder = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory, "images", "buildings");
+        Directory.CreateDirectory(imagesFolder);
+
+        foreach (string imagePath in _selectedImagePaths)
+        {
+            string fileName = Path.GetFileName(imagePath);
+            string destPath = Path.Combine(imagesFolder, fileName);
+            File.Copy(imagePath, destPath, true);
+
+            string relativePath = Path.Combine("images", "buildings", fileName);
+            _buildingService.SaveBuildingImage(buildingId, relativePath);
+        }
+
         MessageBox.Show("A new building has been registered successfully!\nPress OK to continue.", "Success");
         Close();
     }
@@ -140,7 +156,7 @@ public partial class RegisterBuildingDialog : Window
         OpenFileDialog dialog = new OpenFileDialog
         {
             Multiselect = true,
-            Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp"
+            Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp;*.jfif"
         };
 
         if (dialog.ShowDialog() == true)

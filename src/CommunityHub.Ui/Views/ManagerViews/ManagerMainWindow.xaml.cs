@@ -24,4 +24,9 @@ public partial class ManagerMainWindow : Window
         new LogInForm().Show();
         Close();
     }
+
+    private void AccessRequestsButton_Click(object sender, RoutedEventArgs e)
+    {
+        // AccessRequestsPage dolazi sa 1.2
+    }
 }
