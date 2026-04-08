@@ -26,6 +26,10 @@ public class BuildingAccessRequestService
     {
         _repository.Create(userId, buildingId, unitNumber);
     }
+    public bool HasExistingRequest(long userId, long buildingId, string unitNumber)
+    {
+        return _repository.HasExistingRequest(userId, buildingId, unitNumber);
+    }
 
     public bool IsUnitOccupied(long buildingId, string unitNumber)
     {

@@ -37,6 +37,22 @@ public class BuildingAccessRequestDbRepository
         command.ExecuteNonQuery();
     }
 
+    //ne moze u istoj zgradi za isti stan da posalje zahtev opet
+    public bool HasExistingRequest(long userId, long buildingId, string unitNumber)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT COUNT(*) FROM building_access_requests
+        WHERE user_id = @userId AND building_id = @buildingId AND unit_number = @unitNumber";
+
+        AddParameter(command, "@userId", userId);
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@unitNumber", unitNumber);
+
+        return Convert.ToInt64(command.ExecuteScalar()) > 0;
+    }
+
     public List<BuildingAccessRequest> GetAllByTenant(long userId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
