@@ -142,4 +142,82 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
             rejectionReason
         );
     }
+
+    public List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = $@"
+    SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
+           b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+           c.id AS city_id, c.name AS city_name,
+           co.id AS country_id, co.name AS country_name, co.code AS country_code,
+           u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+    FROM building_access_requests r
+    JOIN buildings b ON r.building_id = b.id
+    JOIN cities c ON b.city_id = c.id
+    JOIN countries co ON c.country_id = co.id
+    JOIN users u ON r.user_id = u.id
+    WHERE b.manager_id = @managerId
+      AND (@status IS NULL OR r.status = @status::request_status)
+    ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
+
+        AddParameter(command, "@managerId", managerId);
+        AddParameter(command, "@status", status);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadRequests(reader);
+    }
+
+    public void ApproveRequest(long requestId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = "UPDATE building_access_requests SET status = 'accepted'::request_status WHERE id = @id";
+        AddParameter(command, "@id", requestId);
+        command.ExecuteNonQuery();
+    }
+
+    public void RejectRequest(long requestId, string? rejectionReason)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        UPDATE building_access_requests
+        SET status = 'rejected'::request_status, rejection_reason = @reason
+        WHERE id = @id";
+        AddParameter(command, "@id", requestId);
+        AddParameter(command, "@reason", rejectionReason);
+        command.ExecuteNonQuery();
+    }
+
+    public void CreateMembership(BuildingAccessRequest request)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand floorCmd = connection.CreateCommand();
+        floorCmd.CommandText = @"
+        SELECT f.floor_number FROM units u
+        JOIN floors f ON u.floor_id = f.id
+        WHERE f.building_id = @buildingId AND u.unit_number = @unitNumber
+        LIMIT 1";
+        AddParameter(floorCmd, "@buildingId", request.Building.Id);
+        AddParameter(floorCmd, "@unitNumber", request.UnitNumber);
+
+        object? floorResult = floorCmd.ExecuteScalar();
+        int floorNumber = floorResult != null && floorResult != DBNull.Value
+            ? Convert.ToInt32(floorResult)
+            : 0;
+
+        IDbCommand cmd = connection.CreateCommand();
+        cmd.CommandText = @"
+        INSERT INTO building_memberships (building_id, user_id, unit_number, floor_number, approved_at)
+        VALUES (@buildingId, @userId, @unitNumber, @floorNumber, @approvedAt)";
+        AddParameter(cmd, "@buildingId", request.Building.Id);
+        AddParameter(cmd, "@userId", request.User.Id);
+        AddParameter(cmd, "@unitNumber", request.UnitNumber);
+        AddParameter(cmd, "@floorNumber", floorNumber);
+        AddParameter(cmd, "@approvedAt", DateTime.UtcNow);
+        cmd.ExecuteNonQuery();
+    }
 }

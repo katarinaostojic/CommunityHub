@@ -38,7 +38,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="220" Height="230" Margin="12"
+                        <Border Width="280" Height="225" Margin="12"
                                 Background="White"
                                 CornerRadius="12"
                                 Cursor="Hand"
@@ -91,26 +91,55 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <!-- REGISTER BUTTON -->
+        <!-- FOOTER -->
         <Border Grid.Row="2" Background="White">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="6" Opacity="0.1" ShadowDepth="-2"/>
             </Border.Effect>
-            <Button Content="+ Register New Building"
-                    Width="240" Height="45"
-                    FontSize="14" FontWeight="SemiBold"
-                    Foreground="White"
-                    Background="#2980B9"
-                    BorderThickness="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Click="RegisterBuilding_Click">
-                <Button.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="8"/>
-                    </Style>
-                </Button.Resources>
-            </Button>
+            <Grid Margin="24,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <Button x:Name="PrevButton" Content="←" Width="36" Height="36"
+                    FontSize="16" Foreground="#2C3E50" Background="White"
+                    BorderBrush="#CCCCCC" BorderThickness="1"
+                    Cursor="Hand" Margin="0,0,8,0"
+                    Click="PrevButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <TextBlock x:Name="PageIndicator" FontSize="13"
+                       Foreground="#2C3E50" VerticalAlignment="Center"/>
+                    <Button x:Name="NextButton" Content="→" Width="36" Height="36"
+                    FontSize="16" Foreground="#2C3E50" Background="White"
+                    BorderBrush="#CCCCCC" BorderThickness="1"
+                    Cursor="Hand" Margin="8,0,0,0"
+                    Click="NextButton_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+
+                <Button Content="+ Register New Building"
+                Width="240" Height="45"
+                FontSize="14" FontWeight="SemiBold"
+                Foreground="White" Background="#2980B9"
+                BorderThickness="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Click="RegisterBuilding_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
         </Border>
     </Grid>
 </Page>

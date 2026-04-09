@@ -47,4 +47,20 @@ public class BuildingAccessRequestService
     {
         return _repository.GetPendingRequestsCount(buildingId);
     }
+
+    public List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending)
+    {
+        return _repository.GetAllByManager(managerId, status, sortDescending);
+    }
+
+    public void ApproveRequest(BuildingAccessRequest request)
+    {
+        _repository.ApproveRequest(request.Id);
+        _repository.CreateMembership(request);
+    }
+
+    public void RejectRequest(long requestId, string? rejectionReason)
+    {
+        _repository.RejectRequest(requestId, rejectionReason);
+    }
 }
