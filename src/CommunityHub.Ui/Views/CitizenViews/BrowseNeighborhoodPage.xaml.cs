@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
+using CommunityHub.Ui.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,11 @@ namespace CommunityHub.Ui.Views.CitizenViews
             _user = user;
 
             LoggedInUserTextBlock.Text = _user.Username;
+
+            CitizenMenu.CloseRequested += CitizenMenu_CloseRequested;
+            CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
+            CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
+
             LoadNeighborhoods();
         }
 
@@ -133,7 +139,10 @@ namespace CommunityHub.Ui.Views.CitizenViews
 
         private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            CloseFilterPanel();
+            if (_filterPanelOpen)
+            {
+                CloseFilterPanel();
+            }
         }
 
         private void ApplyFiltersButton_Click(object sender, RoutedEventArgs e)
@@ -175,6 +184,65 @@ namespace CommunityHub.Ui.Views.CitizenViews
         private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("My Requests page.");
+        }
+
+        private void BurgerButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_filterPanelOpen)
+            {
+                CloseFilterPanel();
+            }
+
+            CitizenMenu.Visibility = Visibility.Visible;
+        }
+
+        private void CitizenMenu_CloseRequested()
+        {
+            CitizenMenu.Visibility = Visibility.Collapsed;
+        }
+
+        private void CitizenMenu_NavigationRequested(string destination)
+        {
+            CitizenMenu.Visibility = Visibility.Collapsed;
+
+            switch (destination)
+            {
+                case "Neighborhoods":
+                    break;
+
+                case "MyRequests":
+                    MessageBox.Show("Go to My Requests page.");
+                    break;
+
+                case "Events":
+                    MessageBox.Show("Go to Events page.");
+                    break;
+
+                case "Citizens":
+                    MessageBox.Show("Go to Citizens page.");
+                    break;
+
+                case "Meetings":
+                    MessageBox.Show("Go to Meetings page.");
+                    break;
+
+                case "CityObjects":
+                    MessageBox.Show("Go to City Objects page.");
+                    break;
+
+                case "Budget":
+                    MessageBox.Show("Go to Budget page.");
+                    break;
+            }
+        }
+
+        private void CitizenMenu_LogoutRequested()
+        {
+            CitizenMenu.Visibility = Visibility.Collapsed;
+
+            LogInForm loginForm = new LogInForm();
+            loginForm.Show();
+            Close();
         }
     }
 }
