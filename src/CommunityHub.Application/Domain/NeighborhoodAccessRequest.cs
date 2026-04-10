@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
 
 public class NeighborhoodAccessRequest
 {
@@ -19,19 +19,23 @@ public class NeighborhoodAccessRequest
         Status = status;
         RejectionReason = rejectionReason;
     }
+
+    public NeighborhoodAccessRequest(User citizen, Neighborhood neighborhood)
+    {
+        Id = 0;
+        Citizen = citizen;
+        Neighborhood = neighborhood;
+        CreatedAt = DateTime.Now;
+        Status = RequestStatus.PendingApproval;
+        RejectionReason = null;
+    }
     public void Approve()
     {
-        if (Status != RequestStatus.PendingApproval)
-            throw new InvalidOperationException("Only pending requests can be approved.");
-
         Status = RequestStatus.Approved;
     }
 
     public void Reject(string? reason)
     {
-        if (Status != RequestStatus.PendingApproval)
-            throw new InvalidOperationException("Only pending requests can be rejected.");
-
         Status = RequestStatus.Rejected;
         RejectionReason = reason;
     }

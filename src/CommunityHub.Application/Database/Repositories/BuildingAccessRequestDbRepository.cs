@@ -69,7 +69,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         JOIN countries co ON c.country_id = co.id
         JOIN users u ON r.user_id = u.id
         WHERE r.user_id = @userId
-          AND (@status IS NULL OR r.status = @status)
+          AND (@status IS NULL OR r.status = @status::request_status)
         ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
 
         AddParameter(command, "@userId", tenantId);
@@ -86,7 +86,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         command.CommandText = @"
         SELECT COUNT(*) FROM building_access_requests
         WHERE user_id = @userId
-          AND (@status IS NULL OR status = @status)";
+          AND (@status IS NULL OR status = @status::request_status)";
 
         AddParameter(command, "@userId", tenantId);
         AddParameter(command, "@status", status);
@@ -111,7 +111,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT COUNT(*) FROM building_access_requests
-            WHERE building_id = @buildingId AND status = 'pending approval'";
+            WHERE building_id = @buildingId AND status = 'pending approval'::request_status";
 
         AddParameter(command, "@buildingId", buildingId);
 

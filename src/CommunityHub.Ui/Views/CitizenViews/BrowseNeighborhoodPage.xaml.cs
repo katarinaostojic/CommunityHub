@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
 using CommunityHub.Ui.Views;
+using CommunityHub.Ui.Views.CitizenViews.Dialogs; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,17 +169,12 @@ namespace CommunityHub.Ui.Views.CitizenViews
             _filteredNeighborhoods = new List<Neighborhood>(_allNeighborhoods);
             DisplayNeighborhoods();
         }
-
         private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
         {
             Neighborhood neighborhood = (Neighborhood)((Button)sender).Tag;
 
-            MessageBox.Show(
-                $"Selected neighborhood: {neighborhood.Name}",
-                "Request Access",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
+            var dialog = new NeighborhoodAccessRequestDialog(_user, neighborhood);
+            dialog.ShowDialog();
         }
 
         private void MyRequestsButton_Click(object sender, RoutedEventArgs e)

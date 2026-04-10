@@ -5,9 +5,10 @@ using System.Linq;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class NeighborhoodDbRepository
+public class NeighborhoodDbRepository : BaseDbRepository
 {
     private readonly ImageDbRepository _imageRepository = new();
+
     public long Create(string name, string description, long cityId, long coordinatorId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -18,25 +19,10 @@ public class NeighborhoodDbRepository
             VALUES (@name, @description, @cityId, 0, @coordinatorId)
             RETURNING id";
 
-        IDbDataParameter nameParam = command.CreateParameter();
-        nameParam.ParameterName = "@name";
-        nameParam.Value = name;
-        command.Parameters.Add(nameParam);
-
-        IDbDataParameter descParam = command.CreateParameter();
-        descParam.ParameterName = "@description";
-        descParam.Value = description;
-        command.Parameters.Add(descParam);
-
-        IDbDataParameter cityParam = command.CreateParameter();
-        cityParam.ParameterName = "@cityId";
-        cityParam.Value = cityId;
-        command.Parameters.Add(cityParam);
-
-        IDbDataParameter coordParam = command.CreateParameter();
-        coordParam.ParameterName = "@coordinatorId";
-        coordParam.Value = coordinatorId;
-        command.Parameters.Add(coordParam);
+        AddParameter(command, "@name", name);
+        AddParameter(command, "@description", description);
+        AddParameter(command, "@cityId", cityId);
+        AddParameter(command, "@coordinatorId", coordinatorId);
 
         return Convert.ToInt64(command.ExecuteScalar());
     }
@@ -50,25 +36,10 @@ public class NeighborhoodDbRepository
             INSERT INTO neighborhood_streets (neighborhood_id, street_name, start_number, end_number)
             VALUES (@neighborhoodId, @streetName, @startNumber, @endNumber)";
 
-        IDbDataParameter nIdParam = command.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        command.Parameters.Add(nIdParam);
-
-        IDbDataParameter streetParam = command.CreateParameter();
-        streetParam.ParameterName = "@streetName";
-        streetParam.Value = streetName;
-        command.Parameters.Add(streetParam);
-
-        IDbDataParameter startParam = command.CreateParameter();
-        startParam.ParameterName = "@startNumber";
-        startParam.Value = startNumber;
-        command.Parameters.Add(startParam);
-
-        IDbDataParameter endParam = command.CreateParameter();
-        endParam.ParameterName = "@endNumber";
-        endParam.Value = endNumber;
-        command.Parameters.Add(endParam);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        AddParameter(command, "@streetName", streetName);
+        AddParameter(command, "@startNumber", startNumber);
+        AddParameter(command, "@endNumber", endNumber);
 
         command.ExecuteNonQuery();
     }
@@ -89,10 +60,7 @@ public class NeighborhoodDbRepository
             WHERE n.coordinator_id = @coordinatorId
             ORDER BY n.id";
 
-        IDbDataParameter coordParam = command.CreateParameter();
-        coordParam.ParameterName = "@coordinatorId";
-        coordParam.Value = coordinatorId;
-        command.Parameters.Add(coordParam);
+        AddParameter(command, "@coordinatorId", coordinatorId);
 
         using IDataReader reader = command.ExecuteReader();
 
@@ -106,12 +74,12 @@ public class NeighborhoodDbRepository
             {
                 neighborhoods[id] = new Neighborhood(
                     id,
-                    reader["name"].ToString(),
-                    reader["description"].ToString(),
+                    reader["name"].ToString()!,
+                    reader["description"].ToString()!,
                     new Location(
                         Convert.ToInt64(reader["city_id"]),
-                        reader["city_name"].ToString(),
-                        reader["country_name"].ToString()
+                        reader["city_name"].ToString()!,
+                        reader["country_name"].ToString()!
                     ),
                     Convert.ToDecimal(reader["budget"]),
                     Convert.ToInt64(reader["coordinator_id"])
@@ -123,7 +91,7 @@ public class NeighborhoodDbRepository
                 neighborhoods[id].AddStreet(new Street(
                     Convert.ToInt64(reader["street_id"]),
                     id,
-                    reader["street_name"].ToString(),
+                    reader["street_name"].ToString()!,
                     Convert.ToInt32(reader["start_number"]),
                     Convert.ToInt32(reader["end_number"])
                 ));
@@ -159,18 +127,12 @@ public class NeighborhoodDbRepository
         JOIN countries co ON c.country_id = co.id
         WHERE n.coordinator_id = @coordinatorId";
 
-        IDbDataParameter coordParam = command.CreateParameter();
-        coordParam.ParameterName = "@coordinatorId";
-        coordParam.Value = coordinatorId;
-        command.Parameters.Add(coordParam);
+        AddParameter(command, "@coordinatorId", coordinatorId);
 
         if (!string.IsNullOrEmpty(statusFilter))
         {
-            command.CommandText += " AND r.status = @status";
-            IDbDataParameter statusParam = command.CreateParameter();
-            statusParam.ParameterName = "@status";
-            statusParam.Value = statusFilter;
-            command.Parameters.Add(statusParam);
+            command.CommandText += " AND r.status::text = @status";
+            AddParameter(command, "@status", statusFilter);
         }
 
         command.CommandText += " ORDER BY r.created_at DESC";
@@ -183,10 +145,10 @@ public class NeighborhoodDbRepository
         {
             User citizen = new User(
                 Convert.ToInt64(reader["citizen_id"]),
-                reader["username"].ToString(),
-                reader["password"].ToString(),
-                reader["citizen_name"].ToString(),
-                reader["citizen_surname"].ToString(),
+                reader["username"].ToString()!,
+                reader["password"].ToString()!,
+                reader["citizen_name"].ToString()!,
+                reader["citizen_surname"].ToString()!,
                 ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
                 UserMapper.ParseRole(reader["role"].ToString()!),
                 reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
@@ -194,12 +156,12 @@ public class NeighborhoodDbRepository
 
             Neighborhood neighborhood = new Neighborhood(
                 Convert.ToInt64(reader["n_id"]),
-                reader["neighborhood_name"].ToString(),
-                reader["description"].ToString(),
+                reader["neighborhood_name"].ToString()!,
+                reader["description"].ToString()!,
                 new Location(
                     Convert.ToInt64(reader["city_id"]),
-                    reader["city_name"].ToString(),
-                    reader["country_name"].ToString()
+                    reader["city_name"].ToString()!,
+                    reader["country_name"].ToString()!
                 ),
                 Convert.ToDecimal(reader["budget"]),
                 Convert.ToInt64(reader["coordinator_id"])
@@ -210,7 +172,7 @@ public class NeighborhoodDbRepository
                 citizen,
                 neighborhood,
                 Convert.ToDateTime(reader["created_at"]),
-                Enum.Parse<RequestStatus>(reader["status"].ToString()),
+                ParseRequestStatus(reader["status"].ToString()!),
                 reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader["rejection_reason"].ToString()
             ));
         }
@@ -224,24 +186,15 @@ public class NeighborhoodDbRepository
 
         IDbCommand updateCmd = connection.CreateCommand();
         updateCmd.CommandText = "UPDATE neighborhood_access_requests SET status = 'Approved' WHERE id = @id";
-        IDbDataParameter idParam = updateCmd.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = requestId;
-        updateCmd.Parameters.Add(idParam);
+        AddParameter(updateCmd, "@id", requestId);
         updateCmd.ExecuteNonQuery();
 
         IDbCommand memberCmd = connection.CreateCommand();
         memberCmd.CommandText = @"
         INSERT INTO neighborhood_memberships (citizen_id, neighborhood_id, joined_at)
         VALUES (@citizenId, @neighborhoodId, CURRENT_DATE)";
-        IDbDataParameter citizenParam = memberCmd.CreateParameter();
-        citizenParam.ParameterName = "@citizenId";
-        citizenParam.Value = citizenId;
-        memberCmd.Parameters.Add(citizenParam);
-        IDbDataParameter nIdParam = memberCmd.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        memberCmd.Parameters.Add(nIdParam);
+        AddParameter(memberCmd, "@citizenId", citizenId);
+        AddParameter(memberCmd, "@neighborhoodId", neighborhoodId);
         memberCmd.ExecuteNonQuery();
     }
 
@@ -255,15 +208,8 @@ public class NeighborhoodDbRepository
         SET status = 'Rejected', rejection_reason = @reason 
         WHERE id = @id";
 
-        IDbDataParameter idParam = command.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = requestId;
-        command.Parameters.Add(idParam);
-
-        IDbDataParameter reasonParam = command.CreateParameter();
-        reasonParam.ParameterName = "@reason";
-        reasonParam.Value = (object?)rejectionReason ?? DBNull.Value;
-        command.Parameters.Add(reasonParam);
+        AddParameter(command, "@id", requestId);
+        AddParameter(command, "@reason", rejectionReason);
 
         command.ExecuteNonQuery();
     }
@@ -290,34 +236,15 @@ public class NeighborhoodDbRepository
               AND ns.street_name ILIKE '%' || @address || '%'))
         ORDER BY n.id";
 
-        IDbDataParameter nameParam = command.CreateParameter();
-        nameParam.ParameterName = "@name";
-        nameParam.Value = (object?)name ?? DBNull.Value;
-        nameParam.DbType = DbType.String;
-        command.Parameters.Add(nameParam);
-
-        IDbDataParameter addressParam = command.CreateParameter();
-        addressParam.ParameterName = "@address";
-        addressParam.Value = (object?)address ?? DBNull.Value;
-        addressParam.DbType = DbType.String;
-        command.Parameters.Add(addressParam);
-
-        IDbDataParameter cityParam = command.CreateParameter();
-        cityParam.ParameterName = "@city";
-        cityParam.Value = (object?)city ?? DBNull.Value;
-        cityParam.DbType = DbType.String;
-        command.Parameters.Add(cityParam);
-
-        IDbDataParameter countryParam = command.CreateParameter();
-        countryParam.ParameterName = "@country";
-        countryParam.Value = (object?)country ?? DBNull.Value;
-        countryParam.DbType = DbType.String;
-        command.Parameters.Add(countryParam);
+        AddParameter(command, "@name", name);
+        AddParameter(command, "@address", address);
+        AddParameter(command, "@city", city);
+        AddParameter(command, "@country", country);
 
         using IDataReader reader = command.ExecuteReader();
 
-        Dictionary<long, Neighborhood> neighborhoods = new Dictionary<long, Neighborhood>();
-        HashSet<long> addedStreets = new HashSet<long>();
+        Dictionary<long, Neighborhood> neighborhoods = new();
+        HashSet<long> addedStreets = new();
 
         while (reader.Read())
         {
@@ -327,12 +254,12 @@ public class NeighborhoodDbRepository
             {
                 neighborhoods[id] = new Neighborhood(
                     id,
-                    reader["name"].ToString(),
-                    reader["description"].ToString(),
+                    reader["name"].ToString()!,
+                    reader["description"].ToString()!,
                     new Location(
                         Convert.ToInt64(reader["city_id"]),
-                        reader["city_name"].ToString(),
-                        reader["country_name"].ToString()
+                        reader["city_name"].ToString()!,
+                        reader["country_name"].ToString()!
                     ),
                     Convert.ToDecimal(reader["budget"]),
                     Convert.ToInt64(reader["coordinator_id"])
@@ -348,7 +275,7 @@ public class NeighborhoodDbRepository
                     neighborhoods[id].AddStreet(new Street(
                         streetId,
                         id,
-                        reader["street_name"].ToString(),
+                        reader["street_name"].ToString()!,
                         Convert.ToInt32(reader["start_number"]),
                         Convert.ToInt32(reader["end_number"])
                     ));
@@ -377,23 +304,9 @@ public class NeighborhoodDbRepository
           AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
         ORDER BY n.id";
 
-        IDbDataParameter nameParam = command.CreateParameter();
-        nameParam.ParameterName = "@name";
-        nameParam.Value = string.IsNullOrWhiteSpace(name) ? DBNull.Value : name;
-        nameParam.DbType = DbType.String;
-        command.Parameters.Add(nameParam);
-
-        IDbDataParameter cityParam = command.CreateParameter();
-        cityParam.ParameterName = "@city";
-        cityParam.Value = string.IsNullOrWhiteSpace(city) ? DBNull.Value : city;
-        cityParam.DbType = DbType.String;
-        command.Parameters.Add(cityParam);
-
-        IDbDataParameter countryParam = command.CreateParameter();
-        countryParam.ParameterName = "@country";
-        countryParam.Value = string.IsNullOrWhiteSpace(country) ? DBNull.Value : country;
-        countryParam.DbType = DbType.String;
-        command.Parameters.Add(countryParam);
+        AddParameter(command, "@name", string.IsNullOrWhiteSpace(name) ? null : name);
+        AddParameter(command, "@city", string.IsNullOrWhiteSpace(city) ? null : city);
+        AddParameter(command, "@country", string.IsNullOrWhiteSpace(country) ? null : country);
 
         using IDataReader reader = command.ExecuteReader();
 
@@ -492,20 +405,9 @@ public class NeighborhoodDbRepository
         AND @streetNumber >= start_number
         AND @streetNumber <= end_number";
 
-        IDbDataParameter nIdParam = command.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        command.Parameters.Add(nIdParam);
-
-        IDbDataParameter streetParam = command.CreateParameter();
-        streetParam.ParameterName = "@streetName";
-        streetParam.Value = streetName;
-        command.Parameters.Add(streetParam);
-
-        IDbDataParameter numberParam = command.CreateParameter();
-        numberParam.ParameterName = "@streetNumber";
-        numberParam.Value = streetNumber;
-        command.Parameters.Add(numberParam);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        AddParameter(command, "@streetName", streetName);
+        AddParameter(command, "@streetNumber", streetNumber);
 
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
     }
@@ -519,15 +421,8 @@ public class NeighborhoodDbRepository
         INSERT INTO neighborhood_memberships (citizen_id, neighborhood_id, joined_at)
         VALUES (@citizenId, @neighborhoodId, CURRENT_DATE)";
 
-        IDbDataParameter citizenParam = command.CreateParameter();
-        citizenParam.ParameterName = "@citizenId";
-        citizenParam.Value = citizenId;
-        command.Parameters.Add(citizenParam);
-
-        IDbDataParameter nIdParam = command.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        command.Parameters.Add(nIdParam);
+        AddParameter(command, "@citizenId", citizenId);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
 
         command.ExecuteNonQuery();
     }
@@ -542,15 +437,8 @@ public class NeighborhoodDbRepository
         VALUES (@citizenId, @neighborhoodId, NOW(), 'PendingApproval')
         RETURNING id";
 
-        IDbDataParameter citizenParam = command.CreateParameter();
-        citizenParam.ParameterName = "@citizenId";
-        citizenParam.Value = citizenId;
-        command.Parameters.Add(citizenParam);
-
-        IDbDataParameter nIdParam = command.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        command.Parameters.Add(nIdParam);
+        AddParameter(command, "@citizenId", citizenId);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
 
         return Convert.ToInt64(command.ExecuteScalar());
     }
@@ -574,18 +462,12 @@ public class NeighborhoodDbRepository
         JOIN countries co ON c.country_id = co.id
         WHERE r.citizen_id = @citizenId";
 
-        IDbDataParameter citizenParam = command.CreateParameter();
-        citizenParam.ParameterName = "@citizenId";
-        citizenParam.Value = citizenId;
-        command.Parameters.Add(citizenParam);
+        AddParameter(command, "@citizenId", citizenId);
 
         if (!string.IsNullOrEmpty(statusFilter))
         {
-            command.CommandText += " AND r.status = @status";
-            IDbDataParameter statusParam = command.CreateParameter();
-            statusParam.ParameterName = "@status";
-            statusParam.Value = statusFilter;
-            command.Parameters.Add(statusParam);
+            command.CommandText += " AND r.status::text = @status";
+            AddParameter(command, "@status", statusFilter);
         }
 
         command.CommandText += " ORDER BY r.created_at DESC";
@@ -598,10 +480,10 @@ public class NeighborhoodDbRepository
         {
             User citizen = new User(
                 Convert.ToInt64(reader["citizen_id"]),
-                reader["username"].ToString(),
-                reader["password"].ToString(),
-                reader["citizen_name"].ToString(),
-                reader["citizen_surname"].ToString(),
+                reader["username"].ToString()!,
+                reader["password"].ToString()!,
+                reader["citizen_name"].ToString()!,
+                reader["citizen_surname"].ToString()!,
                 ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
                 UserMapper.ParseRole(reader["role"].ToString()!),
                 reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
@@ -609,12 +491,12 @@ public class NeighborhoodDbRepository
 
             Neighborhood neighborhood = new Neighborhood(
                 Convert.ToInt64(reader["n_id"]),
-                reader["neighborhood_name"].ToString(),
-                reader["description"].ToString(),
+                reader["neighborhood_name"].ToString()!,
+                reader["description"].ToString()!,
                 new Location(
                     Convert.ToInt64(reader["city_id"]),
-                    reader["city_name"].ToString(),
-                    reader["country_name"].ToString()
+                    reader["city_name"].ToString()!,
+                    reader["country_name"].ToString()!
                 ),
                 Convert.ToDecimal(reader["budget"]),
                 Convert.ToInt64(reader["coordinator_id"])
@@ -625,7 +507,7 @@ public class NeighborhoodDbRepository
                 citizen,
                 neighborhood,
                 Convert.ToDateTime(reader["created_at"]),
-                Enum.Parse<RequestStatus>(reader["status"].ToString()),
+                ParseRequestStatus(reader["status"].ToString()!),
                 reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader["rejection_reason"].ToString()
             ));
         }
@@ -640,10 +522,7 @@ public class NeighborhoodDbRepository
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = "DELETE FROM neighborhood_access_requests WHERE id = @id AND status = 'PendingApproval'";
 
-        IDbDataParameter idParam = command.CreateParameter();
-        idParam.ParameterName = "@id";
-        idParam.Value = requestId;
-        command.Parameters.Add(idParam);
+        AddParameter(command, "@id", requestId);
 
         command.ExecuteNonQuery();
     }
@@ -654,18 +533,11 @@ public class NeighborhoodDbRepository
 
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        INSERT INTO images (resource, resource_id, path)
+        INSERT INTO images (entity, entity_id, path)
         VALUES ('neighborhood', @neighborhoodId, @path)";
 
-        IDbDataParameter nIdParam = command.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        command.Parameters.Add(nIdParam);
-
-        IDbDataParameter pathParam = command.CreateParameter();
-        pathParam.ParameterName = "@path";
-        pathParam.Value = imagePath;
-        command.Parameters.Add(pathParam);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        AddParameter(command, "@path", imagePath);
 
         command.ExecuteNonQuery();
     }
@@ -677,12 +549,9 @@ public class NeighborhoodDbRepository
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
         SELECT id, path FROM images
-        WHERE resource = 'neighborhood' AND resource_id = @neighborhoodId";
+        WHERE entity = 'neighborhood' AND entity_id = @neighborhoodId";
 
-        IDbDataParameter nIdParam = command.CreateParameter();
-        nIdParam.ParameterName = "@neighborhoodId";
-        nIdParam.Value = neighborhoodId;
-        command.Parameters.Add(nIdParam);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
 
         using IDataReader reader = command.ExecuteReader();
 
@@ -691,10 +560,23 @@ public class NeighborhoodDbRepository
         {
             images.Add(new Image(
                 Convert.ToInt64(reader["id"]),
-                reader["path"].ToString()
+                reader["path"].ToString()!
             ));
         }
 
         return images;
+    }
+
+    private static RequestStatus ParseRequestStatus(string status)
+    {
+        return status.Trim().ToLower() switch
+        {
+            "pending approval" => RequestStatus.PendingApproval,
+            "pendingapproval" => RequestStatus.PendingApproval,
+            "pending_approval" => RequestStatus.PendingApproval,
+            "approved" => RequestStatus.Approved,
+            "rejected" => RequestStatus.Rejected,
+            _ => throw new ArgumentException($"Unknown status: {status}")
+        };
     }
 }
