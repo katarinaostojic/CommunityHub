@@ -118,4 +118,20 @@ public class NeighborhoodAccessRequestService
             .Replace("đ", "dj")
             .Normalize(NormalizationForm.FormC);
     }
+    private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
+
+    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
+    {
+        return _neighborhoodRepository.GetAllByCoordinator(coordinatorId, status, sortDescending);
+    }
+
+    public void ApproveRequestWithMembership(long requestId, long citizenId, long neighborhoodId)
+    {
+        _neighborhoodRepository.ApproveRequest(requestId, citizenId, neighborhoodId);
+    }
+
+    public void RejectRequestForCoordinator(long requestId, string? rejectionReason)
+    {
+        _neighborhoodRepository.RejectRequest(requestId, rejectionReason);
+    }
 }
