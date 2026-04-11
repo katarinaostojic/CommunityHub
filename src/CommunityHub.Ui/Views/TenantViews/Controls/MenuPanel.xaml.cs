@@ -16,11 +16,13 @@ public partial class MenuPanel : UserControl
 {
     private readonly BuildingService _buildingService;
     private User _user;
+    private readonly BuildingMembershipService _membershipService;
 
     public MenuPanel()
     {
         InitializeComponent();
         _buildingService = new BuildingService();
+        _membershipService = new BuildingMembershipService();
     }
 
     public void Initialize(User user)
@@ -61,7 +63,7 @@ public partial class MenuPanel : UserControl
 
     private void LoadMemberships()
     {
-        var memberships = _buildingService.GetMembershipsByTenant(_user.Id);
+        var memberships = _membershipService.GetByTenant(_user.Id);
         MyBuildingsMenuPanel.ItemsSource = memberships;
     }
 
