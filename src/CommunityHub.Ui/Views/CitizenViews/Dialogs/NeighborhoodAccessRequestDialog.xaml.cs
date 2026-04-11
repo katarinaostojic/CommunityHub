@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using CommunityHub.Application.Domain;
@@ -25,7 +24,6 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
 
             CloseButton.Click += CloseButton_Click;
 
-            // 🔥 pokreće flow
             StartRequestFlow();
         }
 
@@ -50,23 +48,38 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
 
         private async void StartRequestFlow()
         {
-            await Task.Delay(3000); // 3 sekunde loading
+            await Task.Delay(3000);
 
             var service = new NeighborhoodAccessRequestService();
+            AccessRequestResult result = service.RequestAccess(_user, _neighborhood);
 
-            bool granted = service.RequestAccess(_user, _neighborhood);
+            Close();
 
-            this.Close();
-
-            if (granted)
+            switch (result)
             {
-                var successDialog = new NeighborhoodAccessGrantedDialog(_user, _neighborhood);
-                successDialog.ShowDialog();
-            }
-            else
-            {
-                var requestDialog = new NeighborhoodRequestCreatedDialog(_user, _neighborhood);
-                requestDialog.ShowDialog();
+                case AccessRequestResult.Granted:
+                    new NeighborhoodAccessGrantedDialog(_user, _neighborhood).ShowDialog();
+                    break;
+
+                case AccessRequestResult.RequestCreated:
+                    new NeighborhoodRequestCreatedDialog(_user, _neighborhood).ShowDialog();
+                    break;
+
+                case AccessRequestResult.AlreadyPending:
+                    MessageBox.Show(
+                        "You already have a pending request for this neighborhood.",
+                        "Request already exists",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                    break;
+
+                case AccessRequestResult.AlreadyMember:
+                    MessageBox.Show(
+                        "You are already a member of a neighborhood.",
+                        "Already a member",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                    break;
             }
         }
 

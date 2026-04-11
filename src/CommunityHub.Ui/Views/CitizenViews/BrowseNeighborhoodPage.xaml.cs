@@ -207,7 +207,9 @@ namespace CommunityHub.Ui.Views.CitizenViews
                     break;
 
                 case "MyRequests":
-                    MessageBox.Show("Go to My Requests page.");
+                    MyRequestsPage myRequestsPage = new MyRequestsPage(_user);
+                    myRequestsPage.Show();
+                    Close();
                     break;
 
                 case "Events":
