@@ -2,6 +2,7 @@
 using CommunityHub.Application.Domain;
 using System.Data;
 using System.Linq;
+using System.Text;
 
 namespace CommunityHub.Application.Database.Repositories;
 
@@ -393,23 +394,187 @@ public class NeighborhoodDbRepository : BaseDbRepository
         return result;
     }
 
-    public bool CheckAddressMatch(string streetName, int streetNumber, long neighborhoodId)
+    public bool CheckAddressMatch(string fullAddress, long neighborhoodId)
     {
+        if (string.IsNullOrWhiteSpace(fullAddress))
+            return false;
+
+        string Normalize(string s)
+        {
+            return s.Trim().ToLower()
+                .Replace("š", "s")
+                .Replace("đ", "d")
+                .Replace("č", "c")
+                .Replace("ć", "c")
+                .Replace("ž", "z");
+        }
+
+        string normalized = Normalize(fullAddress);
+
+        // NAĐI BROJ (robusnije)
+        string numberStr = new string(normalized.Where(char.IsDigit).ToArray());
+
+        if (!int.TryParse(numberStr, out int number))
+            return false;
+
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        SELECT COUNT(*) FROM neighborhood_streets
-        WHERE neighborhood_id = @neighborhoodId
-        AND LOWER(street_name) = LOWER(@streetName)
-        AND @streetNumber >= start_number
-        AND @streetNumber <= end_number";
+        SELECT street_name, start_number, end_number
+        FROM neighborhood_streets
+        WHERE neighborhood_id = @neighborhoodId";
 
         AddParameter(command, "@neighborhoodId", neighborhoodId);
-        AddParameter(command, "@streetName", streetName);
-        AddParameter(command, "@streetNumber", streetNumber);
 
-        return Convert.ToInt64(command.ExecuteScalar()) > 0;
+        using IDataReader reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            string dbStreet = Normalize(reader["street_name"].ToString()!);
+            int start = Convert.ToInt32(reader["start_number"]);
+            int end = Convert.ToInt32(reader["end_number"]);
+
+            // 🔥 SAMO PROVERI DA LI ADRESA SADRŽI ULICU
+            if (normalized.Contains(dbStreet))
+            {
+                if (number >= start && number <= end)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryExtractStreetAndNumber(string address, out string street, out int number)
+    {
+        street = string.Empty;
+        number = 0;
+
+        if (string.IsNullOrWhiteSpace(address))
+            return false;
+
+        string cleaned = address.Trim();
+
+        int numberStart = -1;
+        for (int i = 0; i < cleaned.Length; i++)
+        {
+            if (char.IsDigit(cleaned[i]))
+            {
+                numberStart = i;
+                break;
+            }
+        }
+
+        if (numberStart == -1)
+            return false;
+
+        int numberEnd = numberStart;
+        while (numberEnd < cleaned.Length && char.IsDigit(cleaned[numberEnd]))
+        {
+            numberEnd++;
+        }
+
+        string streetPart = cleaned.Substring(0, numberStart).Trim().Trim(',', '.', '-', '/');
+        string numberPart = cleaned.Substring(numberStart, numberEnd - numberStart).Trim();
+
+        if (string.IsNullOrWhiteSpace(streetPart))
+            return false;
+
+        if (!int.TryParse(numberPart, out number))
+            return false;
+
+        street = NormalizeStreetName(streetPart);
+        return true;
+    }
+
+    private string NormalizeStreetName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        string result = value.Trim().ToLowerInvariant();
+
+        result = TransliterateSerbianCyrillicToLatin(result);
+
+        result = result
+            .Replace("š", "s")
+            .Replace("đ", "d")
+            .Replace("č", "c")
+            .Replace("ć", "c")
+            .Replace("ž", "z");
+
+        result = result
+            .Replace("ulica", " ")
+            .Replace("ul.", " ")
+            .Replace("ul ", " ");
+
+        var filtered = new List<char>();
+        foreach (char c in result)
+        {
+            if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
+            {
+                filtered.Add(c);
+            }
+        }
+
+        result = new string(filtered.ToArray());
+
+        while (result.Contains("  "))
+        {
+            result = result.Replace("  ", " ");
+        }
+
+        return result.Trim();
+    }
+
+    private string TransliterateSerbianCyrillicToLatin(string input)
+    {
+        var map = new Dictionary<char, string>
+        {
+            ['а'] = "a",
+            ['б'] = "b",
+            ['в'] = "v",
+            ['г'] = "g",
+            ['д'] = "d",
+            ['ђ'] = "d",
+            ['е'] = "e",
+            ['ж'] = "z",
+            ['з'] = "z",
+            ['и'] = "i",
+            ['ј'] = "j",
+            ['к'] = "k",
+            ['л'] = "l",
+            ['љ'] = "lj",
+            ['м'] = "m",
+            ['н'] = "n",
+            ['њ'] = "nj",
+            ['о'] = "o",
+            ['п'] = "p",
+            ['р'] = "r",
+            ['с'] = "s",
+            ['т'] = "t",
+            ['ћ'] = "c",
+            ['у'] = "u",
+            ['ф'] = "f",
+            ['х'] = "h",
+            ['ц'] = "c",
+            ['ч'] = "c",
+            ['џ'] = "dz",
+            ['ш'] = "s"
+        };
+
+        var result = new StringBuilder();
+
+        foreach (char c in input)
+        {
+            if (map.TryGetValue(c, out string? latin))
+                result.Append(latin);
+            else
+                result.Append(c);
+        }
+
+        return result.ToString();
     }
 
     public void CreateMembership(long citizenId, long neighborhoodId)

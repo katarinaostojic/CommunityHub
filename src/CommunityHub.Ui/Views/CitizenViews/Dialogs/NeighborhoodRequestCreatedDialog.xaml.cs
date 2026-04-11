@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
@@ -26,6 +27,7 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
         {
             NeighborhoodNameText.Text = _neighborhood.Name;
             CitizenNameText.Text = _user.Username;
+            CreatedOnText.Text = DateTime.Now.ToString("dd.MM.yyyy.");
             StatusText.Text = "Pending approval";
         }
 

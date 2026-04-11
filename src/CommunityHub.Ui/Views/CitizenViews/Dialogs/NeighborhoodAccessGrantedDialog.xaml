@@ -16,20 +16,22 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="55"/>
-                <RowDefinition Height="180"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="110"/>
+                <RowDefinition Height="140"/>
+                <RowDefinition Height="170"/>
+                <RowDefinition Height="95"/>
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Background="White" LastChildFill="False">
                 <StackPanel Orientation="Horizontal" Margin="18,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="Access Granted"
                                FontSize="28"
-                               FontWeight="Bold"/>
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"/>
                     <TextBlock Text=" ✔"
                                FontSize="28"
                                FontWeight="Bold"
-                               Foreground="Green"/>
+                               Foreground="Green"
+                               VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Button x:Name="CloseButton"
@@ -46,68 +48,69 @@
             </DockPanel>
 
             <StackPanel Grid.Row="1"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center">
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Center"
+                        Margin="0,8,0,0">
                 <TextBlock Text="Your address matches this neighborhood."
                            FontSize="24"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
-                           Margin="0,10,0,18"/>
+                           Margin="0,0,0,16"/>
                 <TextBlock Text="You are now a member of this neighborhood."
                            FontSize="24"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <Grid Grid.Row="2" Margin="24,10,24,10">
+            <Grid Grid.Row="2" Margin="24,0,24,0" VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="230"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="Neighborhood:"
-                           FontSize="22"
+                           FontSize="21"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock x:Name="NeighborhoodNameText"
                            Grid.Row="0" Grid.Column="1"
-                           FontSize="22"
+                           FontSize="21"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="Citizen:"
-                           FontSize="22"
+                           FontSize="21"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock x:Name="CitizenNameText"
                            Grid.Row="1" Grid.Column="1"
-                           FontSize="22"
+                           FontSize="21"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
                            Text="Join date:"
-                           FontSize="22"
+                           FontSize="21"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock x:Name="JoinDateText"
                            Grid.Row="2" Grid.Column="1"
-                           FontSize="22"
+                           FontSize="21"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
             </Grid>
 
-            <Grid Grid.Row="3" Margin="24,10,24,18">
+            <Grid Grid.Row="3" Margin="24,0,24,16" VerticalAlignment="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="40"/>
