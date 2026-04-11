@@ -6,10 +6,12 @@ namespace CommunityHub.Application.Services;
 public class BuildingService
 {
     private readonly BuildingDbRepository _repository;
+    private readonly ImageDbRepository _imageRepository;
 
     public BuildingService()
     {
         _repository = new BuildingDbRepository();
+        _imageRepository = new ImageDbRepository();
     }
 
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
@@ -17,19 +19,19 @@ public class BuildingService
         return _repository.Search(street, neighborhood, city, country);
     }
 
-    public int GetVacancies(Building building)
-    {
-        return building.TotalUnits - building.Memberships.Count;
-    }
-
-    public List<BuildingMembership> GetMembershipsByTenant(long tenantId)
-    {
-        return _repository.GetMembershipsByTenant(tenantId);
-    }
-
     public Building? GetById(long buildingId)
     {
         return _repository.GetById(buildingId);
+    }
+
+    public List<Building> GetAllByManager(long managerId)
+    {
+        return _repository.GetAllByManager(managerId);
+    }
+
+    public int GetVacancies(Building building)
+    {
+        return building.TotalUnits - building.Memberships.Count;
     }
 
     public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId)
@@ -47,14 +49,8 @@ public class BuildingService
         _repository.CreateUnit(floorId, unitNumber);
     }
 
-    public List<Building> GetAllByManager(long managerId)
-    {
-        return _repository.GetAllByManager(managerId);
-    }
-
     public void SaveBuildingImage(long buildingId, string path)
     {
-        ImageDbRepository imageRepository = new ImageDbRepository();
-        imageRepository.SaveImage("building", buildingId, path);
+        _imageRepository.SaveImage("building", buildingId, path);
     }
 }
