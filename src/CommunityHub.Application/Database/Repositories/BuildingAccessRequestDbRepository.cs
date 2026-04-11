@@ -7,20 +7,6 @@ namespace CommunityHub.Application.Database.Repositories;
 
 public class BuildingAccessRequestDbRepository : BaseDbRepository
 {
-    public bool IsUnitOccupied(long buildingId, string unitNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT COUNT(*) FROM building_memberships
-            WHERE building_id = @buildingId AND unit_number = @unitNumber";
-
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@unitNumber", unitNumber);
-
-        return Convert.ToInt64(command.ExecuteScalar()) > 0;
-    }
-
     public void Create(User user, Building building, string unitNumber)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -35,22 +21,6 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         AddParameter(command, "@createdAt", DateTime.UtcNow);
 
         command.ExecuteNonQuery();
-    }
-
-    //ne moze u istoj zgradi za isti stan da posalje zahtev opet
-    public bool HasExistingRequest(User user, Building building, string unitNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT COUNT(*) FROM building_access_requests
-        WHERE user_id = @userId AND building_id = @buildingId AND unit_number = @unitNumber";
-
-        AddParameter(command, "@userId", user.Id);
-        AddParameter(command, "@buildingId", building.Id);
-        AddParameter(command, "@unitNumber", unitNumber);
-
-        return Convert.ToInt64(command.ExecuteScalar()) > 0;
     }
 
     public List<BuildingAccessRequest> GetAllByTenant(long tenantId, string? status, bool sortDescending)

@@ -52,23 +52,26 @@ public class BuildingDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   f.id AS floor_id, f.floor_number,
-                   u.id AS unit_id, u.unit_number
-            FROM buildings b
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            LEFT JOIN floors f ON f.building_id = b.id
-            LEFT JOIN units u ON u.floor_id = f.id
-            WHERE b.id = @buildingId
-            ORDER BY f.floor_number, u.unit_number";
+        SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+               c.id AS city_id, c.name AS city_name,
+               co.id AS country_id, co.name AS country_name, co.code AS country_code,
+               f.id AS floor_id, f.floor_number,
+               u.id AS unit_id, u.unit_number
+        FROM buildings b
+        JOIN cities c ON b.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        LEFT JOIN floors f ON f.building_id = b.id
+        LEFT JOIN units u ON u.floor_id = f.id
+        WHERE b.id = @buildingId
+        ORDER BY f.floor_number, u.unit_number";
 
         AddParameter(command, "@buildingId", buildingId);
 
-        using IDataReader reader = command.ExecuteReader();
-        List<Building> buildings = ReadBuildings(reader);
+        List<Building> buildings;
+        using (IDataReader reader = command.ExecuteReader())
+        {
+            buildings = ReadBuildings(reader);
+        }
 
         if (buildings.Count == 0) return null;
 
@@ -76,7 +79,44 @@ public class BuildingDbRepository : BaseDbRepository
         foreach (Image image in _imageRepository.GetByEntity("building", buildingId))
             building.AddImage(image);
 
+        foreach (var membership in GetMembershipsByBuilding(connection, buildingId))
+            building.AddMembership(membership);
+
+        foreach (var request in GetAccessRequestsByBuilding(connection, buildingId))
+            building.AddAccessRequest(request);
+
         return building;
+    }
+
+    private List<BuildingAccessRequest> GetAccessRequestsByBuilding(IDbConnection connection, long buildingId)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM building_access_requests r
+        JOIN users u ON r.user_id = u.id
+        WHERE r.building_id = @buildingId";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
+        while (reader.Read())
+        {
+            string? reason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
+                ? null : reader["rejection_reason"].ToString();
+            requests.Add(new BuildingAccessRequest(
+                Convert.ToInt64(reader["id"]),
+                UserMapper.Map(reader),
+                null!,
+                reader["unit_number"].ToString()!,
+                DateTime.Parse(reader["created_at"].ToString()!),
+                RequestStatusMapper.Parse(reader["status"].ToString()!),
+                reason
+            ));
+        }
+        return requests;
     }
 
     public List<BuildingMembership> GetMembershipsByTenant(long tenantId)
@@ -258,6 +298,31 @@ public class BuildingDbRepository : BaseDbRepository
         addedUnits.Add(unitId);
     }
 
+    private List<BuildingMembership> GetMembershipsByBuilding(IDbConnection connection, long buildingId)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM building_memberships bm
+        JOIN users u ON bm.user_id = u.id
+        WHERE bm.building_id = @buildingId";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<BuildingMembership> memberships = new List<BuildingMembership>();
+        while (reader.Read())
+            memberships.Add(new BuildingMembership(
+                Convert.ToInt64(reader["id"]),
+                null!,
+                UserMapper.Map(reader),
+                reader["unit_number"].ToString()!,
+                Convert.ToInt32(reader["floor_number"]),
+                DateTime.Parse(reader["approved_at"].ToString()!)
+            ));
+        return memberships;
+    }
 
     public List<Building> GetAllByManager(long managerId)
     {

@@ -33,16 +33,6 @@ public class BuildingAccessRequestService
         _repository.Create(user, building, unitNumber);
     }
 
-    public bool HasExistingRequest(User user, Building building, string unitNumber)
-    {
-        return _repository.HasExistingRequest(user, building, unitNumber);
-    }
-
-    public bool IsUnitOccupied(long buildingId, string unitNumber)
-    {
-        return _repository.IsUnitOccupied(buildingId, unitNumber);
-    }
-
     public int GetPendingRequestsCount(long buildingId)
     {
         return _repository.GetPendingRequestsCount(buildingId);

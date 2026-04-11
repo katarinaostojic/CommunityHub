@@ -39,7 +39,7 @@ public partial class BuildingAccessRequestDialog : Window
             return;
         }
 
-        bool isOccupied = _requestService.IsUnitOccupied(_building.Id, unitNumber);
+        bool isOccupied = _building.IsUnitOccupied(unitNumber);
         WarningTextBlock.Text = isOccupied
             ? $"Warning: Apartment {unitNumber} is already occupied by another user."
             : string.Empty;
@@ -72,7 +72,7 @@ public partial class BuildingAccessRequestDialog : Window
             return;
         }
 
-        if (_requestService.HasExistingRequest(_user, _building, unitNumber))
+        if (_building.HasExistingRequest(_user.Id, unitNumber))
         {
             MessageBox.Show("You already have a request for this apartment.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;

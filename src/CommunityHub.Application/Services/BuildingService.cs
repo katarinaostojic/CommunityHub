@@ -19,8 +19,7 @@ public class BuildingService
 
     public int GetVacancies(Building building)
     {
-        List<string> occupiedUnits = _repository.GetOccupiedUnits(building.Id);
-        return building.TotalUnits - occupiedUnits.Count;
+        return building.TotalUnits - building.Memberships.Count;
     }
 
     public List<BuildingMembership> GetMembershipsByTenant(long tenantId)
