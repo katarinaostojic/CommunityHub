@@ -5,19 +5,30 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5">
-            <TextBlock Text="Filter by Status:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <ComboBox x:Name="StatusFilterComboBox" Width="130" Padding="5"
-                      SelectionChanged="StatusFilterComboBox_SelectionChanged"/>
-            <TextBlock Text="Sort:" VerticalAlignment="Center" Margin="10,0,5,0"/>
-            <ComboBox x:Name="SortComboBox" Width="100" Padding="5"
-                      SelectionChanged="SortComboBox_SelectionChanged"/>
+        <!-- Filter buttons -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,8">
+            <Button x:Name="FilterAllButton" Content="All" Padding="10,5" Margin="0,0,5,0"
+                    Click="FilterAllButton_Click"/>
+            <Button x:Name="FilterPendingButton" Content="Pending" Padding="10,5" Margin="0,0,5,0"
+                    Click="FilterPendingButton_Click"/>
+            <Button x:Name="FilterApprovedButton" Content="Approved" Padding="10,5" Margin="0,0,5,0"
+                    Click="FilterApprovedButton_Click"/>
+            <Button x:Name="FilterRejectedButton" Content="Rejected" Padding="10,5"
+                    Click="FilterRejectedButton_Click"/>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1">
+        <!-- Sort button -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,8">
+            <Button x:Name="SortButton" Content="Sort by Date ↓" Padding="10,5"
+                    Click="SortButton_Click"/>
+        </StackPanel>
+
+        <!-- Requests list -->
+        <ScrollViewer Grid.Row="2">
             <ItemsControl x:Name="RequestsItemsControl">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -29,7 +40,6 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Avatar placeholder -->
                                 <Border Grid.Column="0" Background="#EEEEEE"
                                         Width="50" Height="50" Margin="0,0,10,0"
                                         CornerRadius="25">
@@ -42,6 +52,7 @@
                                     <TextBlock FontWeight="Bold" FontSize="13">
                                         <Run Text="Citizen: "/>
                                         <Run Text="{Binding Citizen.Name, Mode=OneWay}"/>
+                                        <Run Text=" "/>
                                         <Run Text="{Binding Citizen.Surname, Mode=OneWay}"/>
                                     </TextBlock>
                                     <TextBlock FontSize="12">
@@ -53,7 +64,8 @@
                                         <Run Text="{Binding Neighborhood.Name, Mode=OneWay}"/>
                                     </TextBlock>
                                     <TextBlock Text="{Binding CreatedAt, StringFormat='Date: {0:dd.MM.yyyy.}', Mode=OneWay}" FontSize="12"/>
-                                    <TextBlock Text="{Binding Status, StringFormat='Status: {0}', Mode=OneWay}" FontSize="12"/>
+                                    <TextBlock Text="{Binding StatusDisplay, Mode=OneWay}" FontSize="12"/>
+                                    <TextBlock Text="{Binding RejectionReasonDisplay, Mode=OneWay}" FontSize="12"/>
                                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                                         <Button Content="Approve" Padding="10,5" Margin="0,0,10,0"
                                                 Click="ApproveButton_Click" Tag="{Binding}"/>

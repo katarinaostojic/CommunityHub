@@ -185,7 +185,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
         IDbCommand updateCmd = connection.CreateCommand();
-        updateCmd.CommandText = "UPDATE neighborhood_access_requests SET status = 'Approved' WHERE id = @id";
+        updateCmd.CommandText = "UPDATE neighborhood_access_requests SET status = 'accepted' WHERE id = @id";
         AddParameter(updateCmd, "@id", requestId);
         updateCmd.ExecuteNonQuery();
 
@@ -205,7 +205,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
         UPDATE neighborhood_access_requests 
-        SET status = 'Rejected', rejection_reason = @reason 
+        SET status = 'rejected', rejection_reason = @reason 
         WHERE id = @id";
 
         AddParameter(command, "@id", requestId);
@@ -434,7 +434,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
         INSERT INTO neighborhood_access_requests (citizen_id, neighborhood_id, created_at, status)
-        VALUES (@citizenId, @neighborhoodId, NOW(), 'PendingApproval')
+        VALUES (@citizenId, @neighborhoodId, NOW(), 'pending approval')
         RETURNING id";
 
         AddParameter(command, "@citizenId", citizenId);
@@ -520,7 +520,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
         using IDbCommand command = connection.CreateCommand();
-        command.CommandText = "DELETE FROM neighborhood_access_requests WHERE id = @id AND status = 'PendingApproval'";
+        command.CommandText = "DELETE FROM neighborhood_access_requests WHERE id = @id AND status = 'pending approval'";
 
         AddParameter(command, "@id", requestId);
 
@@ -575,8 +575,74 @@ public class NeighborhoodDbRepository : BaseDbRepository
             "pendingapproval" => RequestStatus.PendingApproval,
             "pending_approval" => RequestStatus.PendingApproval,
             "approved" => RequestStatus.Approved,
+            "accepted" => RequestStatus.Approved,
             "rejected" => RequestStatus.Rejected,
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
+    }
+    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = $@"
+    SELECT r.id, r.created_at, r.status, r.rejection_reason,
+           n.id AS neighborhood_id, n.name, n.description, n.city_id AS location_id, 
+           c.name AS city_name, co.name AS country_name,
+           n.budget, n.coordinator_id,
+           u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role, u.address
+    FROM neighborhood_access_requests r
+    JOIN neighborhoods n ON r.neighborhood_id = n.id
+    JOIN cities c ON n.city_id = c.id
+    JOIN countries co ON c.country_id = co.id
+    JOIN users u ON r.citizen_id = u.id
+    WHERE n.coordinator_id = @coordinatorId
+      AND (@status IS NULL OR r.status::text = @status)
+    ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
+
+        AddParameter(command, "@coordinatorId", coordinatorId);
+        AddParameter(command, "@status", status);
+
+        using IDataReader reader = command.ExecuteReader();
+
+        var requests = new List<NeighborhoodAccessRequest>();
+        while (reader.Read())
+        {
+            string? rejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
+                ? null : reader["rejection_reason"].ToString();
+
+            User citizen = new User(
+                Convert.ToInt64(reader["user_id"]),
+                reader["username"].ToString()!,
+                reader["password"].ToString()!,
+                reader["name"].ToString()!,
+                reader["surname"].ToString()!,
+                ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
+                UserMapper.ParseRole(reader["role"].ToString()!),
+                reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
+            );
+
+            Neighborhood neighborhood = new Neighborhood(
+                Convert.ToInt64(reader["neighborhood_id"]),
+                reader["name"].ToString()!,
+                reader["description"].ToString()!,
+                new Location(
+                    Convert.ToInt64(reader["location_id"]),
+                    reader["city_name"].ToString()!,
+                    reader["country_name"].ToString()!
+                ),
+                Convert.ToDecimal(reader["budget"]),
+                Convert.ToInt64(reader["coordinator_id"])
+            );
+
+            requests.Add(new NeighborhoodAccessRequest(
+                Convert.ToInt64(reader["id"]),
+                citizen,
+                neighborhood,
+                Convert.ToDateTime(reader["created_at"]),
+                ParseRequestStatus(reader["status"].ToString()!),
+                rejectionReason
+            ));
+        }
+        return requests;
     }
 }
