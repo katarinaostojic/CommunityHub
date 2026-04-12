@@ -1,0 +1,129 @@
+﻿<Window x:Class="CommunityHub.Ui.Views.ManagerViews.ManagerMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Building Manager" Height="700" Width="1250"
+        WindowStartupLocation="CenterScreen"
+        Background="#F4F6F9">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <Border Grid.Column="0" Background="#1A2332">
+            <DockPanel>
+                <!-- Logo / App name -->
+                <Border DockPanel.Dock="Top" Background="#151D2B" Padding="20,25,20,20">
+                    <StackPanel>
+                        <TextBlock Text="🏛️" FontSize="32" HorizontalAlignment="Center"/>
+                        <TextBlock Text="BuildingHub" FontSize="16" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center"
+                                   Margin="0,5,0,0"/>
+                        <TextBlock Text="Manager Portal" FontSize="11"
+                                   Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Profile -->
+                <Button DockPanel.Dock="Top" Height="70" Background="Transparent"
+                        BorderThickness="0" Cursor="Hand" Margin="10,15,10,5">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Border Width="40" Height="40" CornerRadius="20"
+                                Background="#2980B9">
+                            <TextBlock Text="👤" FontSize="20"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Manager" FontSize="13"
+                                       Foreground="White" FontWeight="SemiBold"/>
+                            <TextBlock Text="View Profile" FontSize="11"
+                                       Foreground="#7F8C8D"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+
+                <!-- Separator -->
+                <Border DockPanel.Dock="Top" Height="1" Background="#2C3E50" Margin="15,5,15,10"/>
+
+                <!-- Nav dugmad -->
+                <StackPanel DockPanel.Dock="Top">
+                    <Button x:Name="BtnBuildings" Height="48" Background="Transparent"
+                            BorderThickness="0" Foreground="White" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand" Click="BuildingsButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏢" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Buildings" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnAccessRequests" Height="48" Background="Transparent"
+                            BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand" Click="AccessRequestsButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📋" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Access Requests" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnNoticeboard" Height="48" Background="Transparent"
+                            BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📢" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Noticeboard" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnAssembly" Height="48" Background="Transparent"
+                            BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="👥" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Tenants Assembly" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="BtnProblems" Height="48" Background="Transparent"
+                            BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚠️" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Problems" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Help i Logout dole -->
+                <StackPanel DockPanel.Dock="Bottom" Margin="10,0,10,25">
+                    <Border Height="1" Background="#2C3E50" Margin="5,0,5,15"/>
+                    <Button Height="44" Background="Transparent"
+                            BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="❓" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Help" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Height="44" Background="Transparent"
+                            BorderThickness="0" Foreground="#E74C3C" FontSize="13"
+                            HorizontalContentAlignment="Left" Padding="20,0,0,0"
+                            Cursor="Hand" Click="LogoutButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🚪" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Logout" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+            </DockPanel>
+        </Border>
+
+        <!-- MAIN CONTENT -->
+        <Frame Grid.Column="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>

@@ -26,7 +26,7 @@ public partial class ProfileWindow : Window
         User? user = _userRepository.GetWithPosts(_userId);
         if (user == null)
         {
-            MessageBox.Show("Korisnik nije pronađen.", "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("User not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             Close();
             return;
         }

@@ -12,4 +12,22 @@
     <ProjectReference Include="..\CommunityHub.Application\CommunityHub.Application.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="images\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="images\NewFolder1\**" />
+	  <Content Remove="images\NewFolder1\**" />
+	  <EmbeddedResource Remove="images\NewFolder1\**" />
+	  <None Remove="images\NewFolder1\**" />
+	  <Page Remove="images\NewFolder1\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="images\neighborhoods\" />
+	</ItemGroup>
+
 </Project>

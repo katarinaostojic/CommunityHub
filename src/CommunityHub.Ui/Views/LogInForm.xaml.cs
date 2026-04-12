@@ -1,7 +1,12 @@
-﻿using System.Windows;
-using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
+using System.Windows;
 
 namespace CommunityHub.Ui.Views;
+
+using CommunityHub.Ui.Views.CitizenViews;
+using CommunityHub.Ui.Views.ManagerViews;
+using CommunityHub.Ui.Views.TenantViews;
 
 public partial class LogInForm : Window
 {
@@ -15,21 +20,44 @@ public partial class LogInForm : Window
 
     private void LoginButton_Click(object sender, RoutedEventArgs e)
     {
-        string username = UsernameTextBox.Text;
-        string password = PasswordBox.Password;
+        string username = UsernameTextBox.Text.Trim();
+        string password = PasswordBox.Password.Trim();
 
-        long? userId = _userRepository.GetIdByCredentials(username, password);
+        User? user = _userRepository.GetByCredentials(username, password);
 
-        if (userId != null)
+        if (user == null)
         {
-            HomeWindow homeWindow = new HomeWindow(userId.Value);
-            homeWindow.Show();
-            this.Close();
-        }
-        else
-        {
-            ErrorMessageTextBlock.Text = "Neispravno korisničko ime ili lozinka.";
+            ErrorMessageTextBlock.Text = "Invalid username or password.";
             ErrorMessageTextBlock.Visibility = Visibility.Visible;
+            return;
         }
+
+        switch (user.Role)
+        {
+            case UserRole.Tenant:
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                mainWindow.NavigateTo(new BrowseBuildingsPage(user));
+                break;
+            case UserRole.Manager:
+                ManagerMainWindow managerWindow = new ManagerMainWindow(user);
+                managerWindow.Show();
+                break;
+            case UserRole.Coordinator:
+
+                CoordinatorViews.CoordinatorMainWindow coordinatorWindow = new CoordinatorViews.CoordinatorMainWindow(user.Id);
+                coordinatorWindow.Show();
+                break;
+            case UserRole.Citizen:
+                BrowseNeighborhoodPage citizenWindow = new BrowseNeighborhoodPage(user);
+                citizenWindow.Show();
+                break;
+            default:
+                ErrorMessageTextBlock.Text = "Unknown user role.";
+                ErrorMessageTextBlock.Visibility = Visibility.Visible;
+                return;
+        }
+
+        this.Hide();
     }
 }

@@ -12,11 +12,12 @@ public partial class HomeWindow : Window
         _userId = userId;
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    private void MyDistrictsButton_Click(object sender, RoutedEventArgs e)
     {
-        ProfileWindow profileWindow = new ProfileWindow(_userId);
-        profileWindow.Show();
-        this.Close();
+    }
+
+    private void RequestsButton_Click(object sender, RoutedEventArgs e)
+    {
     }
 
     private void LogoutButton_Click(object sender, RoutedEventArgs e)
