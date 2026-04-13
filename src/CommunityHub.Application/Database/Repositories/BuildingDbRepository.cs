@@ -105,14 +105,7 @@ public class BuildingDbRepository : BaseDbRepository
         using IDataReader reader = command.ExecuteReader();
         List<BuildingMembership> memberships = new List<BuildingMembership>();
         while (reader.Read())
-            memberships.Add(new BuildingMembership(
-                Convert.ToInt64(reader["id"]),
-                null!,
-                UserMapper.Map(reader),
-                reader["unit_number"].ToString()!,
-                Convert.ToInt32(reader["floor_number"]),
-                DateTime.Parse(reader["approved_at"].ToString()!)
-            ));
+            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
         return memberships;
     }
 
@@ -132,17 +125,7 @@ public class BuildingDbRepository : BaseDbRepository
         List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
         while (reader.Read())
         {
-            string? reason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
-                ? null : reader["rejection_reason"].ToString();
-            requests.Add(new BuildingAccessRequest(
-                Convert.ToInt64(reader["id"]),
-                UserMapper.Map(reader),
-                null!,
-                reader["unit_number"].ToString()!,
-                DateTime.Parse(reader["created_at"].ToString()!),
-                RequestStatusMapper.Parse(reader["status"].ToString()!),
-                reason
-            ));
+            requests.Add(BuildingAccessRequestMapper.MapWithoutBuilding(reader));
         }
         return requests;
     }

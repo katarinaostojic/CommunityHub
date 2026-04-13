@@ -14,14 +14,12 @@ namespace CommunityHub.Ui.Controls;
 
 public partial class MenuPanel : UserControl
 {
-    private readonly BuildingService _buildingService;
     private User _user;
     private readonly BuildingMembershipService _membershipService;
 
     public MenuPanel()
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
         _membershipService = new BuildingMembershipService();
     }
 

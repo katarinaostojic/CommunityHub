@@ -68,20 +68,6 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         return memberships;
     }
 
-    public bool ExistsForUnit(long buildingId, string unitNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT COUNT(*) FROM building_memberships
-            WHERE building_id = @buildingId AND unit_number = @unitNumber";
-
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@unitNumber", unitNumber);
-
-        return Convert.ToInt32(command.ExecuteScalar()) > 0;
-    }
-
     public List<string> GetOccupiedUnits(long buildingId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

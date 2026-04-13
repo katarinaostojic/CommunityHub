@@ -143,23 +143,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
     {
         List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
         while (reader.Read())
-            requests.Add(MapRequest(reader));
+            requests.Add(BuildingAccessRequestMapper.MapWithBuilding(reader));
         return requests;
-    }
-
-    private BuildingAccessRequest MapRequest(IDataReader reader)
-    {
-        string? rejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
-            ? null : reader["rejection_reason"].ToString();
-
-        return new BuildingAccessRequest(
-            Convert.ToInt64(reader["id"]),
-            UserMapper.Map(reader),
-            BuildingMapper.MapFromJoin(reader),
-            reader["unit_number"].ToString()!,
-            DateTime.Parse(reader["created_at"].ToString()!),
-            RequestStatusMapper.Parse(reader["status"].ToString()!),
-            rejectionReason
-        );
     }
 }
