@@ -14,30 +14,6 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         _imageRepository = new ImageDbRepository();
     }
 
-    private BuildingMembership MapWithBuilding(IDataReader reader)
-    {
-        return new BuildingMembership(
-            Convert.ToInt64(reader["id"]),
-            BuildingMapper.MapFromJoin(reader),
-            UserMapper.Map(reader),
-            reader["unit_number"].ToString()!,
-            Convert.ToInt32(reader["floor_number"]),
-            DateTime.Parse(reader["approved_at"].ToString()!)
-        );
-    }
-
-    private BuildingMembership MapWithoutBuilding(IDataReader reader)
-    {
-        return new BuildingMembership(
-            Convert.ToInt64(reader["id"]),
-            null!,
-            UserMapper.Map(reader),
-            reader["unit_number"].ToString()!,
-            Convert.ToInt32(reader["floor_number"]),
-            DateTime.Parse(reader["approved_at"].ToString()!)
-        );
-    }
-
     public List<BuildingMembership> GetByTenant(long tenantId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -61,7 +37,7 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         using IDataReader reader = command.ExecuteReader();
         List<BuildingMembership> memberships = new List<BuildingMembership>();
         while (reader.Read())
-            memberships.Add(MapWithBuilding(reader));
+            memberships.Add(BuildingMembershipMapper.MapWithBuilding(reader));
 
         Dictionary<long, List<Image>> imageMap =
             _imageRepository.GetByEntities("building", memberships.Select(m => m.Building.Id));
@@ -88,7 +64,7 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         using IDataReader reader = command.ExecuteReader();
         List<BuildingMembership> memberships = new List<BuildingMembership>();
         while (reader.Read())
-            memberships.Add(MapWithoutBuilding(reader));
+            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
         return memberships;
     }
 
