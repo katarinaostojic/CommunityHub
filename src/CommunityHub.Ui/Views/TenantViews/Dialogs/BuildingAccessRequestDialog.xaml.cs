@@ -73,7 +73,7 @@ public partial class BuildingAccessRequestDialog : Window
             MessageBox.Show("Please enter an apartment number.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
-        if (!IsValidUnit(unitNumber))
+        if (!_building.ContainsUnit(unitNumber))
         {
             MessageBox.Show("Please select a valid apartment number from the list.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
@@ -84,13 +84,6 @@ public partial class BuildingAccessRequestDialog : Window
             return false;
         }
         return true;
-    }
-
-    private bool IsValidUnit(string unitNumber)
-    {
-        return _building.Floors
-            .SelectMany(f => f.Units)
-            .Any(u => u.UnitNumber == unitNumber);
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)

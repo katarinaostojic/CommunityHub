@@ -92,7 +92,7 @@ public partial class MyBuildingRequestsPage : Page
 
         LoadRequests();
         UpdateFilterButtons();
-        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
     private bool ConfirmCancellation(string street, string streetNumber)

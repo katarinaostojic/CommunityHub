@@ -22,11 +22,6 @@ public class BuildingMembershipService
         return _repository.GetByBuilding(buildingId);
     }
 
-    public bool IsUnitOccupied(long buildingId, string unitNumber)
-    {
-        return _repository.ExistsForUnit(buildingId, unitNumber);
-    }
-
     public List<string> GetOccupiedUnits(long buildingId)
     {
         return _repository.GetOccupiedUnits(buildingId);

@@ -100,7 +100,7 @@ public partial class BuildingDetailsPage : Page
 
         DisplayInfoCards();
         ViewRequestsButton.Visibility = Visibility.Visible;
-        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully!");
     }
 

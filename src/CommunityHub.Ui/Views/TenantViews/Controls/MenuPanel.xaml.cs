@@ -28,7 +28,7 @@ public partial class MenuPanel : UserControl
     public void Initialize(User user)
     {
         _user = user;
-        //reset za my buildings na my building details stranici
+        // Reset My Buildings toggle state on each navigation
         MyBuildingsToggle.IsChecked = false;
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
         MyBuildingsArrow.Text = "∨";

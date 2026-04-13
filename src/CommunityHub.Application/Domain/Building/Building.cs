@@ -53,6 +53,13 @@ public class Building
         return Memberships.Any(m => m.UnitNumber == unitNumber);
     }
 
+    public bool ContainsUnit(string unitNumber)
+    {
+        return Floors
+            .SelectMany(f => f.Units)
+            .Any(u => u.UnitNumber == unitNumber);
+    }
+
     public bool HasExistingRequest(long userId, string unitNumber)
     {
         return AccessRequests.Any(r => r.User.Id == userId
