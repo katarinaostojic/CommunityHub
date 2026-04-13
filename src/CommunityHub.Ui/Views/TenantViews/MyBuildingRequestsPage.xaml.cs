@@ -1,11 +1,13 @@
-﻿using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Database.Mappers;
+using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Services;
+using CommunityHub.Ui.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using CommunityHub.Ui.Helpers;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.Database.Mappers;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -30,7 +32,7 @@ public partial class MyBuildingRequestsPage : Page
 
     private void LoadRequests()
     {
-        string? statusFilter = _currentFilter == null ? null : StatusToString(_currentFilter.Value);
+        string? statusFilter = _currentFilter == null ? null : RequestStatusMapper.ToDbString(_currentFilter.Value);
         _filteredRequests = _requestService.GetAllByTenant(_user.Id, statusFilter, _sortDescending)
             .Select(r => new BuildingAccessRequestDisplay(r))
             .ToList();
@@ -38,21 +40,12 @@ public partial class MyBuildingRequestsPage : Page
         RequestsPanel.ItemsSource = _filteredRequests;
         ResultsCountText.Text = $"Showing {_filteredRequests.Count} results";
     }
-
-    private string StatusToString(RequestStatus status) => status switch
-    {
-        RequestStatus.PendingApproval => "pending approval",
-        RequestStatus.Approved => "accepted",
-        RequestStatus.Rejected => "rejected",
-        _ => throw new ArgumentException($"Unknown status: {status}")
-    };
-
     private void UpdateFilterButtons()
     {
         UpdateFilterButton(FilterAllButton, "All", _requestService.CountByTenantAndStatus(_user.Id, null));
-        UpdateFilterButton(FilterPendingButton, "Pending approval", _requestService.CountByTenantAndStatus(_user.Id, "pending approval"));
-        UpdateFilterButton(FilterApprovedButton, "Approved", _requestService.CountByTenantAndStatus(_user.Id, "accepted"));
-        UpdateFilterButton(FilterRejectedButton, "Rejected", _requestService.CountByTenantAndStatus(_user.Id, "rejected"));
+        UpdateFilterButton(FilterPendingButton, "Pending approval", _requestService.CountByTenantAndStatus(_user.Id, RequestStatusMapper.ToDbString(RequestStatus.PendingApproval)));
+        UpdateFilterButton(FilterApprovedButton, "Approved", _requestService.CountByTenantAndStatus(_user.Id, RequestStatusMapper.ToDbString(RequestStatus.Approved)));
+        UpdateFilterButton(FilterRejectedButton, "Rejected", _requestService.CountByTenantAndStatus(_user.Id, RequestStatusMapper.ToDbString(RequestStatus.Rejected)));
     }
 
     private void UpdateFilterButton(Button filterButton, string label, int count)
@@ -114,7 +107,7 @@ public partial class MyBuildingRequestsPage : Page
         AppMenu.Open();
     }
 
-    //klasa za displej
+    //Display wrapper class
     private class BuildingAccessRequestDisplay
     {
         private readonly BuildingAccessRequest _request;
