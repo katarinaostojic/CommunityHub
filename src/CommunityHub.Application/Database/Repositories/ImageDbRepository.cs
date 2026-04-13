@@ -29,6 +29,23 @@ public class ImageDbRepository : BaseDbRepository
         if (ids.Count == 0) return result;
 
         using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = BuildEntitiesCommand(connection, entity, ids);
+
+        using IDataReader reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            long entityId = Convert.ToInt64(reader["entity_id"]);
+            result[entityId].Add(new Image(
+                Convert.ToInt64(reader["id"]),
+                reader["path"].ToString()!
+            ));
+        }
+
+        return result;
+    }
+
+    private IDbCommand BuildEntitiesCommand(IDbConnection connection, string entity, List<long> ids)
+    {
         IDbCommand command = connection.CreateCommand();
 
         List<string> paramNames = new List<string>();
@@ -40,24 +57,12 @@ public class ImageDbRepository : BaseDbRepository
         }
 
         command.CommandText = $@"
-            SELECT id, path, entity_id
-            FROM images
-            WHERE entity = @entity AND entity_id IN ({string.Join(", ", paramNames)})";
+        SELECT id, path, entity_id
+        FROM images
+        WHERE entity = @entity AND entity_id IN ({string.Join(", ", paramNames)})";
 
         AddParameter(command, "@entity", entity);
-
-        using IDataReader reader = command.ExecuteReader();
-        while (reader.Read())
-        {
-            long entityId = Convert.ToInt64(reader["entity_id"]);
-            Image image = new Image(
-                Convert.ToInt64(reader["id"]),
-                reader["path"].ToString()!
-            );
-            result[entityId].Add(image);
-        }
-
-        return result;
+        return command;
     }
 
     private List<Image> ReadImages(IDataReader reader)

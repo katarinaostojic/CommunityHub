@@ -33,7 +33,7 @@ public partial class BuildingDetailsPage : Page
         DisplayAddress();
         DisplayInfoCards();
         DisplayCurrentImage();
-        UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
+        UserNameTextBlock.Text = _user.DisplayName;
         AppMenu.Initialize(_user);
     }
 
@@ -100,7 +100,7 @@ public partial class BuildingDetailsPage : Page
 
         DisplayInfoCards();
         ViewRequestsButton.Visibility = Visibility.Visible;
-        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully!");
     }
 

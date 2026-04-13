@@ -24,14 +24,14 @@ public class BuildingService
         return _repository.GetById(buildingId);
     }
 
-    public List<Building> GetAllByManager(long managerId)
-    {
-        return _repository.GetAllByManager(managerId);
-    }
-
     public int GetVacancies(Building building)
     {
         return building.TotalUnits - building.Memberships.Count;
+    }
+
+    public List<Building> GetAllByManager(long managerId)
+    {
+        return _repository.GetAllByManager(managerId);
     }
 
     public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId)

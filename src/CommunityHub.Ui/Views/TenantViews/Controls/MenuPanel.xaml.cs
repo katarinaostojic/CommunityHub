@@ -14,21 +14,19 @@ namespace CommunityHub.Ui.Controls;
 
 public partial class MenuPanel : UserControl
 {
-    private readonly BuildingService _buildingService;
     private User _user;
     private readonly BuildingMembershipService _membershipService;
 
     public MenuPanel()
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
         _membershipService = new BuildingMembershipService();
     }
 
     public void Initialize(User user)
     {
         _user = user;
-        //reset za my buildings na my building details stranici
+        // Reset My Buildings toggle state on each navigation
         MyBuildingsToggle.IsChecked = false;
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
         MyBuildingsArrow.Text = "∨";

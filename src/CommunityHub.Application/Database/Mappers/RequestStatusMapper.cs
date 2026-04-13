@@ -11,4 +11,12 @@ public static class RequestStatusMapper
         "rejected" => RequestStatus.Rejected,
         _ => throw new ArgumentException($"Unknown request status: '{status}'")
     };
+
+    public static string ToDbString(RequestStatus status) => status switch
+    {
+        RequestStatus.PendingApproval => "pending approval",
+        RequestStatus.Approved => "accepted",
+        RequestStatus.Rejected => "rejected",
+        _ => throw new ArgumentException($"Unknown request status: '{status}'")
+    };
 }

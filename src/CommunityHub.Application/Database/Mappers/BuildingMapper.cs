@@ -18,7 +18,7 @@ public static class BuildingMapper
         );
     }
 
-   //building kao deo joina
+    //Maps building when it appears as part of a join
     public static Building MapFromJoin(IDataReader reader)
     {
         return new Building(

@@ -59,35 +59,31 @@ public partial class BuildingAccessRequestDialog : Window
     private void SendRequestButton_Click(object sender, RoutedEventArgs e)
     {
         string unitNumber = UnitComboBox.Text.Trim();
-
-        if (string.IsNullOrEmpty(unitNumber))
-        {
-            MessageBox.Show("Please enter an apartment number.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (!IsValidUnit(unitNumber))
-        {
-            MessageBox.Show("Please select a valid apartment number from the list.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (_building.HasExistingRequest(_user.Id, unitNumber))
-        {
-            MessageBox.Show("You already have a request for this apartment.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        if (!ValidateUnitSelection(unitNumber)) return;
 
         _requestService.Create(_user, _building, unitNumber);
         DialogResult = true;
         Close();
     }
 
-    private bool IsValidUnit(string unitNumber)
+    private bool ValidateUnitSelection(string unitNumber)
     {
-        return _building.Floors
-            .SelectMany(f => f.Units)
-            .Any(u => u.UnitNumber == unitNumber);
+        if (string.IsNullOrEmpty(unitNumber))
+        {
+            MessageBox.Show("Please enter an apartment number.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+        if (!_building.ContainsUnit(unitNumber))
+        {
+            MessageBox.Show("Please select a valid apartment number from the list.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+        if (_building.HasExistingRequest(_user.Id, unitNumber))
+        {
+            MessageBox.Show("You already have a request for this apartment.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+        return true;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
