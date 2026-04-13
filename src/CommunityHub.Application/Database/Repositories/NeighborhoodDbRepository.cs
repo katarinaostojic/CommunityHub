@@ -289,6 +289,15 @@ public class NeighborhoodDbRepository : BaseDbRepository
 
     public List<Neighborhood> SearchForCitizen(string? name, string? address, string? city, string? country)
     {
+        List<Neighborhood> result = FetchNeighborhoodsFromDb(name, city, country);
+        AttachImagesToNeighborhoods(result);
+        if (!string.IsNullOrWhiteSpace(address))
+            result = FilterByAddress(result, address);
+        return result;
+    }
+
+    private List<Neighborhood> FetchNeighborhoodsFromDb(string? name, string? city, string? country)
+    {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
 
@@ -310,7 +319,11 @@ public class NeighborhoodDbRepository : BaseDbRepository
         AddParameter(command, "@country", string.IsNullOrWhiteSpace(country) ? null : country);
 
         using IDataReader reader = command.ExecuteReader();
+        return ReadNeighborhoodsWithStreets(reader);
+    }
 
+    private List<Neighborhood> ReadNeighborhoodsWithStreets(IDataReader reader)
+    {
         Dictionary<long, Neighborhood> neighborhoods = new();
         HashSet<long> addedStreets = new();
 
@@ -319,79 +332,83 @@ public class NeighborhoodDbRepository : BaseDbRepository
             long id = Convert.ToInt64(reader["id"]);
 
             if (!neighborhoods.ContainsKey(id))
-            {
-                neighborhoods[id] = new Neighborhood(
-                    id,
-                    reader["name"].ToString()!,
-                    reader["description"].ToString()!,
-                    new Location(
-                        Convert.ToInt64(reader["city_id"]),
-                        reader["city_name"].ToString()!,
-                        reader["country_name"].ToString()!
-                    ),
-                    Convert.ToDecimal(reader["budget"]),
-                    Convert.ToInt64(reader["coordinator_id"])
-                );
-            }
+                neighborhoods[id] = MapNeighborhood(reader);
 
             if (!reader.IsDBNull(reader.GetOrdinal("street_id")))
-            {
-                long streetId = Convert.ToInt64(reader["street_id"]);
-
-                if (!addedStreets.Contains(streetId))
-                {
-                    addedStreets.Add(streetId);
-
-                    neighborhoods[id].AddStreet(new Street(
-                        streetId,
-                        id,
-                        reader["street_name"].ToString()!,
-                        Convert.ToInt32(reader["start_number"]),
-                        Convert.ToInt32(reader["end_number"])
-                    ));
-                }
-            }
+                TryAddStreet(reader, id, neighborhoods, addedStreets);
         }
 
-        List<Neighborhood> result = neighborhoods.Values.ToList();
+        return neighborhoods.Values.ToList();
+    }
 
+    private Neighborhood MapNeighborhood(IDataReader reader)
+    {
+        return new Neighborhood(
+            Convert.ToInt64(reader["id"]),
+            reader["name"].ToString()!,
+            reader["description"].ToString()!,
+            new Location(
+                Convert.ToInt64(reader["city_id"]),
+                reader["city_name"].ToString()!,
+                reader["country_name"].ToString()!
+            ),
+            Convert.ToDecimal(reader["budget"]),
+            Convert.ToInt64(reader["coordinator_id"])
+        );
+    }
+
+    private void TryAddStreet(IDataReader reader, long neighborhoodId, Dictionary<long, Neighborhood> neighborhoods, HashSet<long> addedStreets)
+    {
+        long streetId = Convert.ToInt64(reader["street_id"]);
+        if (addedStreets.Contains(streetId))
+            return;
+
+        addedStreets.Add(streetId);
+        neighborhoods[neighborhoodId].AddStreet(new Street(
+            streetId,
+            neighborhoodId,
+            reader["street_name"].ToString()!,
+            Convert.ToInt32(reader["start_number"]),
+            Convert.ToInt32(reader["end_number"])
+        ));
+    }
+
+    private void AttachImagesToNeighborhoods(List<Neighborhood> neighborhoods)
+    {
         Dictionary<long, List<Image>> imagesByNeighborhood =
-            _imageRepository.GetByEntities("neighborhood", result.Select(n => n.Id));
+            _imageRepository.GetByEntities("neighborhood", neighborhoods.Select(n => n.Id));
 
-        foreach (Neighborhood neighborhood in result)
+        foreach (Neighborhood neighborhood in neighborhoods)
         {
             if (imagesByNeighborhood.TryGetValue(neighborhood.Id, out List<Image>? images))
-            {
                 foreach (Image image in images)
-                {
                     neighborhood.AddImage(image);
-                }
-            }
         }
+    }
 
-        if (!string.IsNullOrWhiteSpace(address))
+    private List<Neighborhood> FilterByAddress(List<Neighborhood> neighborhoods, string address)
+    {
+        string lowered = address.ToLower().Trim();
+        string[] parts = lowered.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        int? number = null;
+        string streetPart = lowered;
+
+        if (parts.Length > 1 && int.TryParse(parts[^1], out int parsedNumber))
         {
-            string loweredAddress = address.ToLower().Trim();
-
-            int? number = null;
-            string streetPart = loweredAddress;
-
-            string[] parts = loweredAddress.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length > 1 && int.TryParse(parts[^1], out int parsedNumber))
-            {
-                number = parsedNumber;
-                streetPart = string.Join(" ", parts.Take(parts.Length - 1));
-            }
-
-            result = result.Where(n =>
-                n.Streets.Any(s =>
-                    s.StreetName.ToLower().Contains(streetPart) &&
-                    (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber))
-                )
-            ).ToList();
+            number = parsedNumber;
+            streetPart = string.Join(" ", parts.Take(parts.Length - 1));
         }
 
-        return result;
+        return neighborhoods.Where(n => MatchesAddressFilter(n, streetPart, number)).ToList();
+    }
+
+    private bool MatchesAddressFilter(Neighborhood neighborhood, string streetPart, int? number)
+    {
+        return neighborhood.Streets.Any(s =>
+            s.StreetName.ToLower().Contains(streetPart) &&
+            (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber))
+        );
     }
 
     public bool CheckAddressMatch(string fullAddress, long neighborhoodId)
@@ -410,15 +427,12 @@ public class NeighborhoodDbRepository : BaseDbRepository
         }
 
         string normalized = Normalize(fullAddress);
-
-        // NAĐI BROJ (robusnije)
         string numberStr = new string(normalized.Where(char.IsDigit).ToArray());
 
         if (!int.TryParse(numberStr, out int number))
             return false;
 
         using IDbConnection connection = PostgresConnection.CreateConnection();
-
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
         SELECT street_name, start_number, end_number
@@ -435,12 +449,8 @@ public class NeighborhoodDbRepository : BaseDbRepository
             int start = Convert.ToInt32(reader["start_number"]);
             int end = Convert.ToInt32(reader["end_number"]);
 
-            // 🔥 SAMO PROVERI DA LI ADRESA SADRŽI ULICU
-            if (normalized.Contains(dbStreet))
-            {
-                if (number >= start && number <= end)
-                    return true;
-            }
+            if (normalized.Contains(dbStreet) && number >= start && number <= end)
+                return true;
         }
 
         return false;
@@ -471,9 +481,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
 
         int numberEnd = numberStart;
         while (numberEnd < cleaned.Length && char.IsDigit(cleaned[numberEnd]))
-        {
             numberEnd++;
-        }
 
         string streetPart = cleaned.Substring(0, numberStart).Trim().Trim(',', '.', '-', '/');
         string numberPart = cleaned.Substring(numberStart, numberEnd - numberStart).Trim();
@@ -494,36 +502,21 @@ public class NeighborhoodDbRepository : BaseDbRepository
             return string.Empty;
 
         string result = value.Trim().ToLowerInvariant();
-
         result = TransliterateSerbianCyrillicToLatin(result);
-
         result = result
-            .Replace("š", "s")
-            .Replace("đ", "d")
-            .Replace("č", "c")
-            .Replace("ć", "c")
-            .Replace("ž", "z");
-
+            .Replace("š", "s").Replace("đ", "d")
+            .Replace("č", "c").Replace("ć", "c").Replace("ž", "z");
         result = result
-            .Replace("ulica", " ")
-            .Replace("ul.", " ")
-            .Replace("ul ", " ");
+            .Replace("ulica", " ").Replace("ul.", " ").Replace("ul ", " ");
 
         var filtered = new List<char>();
         foreach (char c in result)
-        {
             if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
-            {
                 filtered.Add(c);
-            }
-        }
 
         result = new string(filtered.ToArray());
-
         while (result.Contains("  "))
-        {
             result = result.Replace("  ", " ");
-        }
 
         return result.Trim();
     }
@@ -565,7 +558,6 @@ public class NeighborhoodDbRepository : BaseDbRepository
         };
 
         var result = new StringBuilder();
-
         foreach (char c in input)
         {
             if (map.TryGetValue(c, out string? latin))
@@ -745,6 +737,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }
+
     public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

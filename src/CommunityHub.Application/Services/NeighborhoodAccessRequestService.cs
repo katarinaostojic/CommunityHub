@@ -9,6 +9,7 @@ namespace CommunityHub.Application.Services;
 public class NeighborhoodAccessRequestService
 {
     private readonly NeighborhoodAccessRequestDbRepository _repository;
+    private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
 
     public NeighborhoodAccessRequestService()
     {
@@ -56,34 +57,26 @@ public class NeighborhoodAccessRequestService
             return AccessRequestResult.AlreadyPending;
 
         string userAddress = GetEffectiveUserAddress(citizen.Id, citizen.Address);
-
-        bool addressMatches = false;
-
-        if (!string.IsNullOrWhiteSpace(userAddress))
-        {
-            addressMatches = AddressMatchesNeighborhood(userAddress, neighborhood);
-        }
+        bool addressMatches = !string.IsNullOrWhiteSpace(userAddress) && AddressMatchesNeighborhood(userAddress, neighborhood);
 
         if (addressMatches)
-        {
-            if (_repository.HasMembership(citizen.Id))
-                return AccessRequestResult.AlreadyMember;
-
-            NeighborhoodAccessRequest request = new NeighborhoodAccessRequest(
-                0,
-                citizen,
-                neighborhood,
-                DateTime.UtcNow,
-                RequestStatus.Approved,
-                null
-            );
-
-            _repository.CreateMembership(request);
-            return AccessRequestResult.Granted;
-        }
+            return GrantMembership(citizen, neighborhood);
 
         _repository.Create(citizen, neighborhood);
         return AccessRequestResult.RequestCreated;
+    }
+
+    private AccessRequestResult GrantMembership(User citizen, Neighborhood neighborhood)
+    {
+        if (_repository.HasMembership(citizen.Id))
+            return AccessRequestResult.AlreadyMember;
+
+        NeighborhoodAccessRequest request = new NeighborhoodAccessRequest(
+            0, citizen, neighborhood, DateTime.UtcNow, RequestStatus.Approved, null
+        );
+
+        _repository.CreateMembership(request);
+        return AccessRequestResult.Granted;
     }
 
     private string GetEffectiveUserAddress(long userId, string? currentAddress)
@@ -91,8 +84,12 @@ public class NeighborhoodAccessRequestService
         if (!string.IsNullOrWhiteSpace(currentAddress))
             return currentAddress;
 
-        using IDbConnection connection = PostgresConnection.CreateConnection();
+        return FetchAddressFromDb(userId);
+    }
 
+    private string FetchAddressFromDb(long userId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = "SELECT address FROM users WHERE id = @id";
 
@@ -102,7 +99,6 @@ public class NeighborhoodAccessRequestService
         command.Parameters.Add(idParam);
 
         object? result = command.ExecuteScalar();
-
         if (result == null || result == DBNull.Value)
             return string.Empty;
 
@@ -120,6 +116,11 @@ public class NeighborhoodAccessRequestService
         if (!TryParseAddress(fullAddress, out string userStreet, out int userNumber))
             return false;
 
+        return StreetNumberIsInRange(neighborhood, userStreet, userNumber);
+    }
+
+    private bool StreetNumberIsInRange(Neighborhood neighborhood, string userStreet, int userNumber)
+    {
         return neighborhood.Streets.Any(street =>
             Normalize(street.StreetName) == userStreet &&
             userNumber >= street.StartNumber &&
@@ -136,16 +137,7 @@ public class NeighborhoodAccessRequestService
             return false;
 
         string normalized = Normalize(fullAddress);
-
-        int firstDigitIndex = -1;
-        for (int i = 0; i < normalized.Length; i++)
-        {
-            if (char.IsDigit(normalized[i]))
-            {
-                firstDigitIndex = i;
-                break;
-            }
-        }
+        int firstDigitIndex = FindFirstDigitIndex(normalized);
 
         if (firstDigitIndex == -1)
             return false;
@@ -163,41 +155,51 @@ public class NeighborhoodAccessRequestService
         return true;
     }
 
+    private int FindFirstDigitIndex(string value)
+    {
+        for (int i = 0; i < value.Length; i++)
+            if (char.IsDigit(value[i]))
+                return i;
+        return -1;
+    }
+
     private string Normalize(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return string.Empty;
 
         string result = value.Trim().ToLowerInvariant();
+        result = ReplaceDiacritics(result);
+        result = RemoveStreetPrefixes(result);
+        result = KeepOnlyLettersAndDigits(result);
 
-        result = result
-            .Replace("š", "s")
-            .Replace("đ", "d")
-            .Replace("č", "c")
-            .Replace("ć", "c")
-            .Replace("ž", "z");
+        while (result.Contains("  "))
+            result = result.Replace("  ", " ");
 
-        result = result
-            .Replace("ulica", " ")
-            .Replace("ul.", " ")
-            .Replace("ul ", " ");
+        return result.Trim();
+    }
 
+    private string ReplaceDiacritics(string value)
+    {
+        return value
+            .Replace("š", "s").Replace("đ", "d")
+            .Replace("č", "c").Replace("ć", "c").Replace("ž", "z");
+    }
+
+    private string RemoveStreetPrefixes(string value)
+    {
+        return value
+            .Replace("ulica", " ").Replace("ul.", " ").Replace("ul ", " ");
+    }
+
+    private string KeepOnlyLettersAndDigits(string value)
+    {
         StringBuilder sb = new StringBuilder();
-
-        foreach (char c in result)
-        {
+        foreach (char c in value)
             if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
                 sb.Append(c);
-        }
-
-        string cleaned = sb.ToString();
-
-        while (cleaned.Contains("  "))
-            cleaned = cleaned.Replace("  ", " ");
-
-        return cleaned.Trim();
+        return sb.ToString();
     }
-    private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
 
     public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
     {

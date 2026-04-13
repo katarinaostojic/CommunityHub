@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using CommunityHub.Application.Domain;
+using CommunityHub.Ui.Views.CitizenViews;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
 {
@@ -8,13 +9,15 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
     {
         private readonly User _user;
         private readonly Neighborhood _neighborhood;
+        private readonly Window _parentWindow;
 
-        public NeighborhoodAccessGrantedDialog(User user, Neighborhood neighborhood)
+        public NeighborhoodAccessGrantedDialog(User user, Neighborhood neighborhood, Window parentWindow)
         {
             InitializeComponent();
 
             _user = user;
             _neighborhood = neighborhood;
+            _parentWindow = parentWindow;
 
             LoadData();
 
@@ -42,7 +45,9 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
 
         private void ViewMyRequestsButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Open My Requests page.");
+            MyRequestsPage myRequestsPage = new MyRequestsPage(_user);
+            myRequestsPage.Show();
+            _parentWindow.Close();
             Close();
         }
     }
