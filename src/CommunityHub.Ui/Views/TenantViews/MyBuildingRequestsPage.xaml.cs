@@ -24,7 +24,7 @@ public partial class MyBuildingRequestsPage : Page
         InitializeComponent();
         _requestService = new BuildingAccessRequestService();
         _user = user;
-        UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
+        UserNameTextBlock.Text = _user.DisplayName;
         LoadRequests();
         UpdateFilterButtons();
         AppMenu.Initialize(_user);
