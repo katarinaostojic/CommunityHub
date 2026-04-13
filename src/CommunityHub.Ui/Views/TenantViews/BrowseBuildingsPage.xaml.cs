@@ -127,18 +127,7 @@ public partial class BrowseBuildingsPage : Page
         CloseFilterPanel();
     }
 
-    private void ResetFiltersButton_Click(object sender, RoutedEventArgs e)
-    {
-        FilterStreetTextBox.Text = string.Empty;
-        FilterNeighborhoodTextBox.Text = string.Empty;
-        FilterCityTextBox.Text = string.Empty;
-        FilterCountryTextBox.Text = string.Empty;
-        _filteredBuildings = _buildingService.Search(null, null, null, null);
-        _currentPage = 1;
-        DisplayBuildings();
-    }
-
-    private void ResetButton_Click(object sender, RoutedEventArgs e)
+    private void ResetAll()
     {
         SearchTextBox.Text = string.Empty;
         FilterStreetTextBox.Text = string.Empty;
@@ -149,6 +138,9 @@ public partial class BrowseBuildingsPage : Page
         _currentPage = 1;
         DisplayBuildings();
     }
+    private void ResetFiltersButton_Click(object sender, RoutedEventArgs e) => ResetAll();
+
+    private void ResetButton_Click(object sender, RoutedEventArgs e) => ResetAll();
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
