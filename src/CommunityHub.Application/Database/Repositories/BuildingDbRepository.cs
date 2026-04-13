@@ -74,7 +74,12 @@ public class BuildingDbRepository : BaseDbRepository
         if (buildings.Count == 0) return null;
 
         Building building = buildings[0];
+        PopulateBuildingDetails(building, connection, buildingId);
+        return building;
+    }
 
+    private void PopulateBuildingDetails(Building building, IDbConnection connection, long buildingId)
+    {
         foreach (Image image in _imageRepository.GetByEntity("building", buildingId))
             building.AddImage(image);
 
@@ -83,8 +88,6 @@ public class BuildingDbRepository : BaseDbRepository
 
         foreach (BuildingAccessRequest request in GetAccessRequestsByBuilding(connection, buildingId))
             building.AddAccessRequest(request);
-
-        return building;
     }
 
     public List<Building> GetAllByManager(long managerId)
