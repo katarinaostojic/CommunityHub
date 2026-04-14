@@ -41,6 +41,7 @@ public partial class BrowseBuildingsPage : Page
         if (totalPages == 0) totalPages = 1;
         PageLabel.Text = $"Page {_currentPage} of {totalPages}";
 
+        //skip buildings shown on previous pages
         BuildingsPanel.ItemsSource = _filteredBuildings
             .Skip((_currentPage - 1) * PageSize)
             .Take(PageSize)
@@ -159,11 +160,6 @@ public partial class BrowseBuildingsPage : Page
         return dialog.ShowDialog() == true;
     }
 
-    private void CloseBannerButton_Click(object sender, RoutedEventArgs e)
-    {
-        SuccessBanner.Visibility = Visibility.Collapsed;
-    }
-
     private void PrevPageButton_Click(object sender, RoutedEventArgs e)
     {
         if (_currentPage > 1)
@@ -181,16 +177,6 @@ public partial class BrowseBuildingsPage : Page
             _currentPage++;
             DisplayBuildings();
         }
-    }
-
-    private void LogoutButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationService.GoBack();
-    }
-
-    private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
     private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

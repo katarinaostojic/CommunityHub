@@ -29,7 +29,7 @@ public partial class MenuPanel : UserControl
         // Reset My Buildings toggle state on each navigation
         MyBuildingsToggle.IsChecked = false;
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
-        MyBuildingsArrow.Text = "∨";
+        MyBuildingsArrow.Text = "▼";
         LoadMemberships();
     }
 
