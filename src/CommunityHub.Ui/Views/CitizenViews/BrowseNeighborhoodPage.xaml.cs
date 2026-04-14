@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Services;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using System;
@@ -13,7 +13,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
 {
     public partial class BrowseNeighborhoodPage : Window
     {
-        private readonly NeighborhoodDbRepository _neighborhoodRepository;
+        private readonly NeighborhoodService _neighborhoodService;
         private readonly User _user;
 
         private List<Neighborhood> _allNeighborhoods = new();
@@ -25,7 +25,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
         {
             InitializeComponent();
 
-            _neighborhoodRepository = new NeighborhoodDbRepository();
+            _neighborhoodService = new NeighborhoodService();
             _user = user;
 
             LoggedInUserTextBlock.Text = _user.Username;
@@ -39,7 +39,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
 
         private void LoadNeighborhoods()
         {
-            _allNeighborhoods = _neighborhoodRepository.SearchForCitizen(null, null, null, null);
+            _allNeighborhoods = _neighborhoodService.SearchForCitizen(null, null, null, null);
             _filteredNeighborhoods = new List<Neighborhood>(_allNeighborhoods);
             DisplayNeighborhoods();
         }
@@ -157,7 +157,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
             string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
             string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
 
-            _filteredNeighborhoods = _neighborhoodRepository.SearchForCitizen(name, address, city, country);
+            _filteredNeighborhoods = _neighborhoodService.SearchForCitizen(name, address, city, country);
 
             DisplayNeighborhoods();
             CloseFilterPanel();
