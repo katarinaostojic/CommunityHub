@@ -302,11 +302,6 @@ public class NeighborhoodDbRepository : BaseDbRepository
         );
     }
 
-    
-
-    
-
-  
     public void CreateMembership(long citizenId, long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -341,8 +336,14 @@ public class NeighborhoodDbRepository : BaseDbRepository
     public List<NeighborhoodAccessRequest> GetRequestsByCitizen(long citizenId, string? statusFilter = null)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = BuildGetRequestsByCitizenCommand(connection, citizenId, statusFilter);
+        using IDataReader reader = command.ExecuteReader();
+        return ReadRequestList(reader);
+    }
 
-        using IDbCommand command = connection.CreateCommand();
+    private IDbCommand BuildGetRequestsByCitizenCommand(IDbConnection connection, long citizenId, string? statusFilter)
+    {
+        IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
         SELECT r.id, r.citizen_id, u.name AS citizen_name, u.surname AS citizen_surname,
                u.username, u.password, u.birthday, u.role, u.address,
@@ -366,47 +367,14 @@ public class NeighborhoodDbRepository : BaseDbRepository
         }
 
         command.CommandText += " ORDER BY r.created_at DESC";
+        return command;
+    }
 
-        using IDataReader reader = command.ExecuteReader();
-
+    private List<NeighborhoodAccessRequest> ReadRequestList(IDataReader reader)
+    {
         var requests = new List<NeighborhoodAccessRequest>();
-
         while (reader.Read())
-        {
-            User citizen = new User(
-                Convert.ToInt64(reader["citizen_id"]),
-                reader["username"].ToString()!,
-                reader["password"].ToString()!,
-                reader["citizen_name"].ToString()!,
-                reader["citizen_surname"].ToString()!,
-                ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
-                UserMapper.ParseRole(reader["role"].ToString()!),
-                reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
-            );
-
-            Neighborhood neighborhood = new Neighborhood(
-                Convert.ToInt64(reader["n_id"]),
-                reader["neighborhood_name"].ToString()!,
-                reader["description"].ToString()!,
-                new Location(
-                    Convert.ToInt64(reader["city_id"]),
-                    reader["city_name"].ToString()!,
-                    reader["country_name"].ToString()!
-                ),
-                Convert.ToDecimal(reader["budget"]),
-                Convert.ToInt64(reader["coordinator_id"])
-            );
-
-            requests.Add(new NeighborhoodAccessRequest(
-                Convert.ToInt64(reader["id"]),
-                citizen,
-                neighborhood,
-                Convert.ToDateTime(reader["created_at"]),
-                ParseRequestStatus(reader["status"].ToString()!),
-                reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader["rejection_reason"].ToString()
-            ));
-        }
-
+            requests.Add(MapRequest(reader));
         return requests;
     }
 
@@ -452,12 +420,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
 
         var images = new List<Image>();
         while (reader.Read())
-        {
-            images.Add(new Image(
-                Convert.ToInt64(reader["id"]),
-                reader["path"].ToString()!
-            ));
-        }
+            images.Add(new Image(Convert.ToInt64(reader["id"]), reader["path"].ToString()!));
 
         return images;
     }
@@ -507,10 +470,10 @@ public class NeighborhoodDbRepository : BaseDbRepository
 
         return requests;
     }
+
     private NeighborhoodAccessRequest MapRequest(IDataReader reader)
     {
         User citizen = NeighborhoodMapper.MapRequestCitizen(reader);
-
         Neighborhood neighborhood = NeighborhoodMapper.MapFromRequest(reader);
 
         return new NeighborhoodAccessRequest(
