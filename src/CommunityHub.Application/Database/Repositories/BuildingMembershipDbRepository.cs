@@ -35,43 +35,6 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         return memberships;
     }
 
-    public List<BuildingMembership> GetByBuilding(long buildingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
-                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-            FROM building_memberships bm
-            JOIN users u ON bm.user_id = u.id
-            WHERE bm.building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<BuildingMembership> memberships = new List<BuildingMembership>();
-        while (reader.Read())
-            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
-        return memberships;
-    }
-
-    public List<string> GetOccupiedUnits(long buildingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT unit_number FROM building_memberships
-            WHERE building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<string> result = new List<string>();
-        while (reader.Read())
-            result.Add(reader["unit_number"].ToString()!);
-        return result;
-    }
-
     public void Create(BuildingAccessRequest request)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
