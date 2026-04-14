@@ -61,42 +61,42 @@ public partial class AccessRequestsPage : Page
             _requestService.ApproveRequest(vm.Request);
             LoadRequests();
 
-            var dialog = new ConfirmationDialog("A request has been accepted successfully.");
-            dialog.Owner = Window.GetWindow(this);
-            dialog.ShowDialog();
+            ShowConfirmationDialog("A request has been accepted successfully.");
         }
     }
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button btn && btn.Tag is BuildingAccessRequestDisplay vm)
-        {
-            var askDialog = new RejectConfirmationDialog();
-            askDialog.Owner = Window.GetWindow(this);
-            bool? result = askDialog.ShowDialog();
+        if (!(sender is Button btn && btn.Tag is BuildingAccessRequestDisplay vm)) return;
 
-            if (result != true) return;
+        string? explanation = AskForRejectionExplanation();
+        if (explanation == null) return;
 
-            if (askDialog.WantsExplanation)
-            {
-                var explDialog = new WriteExplanationDialog();
-                explDialog.Owner = Window.GetWindow(this);
-                bool? explResult = explDialog.ShowDialog();
-                if (explResult != true) return;
+        _requestService.RejectRequest(vm.Request.Id, string.IsNullOrEmpty(explanation) ? null : explanation);
+        LoadRequests();
+        ShowConfirmationDialog("A request has been rejected successfully.");
+    }
 
-                _requestService.RejectRequest(vm.Request.Id, explDialog.ExplanationText);
-            }
-            else
-            {
-                _requestService.RejectRequest(vm.Request.Id, null);
-            }
+    private string? AskForRejectionExplanation()
+    {
+        var askDialog = new RejectConfirmationDialog();
+        askDialog.Owner = Window.GetWindow(this);
+        if (askDialog.ShowDialog() != true) return null;
 
-            LoadRequests();
+        if (!askDialog.WantsExplanation) return string.Empty;
 
-            var confirmDialog = new ConfirmationDialog("A request has been rejected successfully.");
-            confirmDialog.Owner = Window.GetWindow(this);
-            confirmDialog.ShowDialog();
-        }
+        var explDialog = new WriteExplanationDialog();
+        explDialog.Owner = Window.GetWindow(this);
+        if (explDialog.ShowDialog() != true) return null;
+
+        return explDialog.ExplanationText;
+    }
+
+    private void ShowConfirmationDialog(string message)
+    {
+        var dialog = new ConfirmationDialog(message);
+        dialog.Owner = Window.GetWindow(this);
+        dialog.ShowDialog();
     }
 
     private void ExplanationButton_Click(object sender, RoutedEventArgs e)
