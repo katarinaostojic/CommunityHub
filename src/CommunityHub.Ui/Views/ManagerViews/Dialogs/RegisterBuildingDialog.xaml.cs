@@ -15,6 +15,7 @@ public partial class RegisterBuildingDialog : Window
     private readonly CityDbRepository _cityRepository;
     private readonly CountryDbRepository _countryRepository;
     private List<string> _selectedImagePaths = new List<string>();
+    private bool _updatingFromCity = false;
 
     public RegisterBuildingDialog(User user)
     {
@@ -34,13 +35,38 @@ public partial class RegisterBuildingDialog : Window
         CountryComboBox.DisplayMemberPath = "Name";
     }
 
-    private void LoadCities()
+    private void LoadCities(long? countryId = null)
     {
-        var cities = _cityRepository.GetAll();
+        var cities = countryId.HasValue
+            ? _cityRepository.GetByCountry(countryId.Value)
+            : _cityRepository.GetAll();
+
         CityComboBox.ItemsSource = cities;
         CityComboBox.DisplayMemberPath = "Name";
+        CityComboBox.SelectedItem = null;
     }
 
+    private void CountryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingFromCity) return;
+
+        if (CountryComboBox.SelectedItem is Country country)
+            LoadCities(country.Id);
+        else
+            LoadCities();
+    }
+
+    private void CityComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (CityComboBox.SelectedItem is City city)
+        {
+            _updatingFromCity = true;
+            CountryComboBox.SelectedItem = CountryComboBox.Items
+                .Cast<Country>()
+                .FirstOrDefault(c => c.Id == city.Country.Id);
+            _updatingFromCity = false;
+        }
+    }
     private void ConfirmFloors_Click(object sender, RoutedEventArgs e)
     {
         FloorsStackPanel.Children.Clear();
@@ -121,6 +147,14 @@ public partial class RegisterBuildingDialog : Window
             MessageBox.Show("Please fill in all required fields.", "Error");
             return false;
         }
+
+        City selectedCity = (City)CityComboBox.SelectedItem;
+        if (_buildingService.BuildingExists(StreetTextBox.Text, NumberTextBox.Text, selectedCity.Id))
+        {
+            MessageBox.Show("A building at this address already exists.", "Error");
+            return false;
+        }
+
         return true;
     }
 

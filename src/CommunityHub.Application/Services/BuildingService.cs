@@ -53,4 +53,9 @@ public class BuildingService
     {
         _imageRepository.SaveImage("building", buildingId, path);
     }
+
+    public bool BuildingExists(string street, string streetNumber, long cityId)
+    {
+        return _repository.BuildingExists(street, streetNumber, cityId);
+    }
 }

@@ -263,4 +263,21 @@ public class BuildingDbRepository : BaseDbRepository
             foreach (Image image in imageMap[building.Id])
                 building.AddImage(image);
     }
+
+    public bool BuildingExists(string street, string streetNumber, long cityId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT COUNT(*) FROM buildings
+        WHERE LOWER(street) = LOWER(@street)
+          AND LOWER(street_number) = LOWER(@streetNumber)
+          AND city_id = @cityId";
+
+        AddParameter(command, "@street", street);
+        AddParameter(command, "@streetNumber", streetNumber);
+        AddParameter(command, "@cityId", cityId);
+
+        return Convert.ToInt64(command.ExecuteScalar()) > 0;
+    }
 }
