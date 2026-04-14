@@ -327,7 +327,36 @@ public class NeighborhoodDbRepository : BaseDbRepository
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }
+    public List<Neighborhood> GetByCoordinator(long coordinatorId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
 
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+    SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
+           co.name AS country_name, n.budget, n.coordinator_id,
+           s.id AS street_id, s.street_name, s.start_number, s.end_number
+    FROM neighborhoods n
+    JOIN cities c ON n.city_id = c.id
+    JOIN countries co ON c.country_id = co.id
+    LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
+    WHERE n.coordinator_id = @coordinatorId
+    ORDER BY n.id";
+
+        AddParameter(command, "@coordinatorId", coordinatorId);
+
+        using IDataReader reader = command.ExecuteReader();
+        var neighborhoods = ReadNeighborhoodsWithStreets(reader);
+
+        foreach (var neighborhood in neighborhoods)
+        {
+            var images = GetImages(neighborhood.Id);
+            foreach (var image in images)
+                neighborhood.AddImage(image);
+        }
+
+        return neighborhoods;
+    }
     public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
