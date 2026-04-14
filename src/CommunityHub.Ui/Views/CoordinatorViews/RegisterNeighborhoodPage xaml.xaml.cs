@@ -33,23 +33,8 @@ public partial class RegisterNeighborhoodPage : Page
         string startText = StartNumberTextBox.Text.Trim();
         string endText = EndNumberTextBox.Text.Trim();
 
-        if (string.IsNullOrEmpty(streetName) || string.IsNullOrEmpty(startText) || string.IsNullOrEmpty(endText))
-        {
-            MessageBox.Show("Please fill in all street fields.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        if (!ValidateStreetInputs(streetName, startText, endText, out int startNumber, out int endNumber))
             return;
-        }
-
-        if (!int.TryParse(startText, out int startNumber) || !int.TryParse(endText, out int endNumber))
-        {
-            MessageBox.Show("Start and end numbers must be integers.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (startNumber >= endNumber)
-        {
-            MessageBox.Show("Start number must be less than end number.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
 
         Street street = new Street(0, 0, streetName, startNumber, endNumber);
         _streets.Add(street);
@@ -58,6 +43,32 @@ public partial class RegisterNeighborhoodPage : Page
         StreetNameTextBox.Clear();
         StartNumberTextBox.Clear();
         EndNumberTextBox.Clear();
+    }
+
+    private bool ValidateStreetInputs(string streetName, string startText, string endText, out int startNumber, out int endNumber)
+    {
+        startNumber = 0;
+        endNumber = 0;
+
+        if (string.IsNullOrEmpty(streetName) || string.IsNullOrEmpty(startText) || string.IsNullOrEmpty(endText))
+        {
+            MessageBox.Show("Please fill in all street fields.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (!int.TryParse(startText, out startNumber) || !int.TryParse(endText, out endNumber))
+        {
+            MessageBox.Show("Start and end numbers must be integers.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (startNumber >= endNumber)
+        {
+            MessageBox.Show("Start number must be less than end number.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        return true;
     }
 
     private void AddImage_Click(object sender, RoutedEventArgs e)
