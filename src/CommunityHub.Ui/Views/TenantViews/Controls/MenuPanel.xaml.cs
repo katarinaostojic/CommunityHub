@@ -61,7 +61,10 @@ public partial class MenuPanel : UserControl
 
     private void LoadMemberships()
     {
-        var memberships = _membershipService.GetByTenant(_user.Id);
+        var memberships = _membershipService.GetByTenant(_user.Id)
+            .GroupBy(m => m.Building.Id)
+            .Select(g => g.First())
+            .ToList();
         MyBuildingsMenuPanel.ItemsSource = memberships;
     }
 
