@@ -1,12 +1,11 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Services;
+using CommunityHub.Ui.Converters;
+using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using CommunityHub.Ui.Helpers;
-using System.IO;
-using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -62,13 +61,7 @@ public partial class BuildingDetailsPage : Page
             return;
         }
 
-        string fullPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            _building.Images[_currentImageIndex].Path.Replace('/', Path.DirectorySeparatorChar)
-        );
-
-        try { BuildingImage.Source = new BitmapImage(new Uri(fullPath, UriKind.Absolute)); }
-        catch { BuildingImage.Source = null; }
+        BuildingImage.Source = ImagePathConverter.LoadImage(_building.Images[_currentImageIndex].Path);
 
         ImageCounterText.Text = $"{_currentImageIndex + 1}/{_building.Images.Count}";
         UpdateImageDots();

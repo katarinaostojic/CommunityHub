@@ -7,13 +7,6 @@ namespace CommunityHub.Application.Database.Repositories;
 
 public class BuildingMembershipDbRepository : BaseDbRepository
 {
-    private readonly ImageDbRepository _imageRepository;
-
-    public BuildingMembershipDbRepository()
-    {
-        _imageRepository = new ImageDbRepository();
-    }
-
     public List<BuildingMembership> GetByTenant(long tenantId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -39,50 +32,7 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         while (reader.Read())
             memberships.Add(BuildingMembershipMapper.MapWithBuilding(reader));
 
-        Dictionary<long, List<Image>> imageMap =
-            _imageRepository.GetByEntities("building", memberships.Select(m => m.Building.Id));
-        foreach (BuildingMembership m in memberships)
-            foreach (Image image in imageMap[m.Building.Id])
-                m.Building.AddImage(image);
-
         return memberships;
-    }
-
-    public List<BuildingMembership> GetByBuilding(long buildingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
-                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-            FROM building_memberships bm
-            JOIN users u ON bm.user_id = u.id
-            WHERE bm.building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<BuildingMembership> memberships = new List<BuildingMembership>();
-        while (reader.Read())
-            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
-        return memberships;
-    }
-
-    public List<string> GetOccupiedUnits(long buildingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT unit_number FROM building_memberships
-            WHERE building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<string> result = new List<string>();
-        while (reader.Read())
-            result.Add(reader["unit_number"].ToString()!);
-        return result;
     }
 
     public void Create(BuildingAccessRequest request)

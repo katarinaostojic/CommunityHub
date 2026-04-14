@@ -17,13 +17,4 @@ public class BuildingMembershipService
         return _repository.GetByTenant(tenantId);
     }
 
-    public List<BuildingMembership> GetByBuilding(long buildingId)
-    {
-        return _repository.GetByBuilding(buildingId);
-    }
-
-    public List<string> GetOccupiedUnits(long buildingId)
-    {
-        return _repository.GetOccupiedUnits(buildingId);
-    }
 }

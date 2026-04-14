@@ -11,8 +11,8 @@ public class Building
     public List<Floor> Floors { get; private set; }
     public List<Image> Images { get; private set; }
 
-    public List<BuildingMembership> Memberships { get; private set; } = new List<BuildingMembership>();
-    public List<BuildingAccessRequest> AccessRequests { get; private set; } = new List<BuildingAccessRequest>();
+    public List<BuildingMembership> Memberships { get; private set; }
+    public List<BuildingAccessRequest> AccessRequests { get; private set; }
 
     public Building(long id, string street, string streetNumber, string neighborhood, City city, int numberOfFloors)
     {
@@ -24,6 +24,8 @@ public class Building
         NumberOfFloors = numberOfFloors;
         Floors = new List<Floor>();
         Images = new List<Image>();
+        Memberships = new List<BuildingMembership>();
+        AccessRequests = new List<BuildingAccessRequest>();
     }
 
     public void AddFloor(Floor floor)
