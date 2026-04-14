@@ -9,7 +9,7 @@ public static class BuildingMembershipMapper
     {
         return new BuildingMembership(
             Convert.ToInt64(reader["id"]),
-            BuildingMapper.MapFromJoin(reader),
+            BuildingMapper.Map(reader, "building_id"),
             UserMapper.Map(reader),
             reader["unit_number"].ToString()!,
             Convert.ToInt32(reader["floor_number"]),

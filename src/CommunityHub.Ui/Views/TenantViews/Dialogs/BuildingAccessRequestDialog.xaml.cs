@@ -41,7 +41,7 @@ public partial class BuildingAccessRequestDialog : Window
 
         bool isOccupied = _building.IsUnitOccupied(unitNumber);
         WarningTextBlock.Text = isOccupied
-            ? $"Warning: Apartment {unitNumber} is already occupied by another user."
+            ? $"Warning: Apartment {unitNumber} is already occupied by another user.\nYou can still submit a request."
             : string.Empty;
         WarningPanel.Visibility = isOccupied ? Visibility.Visible : Visibility.Collapsed;
     }

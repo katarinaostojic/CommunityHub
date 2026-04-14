@@ -30,7 +30,7 @@ public static class BuildingAccessRequestMapper
         return new BuildingAccessRequest(
             Convert.ToInt64(reader["id"]),
             UserMapper.Map(reader),
-            BuildingMapper.MapFromJoin(reader),
+            BuildingMapper.Map(reader, "building_id"),
             reader["unit_number"].ToString()!,
             DateTime.Parse(reader["created_at"].ToString()!),
             RequestStatusMapper.Parse(reader["status"].ToString()!),
