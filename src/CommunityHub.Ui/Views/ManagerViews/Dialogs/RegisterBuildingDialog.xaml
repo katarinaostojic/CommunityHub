@@ -115,7 +115,8 @@
                                           Height="38" FontSize="14"
                                           Background="Transparent"
                                           BorderThickness="0" Padding="10,0"
-                                          VerticalContentAlignment="Center"/>
+                                          VerticalContentAlignment="Center"
+                                          SelectionChanged="CountryComboBox_SelectionChanged"/>
                             </Border>
                         </Grid>
 
@@ -133,7 +134,8 @@
                                           Height="38" FontSize="14"
                                           Background="Transparent"
                                           BorderThickness="0" Padding="10,0"
-                                          VerticalContentAlignment="Center"/>
+                                          VerticalContentAlignment="Center"
+                                          SelectionChanged="CityComboBox_SelectionChanged"/>
                             </Border>
                         </Grid>
 
