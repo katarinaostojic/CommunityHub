@@ -45,74 +45,9 @@ public class NeighborhoodDbRepository : BaseDbRepository
         command.ExecuteNonQuery();
     }
 
-    public List<Neighborhood> GetByCoordinator(long coordinatorId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
+    
 
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
-               co.name AS country_name, n.budget, n.coordinator_id,
-               s.id AS street_id, s.street_name, s.start_number, s.end_number
-        FROM neighborhoods n
-        JOIN cities c ON n.city_id = c.id
-        JOIN countries co ON c.country_id = co.id
-        LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
-        WHERE n.coordinator_id = @coordinatorId
-        ORDER BY n.id";
-
-        AddParameter(command, "@coordinatorId", coordinatorId);
-
-        using IDataReader reader = command.ExecuteReader();
-        var neighborhoods = ReadNeighborhoodsWithStreets(reader);
-
-        foreach (var neighborhood in neighborhoods)
-        {
-            var images = GetImages(neighborhood.Id);
-            foreach (var image in images)
-                neighborhood.AddImage(image);
-        }
-
-        return neighborhoods;
-    }
-
-    public List<NeighborhoodAccessRequest> GetRequestsByCoordinator(long coordinatorId, string? statusFilter = null)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-    SELECT r.id, r.citizen_id, u.name AS citizen_name, u.surname AS citizen_surname,
-           u.username, u.password, u.birthday, u.role, u.address,
-           r.neighborhood_id, n.id AS n_id, n.name AS neighborhood_name,
-           n.description, n.city_id, c.name AS city_name,
-           co.name AS country_name, n.budget, n.coordinator_id,
-           r.created_at, r.status, r.rejection_reason
-    FROM neighborhood_access_requests r
-    JOIN users u ON r.citizen_id = u.id
-    JOIN neighborhoods n ON r.neighborhood_id = n.id
-    JOIN cities c ON n.city_id = c.id
-    JOIN countries co ON c.country_id = co.id
-    WHERE n.coordinator_id = @coordinatorId";
-
-        AddParameter(command, "@coordinatorId", coordinatorId);
-
-        if (!string.IsNullOrEmpty(statusFilter))
-        {
-            command.CommandText += " AND r.status::text = @status";
-            AddParameter(command, "@status", statusFilter);
-        }
-
-        command.CommandText += " ORDER BY r.created_at DESC";
-
-        using IDataReader reader = command.ExecuteReader();
-
-        var requests = new List<NeighborhoodAccessRequest>();
-        while (reader.Read())
-            requests.Add(MapRequest(reader));
-
-        return requests;
-    }
+    
 
     public void ApproveRequest(long requestId, long citizenId, long neighborhoodId)
     {
@@ -302,20 +237,7 @@ public class NeighborhoodDbRepository : BaseDbRepository
         );
     }
 
-    public void CreateMembership(long citizenId, long neighborhoodId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        INSERT INTO neighborhood_memberships (citizen_id, neighborhood_id, joined_at)
-        VALUES (@citizenId, @neighborhoodId, CURRENT_DATE)";
-
-        AddParameter(command, "@citizenId", citizenId);
-        AddParameter(command, "@neighborhoodId", neighborhoodId);
-
-        command.ExecuteNonQuery();
-    }
+    
 
     public long CreateRequest(long citizenId, long neighborhoodId)
     {
@@ -333,42 +255,9 @@ public class NeighborhoodDbRepository : BaseDbRepository
         return Convert.ToInt64(command.ExecuteScalar());
     }
 
-    public List<NeighborhoodAccessRequest> GetRequestsByCitizen(long citizenId, string? statusFilter = null)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        using IDbCommand command = BuildGetRequestsByCitizenCommand(connection, citizenId, statusFilter);
-        using IDataReader reader = command.ExecuteReader();
-        return ReadRequestList(reader);
-    }
+    
 
-    private IDbCommand BuildGetRequestsByCitizenCommand(IDbConnection connection, long citizenId, string? statusFilter)
-    {
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT r.id, r.citizen_id, u.name AS citizen_name, u.surname AS citizen_surname,
-               u.username, u.password, u.birthday, u.role, u.address,
-               r.neighborhood_id, n.id AS n_id, n.name AS neighborhood_name,
-               n.description, n.city_id, c.name AS city_name,
-               co.name AS country_name, n.budget, n.coordinator_id,
-               r.created_at, r.status, r.rejection_reason
-        FROM neighborhood_access_requests r
-        JOIN users u ON r.citizen_id = u.id
-        JOIN neighborhoods n ON r.neighborhood_id = n.id
-        JOIN cities c ON n.city_id = c.id
-        JOIN countries co ON c.country_id = co.id
-        WHERE r.citizen_id = @citizenId";
-
-        AddParameter(command, "@citizenId", citizenId);
-
-        if (!string.IsNullOrEmpty(statusFilter))
-        {
-            command.CommandText += " AND r.status::text = @status";
-            AddParameter(command, "@status", statusFilter);
-        }
-
-        command.CommandText += " ORDER BY r.created_at DESC";
-        return command;
-    }
+    
 
     private List<NeighborhoodAccessRequest> ReadRequestList(IDataReader reader)
     {
