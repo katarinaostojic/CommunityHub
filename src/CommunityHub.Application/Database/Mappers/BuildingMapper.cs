@@ -6,6 +6,7 @@ namespace CommunityHub.Application.Database.Mappers;
 
 public static class BuildingMapper
 {
+    // idColumn: "id" when main table, "building_id" when joined
     public static Building Map(IDataReader reader, string idColumn = "id")
     {
         return new Building(

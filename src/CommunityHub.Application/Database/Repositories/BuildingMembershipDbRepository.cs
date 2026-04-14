@@ -7,13 +7,6 @@ namespace CommunityHub.Application.Database.Repositories;
 
 public class BuildingMembershipDbRepository : BaseDbRepository
 {
-    private readonly ImageDbRepository _imageRepository;
-
-    public BuildingMembershipDbRepository()
-    {
-        _imageRepository = new ImageDbRepository();
-    }
-
     public List<BuildingMembership> GetByTenant(long tenantId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -38,12 +31,6 @@ public class BuildingMembershipDbRepository : BaseDbRepository
         List<BuildingMembership> memberships = new List<BuildingMembership>();
         while (reader.Read())
             memberships.Add(BuildingMembershipMapper.MapWithBuilding(reader));
-
-        Dictionary<long, List<Image>> imageMap =
-            _imageRepository.GetByEntities("building", memberships.Select(m => m.Building.Id));
-        foreach (BuildingMembership m in memberships)
-            foreach (Image image in imageMap[m.Building.Id])
-                m.Building.AddImage(image);
 
         return memberships;
     }
