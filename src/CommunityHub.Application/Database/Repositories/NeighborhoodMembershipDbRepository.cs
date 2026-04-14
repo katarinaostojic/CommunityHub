@@ -40,7 +40,7 @@ public class NeighborhoodMembershipDbRepository : BaseDbRepository
                 Convert.ToInt64(reader["id"]),
                 citizen,
                 Convert.ToInt64(reader["neighborhood_id"]),
-                Convert.ToDateTime(reader["joined_at"])
+                ((DateOnly)reader["joined_at"]).ToDateTime(TimeOnly.MinValue)
             ));
         }
 
