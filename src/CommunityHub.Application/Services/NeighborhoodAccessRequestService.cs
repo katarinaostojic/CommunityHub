@@ -215,4 +215,68 @@ public class NeighborhoodAccessRequestService
     {
         _neighborhoodRepository.RejectRequest(requestId, rejectionReason);
     }
+    private string NormalizeStreetName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        string result = value.Trim().ToLowerInvariant();
+        result = TransliterateSerbianCyrillicToLatin(result);
+        result = ReplaceDiacritics(result);
+        result = RemoveStreetPrefixes(result);
+        result = KeepOnlyLettersAndDigits(result);
+
+        while (result.Contains("  "))
+            result = result.Replace("  ", " ");
+
+        return result.Trim();
+    }
+
+    private string TransliterateSerbianCyrillicToLatin(string input)
+    {
+        var map = new Dictionary<char, string>
+        {
+            ['а'] = "a",
+            ['б'] = "b",
+            ['в'] = "v",
+            ['г'] = "g",
+            ['д'] = "d",
+            ['ђ'] = "d",
+            ['е'] = "e",
+            ['ж'] = "z",
+            ['з'] = "z",
+            ['и'] = "i",
+            ['ј'] = "j",
+            ['к'] = "k",
+            ['л'] = "l",
+            ['љ'] = "lj",
+            ['м'] = "m",
+            ['н'] = "n",
+            ['њ'] = "nj",
+            ['о'] = "o",
+            ['п'] = "p",
+            ['р'] = "r",
+            ['с'] = "s",
+            ['т'] = "t",
+            ['ћ'] = "c",
+            ['у'] = "u",
+            ['ф'] = "f",
+            ['х'] = "h",
+            ['ц'] = "c",
+            ['ч'] = "c",
+            ['џ'] = "dz",
+            ['ш'] = "s"
+        };
+
+        var result = new StringBuilder();
+        foreach (char c in input)
+        {
+            if (map.TryGetValue(c, out string? latin))
+                result.Append(latin);
+            else
+                result.Append(c);
+        }
+
+        return result.ToString();
+    }
 }

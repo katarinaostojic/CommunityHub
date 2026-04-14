@@ -85,31 +85,10 @@ public partial class RegisterNeighborhoodPage : Page
         string description = DescriptionTextBox.Text.Trim();
         City? selectedCity = CityComboBox.SelectedItem as City;
 
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
-        {
-            MessageBox.Show("Name and description are required.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        if (!ValidateInputs(name, description, selectedCity))
             return;
-        }
 
-        if (selectedCity == null)
-        {
-            MessageBox.Show("Please select a city.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (_streets.Count == 0)
-        {
-            MessageBox.Show("Please add at least one street.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (_imagePaths.Count == 0)
-        {
-            MessageBox.Show("Please add at least one image.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity.Id, _coordinatorId);
+        long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity!.Id, _coordinatorId);
 
         foreach (Street street in _streets)
             _neighborhoodRepository.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
@@ -119,6 +98,35 @@ public partial class RegisterNeighborhoodPage : Page
 
         MessageBox.Show("Neighborhood registered successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_coordinatorId), "My Districts");
+    }
+
+    private bool ValidateInputs(string name, string description, City? selectedCity)
+    {
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
+        {
+            MessageBox.Show("Name and description are required.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (selectedCity == null)
+        {
+            MessageBox.Show("Please select a city.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (_streets.Count == 0)
+        {
+            MessageBox.Show("Please add at least one street.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (_imagePaths.Count == 0)
+        {
+            MessageBox.Show("Please add at least one image.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        return true;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
