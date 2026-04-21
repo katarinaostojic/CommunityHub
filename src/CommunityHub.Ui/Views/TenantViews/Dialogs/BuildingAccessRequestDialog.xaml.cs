@@ -18,7 +18,7 @@ public partial class BuildingAccessRequestDialog : Window
         InitializeComponent();
         _building = building;
         _user = user;
-        _requestService = new BuildingAccessRequestService();
+        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
 
         TitleTextBlock.Text = $"REQUEST ACCESS: {building.Street} {building.StreetNumber}";
         BuildingInfoTextBlock.Text = $"Building: {building.Street} {building.StreetNumber}, {building.City.Name}, {building.Neighborhood}";

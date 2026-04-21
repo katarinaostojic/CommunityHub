@@ -1,6 +1,5 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
-using System.Collections.Generic;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Services;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,8 +8,8 @@ namespace CommunityHub.Ui.Views
 {
     public partial class CitiesWindow : Window
     {
-        private readonly CityDbRepository _cityRepository;
-        private readonly CountryDbRepository _countryRepository;
+        private readonly CityService _cityService;
+        private readonly CountryService _countryService;
         private City _selectedCity;
 
         public CitiesWindow()
@@ -19,8 +18,8 @@ namespace CommunityHub.Ui.Views
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                _cityRepository = new CityDbRepository();
-                _countryRepository = new CountryDbRepository();
+                _cityService = ServiceFactory.CreateCityService();
+                _countryService = ServiceFactory.CreateCountryService();
                 LoadCities();
                 LoadCountries();
             }
@@ -28,14 +27,12 @@ namespace CommunityHub.Ui.Views
 
         private void LoadCities()
         {
-            List<City> cities = _cityRepository.GetAll();
-            CitiesDataGrid.ItemsSource = cities;
+            CitiesDataGrid.ItemsSource = _cityService.GetAll();
         }
 
         private void LoadCountries()
         {
-            List<Country> countries = _countryRepository.GetAll();
-            CountryComboBox.ItemsSource = countries;
+            CountryComboBox.ItemsSource = _countryService.GetAll();
         }
 
         private void CitiesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,8 +65,7 @@ namespace CommunityHub.Ui.Views
                 return;
             }
 
-            City newCity = new City(name, selectedCountry);
-            _cityRepository.Create(newCity);
+            _cityService.Create(new City(name, selectedCountry));
             LoadCities();
             ClearForm();
         }
@@ -97,8 +93,7 @@ namespace CommunityHub.Ui.Views
                 return;
             }
 
-            City updatedCity = new City(_selectedCity.Id, name, selectedCountry);
-            _cityRepository.Update(updatedCity);
+            _cityService.Update(new City(_selectedCity.Id, name, selectedCountry));
             LoadCities();
             ClearForm();
         }
@@ -119,7 +114,7 @@ namespace CommunityHub.Ui.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                _cityRepository.Delete(_selectedCity.Id);
+                _cityService.Delete(_selectedCity.Id);
                 LoadCities();
                 ClearForm();
             }

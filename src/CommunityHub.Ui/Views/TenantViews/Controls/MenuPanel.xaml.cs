@@ -20,7 +20,7 @@ public partial class MenuPanel : UserControl
     public MenuPanel()
     {
         InitializeComponent();
-        _membershipService = new BuildingMembershipService();
+        _membershipService = ServiceFactory.CreateBuildingMembershipService();
     }
 
     public void Initialize(User user)

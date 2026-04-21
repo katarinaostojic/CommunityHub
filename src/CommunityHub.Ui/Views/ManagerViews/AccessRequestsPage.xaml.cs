@@ -19,7 +19,7 @@ public partial class AccessRequestsPage : Page
     {
         InitializeComponent();
         _currentUser = user;
-        _requestService = new BuildingAccessRequestService();
+        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
         LoadRequests();
     }
 

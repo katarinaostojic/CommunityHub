@@ -21,7 +21,7 @@ public partial class BrowseBuildingsPage : Page
     public BrowseBuildingsPage(User user)
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
+        _buildingService = ServiceFactory.CreateBuildingService();
         _user = user;
         LoadBuildings();
         UserNameTextBlock.Text = _user.DisplayName;
@@ -153,8 +153,9 @@ public partial class BrowseBuildingsPage : Page
         NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
-    private bool ShowBuildingRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(Building selectedBuilding)
     {
+        Building building = _buildingService.GetById(selectedBuilding.Id) ?? selectedBuilding;
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;

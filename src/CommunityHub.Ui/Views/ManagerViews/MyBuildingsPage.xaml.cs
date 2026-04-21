@@ -21,7 +21,7 @@ public partial class MyBuildingsPage : Page
     {
         InitializeComponent();
         _currentUser = user;
-        _buildingService = new BuildingService();
+        _buildingService = ServiceFactory.CreateBuildingService();
         LoadBuildings();
     }
 

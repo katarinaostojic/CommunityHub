@@ -20,8 +20,8 @@ public partial class BuildingDetailsPage : Page
     public BuildingDetailsPage(Building building, User user)
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
-        _requestService = new BuildingAccessRequestService();
+        _buildingService = ServiceFactory.CreateBuildingService();
+        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
         _building = _buildingService.GetById(building.Id) ?? building;
         _user = user;
         LoadBuildingDetails();

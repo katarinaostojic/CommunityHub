@@ -3,7 +3,7 @@ using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class CityDbRepository : BaseDbRepository
+public class CityDbRepository : BaseDbRepository, ICityRepository
 {
     public City Create(City city)
     {

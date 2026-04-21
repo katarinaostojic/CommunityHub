@@ -1,17 +1,18 @@
-﻿using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services;
 
 public class BuildingService
 {
-    private readonly BuildingDbRepository _repository;
-    private readonly ImageDbRepository _imageRepository;
+    private readonly IBuildingRepository _repository;
+    private readonly IImageRepository _imageRepository;
 
-    public BuildingService()
+    public BuildingService(IBuildingRepository repository, IImageRepository imageRepository)
     {
-        _repository = new BuildingDbRepository();
-        _imageRepository = new ImageDbRepository();
+        _repository = repository;
+        _imageRepository = imageRepository;
     }
 
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)

@@ -15,14 +15,14 @@ public partial class MyBuildingRequestsPage : Page
 {
     private readonly User _user;
     private List<BuildingAccessRequestDisplay> _filteredRequests;
-    private RequestStatus? _currentFilter = null; // null = "all"
+    private RequestStatus? _currentFilter = null;
     private bool _sortDescending = true;
     private readonly BuildingAccessRequestService _requestService;
 
     public MyBuildingRequestsPage(User user)
     {
         InitializeComponent();
-        _requestService = new BuildingAccessRequestService();
+        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
         _user = user;
         UserNameTextBlock.Text = _user.DisplayName;
         LoadRequests();

@@ -3,7 +3,7 @@ using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class ImageDbRepository : BaseDbRepository
+public class ImageDbRepository : BaseDbRepository, IImageRepository
 {
     public List<Image> GetByEntity(string entity, long entityId)
     {
