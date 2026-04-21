@@ -21,7 +21,7 @@ public partial class RegisterBuildingDialog : Window
     {
         InitializeComponent();
         _currentUser = user;
-        _buildingService = new BuildingService();
+        _buildingService = ServiceFactory.CreateBuildingService();
         _cityRepository = new CityDbRepository();
         _countryRepository = new CountryDbRepository();
         LoadCountries();

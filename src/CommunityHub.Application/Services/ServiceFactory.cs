@@ -1,0 +1,29 @@
+﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
+
+namespace CommunityHub.Application.Services;
+
+public static class ServiceFactory
+{
+    public static BuildingService CreateBuildingService()
+    {
+        IImageRepository imageRepository = new ImageDbRepository();
+        IBuildingRepository buildingRepository = new BuildingDbRepository(imageRepository);
+        return new BuildingService(buildingRepository, imageRepository);
+    }
+
+    public static BuildingAccessRequestService CreateBuildingAccessRequestService()
+    {
+        IBuildingAccessRequestRepository requestRepository = new BuildingAccessRequestDbRepository();
+        IBuildingMembershipRepository membershipRepository = new BuildingMembershipDbRepository();
+        return new BuildingAccessRequestService(requestRepository, membershipRepository);
+    }
+
+    public static BuildingMembershipService CreateBuildingMembershipService()
+    {
+        IBuildingMembershipRepository membershipRepository = new BuildingMembershipDbRepository();
+        return new BuildingMembershipService(membershipRepository);
+    }
+}
