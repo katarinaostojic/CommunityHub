@@ -117,4 +117,11 @@ public partial class MenuPanel : UserControl
         Close();
         NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(membership.Building, _user));
     }
+
+    private void NoticeBoardMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingMembership membership = (BuildingMembership)((Button)sender).Tag;
+        Close();
+        NavigationService.GetNavigationService(this)?.Navigate(new NoticeBoardPage(_user, membership));
+    }
 }
