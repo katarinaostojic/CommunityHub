@@ -1,11 +1,12 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class BuildingAccessRequestDbRepository : BaseDbRepository
+public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAccessRequestRepository
 {
     public void Create(User user, Building building, string unitNumber)
     {
@@ -48,6 +49,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         using IDataReader reader = command.ExecuteReader();
         return ReadRequests(reader);
     }
+
     public int CountByTenantAndStatus(long tenantId, string? status)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

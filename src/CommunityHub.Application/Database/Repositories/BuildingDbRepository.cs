@@ -1,17 +1,18 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class BuildingDbRepository : BaseDbRepository
+public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
 {
-    private readonly ImageDbRepository _imageRepository;
+    private readonly IImageRepository _imageRepository;
 
-    public BuildingDbRepository()
+    public BuildingDbRepository(IImageRepository imageRepository)
     {
-        _imageRepository = new ImageDbRepository();
+        _imageRepository = imageRepository;
     }
 
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
@@ -124,9 +125,7 @@ public class BuildingDbRepository : BaseDbRepository
         using IDataReader reader = command.ExecuteReader();
         List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
         while (reader.Read())
-        {
             requests.Add(BuildingAccessRequestMapper.MapWithoutBuilding(reader));
-        }
         return requests;
     }
 

@@ -5,7 +5,7 @@ using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class BuildingMembershipDbRepository : BaseDbRepository
+public class BuildingMembershipDbRepository : BaseDbRepository, IBuildingMembershipRepository
 {
     public List<BuildingMembership> GetByTenant(long tenantId)
     {
