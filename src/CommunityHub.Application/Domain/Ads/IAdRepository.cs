@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
+﻿namespace CommunityHub.Application.Domain.Ads;
 
 public interface IAdRepository
 {

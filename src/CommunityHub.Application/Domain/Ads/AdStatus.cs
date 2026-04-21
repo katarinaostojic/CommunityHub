@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Domain.Building;
+﻿namespace CommunityHub.Application.Domain.Ads;
 
 public enum AdStatus
 {

@@ -1,7 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
-using System.Net.NetworkInformation;
-
-namespace CommunityHub.Application.Domain.Building;
+﻿namespace CommunityHub.Application.Domain.Ads;
 
 public class Ad
 {
