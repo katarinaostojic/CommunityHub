@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;

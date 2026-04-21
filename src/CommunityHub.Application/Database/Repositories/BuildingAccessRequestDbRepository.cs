@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
-using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;

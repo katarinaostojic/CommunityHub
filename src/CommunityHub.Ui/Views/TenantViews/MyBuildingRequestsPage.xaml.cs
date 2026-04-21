@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Ui.Helpers;
 using System.Windows;
