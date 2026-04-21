@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 using Microsoft.Win32;
 using System.IO;
@@ -12,8 +11,8 @@ public partial class RegisterBuildingDialog : Window
 {
     private readonly User _currentUser;
     private readonly BuildingService _buildingService;
-    private readonly CityDbRepository _cityRepository;
-    private readonly CountryDbRepository _countryRepository;
+    private readonly CityService _cityService;
+    private readonly CountryService _countryService;
     private List<string> _selectedImagePaths = new List<string>();
     private bool _updatingFromCity = false;
 
@@ -22,15 +21,15 @@ public partial class RegisterBuildingDialog : Window
         InitializeComponent();
         _currentUser = user;
         _buildingService = ServiceFactory.CreateBuildingService();
-        _cityRepository = new CityDbRepository();
-        _countryRepository = new CountryDbRepository();
+        _cityService = ServiceFactory.CreateCityService();
+        _countryService = ServiceFactory.CreateCountryService();
         LoadCountries();
         LoadCities();
     }
 
     private void LoadCountries()
     {
-        var countries = _countryRepository.GetAll();
+        var countries = _countryService.GetAll();
         CountryComboBox.ItemsSource = countries;
         CountryComboBox.DisplayMemberPath = "Name";
     }
@@ -38,8 +37,8 @@ public partial class RegisterBuildingDialog : Window
     private void LoadCities(long? countryId = null)
     {
         var cities = countryId.HasValue
-            ? _cityRepository.GetByCountry(countryId.Value)
-            : _cityRepository.GetAll();
+            ? _cityService.GetByCountry(countryId.Value)
+            : _cityService.GetAll();
 
         CityComboBox.ItemsSource = cities;
         CityComboBox.DisplayMemberPath = "Name";
@@ -67,6 +66,7 @@ public partial class RegisterBuildingDialog : Window
             _updatingFromCity = false;
         }
     }
+
     private void ConfirmFloors_Click(object sender, RoutedEventArgs e)
     {
         FloorsStackPanel.Children.Clear();
@@ -229,6 +229,5 @@ public partial class RegisterBuildingDialog : Window
 
     private void TextBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        // Virtuelna tastatura dolazi kasnije
     }
 }

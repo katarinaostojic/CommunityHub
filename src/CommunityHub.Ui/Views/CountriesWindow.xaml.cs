@@ -1,6 +1,5 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
-using System.Collections.Generic;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Services;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +8,7 @@ namespace CommunityHub.Ui.Views
 {
     public partial class CountriesWindow : Window
     {
-        private readonly CountryDbRepository _countryRepository;
+        private readonly CountryService _countryService;
         private readonly HomeWindow _homeWindow;
         private Country _selectedCountry;
 
@@ -20,15 +19,14 @@ namespace CommunityHub.Ui.Views
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                _countryRepository = new CountryDbRepository();
+                _countryService = ServiceFactory.CreateCountryService();
                 LoadCountries();
             }
         }
 
         private void LoadCountries()
         {
-            List<Country> countries = _countryRepository.GetAll();
-            CountriesDataGrid.ItemsSource = countries;
+            CountriesDataGrid.ItemsSource = _countryService.GetAll();
         }
 
         private void CountriesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -59,8 +57,7 @@ namespace CommunityHub.Ui.Views
                 return;
             }
 
-            Country newCountry = new Country(name, code);
-            _countryRepository.Create(newCountry);
+            _countryService.Create(new Country(name, code));
             LoadCountries();
             ClearForm();
         }
@@ -88,8 +85,7 @@ namespace CommunityHub.Ui.Views
                 return;
             }
 
-            Country updatedCountry = new Country(_selectedCountry.Id, name, code);
-            _countryRepository.Update(updatedCountry);
+            _countryService.Update(new Country(_selectedCountry.Id, name, code));
             LoadCountries();
             ClearForm();
         }
@@ -110,7 +106,7 @@ namespace CommunityHub.Ui.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                bool deleted = _countryRepository.Delete(_selectedCountry.Id);
+                bool deleted = _countryService.Delete(_selectedCountry.Id);
 
                 if (!deleted)
                 {

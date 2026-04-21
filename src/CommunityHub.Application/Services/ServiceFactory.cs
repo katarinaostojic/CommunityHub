@@ -26,4 +26,16 @@ public static class ServiceFactory
         IBuildingMembershipRepository membershipRepository = new BuildingMembershipDbRepository();
         return new BuildingMembershipService(membershipRepository);
     }
+
+    public static CityService CreateCityService()
+    {
+        ICityRepository cityRepository = new CityDbRepository();
+        return new CityService(cityRepository);
+    }
+
+    public static CountryService CreateCountryService()
+    {
+        ICountryRepository countryRepository = new CountryDbRepository();
+        return new CountryService(countryRepository);
+    }
 }
