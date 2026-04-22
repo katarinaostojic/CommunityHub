@@ -33,7 +33,7 @@
                         Click="MenuButton_Click"/>
 
                 <Button Grid.Column="2" Content="Demo"
-                        Style="{StaticResource GhostWhiteOutlinedButton }"
+                        Style="{StaticResource GhostWhiteOutlinedButton}"
                         IsEnabled="False"
                         Margin="0,0,10,0"/>
 
@@ -76,7 +76,7 @@
         </Grid>
 
         <!-- Filters -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="16,0,16,8">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="16,8,16,16">
             <TextBlock Text="Type:" FontSize="13" FontWeight="SemiBold"
                        VerticalAlignment="Center" Margin="0,0,8,0"/>
             <Button x:Name="FilterAllButton" Content="All"
@@ -117,33 +117,39 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <!-- your ad badge + type badge -->
-                                <StackPanel Grid.Row="0" Orientation="Horizontal"
-                                            HorizontalAlignment="Right" Margin="0,0,0,4">
-                                    <Border Visibility="{Binding IsOwnAdVisible}"
-                                            Background="{StaticResource BackgroundLightBrush}"
-                                            CornerRadius="4" Padding="8,3" Margin="0,0,6,0">
-                                        <TextBlock Text="your ad" FontSize="11"
-                                                   Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </Border>
-                                    <Border Style="{StaticResource StatusBadge}">
-                                        <TextBlock Text="{Binding TypeDisplay}" FontSize="13"/>
-                                    </Border>
-                                </StackPanel>
-
-                                <!-- Author + description -->
-                                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                                <!-- Author + badges u istom redu -->
+                                <Grid Grid.Row="0" Margin="0,0,0,6">
                                     <TextBlock Text="{Binding AuthorName}"
-                                               FontSize="15" FontWeight="Bold" Margin="0,0,0,4"/>
-                                    <TextBlock Text="{Binding Description}"
-                                               Style="{StaticResource SecondaryText}"
-                                               TextWrapping="Wrap"/>
-                                </StackPanel>
+                                               FontSize="15" FontWeight="Bold"
+                                               VerticalAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                        <Border Visibility="{Binding IsOwnAdVisible}"
+                                                Background="{StaticResource BackgroundLightBrush}"
+                                                CornerRadius="4" Padding="8,3" Margin="0,0,6,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="your ad" FontSize="11"
+                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource StatusBadge}"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding TypeDisplay}" FontSize="13"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Description -->
+                                <TextBlock Grid.Row="1" Text="{Binding Description}"
+                                           Style="{StaticResource SecondaryText}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,10"/>
 
                                 <!-- Footer -->
                                 <Grid Grid.Row="2">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Border Background="#EEF2FF" CornerRadius="4" Padding="8,3" Margin="0,0,8,0">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border Background="#EEF2FF" CornerRadius="4" Padding="8,3"
+                                                Margin="0,0,8,0" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding CategoryDisplay}"
                                                        FontSize="12" Foreground="#4338CA"/>
                                         </Border>
@@ -152,7 +158,9 @@
                                                    VerticalAlignment="Center"/>
                                     </StackPanel>
 
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
                                         <Button Content="{Binding ViewBookingsDisplay}"
                                                 Style="{StaticResource GhostButton}"
                                                 Foreground="{StaticResource AccentBrush}"

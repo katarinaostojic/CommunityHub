@@ -93,7 +93,7 @@ public partial class NoticeBoardPage : Page
 
     private void NewAdButton_Click(object sender, RoutedEventArgs e)
     {
-    //    NavigationService.Navigate(new NewAdPage(_user, _membership));
+        NavigationService.Navigate(new NewAdPage(_user, _membership));
     }
 
     private void ArchiveButton_Click(object sender, RoutedEventArgs e)

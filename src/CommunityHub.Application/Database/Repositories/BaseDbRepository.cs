@@ -37,4 +37,13 @@ public abstract class BaseDbRepository
         dbParam.DbType = DbType.DateTime;
         command.Parameters.Add(dbParam);
     }
+
+    protected void AddParameter(IDbCommand command, string name, TimeSpan value)
+    {
+        IDbDataParameter dbParam = command.CreateParameter();
+        dbParam.ParameterName = name;
+        dbParam.Value = value;
+        dbParam.DbType = DbType.Time;
+        command.Parameters.Add(dbParam);
+    }
 }

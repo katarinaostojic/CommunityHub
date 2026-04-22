@@ -16,8 +16,8 @@ public static class AdMapper
             type: MapType(reader["type"].ToString()!),
             category: MapCategory(reader["category"].ToString()!),
             description: reader["description"].ToString()!,
-            dateFrom: DateOnly.FromDateTime(Convert.ToDateTime(reader["date_from"])),
-            dateTo: DateOnly.FromDateTime(Convert.ToDateTime(reader["date_to"])),
+            dateFrom: (DateOnly)reader["date_from"],
+            dateTo: (DateOnly)reader["date_to"],
             status: MapStatus(reader["status"].ToString()!)
         );
     }

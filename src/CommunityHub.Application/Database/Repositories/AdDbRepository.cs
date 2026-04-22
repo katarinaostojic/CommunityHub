@@ -64,8 +64,8 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@type", AdMapper.ToDbType(type));
         AddParameter(command, "@category", AdMapper.ToDbCategory(category));
         AddParameter(command, "@description", description);
-        AddParameter(command, "@dateFrom", dateFrom.ToDateTime(TimeOnly.MinValue));
-        AddParameter(command, "@dateTo", dateTo.ToDateTime(TimeOnly.MinValue));
+        AddParameter(command, "@dateFrom", DateTime.SpecifyKind(dateFrom.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@dateTo", DateTime.SpecifyKind(dateTo.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
 
         return Convert.ToInt64(command.ExecuteScalar());
     }
@@ -94,9 +94,9 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
                 VALUES (@adId, @date, @start, @end)";
 
             AddParameter(command, "@adId", adId);
-            AddParameter(command, "@date", date.ToDateTime(TimeOnly.MinValue));
-            AddParameter(command, "@start", start.ToString("HH:mm:ss"));
-            AddParameter(command, "@end", end.ToString("HH:mm:ss"));
+            AddParameter(command, "@date", DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+            AddParameter(command, "@start", start.ToTimeSpan());
+            AddParameter(command, "@end", end.ToTimeSpan());
             command.ExecuteNonQuery();
         }
     }

@@ -202,6 +202,12 @@
         </Setter>
     </Style>
 
+    <Style x:Key="FilterChipButtonActive" TargetType="Button" BasedOn="{StaticResource FilterChipButton}">
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+    </Style>
+
     <!-- Ghost White Outlined dugme — za topbar akcije -->
     <Style x:Key="GhostWhiteOutlinedButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
