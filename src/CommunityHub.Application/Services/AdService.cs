@@ -40,6 +40,11 @@ public class AdService
         _adRepository.Archive(adId);
     }
 
+    public void Restore(long adId)
+    {
+        _adRepository.Restore(adId);
+    }
+
     public List<AdSlot> GetFreeSlots(long adId, DateOnly overlapFrom, DateOnly overlapTo)
     {
         return _adRepository.GetFreeSlotsByAd(adId, overlapFrom, overlapTo);

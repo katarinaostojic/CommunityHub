@@ -153,7 +153,12 @@ public partial class NoticeBoardPage : Page
 
         public Visibility ViewSlotsVisible => !IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
 
-        public string ViewBookingsDisplay => $"→ View bookings ({_ad.Slots.Count(s => !s.IsFree)})";
+
+        //privremeno
+        public string ViewBookingsDisplay => _ad.Slots.Any(s => !s.IsFree)
+            ? $"→ View bookings ({_ad.Slots.Count(s => !s.IsFree)})"
+            : "→ View details";
+        //public string ViewBookingsDisplay => $"→ View bookings ({_ad.Slots.Count(s => !s.IsFree)})";
 
 
         //privremeno dok se ne ubaci zakazivanje

@@ -83,6 +83,19 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         command.ExecuteNonQuery();
     }
 
+    public void Restore(long adId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            UPDATE notice_board_ads
+            SET status = 'active'
+            WHERE id = @adId";
+
+        AddParameter(command, "@adId", adId);
+        command.ExecuteNonQuery();
+    }
+
     public void CreateSlots(long adId, IEnumerable<(DateOnly date, TimeOnly start, TimeOnly end)> slots)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

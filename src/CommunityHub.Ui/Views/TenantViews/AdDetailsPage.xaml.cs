@@ -35,8 +35,20 @@ public partial class AdDetailsPage : Page
         AdDateRangeText.Text = $"{_ad.DateFrom:dd.MM.} - {_ad.DateTo:dd.MM.yyyy}";
         AdDescriptionText.Text = _ad.Description;
 
-        if (!_ad.IsActive)
+        if (_ad.IsActive)
+        {
+            ArchivedWarning.Visibility = Visibility.Collapsed;
+            ArchiveButton.Visibility = Visibility.Visible;
+            RestoreButton.Visibility = Visibility.Collapsed;
+            AdStatusText.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            ArchivedWarning.Visibility = Visibility.Visible;
             ArchiveButton.Visibility = Visibility.Collapsed;
+            RestoreButton.Visibility = Visibility.Visible;
+            AdStatusText.Visibility = Visibility.Visible;
+        }
     }
 
     private void LoadBookedSlots()
@@ -72,6 +84,12 @@ public partial class AdDetailsPage : Page
     private void ArchiveButton_Click(object sender, RoutedEventArgs e)
     {
         _adService.Archive(_ad.Id);
+        NavigationService.Navigate(new AdDetailsPage(_user, _membership, _adService.GetById(_ad.Id)!));
+    }
+
+    private void RestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        _adService.Restore(_ad.Id);
         NavigationService.Navigate(new NoticeBoardPage(_user, _membership));
     }
 

@@ -52,6 +52,20 @@
                 <!-- My advertisement section -->
                 <TextBlock Text="My advertisement" FontSize="15" FontWeight="SemiBold"
                            Margin="0,0,0,8"/>
+
+                <!-- Archived warning -->
+                <Border x:Name="ArchivedWarning"
+                        Background="{StaticResource WarningBrush}"
+                        BorderBrush="{StaticResource WarningTextBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6" Padding="12,10" Margin="0,0,0,8"
+                        Visibility="Collapsed">
+                    <TextBlock Foreground="{StaticResource WarningTextBrush}"
+                               FontSize="13" TextWrapping="Wrap"
+                               Text="⚠ This ad has been archived. It is no longer visible on the Notice Board and will not be suggested to other tenants. Existing bookings remain active."/>
+                </Border>
+
+                <!-- Ad summary box -->
                 <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                         CornerRadius="6" Padding="16,12" Margin="0,0,0,20">
                     <Grid>
@@ -60,9 +74,12 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- TYPE, CATEGORY, DATE RANGE -->
+                        <!-- TYPE, CATEGORY, DATE RANGE, STATUS + actions -->
                         <Grid Grid.Row="0" Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="32"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="32"/>
@@ -94,11 +111,26 @@
                                        FontSize="13" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Margin="8,0,0,0"/>
 
-                            <Button Grid.Column="9" x:Name="ArchiveButton"
+                            <TextBlock Grid.Column="9" Text="STATUS" Style="{StaticResource SectionTitle}"
+                                       VerticalAlignment="Center" x:Name="AdStatusLabel"
+                                       Visibility="Collapsed"/>
+                            <Border Grid.Column="10" Style="{StaticResource StatusBadge}"
+                                    VerticalAlignment="Center" Margin="8,0,0,0"
+                                    x:Name="AdStatusText" Visibility="Collapsed">
+                                <TextBlock Text="Archived" FontSize="13"/>
+                            </Border>
+
+                            <Button Grid.Column="12" x:Name="ArchiveButton"
                                     Content="Archive"
                                     Style="{StaticResource DangerButton}"
                                     VerticalAlignment="Center"
                                     Click="ArchiveButton_Click"/>
+                            <Button Grid.Column="12" x:Name="RestoreButton"
+                                    Content="Restore"
+                                    Style="{StaticResource OutlineButton}"
+                                    VerticalAlignment="Center"
+                                    Visibility="Collapsed"
+                                    Click="RestoreButton_Click"/>
                         </Grid>
 
                         <!-- DESCRIPTION -->
@@ -118,11 +150,9 @@
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">
                                 <StackPanel>
-                                    <!-- Tenant name -->
                                     <TextBlock Text="{Binding TenantName}"
                                                FontSize="15" FontWeight="Bold" Margin="0,0,0,8"/>
 
-                                    <!-- Slot chips -->
                                     <ItemsControl ItemsSource="{Binding Slots}" Margin="0,0,0,8">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -140,7 +170,6 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
 
-                                    <!-- Their ad -->
                                     <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                                             CornerRadius="4" Padding="10,8">
                                         <StackPanel>
@@ -153,14 +182,12 @@
                                                 <TextBlock Text="{Binding TheirAdType}"
                                                            Style="{StaticResource SecondaryText}"
                                                            Margin="0,0,8,0"/>
-                                                <TextBlock Text="·"
-                                                           Style="{StaticResource SecondaryText}"
+                                                <TextBlock Text="·" Style="{StaticResource SecondaryText}"
                                                            Margin="0,0,8,0"/>
                                                 <TextBlock Text="{Binding TheirAdCategory}"
                                                            Style="{StaticResource SecondaryText}"
                                                            Margin="0,0,8,0"/>
-                                                <TextBlock Text="·"
-                                                           Style="{StaticResource SecondaryText}"
+                                                <TextBlock Text="·" Style="{StaticResource SecondaryText}"
                                                            Margin="0,0,8,0"/>
                                                 <TextBlock Text="{Binding TheirAdDateRange}"
                                                            Style="{StaticResource SecondaryText}"/>
@@ -205,8 +232,7 @@
                                                 <Border BorderBrush="{StaticResource BorderBrush}"
                                                         BorderThickness="1" CornerRadius="20"
                                                         Padding="12,6" Margin="0,0,8,0">
-                                                    <TextBlock Text="{Binding Display}"
-                                                               FontSize="12"/>
+                                                    <TextBlock Text="{Binding Display}" FontSize="12"/>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
