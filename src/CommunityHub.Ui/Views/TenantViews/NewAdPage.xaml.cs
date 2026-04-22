@@ -79,7 +79,7 @@ public partial class NewAdPage : Page
         List<Ad> activeAds = _adService.GetActiveByBuilding(_membership.Building.Id);
         List<Ad> matchingAds = _adService.FindMatchingAds(newAd, activeAds);
 
-        //NavigationService.Navigate(new AdPostedPage(_user, _membership, newAd, matchingAds));
+        NavigationService.Navigate(new AdPostedPage(_user, _membership, newAd, matchingAds));
     }
 
     private bool ValidateForm()
@@ -87,6 +87,12 @@ public partial class NewAdPage : Page
         if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text))
         {
             ShowValidationError("Please enter a description.");
+            return false;
+        }
+
+        if (DateFromPicker.SelectedDate.Value.Date < DateTime.Today)
+        {
+            ShowValidationError("Dates cannot be in the past.");
             return false;
         }
 

@@ -64,6 +64,7 @@ public class AdService
 
         return activeAds
             .Where(ad => ad.Id != newAd.Id
+                && ad.Author.Id != newAd.Author.Id
                 && ad.Type == oppositeType
                 && ad.Category == newAd.Category
                 && ad.OverlapsWith(newAd.DateFrom, newAd.DateTo))
