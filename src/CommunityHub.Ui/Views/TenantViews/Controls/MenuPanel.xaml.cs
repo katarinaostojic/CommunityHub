@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
@@ -116,5 +116,12 @@ public partial class MenuPanel : UserControl
         BuildingMembership membership = (BuildingMembership)((Border)sender).Tag;
         Close();
         NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(membership.Building, _user));
+    }
+
+    private void NoticeBoardMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingMembership membership = (BuildingMembership)((Button)sender).Tag;
+        Close();
+        NavigationService.GetNavigationService(this)?.Navigate(new NoticeBoardPage(_user, membership));
     }
 }

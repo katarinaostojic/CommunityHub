@@ -1,7 +1,10 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
-using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services;
 
@@ -37,5 +40,11 @@ public static class ServiceFactory
     {
         ICountryRepository countryRepository = new CountryDbRepository();
         return new CountryService(countryRepository);
+    }
+
+    public static AdService CreateAdService()
+    {
+        IAdRepository adRepository = new AdDbRepository();
+        return new AdService(adRepository);
     }
 }

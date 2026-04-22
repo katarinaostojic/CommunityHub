@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
-using CommunityHub.Application.Domain.Building.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services;
 
