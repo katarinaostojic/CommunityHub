@@ -31,9 +31,9 @@ public static class AdMapper
         return new AdSlot(
             id: Convert.ToInt64(reader["slot_id"]),
             adId: Convert.ToInt64(reader["ad_id"]),
-            date: DateOnly.FromDateTime(Convert.ToDateTime(reader["date"])),
-            startTime: TimeOnly.FromTimeSpan((TimeSpan)reader["start_time"]),
-            endTime: TimeOnly.FromTimeSpan((TimeSpan)reader["end_time"]),
+            date: (DateOnly)reader["date"],
+            startTime: (TimeOnly)reader["start_time"],
+            endTime: (TimeOnly)reader["end_time"],
             bookedByAdId: bookedByAdId
         );
     }

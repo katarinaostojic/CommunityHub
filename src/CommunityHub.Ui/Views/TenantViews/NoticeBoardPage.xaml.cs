@@ -114,10 +114,10 @@ public partial class NoticeBoardPage : Page
 
     private void ViewBookingsButton_Click(object sender, RoutedEventArgs e)
     {
-    //    AdDisplay display = (AdDisplay)((Button)sender).Tag;
-    //    Ad? ad = _adService.GetById(display.Id);
-    //    if (ad == null) return;
-    //    NavigationService.Navigate(new AdDetailsPage(_user, _membership, ad));
+        AdDisplay display = (AdDisplay)((Button)sender).Tag;
+        Ad? ad = _adService.GetById(display.Id);
+        if (ad == null) return;
+        NavigationService.Navigate(new AdDetailsPage(_user, _membership, ad));
     }
 
     private void ExportPdfButton_Click(object sender, RoutedEventArgs e)
@@ -155,8 +155,12 @@ public partial class NoticeBoardPage : Page
 
         public string ViewBookingsDisplay => $"→ View bookings ({_ad.Slots.Count(s => !s.IsFree)})";
 
+
+        //privremeno dok se ne ubaci zakazivanje
         public Visibility ViewBookingsVisible
-            => IsOwnAd && _ad.Slots.Any(s => !s.IsFree) ? Visibility.Visible : Visibility.Collapsed;
+            => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
+        //public Visibility ViewBookingsVisible
+            //=> IsOwnAd && _ad.Slots.Any(s => !s.IsFree) ? Visibility.Visible : Visibility.Collapsed;
 
         public static string GetCategoryDisplay(AdCategory category) => category switch
         {

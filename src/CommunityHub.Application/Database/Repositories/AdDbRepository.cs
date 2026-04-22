@@ -135,8 +135,8 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
             ORDER BY s.date, s.start_time";
 
         AddParameter(command, "@adId", adId);
-        AddParameter(command, "@overlapFrom", overlapFrom.ToDateTime(TimeOnly.MinValue));
-        AddParameter(command, "@overlapTo", overlapTo.ToDateTime(TimeOnly.MinValue));
+        AddParameter(command, "@overlapFrom", DateTime.SpecifyKind(overlapFrom.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@overlapTo", DateTime.SpecifyKind(overlapTo.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
 
         using IDataReader reader = command.ExecuteReader();
         return ReadSlots(reader);
