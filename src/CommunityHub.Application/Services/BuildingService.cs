@@ -25,11 +25,6 @@ public class BuildingService
         return _repository.GetById(buildingId);
     }
 
-    public int GetVacancies(Building building)
-    {
-        return building.TotalUnits - building.Memberships.Count;
-    }
-
     public List<Building> GetAllByManager(long managerId)
     {
         return _repository.GetAllByManager(managerId);
