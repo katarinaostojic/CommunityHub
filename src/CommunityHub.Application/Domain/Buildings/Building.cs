@@ -40,6 +40,8 @@ public class Building
 
     public int TotalUnits => Floors.Sum(f => f.Units.Count);
 
+    public int VacancyCount => TotalUnits - Memberships.Count;
+
     public void AddMembership(BuildingMembership membership)
     {
         Memberships.Add(membership);
@@ -67,5 +69,14 @@ public class Building
         return AccessRequests.Any(r => r.User.Id == userId
             && r.UnitNumber == unitNumber
             && r.Status == RequestStatus.PendingApproval);
+    }
+
+    public List<string> GetSortedUnitNumbers()
+    {
+        return Floors
+            .SelectMany(f => f.Units)
+            .Select(u => u.UnitNumber)
+            .OrderBy(u => int.TryParse(u, out int n) ? n : int.MaxValue)
+            .ToList();
     }
 }

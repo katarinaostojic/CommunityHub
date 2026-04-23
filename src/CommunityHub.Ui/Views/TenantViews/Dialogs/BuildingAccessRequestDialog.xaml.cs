@@ -23,11 +23,7 @@ public partial class BuildingAccessRequestDialog : Window
         TitleTextBlock.Text = $"REQUEST ACCESS: {building.Street} {building.StreetNumber}";
         BuildingInfoTextBlock.Text = $"Building: {building.Street} {building.StreetNumber}, {building.City.Name}, {building.Neighborhood}";
 
-        UnitComboBox.ItemsSource = _building.Floors
-            .SelectMany(f => f.Units)
-            .Select(u => u.UnitNumber)
-            .OrderBy(u => int.TryParse(u, out int n) ? n : int.MaxValue)
-            .ToList();
+        UnitComboBox.ItemsSource = _building.GetSortedUnitNumbers();
     }
 
     private void CheckUnitOccupied()

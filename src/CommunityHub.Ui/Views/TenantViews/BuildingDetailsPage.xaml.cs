@@ -47,7 +47,7 @@ public partial class BuildingDetailsPage : Page
     {
         FloorsText.Text = _building.NumberOfFloors.ToString();
         TotalUnitsText.Text = _building.TotalUnits.ToString();
-        VacanciesText.Text = _buildingService.GetVacancies(_building).ToString();
+        VacanciesText.Text = _building.VacancyCount.ToString();
         PendingRequestsText.Text = _requestService.GetPendingRequestsCount(_building.Id).ToString();
     }
 
