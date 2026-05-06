@@ -1,12 +1,11 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Services;
+using CommunityHub.Ui.Converters;
+using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using CommunityHub.Ui.Helpers;
-using System.IO;
-using CommunityHub.Application.Services;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -21,8 +20,8 @@ public partial class BuildingDetailsPage : Page
     public BuildingDetailsPage(Building building, User user)
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
-        _requestService = new BuildingAccessRequestService();
+        _buildingService = ServiceFactory.CreateBuildingService();
+        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
         _building = _buildingService.GetById(building.Id) ?? building;
         _user = user;
         LoadBuildingDetails();
@@ -33,7 +32,7 @@ public partial class BuildingDetailsPage : Page
         DisplayAddress();
         DisplayInfoCards();
         DisplayCurrentImage();
-        UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
+        UserNameTextBlock.Text = _user.DisplayName;
         AppMenu.Initialize(_user);
     }
 
@@ -48,7 +47,7 @@ public partial class BuildingDetailsPage : Page
     {
         FloorsText.Text = _building.NumberOfFloors.ToString();
         TotalUnitsText.Text = _building.TotalUnits.ToString();
-        VacanciesText.Text = _buildingService.GetVacancies(_building).ToString();
+        VacanciesText.Text = _building.VacancyCount.ToString();
         PendingRequestsText.Text = _requestService.GetPendingRequestsCount(_building.Id).ToString();
     }
 
@@ -62,13 +61,7 @@ public partial class BuildingDetailsPage : Page
             return;
         }
 
-        string fullPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            _building.Images[_currentImageIndex].Path.Replace('/', Path.DirectorySeparatorChar)
-        );
-
-        try { BuildingImage.Source = new BitmapImage(new Uri(fullPath, UriKind.Absolute)); }
-        catch { BuildingImage.Source = null; }
+        BuildingImage.Source = ImagePathConverter.LoadImage(_building.Images[_currentImageIndex].Path);
 
         ImageCounterText.Text = $"{_currentImageIndex + 1}/{_building.Images.Count}";
         UpdateImageDots();
@@ -100,7 +93,7 @@ public partial class BuildingDetailsPage : Page
 
         DisplayInfoCards();
         ViewRequestsButton.Visibility = Visibility.Visible;
-        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully!");
     }
 

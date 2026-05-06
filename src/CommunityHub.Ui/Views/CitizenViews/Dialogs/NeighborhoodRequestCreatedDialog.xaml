@@ -24,11 +24,11 @@
             <DockPanel Grid.Row="0" Background="White" LastChildFill="False">
                 <StackPanel Orientation="Horizontal" Margin="18,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="Request Created"
-                               FontSize="28"
+                               FontSize="30"
                                FontWeight="Bold"
                                VerticalAlignment="Center"/>
                     <TextBlock Text=" ⓘ"
-                               FontSize="24"
+                               FontSize="26"
                                FontWeight="Bold"
                                Foreground="#4F4F4F"
                                VerticalAlignment="Center"/>
@@ -48,9 +48,8 @@
             </DockPanel>
 
             <StackPanel Grid.Row="1"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Center"
-                        Margin="0,8,0,0">
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
                 <TextBlock Text="Your address does not match this neighborhood."
                            FontSize="24"
                            FontWeight="Bold"
@@ -69,7 +68,6 @@
                     <ColumnDefinition Width="230"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="48"/>
                     <RowDefinition Height="48"/>
@@ -79,49 +77,45 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="Neighborhood:"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
-
                 <TextBlock x:Name="NeighborhoodNameText"
                            Grid.Row="0" Grid.Column="1"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="Citizen:"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
-
                 <TextBlock x:Name="CitizenNameText"
                            Grid.Row="1" Grid.Column="1"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
                            Text="Created on:"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
-
                 <TextBlock x:Name="CreatedOnText"
                            Grid.Row="2" Grid.Column="1"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0"
                            Text="Status:"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
-
                 <TextBlock x:Name="StatusText"
                            Grid.Row="3" Grid.Column="1"
-                           FontSize="21"
+                           FontSize="22"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
             </Grid>
@@ -136,10 +130,10 @@
                 <Button x:Name="GoToDashboardButton"
                         Grid.Column="0"
                         Content="Go to Dashboard"
-                        FontSize="20"
+                        FontSize="22"
                         FontWeight="Bold"
-                        Height="56"
-                        Width="220"
+                        Height="60"
+                        Width="230"
                         HorizontalAlignment="Left"
                         Background="White"
                         BorderBrush="#3A3A3A"
@@ -148,14 +142,14 @@
                 <Button x:Name="ViewMyRequestsButton"
                         Grid.Column="2"
                         Content="View My Requests"
-                        FontSize="20"
+                        FontSize="22"
                         FontWeight="Bold"
-                        Height="56"
-                        Width="220"
+                        Height="60"
+                        Width="230"
                         HorizontalAlignment="Right"
-                        Background="White"
-                        BorderBrush="#3A3A3A"
-                        BorderThickness="2"/>
+                        Background="#2C3E50"
+                        Foreground="White"
+                        BorderThickness="0"/>
             </Grid>
         </Grid>
     </Border>

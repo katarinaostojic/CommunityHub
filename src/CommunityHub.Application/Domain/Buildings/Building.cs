@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Domain.Building;
+﻿namespace CommunityHub.Application.Domain.Buildings;
 
 public class Building
 {
@@ -11,8 +11,8 @@ public class Building
     public List<Floor> Floors { get; private set; }
     public List<Image> Images { get; private set; }
 
-    public List<BuildingMembership> Memberships { get; private set; } = new List<BuildingMembership>();
-    public List<BuildingAccessRequest> AccessRequests { get; private set; } = new List<BuildingAccessRequest>();
+    public List<BuildingMembership> Memberships { get; private set; }
+    public List<BuildingAccessRequest> AccessRequests { get; private set; }
 
     public Building(long id, string street, string streetNumber, string neighborhood, City city, int numberOfFloors)
     {
@@ -24,6 +24,8 @@ public class Building
         NumberOfFloors = numberOfFloors;
         Floors = new List<Floor>();
         Images = new List<Image>();
+        Memberships = new List<BuildingMembership>();
+        AccessRequests = new List<BuildingAccessRequest>();
     }
 
     public void AddFloor(Floor floor)
@@ -37,6 +39,8 @@ public class Building
     }
 
     public int TotalUnits => Floors.Sum(f => f.Units.Count);
+
+    public int VacancyCount => TotalUnits - Memberships.Count;
 
     public void AddMembership(BuildingMembership membership)
     {
@@ -53,10 +57,26 @@ public class Building
         return Memberships.Any(m => m.UnitNumber == unitNumber);
     }
 
+    public bool ContainsUnit(string unitNumber)
+    {
+        return Floors
+            .SelectMany(f => f.Units)
+            .Any(u => u.UnitNumber == unitNumber);
+    }
+
     public bool HasExistingRequest(long userId, string unitNumber)
     {
         return AccessRequests.Any(r => r.User.Id == userId
             && r.UnitNumber == unitNumber
             && r.Status == RequestStatus.PendingApproval);
+    }
+
+    public List<string> GetSortedUnitNumbers()
+    {
+        return Floors
+            .SelectMany(f => f.Units)
+            .Select(u => u.UnitNumber)
+            .OrderBy(u => int.TryParse(u, out int n) ? n : int.MaxValue)
+            .ToList();
     }
 }

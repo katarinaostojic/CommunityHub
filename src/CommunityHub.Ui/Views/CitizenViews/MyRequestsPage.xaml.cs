@@ -17,6 +17,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
 
         private List<NeighborhoodAccessRequest> _allRequests = new();
         private List<RequestCardViewModel> _shownRequests = new();
+        private bool _sortDescending = true;
 
         public MyRequestsPage(User user)
         {
@@ -36,66 +37,79 @@ namespace CommunityHub.Ui.Views.CitizenViews
 
         private void LoadRequests()
         {
-            _allRequests = _service.GetAllByCitizen(_user.Id, null, true);
+            _allRequests = _service.GetAllByCitizen(_user.Id, null, _sortDescending);
             ApplyFilters();
         }
 
         private void ApplyFilters()
         {
-            IEnumerable<NeighborhoodAccessRequest> filtered = _allRequests;
+            IEnumerable<NeighborhoodAccessRequest> filtered = FilterByStatus(_allRequests);
+            filtered = SortByDate(filtered);
+            _shownRequests = filtered.Select(BuildRequestCard).ToList();
+            RefreshDisplay();
+        }
 
+        private IEnumerable<NeighborhoodAccessRequest> FilterByStatus(IEnumerable<NeighborhoodAccessRequest> requests)
+        {
             string selectedStatus = GetSelectedStatusText();
-            if (selectedStatus != "All")
+            if (selectedStatus == "All")
+                return requests;
+            return requests.Where(r => GetStatusText(r.Status) == selectedStatus);
+        }
+
+        private IEnumerable<NeighborhoodAccessRequest> SortByDate(IEnumerable<NeighborhoodAccessRequest> requests)
+        {
+            return _sortDescending
+                ? requests.OrderByDescending(r => r.CreatedAt)
+                : requests.OrderBy(r => r.CreatedAt);
+        }
+
+        private RequestCardViewModel BuildRequestCard(NeighborhoodAccessRequest r)
+        {
+            string imagePath = GetNeighborhoodImagePath(r);
+            return new RequestCardViewModel
             {
-                filtered = filtered.Where(r => GetStatusText(r.Status) == selectedStatus);
-            }
+                Id = r.Id,
+                NeighborhoodName = r.Neighborhood?.Name ?? string.Empty,
+                CreatedAtFormatted = r.CreatedAt.ToString("dd/MM/yyyy"),
+                StatusText = GetStatusText(r.Status),
+                StatusBrush = GetStatusBrush(r.Status),
+                DeleteVisibility = IsDeleteVisible(r.Status),
+                RejectionVisibility = IsRejectionVisible(r.RejectionReason),
+                RejectionReason = r.RejectionReason ?? string.Empty,
+                ImagePath = imagePath,
+                NoImageVisibility = string.IsNullOrWhiteSpace(imagePath)
+                    ? Visibility.Visible
+                    : Visibility.Collapsed
+            };
+        }
 
-            if (RequestDatePicker.SelectedDate.HasValue)
-            {
-                DateTime selectedDate = RequestDatePicker.SelectedDate.Value.Date;
-                filtered = filtered.Where(r => r.CreatedAt.Date == selectedDate);
-            }
+        private Visibility IsDeleteVisible(RequestStatus status)
+        {
+            return status == RequestStatus.PendingApproval ? Visibility.Visible : Visibility.Collapsed;
+        }
 
-            filtered = filtered.OrderByDescending(r => r.CreatedAt);
+        private Visibility IsRejectionVisible(string? rejectionReason)
+        {
+            return string.IsNullOrWhiteSpace(rejectionReason) ? Visibility.Collapsed : Visibility.Visible;
+        }
 
-            _shownRequests = filtered
-                .Select(r => new RequestCardViewModel
-                {
-                    Id = r.Id,
-                    NeighborhoodName = r.Neighborhood?.Name ?? string.Empty,
-                    CreatedAtFormatted = r.CreatedAt.ToString("dd/MM/yyyy"),
-                    StatusText = GetStatusText(r.Status),
-                    StatusBrush = GetStatusBrush(r.Status),
-                    DeleteVisibility = r.Status == RequestStatus.PendingApproval
-                        ? Visibility.Visible
-                        : Visibility.Collapsed,
-                    RejectionVisibility = string.IsNullOrWhiteSpace(r.RejectionReason)
-                        ? Visibility.Collapsed
-                        : Visibility.Visible,
-                    RejectionReason = r.RejectionReason ?? string.Empty,
-                    ImagePath = GetNeighborhoodImagePath(r),
-                    NoImageVisibility = string.IsNullOrWhiteSpace(GetNeighborhoodImagePath(r))
-                        ? Visibility.Visible
-                        : Visibility.Collapsed
-                })
-                .ToList();
-
+        private void RefreshDisplay()
+        {
             RequestsItemsControl.ItemsSource = null;
             RequestsItemsControl.ItemsSource = _shownRequests;
-
             ResultsTextBlock.Text = $"Showing {_shownRequests.Count} requests";
         }
 
         private string GetNeighborhoodImagePath(NeighborhoodAccessRequest request)
         {
-            if (request?.Neighborhood == null || request.Neighborhood.Images == null || request.Neighborhood.Images.Count == 0)
+            if (request?.Neighborhood?.Images == null || request.Neighborhood.Images.Count == 0)
                 return string.Empty;
 
             var firstImage = request.Neighborhood.Images.FirstOrDefault();
-            if (firstImage == null || string.IsNullOrWhiteSpace(firstImage.Path))
-                return string.Empty;
-
-            return firstImage.Path;
+            return firstImage == null || string.IsNullOrWhiteSpace(firstImage.Path)
+                ? string.Empty
+                : firstImage.Path;
         }
 
         private string GetSelectedStatusText()
@@ -132,10 +146,18 @@ namespace CommunityHub.Ui.Views.CitizenViews
             ApplyFilters();
         }
 
+        private void SortButton_Click(object sender, RoutedEventArgs e)
+        {
+            _sortDescending = !_sortDescending;
+            SortButton.Content = _sortDescending ? "Date ↓" : "Date ↑";
+            ApplyFilters();
+        }
+
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
             StatusFilterComboBox.SelectedIndex = 0;
-            RequestDatePicker.SelectedDate = null;
+            _sortDescending = true;
+            SortButton.Content = "Date ↓";
             ApplyFilters();
         }
 

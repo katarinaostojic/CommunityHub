@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Services;
 using CommunityHub.Ui.Views;
-using CommunityHub.Ui.Views.CitizenViews.Dialogs; 
+using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
 {
     public partial class BrowseNeighborhoodPage : Window
     {
-        private readonly NeighborhoodDbRepository _neighborhoodRepository;
+        private readonly NeighborhoodService _neighborhoodService;
         private readonly User _user;
 
         private List<Neighborhood> _allNeighborhoods = new();
@@ -25,7 +25,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
         {
             InitializeComponent();
 
-            _neighborhoodRepository = new NeighborhoodDbRepository();
+            _neighborhoodService = new NeighborhoodService();
             _user = user;
 
             LoggedInUserTextBlock.Text = _user.Username;
@@ -39,7 +39,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
 
         private void LoadNeighborhoods()
         {
-            _allNeighborhoods = _neighborhoodRepository.SearchForCitizen(null, null, null, null);
+            _allNeighborhoods = _neighborhoodService.SearchForCitizen(null, null, null, null);
             _filteredNeighborhoods = new List<Neighborhood>(_allNeighborhoods);
             DisplayNeighborhoods();
         }
@@ -61,32 +61,38 @@ namespace CommunityHub.Ui.Views.CitizenViews
                 return;
             }
 
-            int? number = null;
-            string streetPart = search;
+            (string streetPart, int? number) = ParseSearchInput(search);
+            _filteredNeighborhoods = _allNeighborhoods.Where(n => MatchesSearch(n, search, streetPart, number)).ToList();
+            DisplayNeighborhoods();
+        }
 
+        private (string streetPart, int? number) ParseSearchInput(string search)
+        {
             string[] parts = search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length > 1 && int.TryParse(parts[^1], out int parsedNumber))
-            {
-                number = parsedNumber;
-                streetPart = string.Join(" ", parts.Take(parts.Length - 1));
-            }
+                return (string.Join(" ", parts.Take(parts.Length - 1)), parsedNumber);
+            return (search, null);
+        }
 
-            _filteredNeighborhoods = _allNeighborhoods
-                .Where(n =>
-                    n.Name.ToLower().Contains(search) ||
-                    n.Location.CityName.ToLower().Contains(search) ||
-                    n.Location.CountryName.ToLower().Contains(search) ||
-                    n.Streets.Any(s =>
-                        s.StreetName.ToLower().Contains(search) ||
-                        (
-                            s.StreetName.ToLower().Contains(streetPart) &&
-                            (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber))
-                        )
-                    )
-                )
-                .ToList();
+        private bool MatchesSearch(Neighborhood n, string search, string streetPart, int? number)
+        {
+            return MatchesBasicFields(n, search) || MatchesStreet(n, search, streetPart, number);
+        }
 
-            DisplayNeighborhoods();
+        private bool MatchesBasicFields(Neighborhood n, string search)
+        {
+            return n.Name.ToLower().Contains(search) ||
+                   n.Location.CityName.ToLower().Contains(search) ||
+                   n.Location.CountryName.ToLower().Contains(search);
+        }
+
+        private bool MatchesStreet(Neighborhood n, string search, string streetPart, int? number)
+        {
+            return n.Streets.Any(s =>
+                s.StreetName.ToLower().Contains(search) ||
+                (s.StreetName.ToLower().Contains(streetPart) &&
+                (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber)))
+            );
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -141,9 +147,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
         private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (_filterPanelOpen)
-            {
                 CloseFilterPanel();
-            }
         }
 
         private void ApplyFiltersButton_Click(object sender, RoutedEventArgs e)
@@ -153,7 +157,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
             string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
             string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
 
-            _filteredNeighborhoods = _neighborhoodRepository.SearchForCitizen(name, address, city, country);
+            _filteredNeighborhoods = _neighborhoodService.SearchForCitizen(name, address, city, country);
 
             DisplayNeighborhoods();
             CloseFilterPanel();
@@ -169,26 +173,24 @@ namespace CommunityHub.Ui.Views.CitizenViews
             _filteredNeighborhoods = new List<Neighborhood>(_allNeighborhoods);
             DisplayNeighborhoods();
         }
+
         private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
         {
             Neighborhood neighborhood = (Neighborhood)((Button)sender).Tag;
-
             var dialog = new NeighborhoodAccessRequestDialog(_user, neighborhood);
             dialog.ShowDialog();
         }
 
         private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("My Requests page.");
+            new MyRequestsPage(_user).Show();
+            Close();
         }
 
         private void BurgerButton_Click(object sender, RoutedEventArgs e)
         {
             if (_filterPanelOpen)
-            {
                 CloseFilterPanel();
-            }
-
             CitizenMenu.Visibility = Visibility.Visible;
         }
 
@@ -207,8 +209,7 @@ namespace CommunityHub.Ui.Views.CitizenViews
                     break;
 
                 case "MyRequests":
-                    MyRequestsPage myRequestsPage = new MyRequestsPage(_user);
-                    myRequestsPage.Show();
+                    new MyRequestsPage(_user).Show();
                     Close();
                     break;
 

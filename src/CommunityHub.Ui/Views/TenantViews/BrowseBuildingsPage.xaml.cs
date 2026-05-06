@@ -1,18 +1,11 @@
 ﻿using CommunityHub.Application.Services;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
-using CommunityHub.Ui.Converters;
-using CommunityHub.Ui.Views.TenantViews;
-using System.Globalization;
-using System.IO;
+using CommunityHub.Application.Domain.Buildings;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -28,10 +21,10 @@ public partial class BrowseBuildingsPage : Page
     public BrowseBuildingsPage(User user)
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
+        _buildingService = ServiceFactory.CreateBuildingService();
         _user = user;
         LoadBuildings();
-        UserNameTextBlock.Text = char.ToUpper(_user.Name[0]) + _user.Name.Substring(1).ToLower();
+        UserNameTextBlock.Text = _user.DisplayName;
         AppMenu.Initialize(_user);
     }
 
@@ -48,6 +41,7 @@ public partial class BrowseBuildingsPage : Page
         if (totalPages == 0) totalPages = 1;
         PageLabel.Text = $"Page {_currentPage} of {totalPages}";
 
+        //skip buildings shown on previous pages
         BuildingsPanel.ItemsSource = _filteredBuildings
             .Skip((_currentPage - 1) * PageSize)
             .Take(PageSize)
@@ -127,18 +121,7 @@ public partial class BrowseBuildingsPage : Page
         CloseFilterPanel();
     }
 
-    private void ResetFiltersButton_Click(object sender, RoutedEventArgs e)
-    {
-        FilterStreetTextBox.Text = string.Empty;
-        FilterNeighborhoodTextBox.Text = string.Empty;
-        FilterCityTextBox.Text = string.Empty;
-        FilterCountryTextBox.Text = string.Empty;
-        _filteredBuildings = _buildingService.Search(null, null, null, null);
-        _currentPage = 1;
-        DisplayBuildings();
-    }
-
-    private void ResetButton_Click(object sender, RoutedEventArgs e)
+    private void ResetAll()
     {
         SearchTextBox.Text = string.Empty;
         FilterStreetTextBox.Text = string.Empty;
@@ -149,6 +132,9 @@ public partial class BrowseBuildingsPage : Page
         _currentPage = 1;
         DisplayBuildings();
     }
+    private void ResetFiltersButton_Click(object sender, RoutedEventArgs e) => ResetAll();
+
+    private void ResetButton_Click(object sender, RoutedEventArgs e) => ResetAll();
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
@@ -156,7 +142,7 @@ public partial class BrowseBuildingsPage : Page
 
         if (!ShowBuildingRequestAccessDialog(building)) return;
 
-        TenantBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
 
         ViewRequestsButton.Visibility = Visibility.Visible;
@@ -167,16 +153,12 @@ public partial class BrowseBuildingsPage : Page
         NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
-    private bool ShowBuildingRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(Building selectedBuilding)
     {
+        Building building = _buildingService.GetById(selectedBuilding.Id) ?? selectedBuilding;
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
-    }
-
-    private void CloseBannerButton_Click(object sender, RoutedEventArgs e)
-    {
-        SuccessBanner.Visibility = Visibility.Collapsed;
     }
 
     private void PrevPageButton_Click(object sender, RoutedEventArgs e)
@@ -196,16 +178,6 @@ public partial class BrowseBuildingsPage : Page
             _currentPage++;
             DisplayBuildings();
         }
-    }
-
-    private void LogoutButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationService.GoBack();
-    }
-
-    private void MyRequestsButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
     }
 
     private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)

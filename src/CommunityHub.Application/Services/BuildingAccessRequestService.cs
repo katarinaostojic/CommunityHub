@@ -1,18 +1,20 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services;
 
 public class BuildingAccessRequestService
 {
-    private readonly BuildingAccessRequestDbRepository _repository;
-    private readonly BuildingMembershipDbRepository _membershipRepository;
+    private readonly IBuildingAccessRequestRepository _repository;
+    private readonly IBuildingMembershipRepository _membershipRepository;
 
-    public BuildingAccessRequestService()
+    public BuildingAccessRequestService(
+        IBuildingAccessRequestRepository repository,
+        IBuildingMembershipRepository membershipRepository)
     {
-        _repository = new BuildingAccessRequestDbRepository();
-        _membershipRepository = new BuildingMembershipDbRepository();
+        _repository = repository;
+        _membershipRepository = membershipRepository;
     }
 
     public void Create(User user, Building building, string unitNumber)

@@ -1,28 +1,16 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers;
 
 public static class BuildingMapper
 {
-    public static Building Map(IDataReader reader)
+    // idColumn: "id" when main table, "building_id" when joined
+    public static Building Map(IDataReader reader, string idColumn = "id")
     {
         return new Building(
-            Convert.ToInt64(reader["id"]),
-            reader["street"].ToString()!,
-            reader["street_number"].ToString()!,
-            reader["neighborhood"].ToString()!,
-            MapCity(reader),
-            Convert.ToInt32(reader["number_of_floors"])
-        );
-    }
-
-   //building kao deo joina
-    public static Building MapFromJoin(IDataReader reader)
-    {
-        return new Building(
-            Convert.ToInt64(reader["building_id"]),
+            Convert.ToInt64(reader[idColumn]),
             reader["street"].ToString()!,
             reader["street_number"].ToString()!,
             reader["neighborhood"].ToString()!,

@@ -19,6 +19,8 @@ public class User
     public string? Address { get; private set; }
     public List<Post>? Posts { get; private set; }
 
+    public string DisplayName => char.ToUpper(Name[0]) + Name.Substring(1).ToLower();
+
     public User(long id, string username, string password, string name, string surname, DateTime birthDay, UserRole role, string? address = null)
     {
         Id = id;

@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
@@ -14,24 +14,22 @@ namespace CommunityHub.Ui.Controls;
 
 public partial class MenuPanel : UserControl
 {
-    private readonly BuildingService _buildingService;
     private User _user;
     private readonly BuildingMembershipService _membershipService;
 
     public MenuPanel()
     {
         InitializeComponent();
-        _buildingService = new BuildingService();
-        _membershipService = new BuildingMembershipService();
+        _membershipService = ServiceFactory.CreateBuildingMembershipService();
     }
 
     public void Initialize(User user)
     {
         _user = user;
-        //reset za my buildings na my building details stranici
+        // Reset My Buildings toggle state on each navigation
         MyBuildingsToggle.IsChecked = false;
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
-        MyBuildingsArrow.Text = "∨";
+        MyBuildingsArrow.Text = "▼";
         LoadMemberships();
     }
 
@@ -63,7 +61,10 @@ public partial class MenuPanel : UserControl
 
     private void LoadMemberships()
     {
-        var memberships = _membershipService.GetByTenant(_user.Id);
+        var memberships = _membershipService.GetByTenant(_user.Id)
+            .GroupBy(m => m.Building.Id)
+            .Select(g => g.First())
+            .ToList();
         MyBuildingsMenuPanel.ItemsSource = memberships;
     }
 
@@ -115,5 +116,12 @@ public partial class MenuPanel : UserControl
         BuildingMembership membership = (BuildingMembership)((Border)sender).Tag;
         Close();
         NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(membership.Building, _user));
+    }
+
+    private void NoticeBoardMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingMembership membership = (BuildingMembership)((Button)sender).Tag;
+        Close();
+        NavigationService.GetNavigationService(this)?.Navigate(new NoticeBoardPage(_user, membership));
     }
 }

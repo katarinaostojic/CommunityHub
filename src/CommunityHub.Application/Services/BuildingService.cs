@@ -1,17 +1,18 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain.Building;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services;
 
 public class BuildingService
 {
-    private readonly BuildingDbRepository _repository;
-    private readonly ImageDbRepository _imageRepository;
+    private readonly IBuildingRepository _repository;
+    private readonly IImageRepository _imageRepository;
 
-    public BuildingService()
+    public BuildingService(IBuildingRepository repository, IImageRepository imageRepository)
     {
-        _repository = new BuildingDbRepository();
-        _imageRepository = new ImageDbRepository();
+        _repository = repository;
+        _imageRepository = imageRepository;
     }
 
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
@@ -27,11 +28,6 @@ public class BuildingService
     public List<Building> GetAllByManager(long managerId)
     {
         return _repository.GetAllByManager(managerId);
-    }
-
-    public int GetVacancies(Building building)
-    {
-        return building.TotalUnits - building.Memberships.Count;
     }
 
     public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId)
@@ -52,5 +48,10 @@ public class BuildingService
     public void SaveBuildingImage(long buildingId, string path)
     {
         _imageRepository.SaveImage("building", buildingId, path);
+    }
+
+    public bool BuildingExists(string street, string streetNumber, long cityId)
+    {
+        return _repository.BuildingExists(street, streetNumber, cityId);
     }
 }

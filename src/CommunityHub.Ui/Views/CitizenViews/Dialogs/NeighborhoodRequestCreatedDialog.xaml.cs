@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using CommunityHub.Application.Domain;
+using CommunityHub.Ui.Views.CitizenViews;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
 {
@@ -43,7 +44,8 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
 
         private void ViewMyRequestsButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Open My Requests page.");
+            MyRequestsPage myRequestsPage = new MyRequestsPage(_user);
+            myRequestsPage.Show();
             Close();
         }
     }

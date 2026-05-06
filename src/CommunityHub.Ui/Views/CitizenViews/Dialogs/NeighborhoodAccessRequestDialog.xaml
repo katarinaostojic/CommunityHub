@@ -13,7 +13,6 @@
         Background="#F4F4F4"
         WindowStyle="SingleBorderWindow">
 
-    <!-- 🔥 CONVERTER -->
     <Window.Resources>
         <conv:ImagePathConverter x:Key="ImagePathConverter"/>
     </Window.Resources>
@@ -26,10 +25,9 @@
                 <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
 
-            <!-- Header -->
             <DockPanel Grid.Row="0" Background="White" LastChildFill="False">
                 <TextBlock Text="Request Access"
-                           FontSize="28"
+                           FontSize="30"
                            FontWeight="Bold"
                            VerticalAlignment="Center"
                            Margin="18,0,0,0"/>
@@ -46,7 +44,6 @@
                         Margin="0,4,10,4"/>
             </DockPanel>
 
-            <!-- Content -->
             <Grid Grid.Row="1" Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="360"/>
@@ -54,7 +51,6 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Left side -->
                 <StackPanel Grid.Column="0">
                     <Border Width="320"
                             Height="220"
@@ -62,25 +58,21 @@
                             BorderThickness="1.5"
                             Background="#EAEAEA"
                             HorizontalAlignment="Center">
-
-                        <!-- 🔥 OVDE IDE CONVERTER -->
                         <Image Source="{Binding Images, Converter={StaticResource ImagePathConverter}}"
                                Stretch="UniformToFill"/>
-
                     </Border>
 
                     <TextBlock x:Name="NeighborhoodNameText"
-                               FontSize="26"
+                               FontSize="28"
                                FontWeight="Bold"
                                HorizontalAlignment="Center"
                                Margin="0,14,0,0"/>
                 </StackPanel>
 
-                <!-- Right side -->
                 <StackPanel Grid.Column="2" Margin="0,8,0,0">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
-                        <TextBlock Text="📍"
-                                   FontSize="28"
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <TextBlock Text="🏘️"
+                                   FontSize="30"
                                    VerticalAlignment="Top"
                                    Margin="0,0,10,0"/>
                         <TextBlock x:Name="AddressText"
@@ -90,9 +82,9 @@
                                    Width="480"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
-                        <TextBlock Text="📍"
-                                   FontSize="28"
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <TextBlock Text="🌍"
+                                   FontSize="30"
                                    VerticalAlignment="Top"
                                    Margin="0,0,10,0"/>
                         <TextBlock x:Name="LocationText"
@@ -102,20 +94,25 @@
                                    Width="480"/>
                     </StackPanel>
 
-                    <TextBlock Text="Description:"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="📝"
+                                   FontSize="30"
+                                   VerticalAlignment="Top"
+                                   Margin="0,0,10,0"/>
+                        <TextBlock Text="Description:"
+                                   FontSize="24"
+                                   FontWeight="Bold"/>
+                    </StackPanel>
 
                     <TextBlock x:Name="DescriptionText"
                                FontSize="22"
-                               FontWeight="SemiBold"
+                               FontWeight="Bold"
                                TextWrapping="Wrap"
-                               Width="520"/>
+                               Width="520"
+                               Margin="40,0,0,0"/>
                 </StackPanel>
             </Grid>
 
-            <!-- Bottom loading -->
             <StackPanel Grid.Row="2"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
@@ -124,7 +121,6 @@
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,20"/>
-
                 <ProgressBar Width="220"
                              Height="18"
                              IsIndeterminate="True"/>

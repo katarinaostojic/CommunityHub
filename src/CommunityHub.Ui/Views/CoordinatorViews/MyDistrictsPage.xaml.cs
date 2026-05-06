@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
@@ -20,6 +21,12 @@ public partial class MyDistrictsPage : Page
     {
         var districts = _repository.GetByCoordinator(_userId);
         DistrictsItemsControl.ItemsSource = districts;
+    }
+
+    private void DistrictCard_Click(object sender, RoutedEventArgs e)
+    {
+        var neighborhood = (Neighborhood)((Button)sender).Tag;
+        CoordinatorMainWindow.Instance.NavigateTo(new NeighborhoodDetailsPage(neighborhood), neighborhood.Name);
     }
 
     private void AddDistrictButton_Click(object sender, RoutedEventArgs e)

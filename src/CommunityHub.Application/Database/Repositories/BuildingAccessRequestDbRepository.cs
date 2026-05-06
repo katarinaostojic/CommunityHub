@@ -1,11 +1,12 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Building;
+using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class BuildingAccessRequestDbRepository : BaseDbRepository
+public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAccessRequestRepository
 {
     public void Create(User user, Building building, string unitNumber)
     {
@@ -43,32 +44,6 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
             ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
 
         AddParameter(command, "@userId", tenantId);
-        AddParameter(command, "@status", status);
-
-        using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
-    }
-
-    public List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = $@"
-            SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
-                   b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-            FROM building_access_requests r
-            JOIN buildings b ON r.building_id = b.id
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            JOIN users u ON r.user_id = u.id
-            WHERE b.manager_id = @managerId
-              AND (@status IS NULL OR r.status = @status::request_status)
-            ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
-
-        AddParameter(command, "@managerId", managerId);
         AddParameter(command, "@status", status);
 
         using IDataReader reader = command.ExecuteReader();
@@ -114,6 +89,32 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
         command.ExecuteNonQuery();
     }
 
+    public List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = $@"
+            SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
+                   b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+                   c.id AS city_id, c.name AS city_name,
+                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
+                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+            FROM building_access_requests r
+            JOIN buildings b ON r.building_id = b.id
+            JOIN cities c ON b.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            JOIN users u ON r.user_id = u.id
+            WHERE b.manager_id = @managerId
+              AND (@status IS NULL OR r.status = @status::request_status)
+            ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
+
+        AddParameter(command, "@managerId", managerId);
+        AddParameter(command, "@status", status);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadRequests(reader);
+    }
+
     public void ApproveRequest(long requestId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -144,23 +145,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository
     {
         List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
         while (reader.Read())
-            requests.Add(MapRequest(reader));
+            requests.Add(BuildingAccessRequestMapper.MapWithBuilding(reader));
         return requests;
-    }
-
-    private BuildingAccessRequest MapRequest(IDataReader reader)
-    {
-        string? rejectionReason = reader.IsDBNull(reader.GetOrdinal("rejection_reason"))
-            ? null : reader["rejection_reason"].ToString();
-
-        return new BuildingAccessRequest(
-            Convert.ToInt64(reader["id"]),
-            UserMapper.Map(reader),
-            BuildingMapper.MapFromJoin(reader),
-            reader["unit_number"].ToString()!,
-            DateTime.Parse(reader["created_at"].ToString()!),
-            RequestStatusMapper.Parse(reader["status"].ToString()!),
-            rejectionReason
-        );
     }
 }

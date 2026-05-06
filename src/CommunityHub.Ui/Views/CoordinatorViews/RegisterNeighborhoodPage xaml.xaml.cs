@@ -33,23 +33,8 @@ public partial class RegisterNeighborhoodPage : Page
         string startText = StartNumberTextBox.Text.Trim();
         string endText = EndNumberTextBox.Text.Trim();
 
-        if (string.IsNullOrEmpty(streetName) || string.IsNullOrEmpty(startText) || string.IsNullOrEmpty(endText))
-        {
-            MessageBox.Show("Please fill in all street fields.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        if (!ValidateStreetInputs(streetName, startText, endText, out int startNumber, out int endNumber))
             return;
-        }
-
-        if (!int.TryParse(startText, out int startNumber) || !int.TryParse(endText, out int endNumber))
-        {
-            MessageBox.Show("Start and end numbers must be integers.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (startNumber >= endNumber)
-        {
-            MessageBox.Show("Start number must be less than end number.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
 
         Street street = new Street(0, 0, streetName, startNumber, endNumber);
         _streets.Add(street);
@@ -58,6 +43,32 @@ public partial class RegisterNeighborhoodPage : Page
         StreetNameTextBox.Clear();
         StartNumberTextBox.Clear();
         EndNumberTextBox.Clear();
+    }
+
+    private bool ValidateStreetInputs(string streetName, string startText, string endText, out int startNumber, out int endNumber)
+    {
+        startNumber = 0;
+        endNumber = 0;
+
+        if (string.IsNullOrEmpty(streetName) || string.IsNullOrEmpty(startText) || string.IsNullOrEmpty(endText))
+        {
+            MessageBox.Show("Please fill in all street fields.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (!int.TryParse(startText, out startNumber) || !int.TryParse(endText, out endNumber))
+        {
+            MessageBox.Show("Start and end numbers must be integers.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (startNumber >= endNumber)
+        {
+            MessageBox.Show("Start number must be less than end number.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        return true;
     }
 
     private void AddImage_Click(object sender, RoutedEventArgs e)
@@ -85,31 +96,10 @@ public partial class RegisterNeighborhoodPage : Page
         string description = DescriptionTextBox.Text.Trim();
         City? selectedCity = CityComboBox.SelectedItem as City;
 
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
-        {
-            MessageBox.Show("Name and description are required.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        if (!ValidateInputs(name, description, selectedCity))
             return;
-        }
 
-        if (selectedCity == null)
-        {
-            MessageBox.Show("Please select a city.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (_streets.Count == 0)
-        {
-            MessageBox.Show("Please add at least one street.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        if (_imagePaths.Count == 0)
-        {
-            MessageBox.Show("Please add at least one image.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity.Id, _coordinatorId);
+        long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity!.Id, _coordinatorId);
 
         foreach (Street street in _streets)
             _neighborhoodRepository.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
@@ -119,6 +109,35 @@ public partial class RegisterNeighborhoodPage : Page
 
         MessageBox.Show("Neighborhood registered successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_coordinatorId), "My Districts");
+    }
+
+    private bool ValidateInputs(string name, string description, City? selectedCity)
+    {
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
+        {
+            MessageBox.Show("Name and description are required.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (selectedCity == null)
+        {
+            MessageBox.Show("Please select a city.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (_streets.Count == 0)
+        {
+            MessageBox.Show("Please add at least one street.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (_imagePaths.Count == 0)
+        {
+            MessageBox.Show("Please add at least one image.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        return true;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)

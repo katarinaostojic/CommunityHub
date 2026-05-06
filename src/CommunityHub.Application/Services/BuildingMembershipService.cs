@@ -1,34 +1,18 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain.Building;
+﻿using CommunityHub.Application.Domain.Buildings;
 
 namespace CommunityHub.Application.Services;
 
 public class BuildingMembershipService
 {
-    private readonly BuildingMembershipDbRepository _repository;
+    private readonly IBuildingMembershipRepository _repository;
 
-    public BuildingMembershipService()
+    public BuildingMembershipService(IBuildingMembershipRepository repository)
     {
-        _repository = new BuildingMembershipDbRepository();
+        _repository = repository;
     }
 
     public List<BuildingMembership> GetByTenant(long tenantId)
     {
         return _repository.GetByTenant(tenantId);
-    }
-
-    public List<BuildingMembership> GetByBuilding(long buildingId)
-    {
-        return _repository.GetByBuilding(buildingId);
-    }
-
-    public bool IsUnitOccupied(long buildingId, string unitNumber)
-    {
-        return _repository.ExistsForUnit(buildingId, unitNumber);
-    }
-
-    public List<string> GetOccupiedUnits(long buildingId)
-    {
-        return _repository.GetOccupiedUnits(buildingId);
     }
 }

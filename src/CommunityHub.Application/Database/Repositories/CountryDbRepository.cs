@@ -3,7 +3,7 @@ using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Application.Database.Repositories;
 
-public class CountryDbRepository : BaseDbRepository
+public class CountryDbRepository : BaseDbRepository, ICountryRepository
 {
     public Country Create(Country country)
     {
