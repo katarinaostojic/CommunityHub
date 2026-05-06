@@ -76,7 +76,7 @@ public partial class ManageRequestsPage : Page
 
         try
         {
-            _requestService.ApproveRequestWithMembership(display.Id, display.Citizen.Id, display.Neighborhood.Id);
+            _requestService.ApproveRequestWithMembership(display.Request);
             MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             LoadRequests();
         }
@@ -97,7 +97,7 @@ public partial class ManageRequestsPage : Page
 
             if (rejectWindow.Confirmed)
             {
-                _requestService.RejectRequestForCoordinator(display.Id, rejectWindow.Reason);
+                _requestService.RejectRequestForCoordinator(display.Request, rejectWindow.Reason);
                 MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadRequests();
             }
@@ -122,6 +122,8 @@ public partial class ManageRequestsPage : Page
         public Neighborhood Neighborhood => _request.Neighborhood;
         public DateTime CreatedAt => _request.CreatedAt;
         public RequestStatus Status => _request.Status;
+
+        public NeighborhoodAccessRequest Request => _request;
 
         public string StatusDisplay => _request.Status switch
         {

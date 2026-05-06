@@ -9,7 +9,6 @@ namespace CommunityHub.Application.Services;
 public class NeighborhoodAccessRequestService
 {
     private readonly NeighborhoodAccessRequestDbRepository _repository;
-    private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
 
     public NeighborhoodAccessRequestService()
     {
@@ -41,14 +40,19 @@ public class NeighborhoodAccessRequestService
         return _repository.HasExistingPendingRequest(citizen, neighborhood);
     }
 
-    public void ApproveRequest(NeighborhoodAccessRequest request)
+    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
     {
-        _repository.ApproveRequest(request.Id);
+        return _repository.GetAllByCoordinator(coordinatorId, status, sortDescending);
     }
 
-    public void RejectRequest(long requestId, string? rejectionReason)
+    public void ApproveRequestWithMembership(NeighborhoodAccessRequest request)
     {
-        _repository.RejectRequest(requestId, rejectionReason);
+        _repository.Approve(request);
+    }
+
+    public void RejectRequestForCoordinator(NeighborhoodAccessRequest request, string? rejectionReason)
+    {
+        _repository.Reject(request, rejectionReason);
     }
 
     public AccessRequestResult RequestAccess(User citizen, Neighborhood neighborhood)
@@ -199,84 +203,5 @@ public class NeighborhoodAccessRequestService
             if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
                 sb.Append(c);
         return sb.ToString();
-    }
-
-    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
-    {
-        return _neighborhoodRepository.GetAllByCoordinator(coordinatorId, status, sortDescending);
-    }
-
-    public void ApproveRequestWithMembership(long requestId, long citizenId, long neighborhoodId)
-    {
-        _neighborhoodRepository.ApproveRequest(requestId, citizenId, neighborhoodId);
-    }
-
-    public void RejectRequestForCoordinator(long requestId, string? rejectionReason)
-    {
-        _neighborhoodRepository.RejectRequest(requestId, rejectionReason);
-    }
-    private string NormalizeStreetName(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return string.Empty;
-
-        string result = value.Trim().ToLowerInvariant();
-        result = TransliterateSerbianCyrillicToLatin(result);
-        result = ReplaceDiacritics(result);
-        result = RemoveStreetPrefixes(result);
-        result = KeepOnlyLettersAndDigits(result);
-
-        while (result.Contains("  "))
-            result = result.Replace("  ", " ");
-
-        return result.Trim();
-    }
-
-    private string TransliterateSerbianCyrillicToLatin(string input)
-    {
-        var map = new Dictionary<char, string>
-        {
-            ['а'] = "a",
-            ['б'] = "b",
-            ['в'] = "v",
-            ['г'] = "g",
-            ['д'] = "d",
-            ['ђ'] = "d",
-            ['е'] = "e",
-            ['ж'] = "z",
-            ['з'] = "z",
-            ['и'] = "i",
-            ['ј'] = "j",
-            ['к'] = "k",
-            ['л'] = "l",
-            ['љ'] = "lj",
-            ['м'] = "m",
-            ['н'] = "n",
-            ['њ'] = "nj",
-            ['о'] = "o",
-            ['п'] = "p",
-            ['р'] = "r",
-            ['с'] = "s",
-            ['т'] = "t",
-            ['ћ'] = "c",
-            ['у'] = "u",
-            ['ф'] = "f",
-            ['х'] = "h",
-            ['ц'] = "c",
-            ['ч'] = "c",
-            ['џ'] = "dz",
-            ['ш'] = "s"
-        };
-
-        var result = new StringBuilder();
-        foreach (char c in input)
-        {
-            if (map.TryGetValue(c, out string? latin))
-                result.Append(latin);
-            else
-                result.Append(c);
-        }
-
-        return result.ToString();
     }
 }

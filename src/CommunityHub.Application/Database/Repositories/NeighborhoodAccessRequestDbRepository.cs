@@ -109,29 +109,37 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository
         command.ExecuteNonQuery();
     }
 
-    public void ApproveRequest(long requestId)
+    public void Approve(NeighborhoodAccessRequest request)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            UPDATE neighborhood_access_requests
-            SET status = 'approved', rejection_reason = NULL
-            WHERE id = @id";
 
-        AddParameter(command, "@id", requestId);
-        command.ExecuteNonQuery();
+        IDbCommand updateCmd = connection.CreateCommand();
+        updateCmd.CommandText = @"
+            UPDATE neighborhood_access_requests 
+            SET status = 'accepted' 
+            WHERE id = @id";
+        AddParameter(updateCmd, "@id", request.Id);
+        updateCmd.ExecuteNonQuery();
+
+        IDbCommand memberCmd = connection.CreateCommand();
+        memberCmd.CommandText = @"
+            INSERT INTO neighborhood_memberships (citizen_id, neighborhood_id, joined_at)
+            VALUES (@citizenId, @neighborhoodId, CURRENT_DATE)";
+        AddParameter(memberCmd, "@citizenId", request.Citizen.Id);
+        AddParameter(memberCmd, "@neighborhoodId", request.Neighborhood.Id);
+        memberCmd.ExecuteNonQuery();
     }
 
-    public void RejectRequest(long requestId, string? rejectionReason)
+    public void Reject(NeighborhoodAccessRequest request, string? rejectionReason)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            UPDATE neighborhood_access_requests
-            SET status = 'rejected', rejection_reason = @reason
+            UPDATE neighborhood_access_requests 
+            SET status = 'rejected', rejection_reason = @reason 
             WHERE id = @id";
 
-        AddParameter(command, "@id", requestId);
+        AddParameter(command, "@id", request.Id);
         AddParameter(command, "@reason", rejectionReason);
 
         command.ExecuteNonQuery();
@@ -150,6 +158,33 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository
         AddParameter(command, "@joinedAt", DateTime.UtcNow);
 
         command.ExecuteNonQuery();
+    }
+
+    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = $@"
+            SELECT r.id, r.created_at, r.status, r.rejection_reason,
+                   n.id AS n_id, n.name AS neighborhood_name,
+                   n.description, n.city_id, c.name AS city_name,
+                   co.name AS country_name, n.budget, n.coordinator_id,
+                   u.id AS citizen_id, u.username, u.password, u.name AS citizen_name,
+                   u.surname AS citizen_surname, u.birthday, u.role, u.address
+            FROM neighborhood_access_requests r
+            JOIN neighborhoods n ON r.neighborhood_id = n.id
+            JOIN cities c ON n.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            JOIN users u ON r.citizen_id = u.id
+            WHERE n.coordinator_id = @coordinatorId
+              AND (@status IS NULL OR r.status::text = @status)
+            ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
+
+        AddParameter(command, "@coordinatorId", coordinatorId);
+        AddParameter(command, "@status", status);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadRequests(reader);
     }
 
     private List<NeighborhoodAccessRequest> ReadRequests(IDataReader reader)
@@ -194,7 +229,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository
     private Neighborhood MapNeighborhood(IDataReader reader)
     {
         return new Neighborhood(
-            Convert.ToInt64(reader["neighborhood_id"]),
+            Convert.ToInt64(reader["n_id"]),
             reader["neighborhood_name"].ToString()!,
             reader["description"].ToString()!,
             new Location(
