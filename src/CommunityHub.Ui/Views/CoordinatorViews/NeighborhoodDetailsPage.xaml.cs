@@ -41,4 +41,9 @@ public partial class NeighborhoodDetailsPage : Page
         public string Address => _membership.Citizen.Address ?? "No address";
         public string JoinedAt => $"Joined: {_membership.JoinedAt:dd.MM.yyyy}";
     }
+    private void MeetingsButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new MeetingsPage(_neighborhood.CoordinatorId, _neighborhood.Id), "Meetings");
+    }
 }
