@@ -25,7 +25,7 @@ public partial class ManageRequestsPage : Page
         string? statusFilter = _currentFilter == null ? null : StatusToString(_currentFilter.Value);
 
         var requests = _requestService.GetAllByCoordinator(_coordinatorId, statusFilter, _sortDescending)
-            .Select(r => new NeighborhoodAccessRequestDisplay(r))
+            .Select(r => new NeighborhoodAccessRequestViewModel(r))
             .ToList();
 
         RequestsItemsControl.ItemsSource = requests;
@@ -72,11 +72,11 @@ public partial class ManageRequestsPage : Page
 
     private void ApproveButton_Click(object sender, RoutedEventArgs e)
     {
-        var display = (NeighborhoodAccessRequestDisplay)((Button)sender).Tag;
+        var vm = (NeighborhoodAccessRequestViewModel)((Button)sender).Tag;
 
         try
         {
-            _requestService.ApproveRequestWithMembership(display.Id, display.Citizen.Id, display.Neighborhood.Id);
+            _requestService.ApproveRequestWithMembership(vm.Request);
             MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             LoadRequests();
         }
@@ -88,7 +88,7 @@ public partial class ManageRequestsPage : Page
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        var display = (NeighborhoodAccessRequestDisplay)((Button)sender).Tag;
+        var vm = (NeighborhoodAccessRequestViewModel)((Button)sender).Tag;
 
         try
         {
@@ -97,7 +97,7 @@ public partial class ManageRequestsPage : Page
 
             if (rejectWindow.Confirmed)
             {
-                _requestService.RejectRequestForCoordinator(display.Id, rejectWindow.Reason);
+                _requestService.RejectRequestForCoordinator(vm.Request, rejectWindow.Reason);
                 MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadRequests();
             }
@@ -107,36 +107,37 @@ public partial class ManageRequestsPage : Page
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+}
 
-    private class NeighborhoodAccessRequestDisplay
+public class NeighborhoodAccessRequestViewModel
+{
+    private readonly NeighborhoodAccessRequest _request;
+
+    public NeighborhoodAccessRequestViewModel(NeighborhoodAccessRequest request)
     {
-        private readonly NeighborhoodAccessRequest _request;
-
-        public NeighborhoodAccessRequestDisplay(NeighborhoodAccessRequest request)
-        {
-            _request = request;
-        }
-
-        public long Id => _request.Id;
-        public User Citizen => _request.Citizen;
-        public Neighborhood Neighborhood => _request.Neighborhood;
-        public DateTime CreatedAt => _request.CreatedAt;
-        public RequestStatus Status => _request.Status;
-
-        public string StatusDisplay => _request.Status switch
-        {
-            RequestStatus.PendingApproval => "⏳ Pending approval",
-            RequestStatus.Approved => "✔ Approved",
-            RequestStatus.Rejected => "✕ Rejected",
-            _ => _request.Status.ToString()
-        };
-
-        public string RejectionReasonDisplay => _request.RejectionReason != null
-            ? $"Note: {_request.RejectionReason}"
-            : string.Empty;
-
-        public bool ApproveRejectVisible => _request.Status == RequestStatus.PendingApproval;
-        public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
-                                           && _request.RejectionReason != null;
+        _request = request;
     }
+
+    public NeighborhoodAccessRequest Request => _request;
+    public long Id => _request.Id;
+    public User Citizen => _request.Citizen;
+    public Neighborhood Neighborhood => _request.Neighborhood;
+    public DateTime CreatedAt => _request.CreatedAt;
+    public RequestStatus Status => _request.Status;
+
+    public string StatusDisplay => _request.Status switch
+    {
+        RequestStatus.PendingApproval => "⏳ Pending approval",
+        RequestStatus.Approved => "✔ Approved",
+        RequestStatus.Rejected => "✕ Rejected",
+        _ => _request.Status.ToString()
+    };
+
+    public string RejectionReasonDisplay => _request.RejectionReason != null
+        ? $"Note: {_request.RejectionReason}"
+        : string.Empty;
+
+    public bool ApproveRejectVisible => _request.Status == RequestStatus.PendingApproval;
+    public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
+                                       && _request.RejectionReason != null;
 }

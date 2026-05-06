@@ -2,7 +2,6 @@
 using CommunityHub.Application.Domain;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace CommunityHub.Application.Database.Repositories;
 
@@ -45,64 +44,26 @@ public class NeighborhoodDbRepository : BaseDbRepository
         command.ExecuteNonQuery();
     }
 
-    
-
-    
-
-    public void ApproveRequest(long requestId, long citizenId, long neighborhoodId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        IDbCommand updateCmd = connection.CreateCommand();
-        updateCmd.CommandText = "UPDATE neighborhood_access_requests SET status = 'accepted' WHERE id = @id";
-        AddParameter(updateCmd, "@id", requestId);
-        updateCmd.ExecuteNonQuery();
-
-        IDbCommand memberCmd = connection.CreateCommand();
-        memberCmd.CommandText = @"
-        INSERT INTO neighborhood_memberships (citizen_id, neighborhood_id, joined_at)
-        VALUES (@citizenId, @neighborhoodId, CURRENT_DATE)";
-        AddParameter(memberCmd, "@citizenId", citizenId);
-        AddParameter(memberCmd, "@neighborhoodId", neighborhoodId);
-        memberCmd.ExecuteNonQuery();
-    }
-
-    public void RejectRequest(long requestId, string? rejectionReason)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        UPDATE neighborhood_access_requests 
-        SET status = 'rejected', rejection_reason = @reason 
-        WHERE id = @id";
-
-        AddParameter(command, "@id", requestId);
-        AddParameter(command, "@reason", rejectionReason);
-
-        command.ExecuteNonQuery();
-    }
-
     public List<Neighborhood> Search(string? name, string? address, string? city, string? country)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-    SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
-           co.name AS country_name, n.budget, n.coordinator_id,
-           s.id AS street_id, s.street_name, s.start_number, s.end_number
-    FROM neighborhoods n
-    JOIN cities c ON n.city_id = c.id
-    JOIN countries co ON c.country_id = co.id
-    LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
-    WHERE (@name IS NULL OR n.name ILIKE '%' || @name || '%')
-      AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
-      AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
-      AND (@address IS NULL OR EXISTS (
-          SELECT 1 FROM neighborhood_streets ns
-          WHERE ns.neighborhood_id = n.id
-          AND ns.street_name ILIKE '%' || @address || '%'))
-    ORDER BY n.id";
+            SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
+                   co.name AS country_name, n.budget, n.coordinator_id,
+                   s.id AS street_id, s.street_name, s.start_number, s.end_number
+            FROM neighborhoods n
+            JOIN cities c ON n.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
+            WHERE (@name IS NULL OR n.name ILIKE '%' || @name || '%')
+              AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
+              AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
+              AND (@address IS NULL OR EXISTS (
+                  SELECT 1 FROM neighborhood_streets ns
+                  WHERE ns.neighborhood_id = n.id
+                  AND ns.street_name ILIKE '%' || @address || '%'))
+            ORDER BY n.id";
 
         AddParameter(command, "@name", name);
         AddParameter(command, "@address", address);
@@ -122,23 +83,89 @@ public class NeighborhoodDbRepository : BaseDbRepository
         return result;
     }
 
+    public List<Neighborhood> GetByCoordinator(long coordinatorId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
+                   co.name AS country_name, n.budget, n.coordinator_id,
+                   s.id AS street_id, s.street_name, s.start_number, s.end_number
+            FROM neighborhoods n
+            JOIN cities c ON n.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
+            WHERE n.coordinator_id = @coordinatorId
+            ORDER BY n.id";
+
+        AddParameter(command, "@coordinatorId", coordinatorId);
+
+        using IDataReader reader = command.ExecuteReader();
+        var neighborhoods = ReadNeighborhoodsWithStreets(reader);
+
+        foreach (var neighborhood in neighborhoods)
+        {
+            var images = GetImages(neighborhood.Id);
+            foreach (var image in images)
+                neighborhood.AddImage(image);
+        }
+
+        return neighborhoods;
+    }
+
+    public void AddImage(long neighborhoodId, string imagePath)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            INSERT INTO images (entity, entity_id, path)
+            VALUES ('neighborhood', @neighborhoodId, @path)";
+
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        AddParameter(command, "@path", imagePath);
+
+        command.ExecuteNonQuery();
+    }
+
+    public List<Image> GetImages(long neighborhoodId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT id, path FROM images
+            WHERE entity = 'neighborhood' AND entity_id = @neighborhoodId";
+
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+
+        using IDataReader reader = command.ExecuteReader();
+
+        var images = new List<Image>();
+        while (reader.Read())
+            images.Add(new Image(Convert.ToInt64(reader["id"]), reader["path"].ToString()!));
+
+        return images;
+    }
+
     private List<Neighborhood> FetchNeighborhoodsFromDb(string? name, string? city, string? country)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
 
         command.CommandText = @"
-        SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
-               co.name AS country_name, n.budget, n.coordinator_id,
-               s.id AS street_id, s.street_name, s.start_number, s.end_number
-        FROM neighborhoods n
-        JOIN cities c ON n.city_id = c.id
-        JOIN countries co ON c.country_id = co.id
-        LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
-        WHERE (@name IS NULL OR n.name ILIKE '%' || @name || '%')
-          AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
-          AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
-        ORDER BY n.id";
+            SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
+                   co.name AS country_name, n.budget, n.coordinator_id,
+                   s.id AS street_id, s.street_name, s.start_number, s.end_number
+            FROM neighborhoods n
+            JOIN cities c ON n.city_id = c.id
+            JOIN countries co ON c.country_id = co.id
+            LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
+            WHERE (@name IS NULL OR n.name ILIKE '%' || @name || '%')
+              AND (@city IS NULL OR c.name ILIKE '%' || @city || '%')
+              AND (@country IS NULL OR co.name ILIKE '%' || @country || '%')
+            ORDER BY n.id";
 
         AddParameter(command, "@name", string.IsNullOrWhiteSpace(name) ? null : name);
         AddParameter(command, "@city", string.IsNullOrWhiteSpace(city) ? null : city);
@@ -234,173 +261,6 @@ public class NeighborhoodDbRepository : BaseDbRepository
         return neighborhood.Streets.Any(s =>
             s.StreetName.ToLower().Contains(streetPart) &&
             (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber))
-        );
-    }
-
-    
-
-    public long CreateRequest(long citizenId, long neighborhoodId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        INSERT INTO neighborhood_access_requests (citizen_id, neighborhood_id, created_at, status)
-        VALUES (@citizenId, @neighborhoodId, NOW(), 'pending approval')
-        RETURNING id";
-
-        AddParameter(command, "@citizenId", citizenId);
-        AddParameter(command, "@neighborhoodId", neighborhoodId);
-
-        return Convert.ToInt64(command.ExecuteScalar());
-    }
-
-    
-
-    
-
-    private List<NeighborhoodAccessRequest> ReadRequestList(IDataReader reader)
-    {
-        var requests = new List<NeighborhoodAccessRequest>();
-        while (reader.Read())
-            requests.Add(MapRequest(reader));
-        return requests;
-    }
-
-    public void DeleteRequest(long requestId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        using IDbCommand command = connection.CreateCommand();
-        command.CommandText = "DELETE FROM neighborhood_access_requests WHERE id = @id AND status = 'pending approval'";
-
-        AddParameter(command, "@id", requestId);
-
-        command.ExecuteNonQuery();
-    }
-
-    public void AddImage(long neighborhoodId, string imagePath)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        INSERT INTO images (entity, entity_id, path)
-        VALUES ('neighborhood', @neighborhoodId, @path)";
-
-        AddParameter(command, "@neighborhoodId", neighborhoodId);
-        AddParameter(command, "@path", imagePath);
-
-        command.ExecuteNonQuery();
-    }
-
-    public List<Image> GetImages(long neighborhoodId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT id, path FROM images
-        WHERE entity = 'neighborhood' AND entity_id = @neighborhoodId";
-
-        AddParameter(command, "@neighborhoodId", neighborhoodId);
-
-        using IDataReader reader = command.ExecuteReader();
-
-        var images = new List<Image>();
-        while (reader.Read())
-            images.Add(new Image(Convert.ToInt64(reader["id"]), reader["path"].ToString()!));
-
-        return images;
-    }
-
-    private static RequestStatus ParseRequestStatus(string status)
-    {
-        return status.Trim().ToLower() switch
-        {
-            "pending approval" => RequestStatus.PendingApproval,
-            "pendingapproval" => RequestStatus.PendingApproval,
-            "pending_approval" => RequestStatus.PendingApproval,
-            "approved" => RequestStatus.Approved,
-            "accepted" => RequestStatus.Approved,
-            "rejected" => RequestStatus.Rejected,
-            _ => throw new ArgumentException($"Unknown status: {status}")
-        };
-    }
-    public List<Neighborhood> GetByCoordinator(long coordinatorId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-    SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
-           co.name AS country_name, n.budget, n.coordinator_id,
-           s.id AS street_id, s.street_name, s.start_number, s.end_number
-    FROM neighborhoods n
-    JOIN cities c ON n.city_id = c.id
-    JOIN countries co ON c.country_id = co.id
-    LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
-    WHERE n.coordinator_id = @coordinatorId
-    ORDER BY n.id";
-
-        AddParameter(command, "@coordinatorId", coordinatorId);
-
-        using IDataReader reader = command.ExecuteReader();
-        var neighborhoods = ReadNeighborhoodsWithStreets(reader);
-
-        foreach (var neighborhood in neighborhoods)
-        {
-            var images = GetImages(neighborhood.Id);
-            foreach (var image in images)
-                neighborhood.AddImage(image);
-        }
-
-        return neighborhoods;
-    }
-    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = $@"
-    SELECT r.id, r.created_at, r.status, r.rejection_reason,
-           n.id AS n_id, n.name AS neighborhood_name,
-           n.description, n.city_id, c.name AS city_name,
-           co.name AS country_name, n.budget, n.coordinator_id,
-           u.id AS citizen_id, u.username, u.password, u.name AS citizen_name,
-           u.surname AS citizen_surname, u.birthday, u.role, u.address
-    FROM neighborhood_access_requests r
-    JOIN neighborhoods n ON r.neighborhood_id = n.id
-    JOIN cities c ON n.city_id = c.id
-    JOIN countries co ON c.country_id = co.id
-    JOIN users u ON r.citizen_id = u.id
-    WHERE n.coordinator_id = @coordinatorId
-      AND (@status IS NULL OR r.status::text = @status)
-    ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
-
-        AddParameter(command, "@coordinatorId", coordinatorId);
-        AddParameter(command, "@status", status);
-
-        using IDataReader reader = command.ExecuteReader();
-
-        var requests = new List<NeighborhoodAccessRequest>();
-        while (reader.Read())
-            requests.Add(MapRequest(reader));
-
-        return requests;
-    }
-
-    private NeighborhoodAccessRequest MapRequest(IDataReader reader)
-    {
-        User citizen = NeighborhoodMapper.MapRequestCitizen(reader);
-        Neighborhood neighborhood = NeighborhoodMapper.MapFromRequest(reader);
-
-        return new NeighborhoodAccessRequest(
-            Convert.ToInt64(reader["id"]),
-            citizen,
-            neighborhood,
-            Convert.ToDateTime(reader["created_at"]),
-            ParseRequestStatus(reader["status"].ToString()!),
-            reader.IsDBNull(reader.GetOrdinal("rejection_reason")) ? null : reader["rejection_reason"].ToString()
         );
     }
 }
