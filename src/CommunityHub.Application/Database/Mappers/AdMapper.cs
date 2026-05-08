@@ -22,6 +22,21 @@ public static class AdMapper
         );
     }
 
+    public static Ad MapBookedByAd(IDataReader reader, User author)
+    {
+        return new Ad(
+            id: Convert.ToInt64(reader["ba_id"]),
+            buildingId: Convert.ToInt64(reader["ba_building_id"]),
+            author: author,
+            type: MapType(reader["ba_type"].ToString()!),
+            category: MapCategory(reader["ba_category"].ToString()!),
+            description: reader["ba_description"].ToString()!,
+            dateFrom: (DateOnly)reader["ba_date_from"],
+            dateTo: (DateOnly)reader["ba_date_to"],
+            status: MapStatus(reader["ba_status"].ToString()!)
+        );
+    }
+
     public static AdSlot MapSlot(IDataReader reader)
     {
         long? bookedByAdId = reader.IsDBNull(reader.GetOrdinal("booked_by_ad_id"))
