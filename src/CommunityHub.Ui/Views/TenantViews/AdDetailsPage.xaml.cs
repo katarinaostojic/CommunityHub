@@ -26,6 +26,7 @@ public partial class AdDetailsPage : Page
 
         UserNameTextBlock.Text = _user.DisplayName;
         AppMenu.Initialize(_user);
+        _viewModel.Slots.LoadSlots();
     }
 
     private void ArchiveButton_Click(object sender, RoutedEventArgs e)

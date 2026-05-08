@@ -145,9 +145,9 @@
                 </Border>
 
                 <!-- Booked slots -->
-                <TextBlock Text="{Binding BookedSlotsTitleText}" FontSize="15" FontWeight="SemiBold"
+                <TextBlock Text="{Binding Slots.BookedSlotsTitleText}" FontSize="15" FontWeight="SemiBold"
                            Margin="0,0,0,8"/>
-                <ItemsControl ItemsSource="{Binding BookedSlotGroups}" Margin="0,0,0,20">
+                <ItemsControl ItemsSource="{Binding Slots.BookedSlotGroups}" Margin="0,0,0,20">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">
@@ -207,7 +207,7 @@
                            Margin="0,0,0,8"/>
                 <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                         CornerRadius="6" Padding="16,12">
-                    <ItemsControl ItemsSource="{Binding FreeSlotDayGroups}">
+                    <ItemsControl ItemsSource="{Binding Slots.FreeSlotDayGroups}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,0,0,8">
