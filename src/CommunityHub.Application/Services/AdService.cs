@@ -50,6 +50,11 @@ public class AdService
         return _adRepository.GetFreeSlotsByAd(adId, overlapFrom, overlapTo);
     }
 
+    public List<(AdSlot slot, Ad? bookedByAd)> GetBookedSlotsWithAds(long adId)
+    {
+        return _adRepository.GetBookedSlotsWithAds(adId);
+    }
+
     public List<AdSlot> GetBookedSlots(long adId)
     {
         return _adRepository.GetBookedSlotsByAd(adId);

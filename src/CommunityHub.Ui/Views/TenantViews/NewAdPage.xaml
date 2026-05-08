@@ -6,6 +6,10 @@
       xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
       mc:Ignorable="d">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -58,12 +62,12 @@
 
                 <!-- Building -->
                 <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                    CornerRadius="6" Padding="16,12" Margin="0,10,0,20">
+                        CornerRadius="6" Padding="16,12" Margin="0,10,0,20">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Building:" FontSize="16" FontWeight="SemiBold"
-                   VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock x:Name="BuildingSubtitle" FontSize="16"
-                   VerticalAlignment="Center"/>
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding BuildingSubtitle}" FontSize="16"
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </Border>
 
@@ -90,48 +94,52 @@
                          TextWrapping="Wrap"
                          AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,4"/>
+                <TextBlock Text="{Binding DescriptionError}"
+                           Foreground="{StaticResource DangerBrush}"
+                           FontSize="13" Margin="0,0,0,12"
+                           Visibility="{Binding HasDescriptionError, Converter={StaticResource BoolToVis}}"
+                           TextWrapping="Wrap"/>
 
                 <!-- Category -->
                 <TextBlock Text="CATEGORY *" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-                <!-- Category -->
                 <ComboBox x:Name="CategoryComboBox"
-                      Width="475"
-                      HorizontalAlignment="Left"
-                      Margin="0,0,0,20"
-                      FontSize="16"
-                      SelectionChanged="CategoryComboBox_SelectionChanged"/>
+                          Width="475"
+                          HorizontalAlignment="Left"
+                          Margin="0,0,0,20"
+                          FontSize="16"
+                          SelectionChanged="CategoryComboBox_SelectionChanged"/>
 
                 <!-- Date range -->
                 <TextBlock Text="DATE RANGE *" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-                <Grid Margin="0,0,0,8">
+                <Grid Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <DatePicker Grid.Column="0" x:Name="DateFromPicker" FontSize="16"
-                                Padding="10, 5, 5, 5"/>
+                                Padding="10,5,5,5"/>
                     <TextBlock Grid.Column="1" Text=" – " FontSize="13"
                                VerticalAlignment="Center" Margin="8,0"/>
                     <DatePicker Grid.Column="2" x:Name="DateToPicker" FontSize="16"
-                                Padding="10, 5, 5, 5"/>
+                                Padding="10,5,5,5"/>
                 </Grid>
-                <!-- Validation error -->
-                <TextBlock x:Name="ValidationErrorText"
-                       Foreground="{StaticResource DangerBrush}"
-                       FontSize="13" Margin="0,0,0,15"
-                       Visibility="Collapsed"
-                       TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding DateError}"
+                           Foreground="{StaticResource DangerBrush}"
+                           FontSize="13"
+                           Visibility="{Binding HasDateError, Converter={StaticResource BoolToVis}}"
+                           TextWrapping="Wrap"/>
 
                 <!-- Slot info -->
                 <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                    CornerRadius="6" Padding="12,10" Margin="0,3,0,16">
+                        CornerRadius="6" Padding="12,10" Margin="0,20,0,16">
                     <StackPanel>
                         <TextBlock Text="How time slots work"
-                                   FontSize="15" FontWeight="SemiBold" />
+                                   FontSize="15" FontWeight="SemiBold"/>
                         <TextBlock Style="{StaticResource SecondaryText}"
-                                   TextWrapping="Wrap" FontSize="14"
+                                   TextWrapping="Wrap" FontSize="13"
+                                   Padding="0,4,0,0"
                                    Text="For each day in the selected date range, the system will automatically create hourly time slots from 16:00 to 20:00. Other tenants will be able to book these slots."/>
                     </StackPanel>
                 </Border>

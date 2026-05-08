@@ -13,4 +13,5 @@ public interface IAdRepository
     List<AdSlot> GetFreeSlotsByAd(long adId, DateOnly overlapFrom, DateOnly overlapTo);
     void BookSlot(long slotId, long bookedByAdId);
     List<AdSlot> GetBookedSlotsByAd(long adId);
+    List<(AdSlot slot, Ad? bookedByAd)> GetBookedSlotsWithAds(long adId);
 }

@@ -22,7 +22,7 @@ public class BuildingAccessRequestService
         _repository.Create(user, building, unitNumber);
     }
 
-    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, string? status, bool sortDescending)
+    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
     {
         return _repository.GetAllByTenant(tenantId, status, sortDescending);
     }
@@ -32,7 +32,7 @@ public class BuildingAccessRequestService
         return _repository.GetAllByManager(managerId, status, sortDescending);
     }
 
-    public int CountByTenantAndStatus(long tenantId, string? status)
+    public int CountByTenantAndStatus(long tenantId, RequestStatus? status)
     {
         return _repository.CountByTenantAndStatus(tenantId, status);
     }

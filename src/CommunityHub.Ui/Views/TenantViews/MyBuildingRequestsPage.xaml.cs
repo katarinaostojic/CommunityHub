@@ -1,97 +1,46 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 using CommunityHub.Ui.Helpers;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using CommunityHub.Application.Database.Mappers;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
 public partial class MyBuildingRequestsPage : Page
 {
     private readonly User _user;
-    private List<BuildingAccessRequestDisplay> _filteredRequests;
-    private RequestStatus? _currentFilter = null;
-    private bool _sortDescending = true;
-    private readonly BuildingAccessRequestService _requestService;
+    private readonly MyBuildingRequestsViewModel _viewModel;
 
     public MyBuildingRequestsPage(User user)
     {
         InitializeComponent();
-        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
         _user = user;
+
+        BuildingAccessRequestService requestService = ServiceFactory.CreateBuildingAccessRequestService();
+        _viewModel = new MyBuildingRequestsViewModel(requestService, user.Id);
+        DataContext = _viewModel;
+
         UserNameTextBlock.Text = _user.DisplayName;
-        LoadRequests();
-        UpdateFilterButtons();
         AppMenu.Initialize(_user);
     }
 
-    private void LoadRequests()
-    {
-        string? statusFilter = _currentFilter == null ? null : RequestStatusMapper.ToDbString(_currentFilter.Value);
-        _filteredRequests = _requestService.GetAllByTenant(_user.Id, statusFilter, _sortDescending)
-            .Select(r => new BuildingAccessRequestDisplay(r))
-            .ToList();
+    private void FilterAllButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterAll();
 
-        RequestsPanel.ItemsSource = _filteredRequests;
-        ResultsCountText.Text = $"Showing {_filteredRequests.Count} results";
-    }
-    private void UpdateFilterButtons()
-    {
-        UpdateFilterButton(FilterAllButton, "All", _requestService.CountByTenantAndStatus(_user.Id, null));
-        UpdateFilterButton(FilterPendingButton, "Pending approval", _requestService.CountByTenantAndStatus(_user.Id, RequestStatusMapper.ToDbString(RequestStatus.PendingApproval)));
-        UpdateFilterButton(FilterApprovedButton, "Approved", _requestService.CountByTenantAndStatus(_user.Id, RequestStatusMapper.ToDbString(RequestStatus.Approved)));
-        UpdateFilterButton(FilterRejectedButton, "Rejected", _requestService.CountByTenantAndStatus(_user.Id, RequestStatusMapper.ToDbString(RequestStatus.Rejected)));
-    }
+    private void FilterPendingButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterPending();
 
-    private void UpdateFilterButton(Button filterButton, string label, int count)
-    {
-        filterButton.Content = $"{label} ({count})";
-    }
+    private void FilterApprovedButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterApproved();
 
-    private void FilterAllButton_Click(object sender, RoutedEventArgs e)
-    {
-        _currentFilter = null;
-        LoadRequests();
-    }
+    private void FilterRejectedButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterRejected();
 
-    private void FilterPendingButton_Click(object sender, RoutedEventArgs e)
-    {
-        _currentFilter = RequestStatus.PendingApproval;
-        LoadRequests();
-    }
-
-    private void FilterApprovedButton_Click(object sender, RoutedEventArgs e)
-    {
-        _currentFilter = RequestStatus.Approved;
-        LoadRequests();
-    }
-
-    private void FilterRejectedButton_Click(object sender, RoutedEventArgs e)
-    {
-        _currentFilter = RequestStatus.Rejected;
-        LoadRequests();
-    }
-
-    private void SortButton_Click(object sender, RoutedEventArgs e)
-    {
-        _sortDescending = !_sortDescending;
-        SortButton.Content = _sortDescending ? "Sort by Date ↓" : "Sort by Date ↑";
-        LoadRequests();
-    }
+    private void SortButton_Click(object sender, RoutedEventArgs e) => _viewModel.ToggleSort();
 
     private void CancelRequestButton_Click(object sender, RoutedEventArgs e)
     {
-        var display = (BuildingAccessRequestDisplay)((Button)sender).Tag;
-        if (!ConfirmCancellation(display.Building.Street, display.Building.StreetNumber)) return;
-        _requestService.Delete(display.Id);
+        BuildingAccessRequestViewModel item = (BuildingAccessRequestViewModel)((Button)sender).Tag;
+        if (!ConfirmCancellation(item.Building.Street, item.Building.StreetNumber)) return;
 
-        LoadRequests();
-        UpdateFilterButtons();
+        _viewModel.CancelRequest(item.Id);
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
@@ -102,42 +51,5 @@ public partial class MyBuildingRequestsPage : Page
         return dialog.ShowDialog() == true;
     }
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e)
-    {
-        AppMenu.Open();
-    }
-
-    //Display wrapper class
-    private class BuildingAccessRequestDisplay
-    {
-        private readonly BuildingAccessRequest _request;
-
-        public BuildingAccessRequestDisplay(BuildingAccessRequest request)
-        {
-            _request = request;
-        }
-
-        public long Id => _request.Id;
-        public Building Building => _request.Building;
-        public string UnitNumber => _request.UnitNumber;
-        public DateTime CreatedAt => _request.CreatedAt;
-        public RequestStatus Status => _request.Status;
-
-        public string StatusDisplay => _request.Status switch
-        {
-            RequestStatus.PendingApproval => "⏳ Pending approval",
-            RequestStatus.Approved => "✔ Approved",
-            RequestStatus.Rejected => "✕ Rejected",
-            _ => _request.Status.ToString()
-        };
-
-        public string RejectionReasonDisplay => _request.RejectionReason != null
-            ? $"Note: {_request.RejectionReason}"
-            : string.Empty;
-
-        public bool CancelButtonVisible => _request.Status == RequestStatus.PendingApproval;
-
-        public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
-                                           && _request.RejectionReason != null;
-    }
+    private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
 }

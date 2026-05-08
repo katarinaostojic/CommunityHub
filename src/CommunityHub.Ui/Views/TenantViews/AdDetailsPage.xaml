@@ -54,12 +54,11 @@
                            Margin="0,0,0,8"/>
 
                 <!-- Archived warning -->
-                <Border x:Name="ArchivedWarning"
+                <Border Visibility="{Binding ArchivedWarningVisible}"
                         Background="{StaticResource WarningBrush}"
                         BorderBrush="{StaticResource WarningTextBrush}"
                         BorderThickness="1"
-                        CornerRadius="6" Padding="12,10" Margin="0,0,0,8"
-                        Visibility="Collapsed">
+                        CornerRadius="6" Padding="12,10" Margin="0,0,0,8">
                     <TextBlock Foreground="{StaticResource WarningTextBrush}"
                                FontSize="13" TextWrapping="Wrap"
                                Text="⚠ This ad has been archived. It is no longer visible on the Notice Board and will not be suggested to other tenants. Existing bookings remain active."/>
@@ -96,40 +95,43 @@
                                        VerticalAlignment="Center"/>
                             <Border Grid.Column="1" Style="{StaticResource StatusBadge}"
                                     VerticalAlignment="Center" Margin="8,0,0,0">
-                                <TextBlock x:Name="AdTypeText" FontSize="13" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding TypeDisplay}" FontSize="13" FontWeight="SemiBold"/>
                             </Border>
 
                             <TextBlock Grid.Column="3" Text="CATEGORY" Style="{StaticResource SectionTitle}"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="4" x:Name="AdCategoryText"
+                            <TextBlock Grid.Column="4"
+                                       Text="{Binding CategoryDisplay}"
                                        FontSize="13" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Margin="8,0,0,0"/>
 
                             <TextBlock Grid.Column="6" Text="DATE RANGE" Style="{StaticResource SectionTitle}"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="7" x:Name="AdDateRangeText"
+                            <TextBlock Grid.Column="7"
+                                       Text="{Binding DateRangeDisplay}"
                                        FontSize="13" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Margin="8,0,0,0"/>
 
                             <TextBlock Grid.Column="9" Text="STATUS" Style="{StaticResource SectionTitle}"
-                                       VerticalAlignment="Center" x:Name="AdStatusLabel"
-                                       Visibility="Collapsed"/>
+                                       VerticalAlignment="Center"
+                                       Visibility="{Binding AdStatusTextVisible}"/>
                             <Border Grid.Column="10" Style="{StaticResource StatusBadge}"
                                     VerticalAlignment="Center" Margin="8,0,0,0"
-                                    x:Name="AdStatusText" Visibility="Collapsed">
+                                    Visibility="{Binding AdStatusTextVisible}">
                                 <TextBlock Text="Archived" FontSize="13"/>
                             </Border>
 
-                            <Button Grid.Column="12" x:Name="ArchiveButton"
+                            <Button Grid.Column="12"
                                     Content="Archive"
                                     Style="{StaticResource DangerButton}"
                                     VerticalAlignment="Center"
+                                    Visibility="{Binding ArchiveButtonVisible}"
                                     Click="ArchiveButton_Click"/>
-                            <Button Grid.Column="12" x:Name="RestoreButton"
+                            <Button Grid.Column="12"
                                     Content="Restore"
                                     Style="{StaticResource OutlineButton}"
                                     VerticalAlignment="Center"
-                                    Visibility="Collapsed"
+                                    Visibility="{Binding RestoreButtonVisible}"
                                     Click="RestoreButton_Click"/>
                         </Grid>
 
@@ -137,15 +139,15 @@
                         <StackPanel Grid.Row="1">
                             <TextBlock Text="DESCRIPTION" Style="{StaticResource SectionTitle}"
                                        Margin="0,0,0,4"/>
-                            <TextBlock x:Name="AdDescriptionText" FontSize="13" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding Description}" FontSize="13" TextWrapping="Wrap"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
                 <!-- Booked slots -->
-                <TextBlock x:Name="BookedSlotsTitleText" FontSize="15" FontWeight="SemiBold"
+                <TextBlock Text="{Binding Slots.BookedSlotsTitleText}" FontSize="15" FontWeight="SemiBold"
                            Margin="0,0,0,8"/>
-                <ItemsControl x:Name="BookedSlotsPanel" Margin="0,0,0,20">
+                <ItemsControl ItemsSource="{Binding Slots.BookedSlotGroups}" Margin="0,0,0,20">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">
@@ -205,7 +207,7 @@
                            Margin="0,0,0,8"/>
                 <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                         CornerRadius="6" Padding="16,12">
-                    <ItemsControl x:Name="FreeSlotsPanel">
+                    <ItemsControl ItemsSource="{Binding Slots.FreeSlotDayGroups}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,0,0,8">

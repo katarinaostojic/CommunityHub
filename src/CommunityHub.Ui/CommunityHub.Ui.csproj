@@ -13,21 +13,17 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Include="images\**\*">
+		<Content Include="Images\**\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="images\NewFolder1\**" />
-	  <Content Remove="images\NewFolder1\**" />
-	  <EmbeddedResource Remove="images\NewFolder1\**" />
-	  <None Remove="images\NewFolder1\**" />
-	  <Page Remove="images\NewFolder1\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="images\neighborhoods\" />
+	  <Compile Remove="Images\NewFolder1\**" />
+	  <Content Remove="Images\NewFolder1\**" />
+	  <EmbeddedResource Remove="Images\NewFolder1\**" />
+	  <None Remove="Images\NewFolder1\**" />
+	  <Page Remove="Images\NewFolder1\**" />
 	</ItemGroup>
 
 </Project>
