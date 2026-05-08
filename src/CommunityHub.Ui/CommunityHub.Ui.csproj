@@ -28,7 +28,6 @@
 
 	<ItemGroup>
 	  <Folder Include="images\neighborhoods\" />
-	  <Folder Include="ViewModels\TenantViewModels\" />
 	</ItemGroup>
 
 </Project>
