@@ -1,7 +1,8 @@
-﻿using CommunityHub.Application.Services;
-using CommunityHub.Ui.Helpers;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Services;
+using CommunityHub.Ui.Helpers;
+using CommunityHub.Ui.ViewModels.TenantViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,67 +13,89 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class BrowseBuildingsPage : Page
 {
     private readonly User _user;
-    private List<Building> _filteredBuildings;
-    private int _currentPage = 1;
-    private const int PageSize = 3;
+    private readonly BrowseBuildingsViewModel _viewModel;
     private bool _filterPanelOpen = false;
-    private readonly BuildingService _buildingService;
 
     public BrowseBuildingsPage(User user)
     {
         InitializeComponent();
-        _buildingService = ServiceFactory.CreateBuildingService();
         _user = user;
-        LoadBuildings();
+
+        BuildingService buildingService = ServiceFactory.CreateBuildingService();
+        _viewModel = new BrowseBuildingsViewModel(buildingService);
+        DataContext = _viewModel;
+
         UserNameTextBlock.Text = _user.DisplayName;
         AppMenu.Initialize(_user);
     }
 
-    private void LoadBuildings()
-    {
-        _filteredBuildings = _buildingService.Search(null, null, null, null);
-        _currentPage = 1;
-        DisplayBuildings();
-    }
-
-    private void DisplayBuildings()
-    {
-        int totalPages = (int)Math.Ceiling(_filteredBuildings.Count / (double)PageSize);
-        if (totalPages == 0) totalPages = 1;
-        PageLabel.Text = $"Page {_currentPage} of {totalPages}";
-
-        //skip buildings shown on previous pages
-        BuildingsPanel.ItemsSource = _filteredBuildings
-            .Skip((_currentPage - 1) * PageSize)
-            .Take(PageSize)
-            .ToList();
-    }
-
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        SearchAddress();
-    }
-
-    private void SearchAddress()
-    {
         string search = SearchTextBox.Text.Trim();
-        _filteredBuildings = _buildingService.Search(
-            string.IsNullOrEmpty(search) ? null : search, null, null, null);
-        _currentPage = 1;
-        DisplayBuildings();
+        _viewModel.Search(
+            string.IsNullOrEmpty(search) ? null : search,
+            null, null, null);
     }
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e)
+    private void ApplyFiltersButton_Click(object sender, RoutedEventArgs e)
     {
-        AppMenu.Open();
+        string? street = string.IsNullOrWhiteSpace(FilterStreetTextBox.Text) ? null : FilterStreetTextBox.Text.Trim();
+        string? neighborhood = string.IsNullOrWhiteSpace(FilterNeighborhoodTextBox.Text) ? null : FilterNeighborhoodTextBox.Text.Trim();
+        string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
+        string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
+
+        _viewModel.Search(street, neighborhood, city, country);
+        CloseFilterPanel();
     }
+
+    private void ResetAll()
+    {
+        SearchTextBox.Text = string.Empty;
+        FilterStreetTextBox.Text = string.Empty;
+        FilterNeighborhoodTextBox.Text = string.Empty;
+        FilterCityTextBox.Text = string.Empty;
+        FilterCountryTextBox.Text = string.Empty;
+        _viewModel.Search(null, null, null, null);
+    }
+
+    private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
+    {
+        Building building = (Building)((Button)sender).Tag;
+        if (!ShowBuildingRequestAccessDialog(building)) return;
+
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
+            $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
+        ViewRequestsButton.Visibility = Visibility.Visible;
+    }
+
+    private bool ShowBuildingRequestAccessDialog(Building selectedBuilding)
+    {
+        Building building = _viewModel.GetBuildingById(selectedBuilding.Id) ?? selectedBuilding;
+        BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
+        dialog.Owner = Window.GetWindow(this);
+        return dialog.ShowDialog() == true;
+    }
+
+    private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (e.OriginalSource is Button) return;
+        Building building = (Building)((Border)sender).Tag;
+        NavigationService.Navigate(new BuildingDetailsPage(building, _user));
+    }
+
+    private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
+        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
+
+    private void PrevPageButton_Click(object sender, RoutedEventArgs e) => _viewModel.PreviousPage();
+
+    private void NextPageButton_Click(object sender, RoutedEventArgs e) => _viewModel.NextPage();
+
+    private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
 
     private void FilterButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_filterPanelOpen)
-            CloseFilterPanel();
-        else
-            OpenFilterPanel();
+        if (_filterPanelOpen) CloseFilterPanel();
+        else OpenFilterPanel();
     }
 
     private void OpenFilterPanel()
@@ -103,90 +126,10 @@ public partial class BrowseBuildingsPage : Page
         _filterPanelOpen = false;
     }
 
-    private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
+    private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) =>
         CloseFilterPanel();
-    }
 
-    private void ApplyFiltersButton_Click(object sender, RoutedEventArgs e)
-    {
-        string? street = string.IsNullOrWhiteSpace(FilterStreetTextBox.Text) ? null : FilterStreetTextBox.Text.Trim();
-        string? neighborhood = string.IsNullOrWhiteSpace(FilterNeighborhoodTextBox.Text) ? null : FilterNeighborhoodTextBox.Text.Trim();
-        string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
-        string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
-
-        _filteredBuildings = _buildingService.Search(street, neighborhood, city, country);
-        _currentPage = 1;
-        DisplayBuildings();
-        CloseFilterPanel();
-    }
-
-    private void ResetAll()
-    {
-        SearchTextBox.Text = string.Empty;
-        FilterStreetTextBox.Text = string.Empty;
-        FilterNeighborhoodTextBox.Text = string.Empty;
-        FilterCityTextBox.Text = string.Empty;
-        FilterCountryTextBox.Text = string.Empty;
-        _filteredBuildings = _buildingService.Search(null, null, null, null);
-        _currentPage = 1;
-        DisplayBuildings();
-    }
     private void ResetFiltersButton_Click(object sender, RoutedEventArgs e) => ResetAll();
 
     private void ResetButton_Click(object sender, RoutedEventArgs e) => ResetAll();
-
-    private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
-    {
-        Building building = (Building)((Button)sender).Tag;
-
-        if (!ShowBuildingRequestAccessDialog(building)) return;
-
-        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
-            $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
-
-        ViewRequestsButton.Visibility = Visibility.Visible;
-    }
-
-    private void ViewRequestsButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigationService.Navigate(new MyBuildingRequestsPage(_user));
-    }
-
-    private bool ShowBuildingRequestAccessDialog(Building selectedBuilding)
-    {
-        Building building = _buildingService.GetById(selectedBuilding.Id) ?? selectedBuilding;
-        BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
-        dialog.Owner = Window.GetWindow(this);
-        return dialog.ShowDialog() == true;
-    }
-
-    private void PrevPageButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_currentPage > 1)
-        {
-            _currentPage--;
-            DisplayBuildings();
-        }
-    }
-
-    private void NextPageButton_Click(object sender, RoutedEventArgs e)
-    {
-        int totalPages = (int)Math.Ceiling(_filteredBuildings.Count / (double)PageSize);
-        if (_currentPage < totalPages)
-        {
-            _currentPage++;
-            DisplayBuildings();
-        }
-    }
-
-    private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-        if (e.OriginalSource is Button) return;
-
-        Building building = (Building)((Border)sender).Tag;
-        NavigationService.Navigate(new BuildingDetailsPage(building, _user));
-    }
-
-
 }
