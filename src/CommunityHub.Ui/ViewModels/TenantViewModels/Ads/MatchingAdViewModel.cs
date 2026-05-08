@@ -17,7 +17,7 @@ public class MatchingAdViewModel : BaseViewModel
     public long Id => _ad.Id;
     public string AuthorName => _ad.Author.DisplayName;
     public string Description => _ad.Description;
-    public string TypeDisplay => _ad.Type == AdType.Offering ? "↑ Offering" : "↓ Seeking";
+    public string TypeDisplay => _ad.Type.ToDisplayString();
     public string CategoryDisplay => _ad.Category.ToDisplayString();
     public string DateRangeDisplay => $"📅 {_ad.DateFrom:dd.MM.yyyy} – {_ad.DateTo:dd.MM.yyyy}";
 

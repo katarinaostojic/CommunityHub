@@ -9,7 +9,7 @@ public class AdPostedViewModel : BaseViewModel
 {
     public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembership membership)
     {
-        TypeDisplay = postedAd.Type == AdType.Offering ? "↑ Offering" : "↓ Seeking";
+        TypeDisplay = postedAd.Type.ToDisplayString();
         CategoryDisplay = postedAd.Category.ToDisplayString();
         DateRangeDisplay = $"{postedAd.DateFrom:dd.MM.yyyy} – {postedAd.DateTo:dd.MM.yyyy}";
         BuildingDisplay = $"{membership.Building.Street} {membership.Building.StreetNumber}";

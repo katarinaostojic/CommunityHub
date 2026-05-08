@@ -20,7 +20,7 @@ public class AdDetailsViewModel : BaseViewModel
         _adService = adService;
         _adId = ad.Id;
 
-        TypeDisplay = ad.Type == AdType.Offering ? "↑ Offering" : "↓ Seeking";
+        TypeDisplay = ad.Type.ToDisplayString();
         CategoryDisplay = ad.Category.ToDisplayString();
         DateRangeDisplay = $"{ad.DateFrom:dd.MM.} - {ad.DateTo:dd.MM.yyyy}";
         Description = ad.Description;
