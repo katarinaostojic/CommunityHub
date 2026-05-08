@@ -49,7 +49,7 @@
                 <TextBlock Text="✔ Your ad has been posted successfully!"
                            FontSize="17" FontWeight="Bold" Margin="0,0,0,4"/>
                 <TextBlock Text="Time slots created: 16:00–17:00, 17:00–18:00, 18:00–19:00, 19:00–20:00 for each day in your date range."
-                           FontSize ="15" Style="{StaticResource SecondaryText}" TextWrapping="Wrap"/>
+                           FontSize="15" Style="{StaticResource SecondaryText}" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
@@ -75,34 +75,40 @@
                            FontSize="14" VerticalAlignment="Center"/>
                 <Border Grid.Column="1" Style="{StaticResource StatusBadge}"
                         VerticalAlignment="Center" Margin="8,0,0,0">
-                    <TextBlock x:Name="AdTypeText" FontSize="15" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding TypeDisplay}" FontSize="15" FontWeight="SemiBold"/>
                 </Border>
 
                 <TextBlock Grid.Column="3" Text="CATEGORY" Style="{StaticResource SectionTitle}"
                            FontSize="14" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="4" x:Name="AdCategoryText"
-                           FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                <TextBlock Grid.Column="4"
+                           Text="{Binding CategoryDisplay}"
+                           FontSize="15" FontWeight="SemiBold"
+                           VerticalAlignment="Center" Margin="8,0,0,0"/>
 
                 <TextBlock Grid.Column="6" Text="DATE RANGE" Style="{StaticResource SectionTitle}"
                            FontSize="14" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="7" x:Name="AdDateRangeText"
-                           FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                <TextBlock Grid.Column="7"
+                           Text="{Binding DateRangeDisplay}"
+                           FontSize="15" FontWeight="SemiBold"
+                           VerticalAlignment="Center" Margin="8,0,0,0"/>
 
                 <TextBlock Grid.Column="9" Text="BUILDING" Style="{StaticResource SectionTitle}"
                            FontSize="14" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="10" x:Name="AdBuildingText"
-                           FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                <TextBlock Grid.Column="10"
+                           Text="{Binding BuildingDisplay}"
+                           FontSize="15" FontWeight="SemiBold"
+                           VerticalAlignment="Center" Margin="8,0,0,0"/>
             </Grid>
         </Border>
 
         <!-- Matching ads -->
         <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="16,0,16,8">
             <StackPanel>
-                <TextBlock x:Name="MatchingAdsTitle"
+                <TextBlock Text="{Binding MatchingAdsTitle}"
                            FontSize="13" Style="{StaticResource SecondaryText}"
                            HorizontalAlignment="Right"
                            Margin="0,0,0,8"/>
-                <ItemsControl x:Name="MatchingAdsPanel">
+                <ItemsControl ItemsSource="{Binding MatchingAds}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">

@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
 public class BuildingDetailsViewModel : BaseViewModel
 {

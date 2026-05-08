@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Ui.Extensions;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class BookedSlotGroupViewModel : BaseViewModel
 {

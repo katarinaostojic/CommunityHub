@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class SlotChipViewModel : BaseViewModel
 {

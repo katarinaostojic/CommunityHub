@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 

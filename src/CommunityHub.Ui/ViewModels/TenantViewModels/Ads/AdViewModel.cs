@@ -2,7 +2,7 @@
 using CommunityHub.Ui.Extensions;
 using System.Windows;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class AdViewModel : BaseViewModel
 {

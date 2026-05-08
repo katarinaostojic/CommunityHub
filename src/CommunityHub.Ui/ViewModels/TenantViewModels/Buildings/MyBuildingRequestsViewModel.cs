@@ -2,7 +2,7 @@
 using CommunityHub.Application.Services;
 using System.Collections.ObjectModel;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
 public class MyBuildingRequestsViewModel : BaseViewModel
 {

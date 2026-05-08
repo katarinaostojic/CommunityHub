@@ -4,7 +4,7 @@ using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class AdDetailsViewModel : BaseViewModel
 {
