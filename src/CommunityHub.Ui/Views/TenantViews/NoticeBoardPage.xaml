@@ -50,17 +50,27 @@
 
         <!-- Success banner -->
         <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="{StaticResource SuccessBrush}" Padding="12,8"
-                Visibility="Collapsed">
-            <TextBlock x:Name="SuccessTextBlock"
-                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
+            Background="{StaticResource SuccessBrush}" Padding="12,8"
+            Visibility="Collapsed">
+            <Grid>
+                <TextBlock x:Name="SuccessTextBlock"
+                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"
+                       VerticalAlignment="Center"/>
+                <Button x:Name="RestoreAdButton" Content="Restore"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource GhostButton}"
+                    Foreground="{StaticResource SuccessTextBrush}"
+                    FontWeight="Bold"
+                    Visibility="Collapsed"
+                    Click="RestoreAdButton_Click"/>
+            </Grid>
         </Border>
 
         <!-- Title row -->
         <Grid Grid.Row="2" Margin="16,12,16,8">
             <StackPanel>
                 <TextBlock Text="Notice Board" Style="{StaticResource PageTitle}"/>
-                <TextBlock x:Name="BuildingSubtitle"
+                <TextBlock Text="{Binding BuildingSubtitle}"
                            Style="{StaticResource SecondaryText}"
                            Margin="0,2,0,0"/>
             </StackPanel>
@@ -100,13 +110,14 @@
         </StackPanel>
 
         <!-- Results count -->
-        <TextBlock Grid.Row="4" x:Name="ResultsCountText"
+        <TextBlock Grid.Row="4"
+                   Text="{Binding ResultsCountText}"
                    Style="{StaticResource SecondaryText}"
                    Margin="16,0,16,8"/>
 
         <!-- Ad list -->
         <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
-            <ItemsControl x:Name="AdsPanel">
+            <ItemsControl ItemsSource="{Binding FilteredAds}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource CardBorder}">
@@ -125,7 +136,7 @@
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center">
-                                        <Border Visibility="{Binding IsOwnAdVisible}"
+                                        <Border Visibility="{Binding ArchiveButtonVisible}"
                                                 Background="{StaticResource BackgroundLightBrush}"
                                                 CornerRadius="4" Padding="8,3" Margin="0,0,6,0"
                                                 VerticalAlignment="Center">
