@@ -24,7 +24,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         command.ExecuteNonQuery();
     }
 
-    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, string? status, bool sortDescending)
+    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -44,13 +44,13 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
             ORDER BY r.created_at {(sortDescending ? "DESC" : "ASC")}";
 
         AddParameter(command, "@userId", tenantId);
-        AddParameter(command, "@status", status);
+        AddParameter(command, "@status", status.HasValue ? RequestStatusMapper.ToDbString(status.Value) : null);
 
         using IDataReader reader = command.ExecuteReader();
         return ReadRequests(reader);
     }
 
-    public int CountByTenantAndStatus(long tenantId, string? status)
+    public int CountByTenantAndStatus(long tenantId, RequestStatus? status)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -60,7 +60,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
               AND (@status IS NULL OR status = @status::request_status)";
 
         AddParameter(command, "@userId", tenantId);
-        AddParameter(command, "@status", status);
+        AddParameter(command, "@status", status.HasValue ? RequestStatusMapper.ToDbString(status.Value) : null);
 
         return Convert.ToInt32(command.ExecuteScalar());
     }
