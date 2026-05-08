@@ -102,7 +102,7 @@
                 </Button.Template>
             </Button>
 
-            <TextBlock x:Name="ImageCounterText"
+            <TextBlock Text="{Binding ImageCounterText}"
                        HorizontalAlignment="Right" VerticalAlignment="Top"
                        Margin="0,10,10,0" Foreground="White"
                        Background="#88000000" Padding="6,3"/>
@@ -111,7 +111,7 @@
                 <TextBlock x:Name="SwipeText" Text="← swipe to browse photos →"
                            Foreground="White" FontSize="12"
                            HorizontalAlignment="Center" Margin="0,0,0,6"/>
-                <ItemsControl x:Name="ImageDots" HorizontalAlignment="Center">
+                <ItemsControl ItemsSource="{Binding ImageDotColors}" HorizontalAlignment="Center">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>
@@ -128,9 +128,9 @@
 
         <!-- Adresa -->
         <StackPanel Grid.Row="3" Margin="16,16,16,8">
-            <TextBlock x:Name="AddressText" Style="{StaticResource PageTitle}"/>
-            <TextBlock x:Name="NeighborhoodText" FontSize="14" Margin="0,4,0,0"/>
-            <TextBlock x:Name="CityCountryText" Style="{StaticResource SecondaryText}"/>
+            <TextBlock Text="{Binding AddressText}" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="{Binding Building.Neighborhood}" FontSize="14" Margin="0,4,0,0"/>
+            <TextBlock Text="{Binding CityCountryText}" Style="{StaticResource SecondaryText}"/>
         </StackPanel>
 
         <!-- Building Info label + kartice -->
@@ -140,7 +140,7 @@
             <UniformGrid Rows="1">
                 <Border Style="{StaticResource CardBorder}" Margin="4">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock x:Name="FloorsText" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding NumberOfFloors}" FontSize="22" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="Floors" Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
@@ -148,7 +148,7 @@
                 </Border>
                 <Border Style="{StaticResource CardBorder}" Margin="4">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock x:Name="TotalUnitsText" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding TotalUnits}" FontSize="22" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="Total units" Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
@@ -156,7 +156,7 @@
                 </Border>
                 <Border Style="{StaticResource CardBorder}" Margin="4">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock x:Name="VacanciesText" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding VacancyCount}" FontSize="22" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="Vacancies" Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
@@ -164,7 +164,7 @@
                 </Border>
                 <Border Style="{StaticResource CardBorder}" Margin="4">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock x:Name="PendingRequestsText" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding PendingRequestsCount}" FontSize="22" FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="Pending requests" Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
