@@ -6,7 +6,7 @@ public class SelectableFreeSlotDayGroupViewModel : BaseViewModel
 {
     public SelectableFreeSlotDayGroupViewModel(DateOnly date, List<AdSlot> slots)
     {
-        DateDisplay = date.ToString("dd.MM");
+        DateDisplay = date.ToString("dddd, dd.MM.").ToUpper();
         Slots = slots.Select(s => new SelectableSlotChipViewModel(s)).ToList();
     }
 
