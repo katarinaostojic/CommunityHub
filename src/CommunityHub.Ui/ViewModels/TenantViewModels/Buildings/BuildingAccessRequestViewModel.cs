@@ -30,8 +30,7 @@ public class BuildingAccessRequestViewModel : BaseViewModel
         ? $"Note: {_request.RejectionReason}"
         : string.Empty;
 
-    public bool CancelButtonVisible => _request.Status == RequestStatus.PendingApproval;
+    public bool CancelButtonVisible => _request.CanBeCancelled;
 
-    public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
-                                       && _request.RejectionReason != null;
+    public bool RejectionReasonVisible => _request.HasRejectionReason;
 }

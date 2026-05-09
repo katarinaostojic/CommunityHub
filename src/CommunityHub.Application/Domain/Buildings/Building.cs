@@ -66,7 +66,7 @@ public class Building
 
     public bool HasExistingRequest(long userId, string unitNumber)
     {
-        return AccessRequests.Any(r => r.User.Id == userId
+        return AccessRequests.Any(r => r.Tenant.Id == userId
             && r.UnitNumber == unitNumber
             && r.Status == RequestStatus.PendingApproval);
     }
