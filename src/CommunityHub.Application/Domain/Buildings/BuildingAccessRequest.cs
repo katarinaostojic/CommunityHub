@@ -20,4 +20,8 @@ public class BuildingAccessRequest
         Status = status;
         RejectionReason = rejectionReason;
     }
+
+    public bool CanBeCancelled => Status == RequestStatus.PendingApproval;
+
+    public bool HasRejectionReason => Status == RequestStatus.Rejected && RejectionReason != null;
 }
