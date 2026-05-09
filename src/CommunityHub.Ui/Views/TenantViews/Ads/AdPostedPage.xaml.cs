@@ -32,7 +32,14 @@ public partial class AdPostedPage : Page
 
     private void ViewSlotsButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: navigate to ViewSlotsPage
+        if (sender is Button button && button.Tag is MatchingAdViewModel matchingAd)
+        {
+            Ad? theirAd = _adService.GetById(matchingAd.Id);
+            if (theirAd == null) return;
+            Ad? myAd = _adService.GetById(_viewModel.PostedAdId);
+            if (myAd == null) return;
+            NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd));
+        }
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e) =>

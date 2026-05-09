@@ -9,6 +9,7 @@ public class AdPostedViewModel : BaseViewModel
 {
     public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembership membership)
     {
+        PostedAdId = postedAd.Id;
         TypeDisplay = postedAd.Type.ToDisplayString();
         CategoryDisplay = postedAd.Category.ToDisplayString();
         DateRangeDisplay = $"{postedAd.DateFrom:dd.MM.yyyy} – {postedAd.DateTo:dd.MM.yyyy}";
@@ -18,6 +19,7 @@ public class AdPostedViewModel : BaseViewModel
             matchingAds.Select(ad => new MatchingAdViewModel(ad, postedAd)));
     }
 
+    public long PostedAdId { get; }
     public string TypeDisplay { get; }
     public string CategoryDisplay { get; }
     public string DateRangeDisplay { get; }
