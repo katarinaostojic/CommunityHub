@@ -9,14 +9,16 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 public class BookSlotsViewModel : BaseViewModel
 {
     private readonly AdService _adService;
-    private readonly Ad _myAd;
+    private readonly Ad _theirAd;
+    private readonly Ad? _myAd;
     private string _selectedCountText = string.Empty;
     private bool _hasSelectedSlots;
     private bool _hasNoSlots;
 
-    public BookSlotsViewModel(AdService adService, Ad theirAd, Ad myAd)
+    public BookSlotsViewModel(AdService adService, Ad theirAd, Ad? myAd = null)
     {
         _adService = adService;
+        _theirAd = theirAd;
         _myAd = myAd;
 
         AuthorName = theirAd.Author.DisplayName;
@@ -24,12 +26,25 @@ public class BookSlotsViewModel : BaseViewModel
         CategoryDisplay = theirAd.Category.ToDisplayString();
         DateRangeDisplay = $"{theirAd.DateFrom:dd.MM.yyyy} – {theirAd.DateTo:dd.MM.yyyy}";
 
-        DateOnly overlapFrom = theirAd.DateFrom > myAd.DateFrom ? theirAd.DateFrom : myAd.DateFrom;
-        DateOnly overlapTo = theirAd.DateTo < myAd.DateTo ? theirAd.DateTo : myAd.DateTo;
+        DateOnly slotFrom;
+        DateOnly slotTo;
 
-        OverlapRangeDisplay = $"Showing slots within your overlap: {overlapFrom:dd.MM.} – {overlapTo:dd.MM.} only";
+        if (myAd != null)
+        {
+            slotFrom = theirAd.DateFrom > myAd.DateFrom ? theirAd.DateFrom : myAd.DateFrom;
+            slotTo = theirAd.DateTo < myAd.DateTo ? theirAd.DateTo : myAd.DateTo;
+            OverlapRangeDisplay = $"Showing slots within your overlap: {slotFrom:dd.MM.} – {slotTo:dd.MM.} only";
+            ShowOverlapInfo = true;
+        }
+        else
+        {
+            slotFrom = theirAd.DateFrom;
+            slotTo = theirAd.DateTo;
+            OverlapRangeDisplay = string.Empty;
+            ShowOverlapInfo = false;
+        }
 
-        List<AdSlot> freeSlots = adService.GetFreeSlots(theirAd.Id, overlapFrom, overlapTo);
+        List<AdSlot> freeSlots = adService.GetFreeSlots(theirAd.Id, slotFrom, slotTo);
         HasNoSlots = freeSlots.Count == 0;
 
         FreeSlotDayGroups = new ObservableCollection<SelectableFreeSlotDayGroupViewModel>(
@@ -46,6 +61,7 @@ public class BookSlotsViewModel : BaseViewModel
     public string CategoryDisplay { get; }
     public string DateRangeDisplay { get; }
     public string OverlapRangeDisplay { get; }
+    public bool ShowOverlapInfo { get; }
 
     public ObservableCollection<SelectableFreeSlotDayGroupViewModel> FreeSlotDayGroups { get; }
 
@@ -75,14 +91,15 @@ public class BookSlotsViewModel : BaseViewModel
 
     public bool BookSelectedSlots()
     {
+        if (_myAd == null) return false;
+
         List<long> selectedIds = FreeSlotDayGroups
             .SelectMany(g => g.Slots)
             .Where(s => s.IsSelected)
             .Select(s => s.Slot.Id)
             .ToList();
 
-        if (selectedIds.Count == 0)
-            return false;
+        if (selectedIds.Count == 0) return false;
 
         _adService.BookSlots(selectedIds, _myAd.Id);
         return true;

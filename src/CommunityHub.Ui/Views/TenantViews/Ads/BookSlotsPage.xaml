@@ -6,6 +6,10 @@
       xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
       mc:Ignorable="d">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -95,10 +99,11 @@
             <!-- Overlap info -->
             <TextBlock Text="{Binding OverlapRangeDisplay}"
                        Style="{StaticResource SecondaryText}"
+                       Visibility="{Binding ShowOverlapInfo, Converter={StaticResource BoolToVis}}"
                        FontSize="13" Margin="4,0,0,0"/>
 
             <!-- No slots warning -->
-            <Border Visibility="{Binding HasNoSlots, Converter={StaticResource BoolToVisibilityConverter}}"
+            <Border Visibility="{Binding HasNoSlots, Converter={StaticResource BoolToVis}}"
                     Background="{StaticResource WarningBrush}"
                     BorderBrush="{StaticResource WarningTextBrush}"
                     BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,8,0,0">
@@ -146,10 +151,11 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </Border.Style>
-                                            <TextBlock Text="{Binding Display}" FontSize="12">
+                                            <TextBlock Text="{Binding Display}" FontSize="12"
+                                                       Foreground="Black">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
-                                                        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                                                        <Setter Property="Foreground" Value="Black"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                                                 <Setter Property="Foreground" Value="White"/>
@@ -193,6 +199,7 @@
                         Content="Confirm"
                         Style="{StaticResource PrimaryButton}"
                         IsEnabled="{Binding HasSelectedSlots}"
+                        Visibility="{Binding ShowOverlapInfo, Converter={StaticResource BoolToVis}}"
                         Click="ConfirmButton_Click"/>
             </Grid>
         </Border>

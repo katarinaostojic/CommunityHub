@@ -14,10 +14,10 @@ public partial class BookSlotsPage : Page
 {
     private readonly User _user;
     private readonly BuildingMembership _membership;
-    private readonly Ad _myAd;
+    private readonly Ad? _myAd;
     private readonly BookSlotsViewModel _viewModel;
 
-    public BookSlotsPage(User user, BuildingMembership membership, Ad theirAd, Ad myAd)
+    public BookSlotsPage(User user, BuildingMembership membership, Ad theirAd, Ad? myAd = null)
     {
         InitializeComponent();
         _user = user;

@@ -71,7 +71,10 @@ public partial class NoticeBoardPage : Page
 
     private void ViewSlotsButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: navigate to ViewSlotsPage
+        AdViewModel adVm = (AdViewModel)((Button)sender).Tag;
+        Ad? theirAd = _viewModel.GetAdById(adVm.Id);
+        if (theirAd == null) return;
+        NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd));
     }
 
     private void ViewBookingsButton_Click(object sender, RoutedEventArgs e)
