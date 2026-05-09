@@ -125,7 +125,7 @@ public partial class AccessRequestsPage : Page
         }
 
         public BuildingAccessRequest Request => _request;
-        public User User => _request.User;
+        public User User => _request.Tenant;
         public Building Building => _request.Building;
         public string UnitNumber => _request.UnitNumber;
         public DateTime CreatedAt => _request.CreatedAt;

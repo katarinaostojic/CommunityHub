@@ -119,7 +119,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = "UPDATE building_access_requests SET status = 'accepted'::request_status WHERE id = @id";
+        command.CommandText = "UPDATE building_access_requests SET status = 'approved'::request_status WHERE id = @id";
 
         AddParameter(command, "@id", requestId);
 

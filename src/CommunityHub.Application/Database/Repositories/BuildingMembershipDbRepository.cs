@@ -57,7 +57,7 @@ public class BuildingMembershipDbRepository : BaseDbRepository, IBuildingMembers
             INSERT INTO building_memberships (building_id, user_id, unit_number, floor_number, approved_at)
             VALUES (@buildingId, @userId, @unitNumber, @floorNumber, @approvedAt)";
         AddParameter(cmd, "@buildingId", request.Building.Id);
-        AddParameter(cmd, "@userId", request.User.Id);
+        AddParameter(cmd, "@userId", request.Tenant.Id);
         AddParameter(cmd, "@unitNumber", request.UnitNumber);
         AddParameter(cmd, "@floorNumber", floorNumber);
         AddParameter(cmd, "@approvedAt", DateTime.UtcNow);
