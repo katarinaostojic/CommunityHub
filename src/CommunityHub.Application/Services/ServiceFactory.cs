@@ -1,10 +1,12 @@
 ﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Database.Repositories.Ads;
+using CommunityHub.Application.Database.Repositories.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Buildings;
 
 namespace CommunityHub.Application.Services;
 

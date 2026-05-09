@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 
-namespace CommunityHub.Application.Services;
+namespace CommunityHub.Application.Services.Ads;
 
 public class AdService
 {

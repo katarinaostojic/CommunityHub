@@ -2,6 +2,7 @@
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;

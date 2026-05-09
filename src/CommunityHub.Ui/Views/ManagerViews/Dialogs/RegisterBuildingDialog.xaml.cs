@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Buildings;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;

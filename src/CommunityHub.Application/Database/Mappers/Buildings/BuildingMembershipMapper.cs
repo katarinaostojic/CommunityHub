@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Buildings;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Mappers;
+namespace CommunityHub.Application.Database.Mappers.Buildings;
 
 public static class BuildingMembershipMapper
 {

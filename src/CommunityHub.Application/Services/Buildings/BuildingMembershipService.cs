@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Buildings;
 
-namespace CommunityHub.Application.Services;
+namespace CommunityHub.Application.Services.Buildings;
 
 public class BuildingMembershipService
 {

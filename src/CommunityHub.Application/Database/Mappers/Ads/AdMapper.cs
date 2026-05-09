@@ -3,7 +3,7 @@ using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Mappers;
+namespace CommunityHub.Application.Database.Mappers.Ads;
 
 public static class AdMapper
 {

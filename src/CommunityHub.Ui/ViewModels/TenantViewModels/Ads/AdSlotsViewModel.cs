@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Ads;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;

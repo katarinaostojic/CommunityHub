@@ -2,7 +2,7 @@
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 
-namespace CommunityHub.Application.Services;
+namespace CommunityHub.Application.Services.Buildings;
 
 public class BuildingService
 {

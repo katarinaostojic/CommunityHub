@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 

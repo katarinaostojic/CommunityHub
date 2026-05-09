@@ -4,6 +4,7 @@ using CommunityHub.Application.Domain.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Buildings;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

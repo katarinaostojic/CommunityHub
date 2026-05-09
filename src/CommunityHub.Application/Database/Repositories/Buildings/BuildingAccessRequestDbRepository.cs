@@ -1,10 +1,11 @@
 ﻿using CommunityHub.Application.Database.Mappers;
+using CommunityHub.Application.Database.Mappers.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Buildings;
 
 public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAccessRequestRepository
 {
