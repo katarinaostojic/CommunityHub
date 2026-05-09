@@ -45,6 +45,7 @@ public static class ServiceFactory
     public static AdService CreateAdService()
     {
         IAdRepository adRepository = new AdDbRepository();
-        return new AdService(adRepository);
+        IAdSlotRepository adSlotRepository = new AdSlotDbRepository();
+        return new AdService(adRepository, adSlotRepository);
     }
 }

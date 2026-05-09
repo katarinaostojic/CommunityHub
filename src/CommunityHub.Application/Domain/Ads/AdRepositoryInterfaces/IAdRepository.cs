@@ -1,0 +1,10 @@
+﻿namespace CommunityHub.Application.Domain.Ads;
+
+public interface IAdRepository
+{
+    List<Ad> GetActiveByBuilding(long buildingId);
+    Ad? GetById(long adId);
+    long Create(long buildingId, long authorId, AdType type, AdCategory category,
+        string description, DateOnly dateFrom, DateOnly dateTo);
+    void Update(Ad ad);
+}

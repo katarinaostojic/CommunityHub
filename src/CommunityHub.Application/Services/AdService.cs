@@ -5,13 +5,15 @@ namespace CommunityHub.Application.Services;
 public class AdService
 {
     private readonly IAdRepository _adRepository;
+    private readonly IAdSlotRepository _adSlotRepository;
 
     private static readonly TimeOnly SlotStart = new TimeOnly(16, 0);
     private const int SlotsPerDay = 4;
 
-    public AdService(IAdRepository adRepository)
+    public AdService(IAdRepository adRepository, IAdSlotRepository adSlotRepository)
     {
         _adRepository = adRepository;
+        _adSlotRepository = adSlotRepository;
     }
 
     public List<Ad> GetActiveByBuilding(long buildingId)
@@ -30,7 +32,7 @@ public class AdService
         long adId = _adRepository.Create(buildingId, authorId, type, category,
             description, dateFrom, dateTo);
 
-        _adRepository.CreateSlots(adId, GenerateSlots(dateFrom, dateTo));
+        _adSlotRepository.CreateSlots(adId, GenerateSlots(dateFrom, dateTo));
 
         return _adRepository.GetById(adId)!;
     }
@@ -51,23 +53,23 @@ public class AdService
 
     public List<AdSlot> GetFreeSlots(long adId, DateOnly overlapFrom, DateOnly overlapTo)
     {
-        return _adRepository.GetFreeSlotsByAd(adId, overlapFrom, overlapTo);
+        return _adSlotRepository.GetFreeSlotsByAd(adId, overlapFrom, overlapTo);
     }
 
     public List<(AdSlot slot, Ad? bookedByAd)> GetBookedSlotsWithAds(long adId)
     {
-        return _adRepository.GetBookedSlotsWithAds(adId);
+        return _adSlotRepository.GetBookedSlotsWithAds(adId);
     }
 
     public List<AdSlot> GetBookedSlots(long adId)
     {
-        return _adRepository.GetBookedSlotsByAd(adId);
+        return _adSlotRepository.GetBookedSlotsByAd(adId);
     }
 
     public void BookSlots(IEnumerable<long> slotIds, long bookedByAdId)
     {
         foreach (long slotId in slotIds)
-            _adRepository.BookSlot(slotId, bookedByAdId);
+            _adSlotRepository.BookSlot(slotId, bookedByAdId);
     }
 
     public List<Ad> FindMatchingAds(Ad newAd)
