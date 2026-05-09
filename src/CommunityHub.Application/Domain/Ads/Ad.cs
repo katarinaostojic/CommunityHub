@@ -30,8 +30,21 @@ public class Ad
 
     public void AddSlot(AdSlot slot) => Slots.Add(slot);
 
+    public void Archive() => Status = AdStatus.Archived;
+
+    public void Restore() => Status = AdStatus.Active;
+
     public bool IsActive => Status == AdStatus.Active;
 
     public bool OverlapsWith(DateOnly otherFrom, DateOnly otherTo)
         => DateFrom <= otherTo && DateTo >= otherFrom;
+
+    public static string? ValidateDateRange(DateOnly dateFrom, DateOnly dateTo)
+    {
+        if (dateFrom < DateOnly.FromDateTime(DateTime.Today))
+            return "Dates cannot be in the past.";
+        if (dateFrom > dateTo)
+            return "Start date must be before end date.";
+        return null;
+    }
 }

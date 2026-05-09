@@ -70,29 +70,17 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         return Convert.ToInt64(command.ExecuteScalar());
     }
 
-    public void Archive(long adId)
+    public void Update(Ad ad)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             UPDATE notice_board_ads
-            SET status = 'archived'
-            WHERE id = @adId";
+            SET status = @status::ad_status
+            WHERE id = @id";
 
-        AddParameter(command, "@adId", adId);
-        command.ExecuteNonQuery();
-    }
-
-    public void Restore(long adId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            UPDATE notice_board_ads
-            SET status = 'active'
-            WHERE id = @adId";
-
-        AddParameter(command, "@adId", adId);
+        AddParameter(command, "@id", ad.Id);
+        AddParameter(command, "@status", AdMapper.ToDbStatus(ad.Status));
         command.ExecuteNonQuery();
     }
 

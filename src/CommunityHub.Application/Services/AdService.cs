@@ -24,7 +24,7 @@ public class AdService
         return _adRepository.GetById(adId);
     }
 
-    public Ad CreateAd(long buildingId, long authorId, AdType type, AdCategory category,
+    public Ad Create(long buildingId, long authorId, AdType type, AdCategory category,
         string description, DateOnly dateFrom, DateOnly dateTo)
     {
         long adId = _adRepository.Create(buildingId, authorId, type, category,
@@ -37,12 +37,16 @@ public class AdService
 
     public void Archive(long adId)
     {
-        _adRepository.Archive(adId);
+        Ad ad = _adRepository.GetById(adId)!;
+        ad.Archive();
+        _adRepository.Update(ad);
     }
 
     public void Restore(long adId)
     {
-        _adRepository.Restore(adId);
+        Ad ad = _adRepository.GetById(adId)!;
+        ad.Restore();
+        _adRepository.Update(ad);
     }
 
     public List<AdSlot> GetFreeSlots(long adId, DateOnly overlapFrom, DateOnly overlapTo)
@@ -66,8 +70,10 @@ public class AdService
             _adRepository.BookSlot(slotId, bookedByAdId);
     }
 
-    public List<Ad> FindMatchingAds(Ad newAd, List<Ad> activeAds)
+    public List<Ad> FindMatchingAds(Ad newAd)
     {
+        List<Ad> activeAds = _adRepository.GetActiveByBuilding(newAd.BuildingId);
+
         AdType oppositeType = newAd.Type == AdType.Offering
             ? AdType.Seeking
             : AdType.Offering;
