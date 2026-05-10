@@ -10,7 +10,8 @@ public class BuildingAccessRequest
     public RequestStatus Status { get; private set; }
     public string? RejectionReason { get; private set; }
 
-    public BuildingAccessRequest(long id, User tenant, Building building, string unitNumber, DateTime createdAt, RequestStatus status, string? rejectionReason = null)
+    public BuildingAccessRequest(long id, User tenant, Building building, string unitNumber,
+                                  DateTime createdAt, RequestStatus status, string? rejectionReason = null)
     {
         Id = id;
         Tenant = tenant;
@@ -22,6 +23,16 @@ public class BuildingAccessRequest
     }
 
     public bool CanBeCancelled => Status == RequestStatus.PendingApproval;
-
     public bool HasRejectionReason => Status == RequestStatus.Rejected && RejectionReason != null;
+
+    public void Approve()
+    {
+        Status = RequestStatus.Approved;
+    }
+
+    public void Reject(string? rejectionReason)
+    {
+        Status = RequestStatus.Rejected;
+        RejectionReason = rejectionReason;
+    }
 }

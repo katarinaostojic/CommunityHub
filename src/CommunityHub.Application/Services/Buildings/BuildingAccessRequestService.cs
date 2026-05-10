@@ -49,12 +49,14 @@ public class BuildingAccessRequestService
 
     public void ApproveRequest(BuildingAccessRequest request)
     {
-        _repository.ApproveRequest(request.Id);
+        request.Approve();
+        _repository.Update(request);
         _membershipRepository.Create(request);
     }
 
-    public void RejectRequest(long requestId, string? rejectionReason)
+    public void RejectRequest(BuildingAccessRequest request, string? rejectionReason)
     {
-        _repository.RejectRequest(requestId, rejectionReason);
+        request.Reject(rejectionReason);
+        _repository.Update(request);
     }
 }

@@ -73,7 +73,7 @@ public partial class AccessRequestsPage : Page
         string? explanation = AskForRejectionExplanation();
         if (explanation == null) return;
 
-        _requestService.RejectRequest(vm.Request.Id, string.IsNullOrEmpty(explanation) ? null : explanation);
+        _requestService.RejectRequest(vm.Request, string.IsNullOrEmpty(explanation) ? null : explanation);
         LoadRequests();
         ShowConfirmationDialog("A request has been rejected successfully.");
     }

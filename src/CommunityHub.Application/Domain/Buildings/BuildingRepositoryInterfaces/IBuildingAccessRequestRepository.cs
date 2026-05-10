@@ -8,6 +8,5 @@ public interface IBuildingAccessRequestRepository
     int CountByTenantAndStatus(long tenantId, RequestStatus? status);
     int GetPendingRequestsCount(long buildingId);
     void Delete(long requestId);
-    void ApproveRequest(long requestId);
-    void RejectRequest(long requestId, string? rejectionReason);
+    void Update(BuildingAccessRequest request);
 }

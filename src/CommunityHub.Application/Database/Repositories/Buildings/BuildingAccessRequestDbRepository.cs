@@ -116,28 +116,18 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         return ReadRequests(reader);
     }
 
-    public void ApproveRequest(long requestId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = "UPDATE building_access_requests SET status = 'approved'::request_status WHERE id = @id";
-
-        AddParameter(command, "@id", requestId);
-
-        command.ExecuteNonQuery();
-    }
-
-    public void RejectRequest(long requestId, string? rejectionReason)
+    public void Update(BuildingAccessRequest request)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             UPDATE building_access_requests
-            SET status = 'rejected'::request_status, rejection_reason = @reason
+            SET status = @status::request_status, rejection_reason = @reason
             WHERE id = @id";
 
-        AddParameter(command, "@id", requestId);
-        AddParameter(command, "@reason", rejectionReason);
+        AddParameter(command, "@id", request.Id);
+        AddParameter(command, "@status", RequestStatusMapper.ToDbString(request.Status));
+        AddParameter(command, "@reason", request.RejectionReason);
 
         command.ExecuteNonQuery();
     }
