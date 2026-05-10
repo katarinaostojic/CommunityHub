@@ -76,7 +76,7 @@ public partial class NoticeBoardPage : Page
         if (theirAd == null) return;
         Ad? myAd = adVm.MyMatchingAd;
         if (myAd == null) return;
-        NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd));
+        NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd, this));
     }
 
     private void ViewBookingsButton_Click(object sender, RoutedEventArgs e)
@@ -93,4 +93,9 @@ public partial class NoticeBoardPage : Page
     }
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
+
+    public void ShowBookingSuccess()
+    {
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Slots booked successfully!");
+    }
 }

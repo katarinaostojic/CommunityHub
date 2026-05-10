@@ -38,7 +38,7 @@ public partial class AdPostedPage : Page
             if (theirAd == null) return;
             Ad? myAd = _adService.GetById(_viewModel.PostedAdId);
             if (myAd == null) return;
-            NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd));
+            NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd, this));
         }
     }
 
@@ -46,4 +46,10 @@ public partial class AdPostedPage : Page
         NavigationService.Navigate(new NoticeBoardPage(_user, _membership));
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
+
+    public void ShowBookingSuccess()
+    {
+        SuccessBanner.Visibility = Visibility.Visible;
+        SuccessTextBlock.Text = "✔ Slots booked successfully!";
+    }
 }

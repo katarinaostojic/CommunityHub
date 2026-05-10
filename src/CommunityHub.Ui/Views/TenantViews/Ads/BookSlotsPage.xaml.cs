@@ -14,15 +14,15 @@ public partial class BookSlotsPage : Page
 {
     private readonly User _user;
     private readonly BuildingMembership _membership;
-    private readonly Ad? _myAd;
+    private readonly Page _returnPage;
     private readonly BookSlotsViewModel _viewModel;
 
-    public BookSlotsPage(User user, BuildingMembership membership, Ad theirAd, Ad? myAd = null)
+    public BookSlotsPage(User user, BuildingMembership membership, Ad theirAd, Ad myAd, Page returnPage)
     {
         InitializeComponent();
         _user = user;
         _membership = membership;
-        _myAd = myAd;
+        _returnPage = returnPage;
 
         AdService adService = ServiceFactory.CreateAdService();
         _viewModel = new BookSlotsViewModel(adService, theirAd, myAd);
@@ -42,7 +42,11 @@ public partial class BookSlotsPage : Page
     {
         bool booked = _viewModel.BookSelectedSlots();
         if (!booked) return;
-        SuccessBanner.Visibility = Visibility.Visible;
+        if (_returnPage is NoticeBoardPage noticePage)
+            noticePage.ShowBookingSuccess();
+        else if (_returnPage is AdPostedPage adPostedPage)
+            adPostedPage.ShowBookingSuccess();
+        NavigationService.Navigate(_returnPage);
     }
 
     private void GoBackButton_Click(object sender, RoutedEventArgs e) =>

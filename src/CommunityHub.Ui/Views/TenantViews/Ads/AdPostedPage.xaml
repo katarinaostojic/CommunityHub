@@ -38,12 +38,22 @@
         </Border>
 
         <!-- Title -->
-        <TextBlock Grid.Row="1" Text="Ad posted"
+        <!-- Success banner -->
+        <Border Grid.Row="1" x:Name="SuccessBanner"
+                Visibility="Collapsed"
+                Background="#DFF0D8" BorderBrush="#3C763D"
+                BorderThickness="1" CornerRadius="6"
+                Padding="12,10" Margin="16,8,16,0">
+            <TextBlock x:Name="SuccessTextBlock"
+                       Foreground="#3C763D" FontSize="13"/>
+        </Border>
+
+        <TextBlock Grid.Row="2" Text="Ad posted"
                    Style="{StaticResource PageTitle}"
                    Margin="16,12,16,8"/>
 
         <!-- Success box -->
-        <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+        <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                 CornerRadius="6" Padding="16,12" Margin="16,0,16,12">
             <StackPanel>
                 <TextBlock Text="✔ Your ad has been posted successfully!"
@@ -54,7 +64,7 @@
         </Border>
 
         <!-- Ad summary -->
-        <Border Grid.Row="3" BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1"
+        <Border Grid.Row="4" BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1"
                 CornerRadius="6" Padding="20,14" Margin="16,0,16,12">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -102,7 +112,7 @@
         </Border>
 
         <!-- Matching ads -->
-        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="16,0,16,8">
+        <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,8">
             <StackPanel>
                 <TextBlock Text="{Binding MatchingAdsTitle}"
                            FontSize="13" Style="{StaticResource SecondaryText}"
@@ -168,7 +178,7 @@
         </ScrollViewer>
 
         <!-- Actions -->
-        <Grid Grid.Row="5" Margin="16,8,16,16">
+        <Grid Grid.Row="6" Margin="16,8,16,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -185,6 +195,6 @@
                     Click="BackButton_Click"/>
         </Grid>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="7" x:Name="AppMenu"/>
     </Grid>
 </Page>
