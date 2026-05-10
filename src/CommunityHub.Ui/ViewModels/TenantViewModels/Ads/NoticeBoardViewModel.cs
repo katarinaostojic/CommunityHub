@@ -15,9 +15,11 @@ public class NoticeBoardViewModel : BaseViewModel
 
     private List<Ad> _allActiveAds = new();
     private ObservableCollection<AdViewModel> _filteredAds = new();
+    private ObservableCollection<AdNotificationViewModel> _notifications = new();
     private AdType? _currentTypeFilter = null;
     private AdCategory? _currentCategoryFilter = null;
     private string _resultsCountText = string.Empty;
+    private bool _hasNotifications;
 
     public NoticeBoardViewModel(AdService adService, BuildingMembership membership, long currentUserId)
     {
@@ -27,6 +29,7 @@ public class NoticeBoardViewModel : BaseViewModel
         BuildingSubtitle = $"Building: {membership.Building.Street} {membership.Building.StreetNumber}, {membership.Building.Neighborhood}";
         CategoryOptions = BuildCategoryOptions();
         LoadAds();
+        LoadNotifications();
     }
 
     public string BuildingSubtitle { get; }
@@ -36,6 +39,43 @@ public class NoticeBoardViewModel : BaseViewModel
     {
         get => _filteredAds;
         private set => SetProperty(ref _filteredAds, value);
+    }
+
+    public ObservableCollection<AdNotificationViewModel> Notifications
+    {
+        get => _notifications;
+        private set => SetProperty(ref _notifications, value);
+    }
+
+    public bool HasNotifications
+    {
+        get => _hasNotifications;
+        private set => SetProperty(ref _hasNotifications, value);
+    }
+
+    public void DismissNotification(long notificationId)
+    {
+        AdNotificationViewModel? notif = Notifications.FirstOrDefault(n => n.Id == notificationId);
+        if (notif == null) return;
+        Notifications.Remove(notif);
+        HasNotifications = Notifications.Count > 0;
+    }
+
+    public void MarkAllNotificationsAsRead()
+    {
+        _adService.MarkAllNotificationsAsRead(_currentUserId);
+        Notifications.Clear();
+        HasNotifications = false;
+    }
+
+    private void LoadNotifications()
+    {
+        List<AdNotificationViewModel> notifs = _adService
+            .GetUnreadNotifications(_currentUserId)
+            .Select(n => new AdNotificationViewModel(n))
+            .ToList();
+        Notifications = new ObservableCollection<AdNotificationViewModel>(notifs);
+        HasNotifications = notifs.Count > 0;
     }
 
     public string ResultsCountText

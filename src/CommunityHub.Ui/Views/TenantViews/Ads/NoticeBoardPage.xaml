@@ -67,7 +67,46 @@
         </Border>
 
         <!-- Title row -->
-        <Grid Grid.Row="2" Margin="16,12,16,8">
+        <!-- Notifications -->
+        <ItemsControl Grid.Row="2"
+                      ItemsSource="{Binding Notifications}"
+                      Margin="16,4,16,0"
+                      Visibility="{Binding HasNotifications, Converter={StaticResource BoolToVis}}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#EBF5FB" BorderBrush="#3498DB"
+                            BorderThickness="1" CornerRadius="6"
+                            Padding="12,10" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{Binding Title}"
+                                           FontWeight="SemiBold" FontSize="13"
+                                           Foreground="#1A5276"/>
+                                <TextBlock Text="{Binding Body}"
+                                           FontSize="12" Foreground="#2E86C1"
+                                           FontStyle="Italic"
+                                           TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="{Binding TimeDisplay}"
+                                           FontSize="11" Foreground="#5DADE2"
+                                           Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <Button Grid.Column="1"
+                                    Content="✕"
+                                    Tag="{Binding Id}"
+                                    Style="{StaticResource GhostButton}"
+                                    VerticalAlignment="Top"
+                                    Click="DismissNotificationButton_Click"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Grid Grid.Row="3" Margin="16,12,16,8">
             <StackPanel>
                 <TextBlock Text="Notice Board" Style="{StaticResource PageTitle}"/>
                 <TextBlock Text="{Binding BuildingSubtitle}"
@@ -86,7 +125,7 @@
         </Grid>
 
         <!-- Filters -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="16,8,16,16">
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="16,8,16,16">
             <TextBlock Text="Type:" FontSize="13" FontWeight="SemiBold"
                        VerticalAlignment="Center" Margin="0,0,8,0"/>
             <Button x:Name="FilterAllButton" Content="All"
@@ -116,7 +155,7 @@
                    Margin="16,0,16,8"/>
 
         <!-- Ad list -->
-        <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
+        <ScrollViewer Grid.Row="6" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
             <ItemsControl ItemsSource="{Binding FilteredAds}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -199,6 +238,6 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="7" x:Name="AppMenu"/>
     </Grid>
 </Page>

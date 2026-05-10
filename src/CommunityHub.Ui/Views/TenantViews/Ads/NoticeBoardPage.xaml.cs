@@ -95,6 +95,12 @@ public partial class NoticeBoardPage : Page
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
 
+    private void DismissNotificationButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is long notifId)
+            _viewModel.DismissNotification(notifId);
+    }
+
     public void ShowBookingSuccess()
     {
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Slots booked successfully!");
