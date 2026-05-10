@@ -52,4 +52,11 @@ public static class ServiceFactory
         IAdNotificationRepository notificationRepository = new AdNotificationDbRepository();
         return new AdService(adRepository, adSlotRepository, notificationRepository);
     }
+
+    public static CommonRoomService CreateCommonRoomService()
+    {
+        IBuildingRepository buildingRepository = new BuildingDbRepository(new ImageDbRepository());
+        ICommonRoomRepository commonRoomRepository = new CommonRoomDbRepository();
+        return new CommonRoomService(commonRoomRepository, buildingRepository);
+    }
 }
