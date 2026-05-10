@@ -7,7 +7,6 @@ public class BookedSlotGroupViewModel : BaseViewModel
 {
     public BookedSlotGroupViewModel(List<AdSlot> slots, Ad? bookedByAd)
     {
-        Slots = slots.Select(s => new SlotChipViewModel(s)).ToList();
         TenantName = bookedByAd?.Author.DisplayName ?? "Unknown";
         TheirAdDescription = bookedByAd?.Description ?? string.Empty;
         TheirAdType = bookedByAd?.Type.ToDisplayString() ?? string.Empty;
@@ -15,10 +14,16 @@ public class BookedSlotGroupViewModel : BaseViewModel
         TheirAdDateRange = bookedByAd != null
             ? $"{bookedByAd.DateFrom:dd.MM.} – {bookedByAd.DateTo:dd.MM.yyyy}"
             : string.Empty;
+
+        DayGroups = slots
+            .GroupBy(s => s.Date)
+            .OrderBy(g => g.Key)
+            .Select(g => new BookedSlotDayGroupViewModel(g.Key, g.ToList()))
+            .ToList();
     }
 
     public string TenantName { get; }
-    public List<SlotChipViewModel> Slots { get; }
+    public List<BookedSlotDayGroupViewModel> DayGroups { get; }
     public string TheirAdDescription { get; }
     public string TheirAdType { get; }
     public string TheirAdCategory { get; }
