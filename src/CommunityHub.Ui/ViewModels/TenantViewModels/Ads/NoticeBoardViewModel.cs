@@ -57,6 +57,7 @@ public class NoticeBoardViewModel : BaseViewModel
     {
         AdNotificationViewModel? notif = Notifications.FirstOrDefault(n => n.Id == notificationId);
         if (notif == null) return;
+        _adService.MarkNotificationAsRead(notificationId);
         Notifications.Remove(notif);
         HasNotifications = Notifications.Count > 0;
     }

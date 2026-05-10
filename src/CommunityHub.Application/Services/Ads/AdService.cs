@@ -86,6 +86,11 @@ public class AdService
         return _notificationRepository.GetUnreadByUser(userId);
     }
 
+    public void MarkNotificationAsRead(long notificationId)
+    {
+        _notificationRepository.MarkAsRead(notificationId);
+    }
+
     public void MarkAllNotificationsAsRead(long userId)
     {
         _notificationRepository.MarkAllAsRead(userId);

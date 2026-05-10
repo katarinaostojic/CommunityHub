@@ -101,6 +101,16 @@ public partial class NoticeBoardPage : Page
             _viewModel.DismissNotification(notifId);
     }
 
+    private void ViewSlotsFromNotificationButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button || button.Tag is not long adId) return;
+        Ad? ownerAd = _viewModel.GetAdById(adId);
+        if (ownerAd == null) return;
+        Ad? myMatchingAd = _viewModel.GetMyMatchingAd(ownerAd);
+        if (myMatchingAd == null) return;
+        NavigationService.Navigate(new BookSlotsPage(_user, _membership, ownerAd, myMatchingAd, this));
+    }
+
     public void ShowBookingSuccess()
     {
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Slots booked successfully!");

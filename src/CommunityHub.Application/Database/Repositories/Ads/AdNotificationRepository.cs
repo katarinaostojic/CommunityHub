@@ -29,8 +29,11 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT n.id AS notif_id, n.recipient_id, n.created_at, n.is_read,
-                   a.id, a.building_id, a.type, a.category, a.description,
-                   a.date_from, a.date_to, a.status,
+                   a.id AS id, a.building_id AS building_id,
+                   a.type AS type, a.category AS category,
+                   a.description AS description,
+                   a.date_from AS date_from, a.date_to AS date_to,
+                   a.status AS status,
                    ua.id AS user_id, ua.username, ua.password,
                    ua.name, ua.surname, ua.birthday, ua.role,
                    b.id AS ba_id, b.building_id AS ba_building_id,
@@ -73,6 +76,19 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             ));
         }
         return notifications;
+    }
+
+    public void MarkAsRead(long notificationId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            UPDATE notice_board_notifications
+            SET is_read = TRUE
+            WHERE id = @notificationId";
+
+        AddParameter(command, "@notificationId", notificationId);
+        command.ExecuteNonQuery();
     }
 
     public void MarkAllAsRead(long userId)
