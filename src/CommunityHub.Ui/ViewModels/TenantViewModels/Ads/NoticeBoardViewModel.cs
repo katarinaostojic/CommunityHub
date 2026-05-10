@@ -82,6 +82,16 @@ public class NoticeBoardViewModel : BaseViewModel
 
     public Ad? GetAdById(long adId) => _adService.GetById(adId);
 
+    public Ad? GetMyMatchingAd(Ad theirAd)
+    {
+        AdType myType = theirAd.Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
+        return _allActiveAds.FirstOrDefault(ad =>
+            ad.Author.Id == _currentUserId
+            && ad.Type == myType
+            && ad.Category == theirAd.Category
+            && ad.OverlapsWith(theirAd.DateFrom, theirAd.DateTo));
+    }
+
     private void LoadAds()
     {
         _allActiveAds = _adService.GetActiveByBuilding(_buildingId);
@@ -93,7 +103,7 @@ public class NoticeBoardViewModel : BaseViewModel
         List<AdViewModel> filtered = _allActiveAds
             .Where(ad => _currentTypeFilter == null || ad.Type == _currentTypeFilter)
             .Where(ad => _currentCategoryFilter == null || ad.Category == _currentCategoryFilter)
-            .Select(ad => new AdViewModel(ad, _currentUserId))
+            .Select(ad => new AdViewModel(ad, _currentUserId, GetMyMatchingAd(ad)))
             .ToList();
 
         FilteredAds = new ObservableCollection<AdViewModel>(filtered);
