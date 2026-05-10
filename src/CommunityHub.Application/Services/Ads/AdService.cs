@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services.Ads;
 
@@ -6,14 +7,17 @@ public class AdService
 {
     private readonly IAdRepository _adRepository;
     private readonly IAdSlotRepository _adSlotRepository;
+    private readonly IAdNotificationRepository _notificationRepository;
 
     private static readonly TimeOnly SlotStart = new TimeOnly(16, 0);
     private const int SlotsPerDay = 4;
 
-    public AdService(IAdRepository adRepository, IAdSlotRepository adSlotRepository)
+    public AdService(IAdRepository adRepository, IAdSlotRepository adSlotRepository,
+        IAdNotificationRepository notificationRepository)
     {
         _adRepository = adRepository;
         _adSlotRepository = adSlotRepository;
+        _notificationRepository = notificationRepository;
     }
 
     public List<Ad> GetActiveByBuilding(long buildingId)
@@ -70,6 +74,21 @@ public class AdService
     {
         foreach (long slotId in slotIds)
             _adSlotRepository.BookSlot(slotId, bookedByAdId);
+
+        Ad? ownerAd = _adRepository.GetById(ownerAdId);
+        if (ownerAd == null) return;
+
+        _notificationRepository.Create(ownerAd.Author.Id, ownerAdId, bookedByAdId);
+    }
+
+    public List<AdNotification> GetUnreadNotifications(long userId)
+    {
+        return _notificationRepository.GetUnreadByUser(userId);
+    }
+
+    public void MarkAllNotificationsAsRead(long userId)
+    {
+        _notificationRepository.MarkAllAsRead(userId);
     }
 
     public List<Ad> FindMatchingAds(Ad newAd)

@@ -3,6 +3,7 @@ using CommunityHub.Application.Database.Repositories.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using CommunityHub.Application.Services.Ads;
@@ -48,6 +49,7 @@ public static class ServiceFactory
     {
         IAdRepository adRepository = new AdDbRepository();
         IAdSlotRepository adSlotRepository = new AdSlotDbRepository();
-        return new AdService(adRepository, adSlotRepository);
+        IAdNotificationRepository notificationRepository = new AdNotificationDbRepository();
+        return new AdService(adRepository, adSlotRepository, notificationRepository);
     }
 }
