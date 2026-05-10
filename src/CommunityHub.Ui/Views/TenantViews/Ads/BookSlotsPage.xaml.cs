@@ -42,7 +42,7 @@ public partial class BookSlotsPage : Page
     {
         bool booked = _viewModel.BookSelectedSlots();
         if (!booked) return;
-        NavigationService.Navigate(new AdDetailsPage(_user, _membership, _myAd));
+        SuccessBanner.Visibility = Visibility.Visible;
     }
 
     private void GoBackButton_Click(object sender, RoutedEventArgs e) =>

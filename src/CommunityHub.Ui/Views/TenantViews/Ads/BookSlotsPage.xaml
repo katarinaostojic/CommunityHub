@@ -15,6 +15,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -52,8 +53,19 @@
                        VerticalAlignment="Center"/>
         </Grid>
 
+        <!-- Success banner -->
+        <Border Grid.Row="2" x:Name="SuccessBanner"
+                Visibility="Collapsed"
+                Background="#DFF0D8" BorderBrush="#3C763D"
+                BorderThickness="1" CornerRadius="6"
+                Padding="12,10" Margin="16,0,16,4">
+            <TextBlock x:Name="SuccessTextBlock"
+                       Foreground="#3C763D" FontSize="13"
+                       Text="✔ Slots booked successfully!"/>
+        </Border>
+
         <!-- Their ad summary + overlap info -->
-        <StackPanel Grid.Row="2" Margin="16,0,16,12">
+        <StackPanel Grid.Row="3" Margin="16,0,16,12">
 
             <!-- Ad info row: TENANT | TYPE | CATEGORY | THEIR RANGE -->
             <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
@@ -114,7 +126,7 @@
         </StackPanel>
 
         <!-- Slot groups -->
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" Margin="16,0,16,8">
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="16,0,16,8">
             <ItemsControl ItemsSource="{Binding FreeSlotDayGroups}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -145,8 +157,8 @@
                                                     <Setter Property="Background" Value="Transparent"/>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                            <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
-                                                            <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                                            <Setter Property="Background" Value="#4A90D9"/>
+                                                            <Setter Property="BorderBrush" Value="#4A90D9"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -175,7 +187,7 @@
         </ScrollViewer>
 
         <!-- Bottom bar: X slots selected | Cancel | Confirm -->
-        <Border Grid.Row="4" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
+        <Border Grid.Row="5" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
                 Padding="16,12">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -199,11 +211,10 @@
                         Content="Confirm"
                         Style="{StaticResource PrimaryButton}"
                         IsEnabled="{Binding HasSelectedSlots}"
-                        Visibility="{Binding ShowOverlapInfo, Converter={StaticResource BoolToVis}}"
                         Click="ConfirmButton_Click"/>
             </Grid>
         </Border>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="5" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
     </Grid>
 </Page>
