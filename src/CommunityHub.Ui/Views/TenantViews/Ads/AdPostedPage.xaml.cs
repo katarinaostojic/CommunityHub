@@ -3,6 +3,7 @@ using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;
+using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
@@ -49,7 +50,6 @@ public partial class AdPostedPage : Page
 
     public void ShowBookingSuccess()
     {
-        SuccessBanner.Visibility = Visibility.Visible;
-        SuccessTextBlock.Text = "✔ Slots booked successfully!";
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Slots booked successfully!");
     }
 }

@@ -18,6 +18,24 @@ public static class UserMapper
         );
     }
 
+    // Used when a query joins multiple users in the same row (e.g. ad author and booking author).
+    // Standard Map() always reads fixed column names like "user_id", "username" etc.
+    // This overload accepts column name aliases so both users can be mapped from the same reader.
+    public static User MapWithAliases(IDataReader reader,
+        string idCol, string usernameCol, string passwordCol,
+        string nameCol, string surnameCol, string birthdayCol, string roleCol)
+    {
+        return new User(
+            Convert.ToInt64(reader[idCol]),
+            reader[usernameCol].ToString()!,
+            reader[passwordCol].ToString()!,
+            reader[nameCol].ToString()!,
+            reader[surnameCol].ToString()!,
+            DateTime.Parse(reader[birthdayCol].ToString()!),
+            ParseRole(reader[roleCol].ToString()!)
+        );
+    }
+
     public static UserRole ParseRole(string role) => role switch
     {
         "tenant" => UserRole.Tenant,
