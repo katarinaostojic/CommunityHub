@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
@@ -83,53 +83,24 @@ public class NewAdViewModel : BaseViewModel
         DateOnly to = DateOnly.FromDateTime(dateTo!.Value);
         AdCategory category = (AdCategory)categoryIndex;
 
-        Ad newAd = _adService.CreateAd(_buildingId, _authorId, SelectedType, category, description.Trim(), from, to);
-        List<Ad> activeAds = _adService.GetActiveByBuilding(_buildingId);
-        List<Ad> matchingAds = _adService.FindMatchingAds(newAd, activeAds);
+        Ad newAd = _adService.Create(_buildingId, _authorId, SelectedType, category, description.Trim(), from, to);
+        List<Ad> matchingAds = _adService.FindMatchingAds(newAd);
 
         return (newAd, matchingAds);
     }
 
     private bool Validate(string description, DateTime? dateFrom, DateTime? dateTo)
     {
-        bool valid = true;
+        HasDescriptionError = string.IsNullOrWhiteSpace(description);
+        DescriptionError = HasDescriptionError ? "Please enter a description." : string.Empty;
 
-        if (string.IsNullOrWhiteSpace(description))
-        {
-            DescriptionError = "Please enter a description.";
-            HasDescriptionError = true;
-            valid = false;
-        }
-        else
-        {
-            DescriptionError = string.Empty;
-            HasDescriptionError = false;
-        }
+        string? dateError = dateFrom == null || dateTo == null
+            ? "Please select a date range."
+            : Ad.ValidateDateRange(DateOnly.FromDateTime(dateFrom.Value), DateOnly.FromDateTime(dateTo.Value));
 
-        if (dateFrom == null || dateTo == null)
-        {
-            DateError = "Please select a date range.";
-            HasDateError = true;
-            valid = false;
-        }
-        else if (dateFrom.Value.Date < DateTime.Today)
-        {
-            DateError = "Dates cannot be in the past.";
-            HasDateError = true;
-            valid = false;
-        }
-        else if (dateFrom.Value > dateTo.Value)
-        {
-            DateError = "Start date must be before end date.";
-            HasDateError = true;
-            valid = false;
-        }
-        else
-        {
-            DateError = string.Empty;
-            HasDateError = false;
-        }
+        HasDateError = dateError != null;
+        DateError = dateError ?? string.Empty;
 
-        return valid;
+        return !HasDescriptionError && !HasDateError;
     }
 }
