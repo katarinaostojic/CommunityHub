@@ -20,6 +20,7 @@ public class User
     public List<Post>? Posts { get; private set; }
 
     public string DisplayName => char.ToUpper(Name[0]) + Name.Substring(1).ToLower();
+    public string FullName => $"{Name} {Surname}";
 
     public User(long id, string username, string password, string name, string surname, DateTime birthDay, UserRole role, string? address = null)
     {

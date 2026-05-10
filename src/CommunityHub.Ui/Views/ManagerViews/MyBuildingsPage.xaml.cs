@@ -72,7 +72,9 @@ public partial class MyBuildingsPage : Page
     {
         if (sender is Border border && border.DataContext is Building building)
         {
-            // Building details - dolazi kasnije
+            Building? fullBuilding = _buildingService.GetById(building.Id);
+            if (fullBuilding == null) return;
+            NavigationService.Navigate(new BuildingDetailsPage(_currentUser, fullBuilding));
         }
     }
 }
