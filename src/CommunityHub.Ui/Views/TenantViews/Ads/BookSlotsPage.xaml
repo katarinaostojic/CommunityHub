@@ -111,7 +111,7 @@
             <!-- Overlap info -->
             <TextBlock Text="{Binding OverlapRangeDisplay}"
                        Style="{StaticResource SecondaryText}"
-                       Visibility="{Binding ShowOverlapInfo, Converter={StaticResource BoolToVis}}"
+                       Visibility="Visible"
                        FontSize="13" Margin="4,0,0,0"/>
 
             <!-- No slots warning -->

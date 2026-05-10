@@ -66,7 +66,7 @@ public class AdService
         return _adSlotRepository.GetBookedSlotsByAd(adId);
     }
 
-    public void BookSlots(IEnumerable<long> slotIds, long bookedByAdId)
+    public void BookSlots(IEnumerable<long> slotIds, long bookedByAdId, long ownerAdId)
     {
         foreach (long slotId in slotIds)
             _adSlotRepository.BookSlot(slotId, bookedByAdId);
