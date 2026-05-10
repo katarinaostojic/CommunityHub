@@ -103,12 +103,11 @@ public partial class NoticeBoardPage : Page
 
     private void ViewSlotsFromNotificationButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not Button button || button.Tag is not long adId) return;
-        Ad? ownerAd = _viewModel.GetAdById(adId);
-        if (ownerAd == null) return;
-        Ad? myMatchingAd = _viewModel.GetMyMatchingAd(ownerAd);
-        if (myMatchingAd == null) return;
-        NavigationService.Navigate(new BookSlotsPage(_user, _membership, ownerAd, myMatchingAd, this));
+        if (sender is not Button button) return;
+        if (button.DataContext is not AdNotificationViewModel notif) return;
+        Ad? myAd = _viewModel.GetAdById(notif.AdId);
+        if (myAd == null) return;
+        NavigationService.Navigate(new AdDetailsPage(_user, _membership, myAd));
     }
 
     public void ShowBookingSuccess()
