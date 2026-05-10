@@ -74,7 +74,8 @@ public partial class NoticeBoardPage : Page
         AdViewModel adVm = (AdViewModel)((Button)sender).Tag;
         Ad? theirAd = _viewModel.GetAdById(adVm.Id);
         if (theirAd == null) return;
-        Ad? myAd = adVm.MyMatchingAd;
+        if (adVm.MyMatchingAdId == null) return;
+        Ad? myAd = _viewModel.GetAdById(adVm.MyMatchingAdId.Value);
         if (myAd == null) return;
         NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd, this));
     }

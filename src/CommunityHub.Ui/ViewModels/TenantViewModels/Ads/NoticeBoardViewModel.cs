@@ -103,7 +103,7 @@ public class NoticeBoardViewModel : BaseViewModel
         List<AdViewModel> filtered = _allActiveAds
             .Where(ad => _currentTypeFilter == null || ad.Type == _currentTypeFilter)
             .Where(ad => _currentCategoryFilter == null || ad.Category == _currentCategoryFilter)
-            .Select(ad => new AdViewModel(ad, _currentUserId, GetMyMatchingAd(ad)))
+            .Select(ad => new AdViewModel(ad, _currentUserId, GetMyMatchingAd(ad)?.Id))
             .ToList();
 
         FilteredAds = new ObservableCollection<AdViewModel>(filtered);
