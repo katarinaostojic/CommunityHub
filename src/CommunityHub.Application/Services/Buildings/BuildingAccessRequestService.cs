@@ -19,7 +19,8 @@ public class BuildingAccessRequestService
 
     public void Create(User user, Building building, string unitNumber)
     {
-        _repository.Create(user, building, unitNumber);
+        BuildingAccessRequest request = new BuildingAccessRequest(user, building, unitNumber);
+        _repository.Create(request);
     }
 
     public List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
