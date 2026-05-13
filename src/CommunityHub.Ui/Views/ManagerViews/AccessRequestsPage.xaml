@@ -110,7 +110,7 @@
                           SelectionChanged="StatusFilterCombo_SelectionChanged">
                     <ComboBoxItem Content="All" IsSelected="True" Tag=""/>
                     <ComboBoxItem Content="Pending" Tag="pending approval"/>
-                    <ComboBoxItem Content="Accepted" Tag="accepted"/>
+                    <ComboBoxItem Content="Approved" Tag="approved"/>
                     <ComboBoxItem Content="Rejected" Tag="rejected"/>
                 </ComboBox>
             </StackPanel>

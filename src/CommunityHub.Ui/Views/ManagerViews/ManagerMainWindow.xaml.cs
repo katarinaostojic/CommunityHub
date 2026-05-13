@@ -51,4 +51,10 @@ public partial class ManagerMainWindow : Window
         activeButton.Background = new SolidColorBrush(Color.FromRgb(44, 62, 80));
         activeButton.Foreground = Brushes.White;
     }
+
+    private void NoticeboardButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveNavButton(BtnNoticeboard);
+        MainFrame.Navigate(new ManagerNoticeBoardPage(_currentUser));
+    }
 }

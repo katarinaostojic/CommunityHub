@@ -7,4 +7,5 @@ public interface IAdRepository
     long Create(long buildingId, long authorId, AdType type, AdCategory category,
         string description, DateOnly dateFrom, DateOnly dateTo);
     void Update(Ad ad);
+    List<Ad> GetAllByBuilding(long buildingId);
 }

@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
 
 namespace CommunityHub.Application.Services.Ads;
@@ -128,5 +129,49 @@ public class AdService
         }
 
         return slots;
+    }
+
+    public List<Ad> GetAllByBuilding(long buildingId)
+    {
+        return _adRepository.GetAllByBuilding(buildingId);
+    }
+
+    public int CountByType(List<Ad> ads, AdType type)
+    {
+        return ads.Count(a => a.Type == type);
+    }
+
+    public Dictionary<AdCategory, (int offering, int seeking)> GetStatsByCategory(List<Ad> ads)
+    {
+        return ads
+            .GroupBy(a => a.Category)
+            .ToDictionary(
+                g => g.Key,
+                g => (
+                    offering: g.Count(a => a.Type == AdType.Offering),
+                    seeking: g.Count(a => a.Type == AdType.Seeking)
+                )
+            );
+    }
+
+    public (int active, int archived) GetCurrentState(List<Ad> ads)
+    {
+        return (
+            active: ads.Count(a => a.Status == AdStatus.Active),
+            archived: ads.Count(a => a.Status == AdStatus.Archived)
+        );
+    }
+
+    public Dictionary<AdCategory, int> GetActiveCountByCategory(List<Ad> ads)
+    {
+        return ads
+            .Where(a => a.Status == AdStatus.Active)
+            .GroupBy(a => a.Category)
+            .ToDictionary(g => g.Key, g => g.Count());
+    }
+
+    public User? GetTopHelper(long buildingId)
+    {
+        return _adSlotRepository.GetTopHelperByBuilding(buildingId);
     }
 }

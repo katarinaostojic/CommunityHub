@@ -95,4 +95,23 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         }
         return ads;
     }
+
+    public List<Ad> GetAllByBuilding(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT a.id, a.building_id, a.type, a.category, a.description,
+               a.date_from, a.date_to, a.status,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM notice_board_ads a
+        JOIN users u ON a.user_id = u.id
+        WHERE a.building_id = @buildingId
+        ORDER BY a.id DESC";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadAds(reader);
+    }
 }

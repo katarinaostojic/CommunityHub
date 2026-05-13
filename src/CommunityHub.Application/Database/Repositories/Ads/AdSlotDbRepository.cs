@@ -122,6 +122,31 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         return ReadBookedSlotsWithAds(reader);
     }
 
+    public User? GetTopHelperByBuilding(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role,
+               COUNT(b.id) as booking_count
+        FROM notice_board_bookings b
+        JOIN notice_board_time_slots s ON b.time_slot_id = s.id
+        JOIN notice_board_ads a ON s.ad_id = a.id
+        JOIN users u ON a.user_id = u.id
+        WHERE a.building_id = @buildingId
+          AND a.type = 'offering'
+        GROUP BY u.id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        ORDER BY booking_count DESC
+        LIMIT 1";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+            return UserMapper.Map(reader);
+        return null;
+    }
+
     private List<(AdSlot, Ad?)> ReadBookedSlotsWithAds(IDataReader reader)
     {
         List<(AdSlot, Ad?)> results = new();

@@ -22,7 +22,7 @@ public class BuildingAccessRequestViewModel
     public string StatusDisplay => _request.Status switch
     {
         RequestStatus.PendingApproval => "Pending",
-        RequestStatus.Approved => "Accepted",
+        RequestStatus.Approved => "Approved",
         RequestStatus.Rejected => "Rejected",
         _ => _request.Status.ToString()
     };

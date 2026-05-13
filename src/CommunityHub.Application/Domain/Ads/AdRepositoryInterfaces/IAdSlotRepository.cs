@@ -8,4 +8,5 @@ public interface IAdSlotRepository
     void BookSlot(long slotId, long bookedByAdId);
     List<AdSlot> GetBookedSlotsByAd(long adId);
     List<(AdSlot slot, Ad? bookedByAd)> GetBookedSlotsWithAds(long adId);
+    User? GetTopHelperByBuilding(long buildingId);
 }
