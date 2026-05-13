@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
@@ -21,8 +21,8 @@ public partial class NewAdPage : Page
         _user = user;
         _membership = membership;
 
-        AdService adService = ServiceFactory.CreateAdService();
-        _viewModel = new NewAdViewModel(adService, membership, user.Id);
+        AdService adService = Injector.CreateInstance<AdService>();
+        _viewModel = new NewAdViewModel(adService, membership, user);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;

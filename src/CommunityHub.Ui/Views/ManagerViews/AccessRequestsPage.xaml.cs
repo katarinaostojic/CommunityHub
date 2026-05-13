@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
@@ -21,7 +21,7 @@ public partial class AccessRequestsPage : Page
     {
         InitializeComponent();
         _currentUser = user;
-        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
+        _requestService = Injector.CreateInstance<BuildingAccessRequestService>();
         LoadRequests();
     }
 

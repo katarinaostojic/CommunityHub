@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Buildings;
@@ -16,7 +17,7 @@ public partial class ManagerNoticeBoardPage : Page
     {
         InitializeComponent();
         _currentUser = user;
-        _buildingService = ServiceFactory.CreateBuildingService();
+        _buildingService = Injector.CreateInstance<BuildingService>();
         LoadBuildings();
     }
 

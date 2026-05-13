@@ -1,7 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Ui.ViewModels.TenantViewModels;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;
@@ -16,18 +17,18 @@ namespace CommunityHub.Ui.Controls;
 public partial class MenuPanel : UserControl
 {
     private User _user;
-    private readonly BuildingMembershipService _membershipService;
+    private readonly MenuPanelViewModel _viewModel;
 
     public MenuPanel()
     {
         InitializeComponent();
-        _membershipService = ServiceFactory.CreateBuildingMembershipService();
+        BuildingMembershipService membershipService = Injector.CreateInstance<BuildingMembershipService>();
+        _viewModel = new MenuPanelViewModel(membershipService);
     }
 
     public void Initialize(User user)
     {
         _user = user;
-        // Reset My Buildings toggle state on each navigation
         MyBuildingsToggle.IsChecked = false;
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
         MyBuildingsArrow.Text = "▼";
@@ -62,11 +63,7 @@ public partial class MenuPanel : UserControl
 
     private void LoadMemberships()
     {
-        var memberships = _membershipService.GetByTenant(_user.Id)
-            .GroupBy(m => m.Building.Id)
-            .Select(g => g.First())
-            .ToList();
-        MyBuildingsMenuPanel.ItemsSource = memberships;
+        MyBuildingsMenuPanel.ItemsSource = _viewModel.GetMemberships(_user.Id);
     }
 
     private void MenuOverlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

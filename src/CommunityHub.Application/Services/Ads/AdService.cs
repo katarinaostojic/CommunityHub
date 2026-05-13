@@ -31,14 +31,10 @@ public class AdService
         return _adRepository.GetById(adId);
     }
 
-    public Ad Create(long buildingId, long authorId, AdType type, AdCategory category,
-        string description, DateOnly dateFrom, DateOnly dateTo)
+    public Ad Create(Ad ad)
     {
-        long adId = _adRepository.Create(buildingId, authorId, type, category,
-            description, dateFrom, dateTo);
-
-        _adSlotRepository.CreateSlots(adId, GenerateSlots(dateFrom, dateTo));
-
+        long adId = _adRepository.Create(ad);
+        _adSlotRepository.CreateSlots(adId, GenerateSlots(ad.DateFrom, ad.DateTo));
         return _adRepository.GetById(adId)!;
     }
 

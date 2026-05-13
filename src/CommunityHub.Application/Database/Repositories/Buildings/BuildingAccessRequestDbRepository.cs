@@ -9,7 +9,7 @@ namespace CommunityHub.Application.Database.Repositories.Buildings;
 
 public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAccessRequestRepository
 {
-    public void Create(User user, Building building, string unitNumber)
+    public void Create(BuildingAccessRequest request)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -17,10 +17,10 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
             INSERT INTO building_access_requests (user_id, building_id, unit_number, created_at, status)
             VALUES (@userId, @buildingId, @unitNumber, @createdAt, 'pending approval')";
 
-        AddParameter(command, "@userId", user.Id);
-        AddParameter(command, "@buildingId", building.Id);
-        AddParameter(command, "@unitNumber", unitNumber);
-        AddParameter(command, "@createdAt", DateTime.UtcNow);
+        AddParameter(command, "@userId", request.Tenant.Id);
+        AddParameter(command, "@buildingId", request.Building.Id);
+        AddParameter(command, "@unitNumber", request.UnitNumber);
+        AddParameter(command, "@createdAt", request.CreatedAt);
 
         command.ExecuteNonQuery();
     }

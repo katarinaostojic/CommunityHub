@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
@@ -23,7 +24,7 @@ public partial class NoticeBoardPage : Page
         _user = user;
         _membership = membership;
 
-        AdService adService = ServiceFactory.CreateAdService();
+        AdService adService = Injector.CreateInstance<AdService>();
         _viewModel = new NoticeBoardViewModel(adService, membership, user.Id);
         DataContext = _viewModel;
 

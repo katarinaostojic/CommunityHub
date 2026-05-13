@@ -2,7 +2,7 @@
 
 public interface IBuildingAccessRequestRepository
 {
-    void Create(User user, Building building, string unitNumber);
+    void Create(BuildingAccessRequest request);
     List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending);
     List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending);
     int CountByTenantAndStatus(long tenantId, RequestStatus? status);

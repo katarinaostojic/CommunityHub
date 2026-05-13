@@ -22,6 +22,17 @@ public class BuildingAccessRequest
         RejectionReason = rejectionReason;
     }
 
+    public BuildingAccessRequest(User tenant, Building building, string unitNumber)
+    {
+        Id = 0;
+        Tenant = tenant;
+        Building = building;
+        UnitNumber = unitNumber;
+        CreatedAt = DateTime.UtcNow;
+        Status = RequestStatus.PendingApproval;
+        RejectionReason = null;
+    }
+
     public bool CanBeCancelled => Status == RequestStatus.PendingApproval;
     public bool HasRejectionReason => Status == RequestStatus.Rejected && RejectionReason != null;
 

@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 
@@ -7,8 +8,11 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class AdPostedViewModel : BaseViewModel
 {
-    public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembership membership)
+    private readonly AdService _adService;
+
+    public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembership membership, AdService adService)
     {
+        _adService = adService;
         PostedAdId = postedAd.Id;
         TypeDisplay = postedAd.Type.ToDisplayString();
         CategoryDisplay = postedAd.Category.ToDisplayString();
@@ -26,6 +30,13 @@ public class AdPostedViewModel : BaseViewModel
     public string BuildingDisplay { get; }
     public string MatchingAdsTitle { get; }
     public ObservableCollection<MatchingAdViewModel> MatchingAds { get; }
+
+    public (Ad? theirAd, Ad? myAd) GetAdsForBooking(long theirAdId)
+    {
+        Ad? theirAd = _adService.GetById(theirAdId);
+        Ad? myAd = _adService.GetById(PostedAdId);
+        return (theirAd, myAd);
+    }
 
     private static string BuildMatchingAdsTitle(Ad postedAd, List<Ad> matchingAds)
     {
