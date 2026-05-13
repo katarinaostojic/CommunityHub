@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using System.Windows;
@@ -21,8 +21,8 @@ public partial class BuildingDetailsPage : Page
         InitializeComponent();
         _currentUser = user;
         _building = building;
-        _buildingService = ServiceFactory.CreateBuildingService();
-        _commonRoomService = ServiceFactory.CreateCommonRoomService();
+        _buildingService = Injector.CreateInstance<BuildingService>();
+        _commonRoomService = Injector.CreateInstance<CommonRoomService>();
         LoadBuildingInfo();
     }
 

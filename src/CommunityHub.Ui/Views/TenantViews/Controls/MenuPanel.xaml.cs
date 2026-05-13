@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Buildings;
@@ -21,7 +22,7 @@ public partial class MenuPanel : UserControl
     public MenuPanel()
     {
         InitializeComponent();
-        _membershipService = ServiceFactory.CreateBuildingMembershipService();
+        _membershipService = Injector.CreateInstance<BuildingMembershipService>();
     }
 
     public void Initialize(User user)

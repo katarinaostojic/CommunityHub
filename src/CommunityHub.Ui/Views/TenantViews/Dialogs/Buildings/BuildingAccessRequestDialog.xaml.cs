@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.DependencyInjection;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -19,7 +20,7 @@ public partial class BuildingAccessRequestDialog : Window
         InitializeComponent();
         _building = building;
         _user = user;
-        _requestService = ServiceFactory.CreateBuildingAccessRequestService();
+        _requestService = Injector.CreateInstance<BuildingAccessRequestService>();
 
         TitleTextBlock.Text = $"REQUEST ACCESS: {building.Street} {building.StreetNumber}";
         BuildingInfoTextBlock.Text = $"Building: {building.Street} {building.StreetNumber}, {building.City.Name}, {building.Neighborhood}";

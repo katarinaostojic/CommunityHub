@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Buildings;
@@ -22,7 +23,7 @@ public partial class BrowseBuildingsPage : Page
         InitializeComponent();
         _user = user;
 
-        BuildingService buildingService = ServiceFactory.CreateBuildingService();
+        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
         _viewModel = new BrowseBuildingsViewModel(buildingService);
         DataContext = _viewModel;
 

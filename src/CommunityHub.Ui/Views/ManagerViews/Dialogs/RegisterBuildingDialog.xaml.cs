@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Buildings;
 using Microsoft.Win32;
@@ -21,9 +22,9 @@ public partial class RegisterBuildingDialog : Window
     {
         InitializeComponent();
         _currentUser = user;
-        _buildingService = ServiceFactory.CreateBuildingService();
-        _cityService = ServiceFactory.CreateCityService();
-        _countryService = ServiceFactory.CreateCountryService();
+        _buildingService = Injector.CreateInstance<BuildingService>();
+        _cityService = Injector.CreateInstance<CityService>();
+        _countryService = Injector.CreateInstance<CountryService>();
         LoadCountries();
         LoadCities();
     }

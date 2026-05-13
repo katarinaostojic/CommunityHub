@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
@@ -22,7 +23,7 @@ public partial class AdPostedPage : Page
         InitializeComponent();
         _user = user;
         _membership = membership;
-        _adService = ServiceFactory.CreateAdService();
+        _adService = Injector.CreateInstance<AdService>();
 
         _viewModel = new AdPostedViewModel(postedAd, matchingAds, membership);
         DataContext = _viewModel;

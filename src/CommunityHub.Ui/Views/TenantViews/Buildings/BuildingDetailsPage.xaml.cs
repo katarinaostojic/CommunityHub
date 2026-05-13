@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Buildings;
@@ -20,8 +21,8 @@ public partial class BuildingDetailsPage : Page
         InitializeComponent();
         _user = user;
 
-        BuildingService buildingService = ServiceFactory.CreateBuildingService();
-        BuildingAccessRequestService requestService = ServiceFactory.CreateBuildingAccessRequestService();
+        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
+        BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
         Building fullBuilding = buildingService.GetById(building.Id) ?? building;
 
         _viewModel = new BuildingDetailsViewModel(fullBuilding, requestService);

@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services;
@@ -24,7 +25,7 @@ public partial class ManagerNoticeBoardDetailsPage : Page
         InitializeComponent();
         _currentUser = user;
         _building = building;
-        _adService = ServiceFactory.CreateAdService();
+        _adService = Injector.CreateInstance<AdService>();
         BuildingTitleText.Text = $"{_building.Street} {_building.StreetNumber}";
         LoadAds();
         PopulatePeriodComboBox();
