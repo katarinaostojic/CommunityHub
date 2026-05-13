@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommunityHub.Application.Domain;
+namespace CommunityHub.Application.Domain.Neighborhoods;
 
 public class Street
 {

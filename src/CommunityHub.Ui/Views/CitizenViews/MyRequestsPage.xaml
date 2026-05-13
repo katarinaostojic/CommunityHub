@@ -130,7 +130,7 @@
 
             <Button x:Name="SortButton"
                     Grid.Column="2"
-                    Content="Date ↓"
+                    Content="{Binding SortButtonLabel}"
                     FontSize="20"
                     FontWeight="Bold"
                     Height="52"
@@ -160,7 +160,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="ResultsTextBlock"
+            <TextBlock Text="{Binding ResultsText}"
                        Grid.Row="0"
                        FontSize="28"
                        FontWeight="Bold"
@@ -169,7 +169,7 @@
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl x:Name="RequestsItemsControl">
+                <ItemsControl ItemsSource="{Binding Requests}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="#4F4F4F"
@@ -257,7 +257,7 @@
                                                      Stroke="Black"
                                                      StrokeThickness="1.5"
                                                      Margin="0,2,12,0"/>
-                                            <TextBlock Text="{Binding StatusText}"
+                                            <TextBlock Text="{Binding StatusDisplay}"
                                                        FontSize="22"
                                                        FontWeight="Bold"
                                                        VerticalAlignment="Center"/>
@@ -296,7 +296,7 @@
                                                 BorderThickness="0"
                                                 Visibility="{Binding DeleteVisibility}"
                                                 Click="DeleteRequestButton_Click"
-                                                Tag="{Binding Id}"/>
+                                                Tag="{Binding}"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>

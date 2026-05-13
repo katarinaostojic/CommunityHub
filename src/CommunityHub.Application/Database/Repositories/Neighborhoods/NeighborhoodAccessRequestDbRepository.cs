@@ -1,10 +1,12 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
-public class NeighborhoodAccessRequestDbRepository : BaseDbRepository
+public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighborhoodAccessRequestRepository
 {
     public void Create(User citizen, Neighborhood neighborhood)
     {
@@ -145,7 +147,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = $@"
             SELECT r.id, r.created_at, r.status, r.rejection_reason,
-                   n.id AS n_id, n.name AS neighborhood_name,
+                   n.id AS neighborhood_id, n.name AS neighborhood_name,
                    n.description, n.city_id, c.name AS city_name,
                    co.name AS country_name, n.budget, n.coordinator_id,
                    u.id AS citizen_id, u.username, u.password, u.name AS citizen_name,
@@ -208,7 +210,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository
     private Neighborhood MapNeighborhood(IDataReader reader)
     {
         return new Neighborhood(
-            Convert.ToInt64(reader["n_id"]),
+            Convert.ToInt64(reader["neighborhood_id"]),
             reader["neighborhood_name"].ToString()!,
             reader["description"].ToString()!,
             new Location(

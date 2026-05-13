@@ -1,12 +1,14 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Database.Repositories.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings;
+using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Neighborhoods;
 
 namespace CommunityHub.Application.DependencyInjection;
 
@@ -54,17 +56,25 @@ public static class Injector
                 new CommonRoomDbRepository(),
                 new BuildingDbRepository(new ImageDbRepository()))
         },
+        {
+            typeof(NeighborhoodService),
+            new NeighborhoodService(
+                new NeighborhoodDbRepository())
+        },
+        {
+            typeof(NeighborhoodAccessRequestService),
+            new NeighborhoodAccessRequestService(
+                new NeighborhoodAccessRequestDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()
     {
         Type type = typeof(T);
-
         if (_implementations.TryGetValue(type, out object? implementation))
         {
             return (T)implementation;
         }
-
         throw new ArgumentException($"No implementation registered for type {type.FullName}");
     }
 }

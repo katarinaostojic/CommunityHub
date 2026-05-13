@@ -1,54 +1,37 @@
-﻿using System;
+﻿using CommunityHub.Application.Domain;
+using System;
 using System.Windows;
-using CommunityHub.Application.Domain;
-using CommunityHub.Ui.Views.CitizenViews;
 
-namespace CommunityHub.Ui.Views.CitizenViews.Dialogs
+namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
+
+public partial class NeighborhoodAccessGrantedDialog : Window
 {
-    public partial class NeighborhoodAccessGrantedDialog : Window
+    private readonly User _user;
+    private readonly Window _parentWindow;
+
+    public NeighborhoodAccessGrantedDialog(User user, string neighborhoodName, Window parentWindow)
     {
-        private readonly User _user;
-        private readonly Neighborhood _neighborhood;
-        private readonly Window _parentWindow;
+        InitializeComponent();
+        _user = user;
+        _parentWindow = parentWindow;
 
-        public NeighborhoodAccessGrantedDialog(User user, Neighborhood neighborhood, Window parentWindow)
-        {
-            InitializeComponent();
+        NeighborhoodNameText.Text = neighborhoodName;
+        CitizenNameText.Text = _user.Username;
+        JoinDateText.Text = DateTime.Now.ToString("dd.MM.yyyy.");
 
-            _user = user;
-            _neighborhood = neighborhood;
-            _parentWindow = parentWindow;
+        CloseButton.Click += CloseButton_Click;
+        GoToDashboardButton.Click += GoToDashboardButton_Click;
+        ViewMyRequestsButton.Click += ViewMyRequestsButton_Click;
+    }
 
-            LoadData();
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
-            CloseButton.Click += CloseButton_Click;
-            GoToDashboardButton.Click += GoToDashboardButton_Click;
-            ViewMyRequestsButton.Click += ViewMyRequestsButton_Click;
-        }
+    private void GoToDashboardButton_Click(object sender, RoutedEventArgs e) => Close();
 
-        private void LoadData()
-        {
-            NeighborhoodNameText.Text = _neighborhood.Name;
-            CitizenNameText.Text = _user.Username;
-            JoinDateText.Text = DateTime.Now.ToString("dd.MM.yyyy.");
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void GoToDashboardButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void ViewMyRequestsButton_Click(object sender, RoutedEventArgs e)
-        {
-            MyRequestsPage myRequestsPage = new MyRequestsPage(_user);
-            myRequestsPage.Show();
-            _parentWindow.Close();
-            Close();
-        }
+    private void ViewMyRequestsButton_Click(object sender, RoutedEventArgs e)
+    {
+        new MyRequestsPage(_user).Show();
+        _parentWindow?.Close();
+        Close();
     }
 }

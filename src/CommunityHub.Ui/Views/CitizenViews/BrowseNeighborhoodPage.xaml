@@ -168,8 +168,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="ResultsTitleTextBlock"
-                       Text="Browse Neighborhood - 0 results"
+            <TextBlock Text="{Binding ResultsTitleText}"
                        FontSize="32"
                        FontWeight="Bold"
                        Margin="0,0,0,14"
@@ -178,7 +177,7 @@
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl x:Name="NeighborhoodsPanel">
+                <ItemsControl ItemsSource="{Binding FilteredNeighborhoods}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="#4F4F4F"

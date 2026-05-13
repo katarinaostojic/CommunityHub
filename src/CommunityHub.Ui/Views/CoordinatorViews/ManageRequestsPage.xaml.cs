@@ -1,7 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Ui.ViewModels.CoordinatorViewModels;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
@@ -16,7 +19,7 @@ public partial class ManageRequestsPage : Page
     {
         InitializeComponent();
         _coordinatorId = coordinatorId;
-        _requestService = new NeighborhoodAccessRequestService();
+        _requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
         LoadRequests();
     }
 
@@ -25,7 +28,7 @@ public partial class ManageRequestsPage : Page
         string? statusFilter = _currentFilter == null ? null : StatusToString(_currentFilter.Value);
 
         var requests = _requestService.GetAllByCoordinator(_coordinatorId, statusFilter, _sortDescending)
-            .Select(r => new NeighborhoodAccessRequestViewModel(r))
+            .Select(r => new NeighborhoodAccessRequestCoordinatorViewModel(r))
             .ToList();
 
         RequestsItemsControl.ItemsSource = requests;
@@ -72,7 +75,7 @@ public partial class ManageRequestsPage : Page
 
     private void ApproveButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (NeighborhoodAccessRequestViewModel)((Button)sender).Tag;
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
 
         try
         {
@@ -88,7 +91,7 @@ public partial class ManageRequestsPage : Page
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (NeighborhoodAccessRequestViewModel)((Button)sender).Tag;
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
 
         try
         {
@@ -107,37 +110,4 @@ public partial class ManageRequestsPage : Page
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-}
-
-public class NeighborhoodAccessRequestViewModel
-{
-    private readonly NeighborhoodAccessRequest _request;
-
-    public NeighborhoodAccessRequestViewModel(NeighborhoodAccessRequest request)
-    {
-        _request = request;
-    }
-
-    public NeighborhoodAccessRequest Request => _request;
-    public long Id => _request.Id;
-    public User Citizen => _request.Citizen;
-    public Neighborhood Neighborhood => _request.Neighborhood;
-    public DateTime CreatedAt => _request.CreatedAt;
-    public RequestStatus Status => _request.Status;
-
-    public string StatusDisplay => _request.Status switch
-    {
-        RequestStatus.PendingApproval => "⏳ Pending approval",
-        RequestStatus.Approved => "✔ Approved",
-        RequestStatus.Rejected => "✕ Rejected",
-        _ => _request.Status.ToString()
-    };
-
-    public string RejectionReasonDisplay => _request.RejectionReason != null
-        ? $"Note: {_request.RejectionReason}"
-        : string.Empty;
-
-    public bool ApproveRejectVisible => _request.Status == RequestStatus.PendingApproval;
-    public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
-                                       && _request.RejectionReason != null;
 }

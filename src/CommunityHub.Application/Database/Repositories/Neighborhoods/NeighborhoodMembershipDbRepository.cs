@@ -1,10 +1,12 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
-public class NeighborhoodMembershipDbRepository : BaseDbRepository
+public class NeighborhoodMembershipDbRepository : BaseDbRepository, INeighborhoodMembershipRepository
 {
     public List<NeighborhoodMembership> GetByNeighborhood(long neighborhoodId)
     {

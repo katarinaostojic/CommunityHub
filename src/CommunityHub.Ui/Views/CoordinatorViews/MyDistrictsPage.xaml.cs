@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Database.Repositories.Neighborhoods;
+using CommunityHub.Application.Domain.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 

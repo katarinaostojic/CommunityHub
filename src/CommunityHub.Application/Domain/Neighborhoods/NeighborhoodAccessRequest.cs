@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
 
 public class NeighborhoodAccessRequest
 {

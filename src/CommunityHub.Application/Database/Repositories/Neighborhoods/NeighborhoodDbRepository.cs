@@ -1,11 +1,13 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 using System.Data;
 using System.Linq;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
-public class NeighborhoodDbRepository : BaseDbRepository
+public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepository
 {
     private readonly ImageDbRepository _imageRepository = new();
 

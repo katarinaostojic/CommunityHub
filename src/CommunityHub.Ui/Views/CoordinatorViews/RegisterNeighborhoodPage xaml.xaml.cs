@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Database.Repositories.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
