@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
@@ -9,7 +10,7 @@ public class NewAdViewModel : BaseViewModel
 {
     private readonly AdService _adService;
     private readonly long _buildingId;
-    private readonly long _authorId;
+    private readonly User _author;
 
     private AdType _selectedType = AdType.Offering;
     private string _descriptionError = string.Empty;
@@ -17,11 +18,11 @@ public class NewAdViewModel : BaseViewModel
     private string _dateError = string.Empty;
     private bool _hasDateError;
 
-    public NewAdViewModel(AdService adService, BuildingMembership membership, long authorId)
+    public NewAdViewModel(AdService adService, BuildingMembership membership, User author)
     {
         _adService = adService;
         _buildingId = membership.Building.Id;
-        _authorId = authorId;
+        _author = author;
         BuildingSubtitle = $"Building: {membership.Building.Street} {membership.Building.StreetNumber}, {membership.Building.Neighborhood}";
         CategoryOptions = Enum.GetValues<AdCategory>()
             .Select(c => c.ToDisplayString())
@@ -83,7 +84,8 @@ public class NewAdViewModel : BaseViewModel
         DateOnly to = DateOnly.FromDateTime(dateTo!.Value);
         AdCategory category = (AdCategory)categoryIndex;
 
-        Ad newAd = _adService.Create(_buildingId, _authorId, SelectedType, category, description.Trim(), from, to);
+        Ad ad = new Ad(_buildingId, _author, SelectedType, category, description.Trim(), from, to);
+        Ad newAd = _adService.Create(ad);
         List<Ad> matchingAds = _adService.FindMatchingAds(newAd);
 
         return (newAd, matchingAds);

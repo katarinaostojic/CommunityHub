@@ -47,8 +47,7 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         return ads.Count == 0 ? null : ads[0];
     }
 
-    public long Create(long buildingId, long authorId, AdType type, AdCategory category,
-        string description, DateOnly dateFrom, DateOnly dateTo)
+    public long Create(Ad ad)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -60,13 +59,13 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
                  @description, @dateFrom, @dateTo)
             RETURNING id";
 
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@authorId", authorId);
-        AddParameter(command, "@type", AdMapper.ToDbType(type));
-        AddParameter(command, "@category", AdMapper.ToDbCategory(category));
-        AddParameter(command, "@description", description);
-        AddParameter(command, "@dateFrom", DateTime.SpecifyKind(dateFrom.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
-        AddParameter(command, "@dateTo", DateTime.SpecifyKind(dateTo.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@buildingId", ad.BuildingId);
+        AddParameter(command, "@authorId", ad.Author.Id);
+        AddParameter(command, "@type", AdMapper.ToDbType(ad.Type));
+        AddParameter(command, "@category", AdMapper.ToDbCategory(ad.Category));
+        AddParameter(command, "@description", ad.Description);
+        AddParameter(command, "@dateFrom", DateTime.SpecifyKind(ad.DateFrom.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@dateTo", DateTime.SpecifyKind(ad.DateTo.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
 
         return Convert.ToInt64(command.ExecuteScalar());
     }

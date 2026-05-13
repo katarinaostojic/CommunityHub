@@ -28,6 +28,21 @@ public class Ad
         Slots = new List<AdSlot>();
     }
 
+    public Ad(long buildingId, User author, AdType type, AdCategory category,
+        string description, DateOnly dateFrom, DateOnly dateTo)
+    {
+        Id = 0;
+        BuildingId = buildingId;
+        Author = author;
+        Type = type;
+        Category = category;
+        Description = description;
+        DateFrom = dateFrom;
+        DateTo = dateTo;
+        Status = AdStatus.Active;
+        Slots = new List<AdSlot>();
+    }
+
     public void AddSlot(AdSlot slot) => Slots.Add(slot);
 
     public void Archive() => Status = AdStatus.Archived;

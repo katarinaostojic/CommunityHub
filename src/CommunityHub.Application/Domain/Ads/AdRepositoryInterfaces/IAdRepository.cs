@@ -4,8 +4,7 @@ public interface IAdRepository
 {
     List<Ad> GetActiveByBuilding(long buildingId);
     Ad? GetById(long adId);
-    long Create(long buildingId, long authorId, AdType type, AdCategory category,
-        string description, DateOnly dateFrom, DateOnly dateTo);
+    long Create(Ad ad);
     void Update(Ad ad);
     List<Ad> GetAllByBuilding(long buildingId);
 }
