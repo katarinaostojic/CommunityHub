@@ -12,11 +12,11 @@ public class BuildingDetailsViewModel : BaseViewModel
     private List<string> _imageDotColors = new();
     private int _pendingRequestsCount;
 
-    public BuildingDetailsViewModel(Building building, BuildingAccessRequestService requestService)
+    public BuildingDetailsViewModel(Building building, BuildingService buildingService, BuildingAccessRequestService requestService)
     {
-        Building = building;
+        Building = buildingService.GetById(building.Id) ?? building;
         _requestService = requestService;
-        _pendingRequestsCount = _requestService.GetPendingRequestsCount(building.Id);
+        _pendingRequestsCount = _requestService.GetPendingRequestsCount(Building.Id);
         UpdateImageState();
     }
 
