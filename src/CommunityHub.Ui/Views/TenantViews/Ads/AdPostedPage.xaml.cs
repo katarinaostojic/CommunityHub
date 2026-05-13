@@ -1,8 +1,7 @@
-﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
@@ -16,16 +15,15 @@ public partial class AdPostedPage : Page
     private readonly User _user;
     private readonly BuildingMembership _membership;
     private readonly AdPostedViewModel _viewModel;
-    private readonly AdService _adService;
 
     public AdPostedPage(User user, BuildingMembership membership, Ad postedAd, List<Ad> matchingAds)
     {
         InitializeComponent();
         _user = user;
         _membership = membership;
-        _adService = Injector.CreateInstance<AdService>();
 
-        _viewModel = new AdPostedViewModel(postedAd, matchingAds, membership);
+        AdService adService = Injector.CreateInstance<AdService>();
+        _viewModel = new AdPostedViewModel(postedAd, matchingAds, membership, adService);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -36,10 +34,8 @@ public partial class AdPostedPage : Page
     {
         if (sender is Button button && button.Tag is MatchingAdViewModel matchingAd)
         {
-            Ad? theirAd = _adService.GetById(matchingAd.Id);
-            if (theirAd == null) return;
-            Ad? myAd = _adService.GetById(_viewModel.PostedAdId);
-            if (myAd == null) return;
+            var (theirAd, myAd) = _viewModel.GetAdsForBooking(matchingAd.Id);
+            if (theirAd == null || myAd == null) return;
             NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd, this));
         }
     }
