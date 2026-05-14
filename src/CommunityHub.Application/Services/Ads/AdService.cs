@@ -25,8 +25,6 @@ public class AdService
         _notificationRepository = notificationRepository;
     }
 
-    // Tenant DTO methods
-
     public List<AdDto> GetActiveByBuilding(long buildingId)
     {
         return _adRepository.GetActiveByBuilding(buildingId).ToTenantAdDtoList();

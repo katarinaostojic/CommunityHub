@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Windows;
@@ -11,7 +11,7 @@ public class AdDetailsViewModel : BaseViewModel
     private readonly long _adId;
     private bool _isActive;
 
-    public AdDetailsViewModel(Ad ad, AdService adService)
+    public AdDetailsViewModel(AdDto ad, AdService adService)
     {
         _adService = adService;
         _adId = ad.Id;
@@ -63,5 +63,5 @@ public class AdDetailsViewModel : BaseViewModel
         IsActive = true;
     }
 
-    public Ad? GetRefreshedAd() => _adService.GetById(_adId);
+    public AdDto? GetRefreshedAd() => _adService.GetById(_adId);
 }

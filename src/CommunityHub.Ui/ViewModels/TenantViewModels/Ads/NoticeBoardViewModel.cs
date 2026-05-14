@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ public class NoticeBoardViewModel : BaseViewModel
     private readonly long _currentUserId;
     private readonly long _buildingId;
 
-    private List<Ad> _allActiveAds = new();
+    private List<AdDto> _allActiveAds = new();
     private ObservableCollection<AdViewModel> _filteredAds = new();
     private ObservableCollection<AdNotificationViewModel> _notifications = new();
     private AdType? _currentTypeFilter = null;
@@ -121,13 +121,13 @@ public class NoticeBoardViewModel : BaseViewModel
         LoadAds();
     }
 
-    public Ad? GetAdById(long adId) => _adService.GetById(adId);
+    public AdDto? GetAdById(long adId) => _adService.GetById(adId);
 
-    public Ad? GetMyMatchingAd(Ad theirAd)
+    public AdDto? GetMyMatchingAd(AdDto theirAd)
     {
         AdType myType = theirAd.Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
         return _allActiveAds.FirstOrDefault(ad =>
-            ad.Author.Id == _currentUserId
+            ad.AuthorId == _currentUserId
             && ad.Type == myType
             && ad.Category == theirAd.Category
             && ad.OverlapsWith(theirAd.DateFrom, theirAd.DateTo));
