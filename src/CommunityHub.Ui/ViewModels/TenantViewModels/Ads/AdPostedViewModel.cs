@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
@@ -10,14 +11,14 @@ public class AdPostedViewModel : BaseViewModel
 {
     private readonly AdService _adService;
 
-    public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembership membership, AdService adService)
+    public AdPostedViewModel(AdDto postedAd, List<AdDto> matchingAds, BuildingMembershipDto membership, AdService adService)
     {
         _adService = adService;
         PostedAdId = postedAd.Id;
         TypeDisplay = postedAd.Type.ToDisplayString();
         CategoryDisplay = postedAd.Category.ToDisplayString();
         DateRangeDisplay = $"{postedAd.DateFrom:dd.MM.yyyy} – {postedAd.DateTo:dd.MM.yyyy}";
-        BuildingDisplay = $"{membership.Building.Street} {membership.Building.StreetNumber}";
+        BuildingDisplay = membership.BuildingFullAddress;
         MatchingAdsTitle = BuildMatchingAdsTitle(postedAd, matchingAds);
         MatchingAds = new ObservableCollection<MatchingAdViewModel>(
             matchingAds.Select(ad => new MatchingAdViewModel(ad, postedAd)));
@@ -31,14 +32,14 @@ public class AdPostedViewModel : BaseViewModel
     public string MatchingAdsTitle { get; }
     public ObservableCollection<MatchingAdViewModel> MatchingAds { get; }
 
-    public (Ad? theirAd, Ad? myAd) GetAdsForBooking(long theirAdId)
+    public (AdDto? theirAd, AdDto? myAd) GetAdsForBooking(long theirAdId)
     {
-        Ad? theirAd = _adService.GetById(theirAdId);
-        Ad? myAd = _adService.GetById(PostedAdId);
+        AdDto? theirAd = _adService.GetById(theirAdId);
+        AdDto? myAd = _adService.GetById(PostedAdId);
         return (theirAd, myAd);
     }
 
-    private static string BuildMatchingAdsTitle(Ad postedAd, List<Ad> matchingAds)
+    private static string BuildMatchingAdsTitle(AdDto postedAd, List<AdDto> matchingAds)
     {
         if (matchingAds.Count == 0)
             return "No matching ads found at the moment. You will be notified when one appears.";

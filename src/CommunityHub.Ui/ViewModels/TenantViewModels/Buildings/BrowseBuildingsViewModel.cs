@@ -7,7 +7,7 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 public class BrowseBuildingsViewModel : BaseViewModel
 {
     private readonly BuildingService _buildingService;
-    private const int PageSize = 3;
+    private const int BuildingsPerPage = 3;
 
     private List<BuildingDto> _allBuildings = new();
     private ObservableCollection<BuildingDto> _currentPageBuildings = new();
@@ -74,7 +74,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
 
     private void UpdatePage()
     {
-        int totalPages = Math.Max(1, (int)Math.Ceiling(_allBuildings.Count / (double)PageSize));
+        int totalPages = Math.Max(1, (int)Math.Ceiling(_allBuildings.Count / (double)BuildingsPerPage));
 
         PageLabelText = $"Page {_currentPage} of {totalPages}";
         HasPreviousPage = _currentPage > 1;
@@ -82,7 +82,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
 
         CurrentPageBuildings = new ObservableCollection<BuildingDto>(
             _allBuildings
-                .Skip((_currentPage - 1) * PageSize)
-                .Take(PageSize));
+                .Skip((_currentPage - 1) * BuildingsPerPage)
+                .Take(BuildingsPerPage));
     }
 }

@@ -174,7 +174,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         return Convert.ToInt64(command.ExecuteScalar());
     }
 
-    public long CreateFloorReturningId(long buildingId, int floorNumber)
+    public long CreateFloor(long buildingId, int floorNumber)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();

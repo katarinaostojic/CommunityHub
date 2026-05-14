@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
@@ -6,13 +6,13 @@ public class SelectableSlotChipViewModel : BaseViewModel
 {
     private bool _isSelected;
 
-    public SelectableSlotChipViewModel(AdSlot slot)
+    public SelectableSlotChipViewModel(AdSlotDto slot)
     {
         Slot = slot;
-        Display = $"{slot.StartTime:HH:mm} - {slot.EndTime:HH:mm}";
+        Display = slot.TimeDisplay;
     }
 
-    public AdSlot Slot { get; }
+    public AdSlotDto Slot { get; }
     public string Display { get; }
 
     public bool IsSelected

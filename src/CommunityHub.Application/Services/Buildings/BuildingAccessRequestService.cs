@@ -25,7 +25,10 @@ public class BuildingAccessRequestService
     public void CreateForBuilding(long buildingId, User tenant, string unitNumber)
     {
         Building building = _buildingRepository.GetById(buildingId)
-            ?? throw new Exception("Building not found.");
+            ?? throw new InvalidOperationException("Building not found.");
+
+        ValidateAccessRequest(building, tenant.Id, unitNumber);
+
         BuildingAccessRequest request = new BuildingAccessRequest(tenant, building, unitNumber);
         _repository.Create(request);
     }
@@ -50,9 +53,18 @@ public class BuildingAccessRequestService
         return _repository.GetPendingRequestsCount(buildingId);
     }
 
+    public void Cancel(long requestId)
+    {
+        BuildingAccessRequest request = _repository.GetById(requestId)
+            ?? throw new InvalidOperationException("Request not found.");
+
+        request.Cancel();
+        _repository.Delete(requestId);
+    }
+
     public void Delete(long id)
     {
-        _repository.Delete(id);
+        Cancel(id);
     }
 
     public void ApproveRequest(BuildingAccessRequest request)
@@ -66,5 +78,17 @@ public class BuildingAccessRequestService
     {
         request.Reject(rejectionReason);
         _repository.Update(request);
+    }
+
+    private void ValidateAccessRequest(Building building, long tenantId, string unitNumber)
+    {
+        if (string.IsNullOrWhiteSpace(unitNumber))
+            throw new InvalidOperationException("Apartment number is required.");
+
+        if (!building.ContainsUnit(unitNumber))
+            throw new InvalidOperationException("Apartment does not exist in this building.");
+
+        if (building.HasExistingRequest(tenantId, unitNumber))
+            throw new InvalidOperationException("You already have a pending request for this apartment.");
     }
 }

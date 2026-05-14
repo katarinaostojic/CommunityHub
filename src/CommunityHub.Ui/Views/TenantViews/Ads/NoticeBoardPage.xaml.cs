@@ -1,8 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.TenantAds;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
@@ -14,11 +13,11 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class NoticeBoardPage : Page
 {
     private readonly User _user;
-    private readonly BuildingMembership _membership;
+    private readonly BuildingMembershipDto _membership;
     private readonly NoticeBoardViewModel _viewModel;
     private long? _lastArchivedAdId = null;
 
-    public NoticeBoardPage(User user, BuildingMembership membership)
+    public NoticeBoardPage(User user, BuildingMembershipDto membership)
     {
         InitializeComponent();
         _user = user;
@@ -73,10 +72,10 @@ public partial class NoticeBoardPage : Page
     private void ViewSlotsButton_Click(object sender, RoutedEventArgs e)
     {
         AdViewModel adVm = (AdViewModel)((Button)sender).Tag;
-        Ad? theirAd = _viewModel.GetAdById(adVm.Id);
+        AdDto? theirAd = _viewModel.GetAdById(adVm.Id);
         if (theirAd == null) return;
         if (adVm.MyMatchingAdId == null) return;
-        Ad? myAd = _viewModel.GetAdById(adVm.MyMatchingAdId.Value);
+        AdDto? myAd = _viewModel.GetAdById(adVm.MyMatchingAdId.Value);
         if (myAd == null) return;
         NavigationService.Navigate(new BookSlotsPage(_user, _membership, theirAd, myAd, this));
     }
@@ -84,7 +83,7 @@ public partial class NoticeBoardPage : Page
     private void ViewBookingsButton_Click(object sender, RoutedEventArgs e)
     {
         AdViewModel adVm = (AdViewModel)((Button)sender).Tag;
-        Ad? ad = _viewModel.GetAdById(adVm.Id);
+        AdDto? ad = _viewModel.GetAdById(adVm.Id);
         if (ad == null) return;
         NavigationService.Navigate(new AdDetailsPage(_user, _membership, ad));
     }
@@ -106,7 +105,7 @@ public partial class NoticeBoardPage : Page
     {
         if (sender is not Button button) return;
         if (button.DataContext is not AdNotificationViewModel notif) return;
-        Ad? myAd = _viewModel.GetAdById(notif.AdId);
+        AdDto? myAd = _viewModel.GetAdById(notif.AdId);
         if (myAd == null) return;
         NavigationService.Navigate(new AdDetailsPage(_user, _membership, myAd));
     }

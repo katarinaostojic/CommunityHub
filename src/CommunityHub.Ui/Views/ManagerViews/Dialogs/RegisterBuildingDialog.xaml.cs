@@ -176,7 +176,7 @@ public partial class RegisterBuildingDialog : Window
         {
             TextBox unitTextBox = (TextBox)floorGrid.Children[1];
             int floorNumber = (int)unitTextBox.Tag;
-            long floorId = _buildingService.CreateFloorReturningId(buildingId, floorNumber);
+            long floorId = _buildingService.CreateFloor(buildingId, floorNumber);
             CreateUnitsForFloor(floorId, unitTextBox.Text);
         }
     }

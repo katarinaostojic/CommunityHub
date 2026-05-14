@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
 using System.Collections.ObjectModel;
 
@@ -49,13 +49,13 @@ public class AdSlotsViewModel : BaseViewModel
 
     private void LoadBookedSlots()
     {
-        List<(AdSlot slot, Ad? bookedByAd)> bookedWithAds = _adService.GetBookedSlotsWithAds(_adId);
+        List<BookedAdSlotDto> bookedWithAds = _adService.GetBookedSlotsWithAds(_adId);
 
         List<BookedSlotGroupViewModel> grouped = bookedWithAds
-            .GroupBy(x => x.bookedByAd?.Id)
+            .GroupBy(x => x.BookedByAd?.Id)
             .Select(g => new BookedSlotGroupViewModel(
-                g.Select(x => x.slot).ToList(),
-                g.First().bookedByAd))
+                g.Select(x => x.Slot).ToList(),
+                g.First().BookedByAd))
             .ToList();
 
         BookedSlotGroups = new ObservableCollection<BookedSlotGroupViewModel>(grouped);

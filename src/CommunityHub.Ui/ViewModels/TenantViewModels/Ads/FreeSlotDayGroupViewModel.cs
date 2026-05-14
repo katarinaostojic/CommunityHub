@@ -1,10 +1,10 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class FreeSlotDayGroupViewModel : BaseViewModel
 {
-    public FreeSlotDayGroupViewModel(DateOnly date, List<AdSlot> slots)
+    public FreeSlotDayGroupViewModel(DateOnly date, List<AdSlotDto> slots)
     {
         DateDisplay = date.ToString("dd.MM");
         Slots = slots.Select(s => new SlotChipViewModel(s)).ToList();

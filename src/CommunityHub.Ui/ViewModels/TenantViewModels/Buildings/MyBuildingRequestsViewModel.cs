@@ -83,7 +83,7 @@ public class MyBuildingRequestsViewModel : BaseViewModel
 
     public void CancelRequest(long requestId)
     {
-        _requestService.Delete(requestId);
+        _requestService.Cancel(requestId);
         LoadRequests();
         UpdateCounts();
     }

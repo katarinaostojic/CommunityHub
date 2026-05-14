@@ -1,13 +1,13 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class BookedSlotGroupViewModel : BaseViewModel
 {
-    public BookedSlotGroupViewModel(List<AdSlot> slots, Ad? bookedByAd)
+    public BookedSlotGroupViewModel(List<AdSlotDto> slots, AdDto? bookedByAd)
     {
-        TenantName = bookedByAd?.Author.DisplayName ?? "Unknown";
+        TenantName = bookedByAd?.AuthorName ?? "Unknown";
         TheirAdDescription = bookedByAd?.Description ?? string.Empty;
         TheirAdType = bookedByAd?.Type.ToDisplayString() ?? string.Empty;
         TheirAdCategory = bookedByAd != null ? bookedByAd.Category.ToDisplayString() : string.Empty;

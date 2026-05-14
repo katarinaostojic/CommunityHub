@@ -1,8 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
@@ -14,11 +13,11 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class BookSlotsPage : Page
 {
     private readonly User _user;
-    private readonly BuildingMembership _membership;
+    private readonly BuildingMembershipDto _membership;
     private readonly Page _returnPage;
     private readonly BookSlotsViewModel _viewModel;
 
-    public BookSlotsPage(User user, BuildingMembership membership, Ad theirAd, Ad myAd, Page returnPage)
+    public BookSlotsPage(User user, BuildingMembershipDto membership, AdDto theirAd, AdDto myAd, Page returnPage)
     {
         InitializeComponent();
         _user = user;

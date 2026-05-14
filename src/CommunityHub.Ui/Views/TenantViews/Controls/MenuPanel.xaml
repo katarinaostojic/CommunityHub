@@ -127,8 +127,8 @@
                                         <TextBlock FontSize="13" FontWeight="SemiBold">
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} {1}">
-                                                    <Binding Path="Building.Street"/>
-                                                    <Binding Path="Building.StreetNumber"/>
+                                                    <Binding Path="BuildingStreet"/>
+                                                    <Binding Path="BuildingStreetNumber"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>

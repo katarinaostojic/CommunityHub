@@ -46,4 +46,10 @@ public class BuildingAccessRequest
         Status = RequestStatus.Rejected;
         RejectionReason = rejectionReason;
     }
+
+    public void Cancel()
+    {
+        if (!CanBeCancelled)
+            throw new InvalidOperationException("Only pending requests can be cancelled.");
+    }
 }

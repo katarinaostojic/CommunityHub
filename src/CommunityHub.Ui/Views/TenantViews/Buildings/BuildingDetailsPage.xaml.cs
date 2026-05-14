@@ -73,9 +73,13 @@ public partial class BuildingDetailsPage : Page
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
         NavigationService.Navigate(new MyBuildingRequestsPage(_user));
 
-    private void BackButton_Click(object sender, RoutedEventArgs e) =>
-        NavigationService.GoBack();
-
+    private void BackButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (NavigationService.CanGoBack)
+            NavigationService.GoBack();
+        else
+            NavigationService.Navigate(new BrowseBuildingsPage(_user));
+    }
     private void MenuButton_Click(object sender, RoutedEventArgs e) =>
         AppMenu.Open();
 }

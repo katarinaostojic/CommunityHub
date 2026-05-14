@@ -1,21 +1,21 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class MatchingAdViewModel : BaseViewModel
 {
-    private readonly Ad _ad;
-    private readonly Ad _myAd;
+    private readonly AdDto _ad;
+    private readonly AdDto _myAd;
 
-    public MatchingAdViewModel(Ad ad, Ad myAd)
+    public MatchingAdViewModel(AdDto ad, AdDto myAd)
     {
         _ad = ad;
         _myAd = myAd;
     }
 
     public long Id => _ad.Id;
-    public string AuthorName => _ad.Author.DisplayName;
+    public string AuthorName => _ad.AuthorName;
     public string Description => _ad.Description;
     public string TypeDisplay => _ad.Type.ToDisplayString();
     public string CategoryDisplay => _ad.Category.ToDisplayString();

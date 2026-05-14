@@ -8,7 +8,7 @@
     <StackPanel Margin="30">
 
         <!-- Naslov -->
-        <TextBlock x:Name="TitleTextBlock"
+        <TextBlock Text="{Binding Title}"
                    Style="{StaticResource PageTitle}"
                    Margin="0,0,0,20"/>
 
@@ -21,25 +21,36 @@
         </StackPanel>
 
         <!-- Info o zgradi -->
-        <TextBlock x:Name="BuildingInfoTextBlock"
+        <TextBlock Text="{Binding BuildingInfo}"
                    Style="{StaticResource SecondaryText}"
                    Margin="0,0,0,16"/>
 
         <!-- Unos broja stana -->
         <TextBlock Text="Enter Apartment Number:" FontWeight="SemiBold"
                    FontSize="13" Margin="0,0,0,6"/>
-        <ComboBox x:Name="UnitComboBox"
+
+        <ComboBox ItemsSource="{Binding SortedUnitNumbers}"
+                  Text="{Binding UnitNumber, UpdateSourceTrigger=PropertyChanged}"
                   IsEditable="True"
                   FontSize="13" Padding="6,4"
-                  Margin="0,0,0,8"
-                  SelectionChanged="UnitComboBox_SelectionChanged"
-                  KeyUp="UnitComboBox_KeyUp"/>
+                  Margin="0,0,0,8"/>
 
         <!-- Warning -->
-        <StackPanel x:Name="WarningPanel" Orientation="Horizontal"
-                    Visibility="Collapsed" Margin="0,0,0,12">
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,0,0,12">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasWarning}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+
             <TextBlock Text="⚠️" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Top"/>
-            <TextBlock x:Name="WarningTextBlock"
+            <TextBlock Text="{Binding WarningMessage}"
                        Foreground="{StaticResource DangerBrush}"
                        FontSize="13"
                        TextWrapping="Wrap" Width="380"/>
@@ -58,10 +69,12 @@
                 <ColumnDefinition Width="12"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <Button Grid.Column="0" Content="Cancel"
                     Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Stretch"
                     Click="CancelButton_Click"/>
+
             <Button Grid.Column="2" Content="Send Request"
                     Style="{StaticResource PrimaryButton}"
                     HorizontalAlignment="Stretch"

@@ -1,15 +1,15 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class AdNotificationViewModel : BaseViewModel
 {
-    public AdNotificationViewModel(AdNotification notification)
+    public AdNotificationViewModel(AdNotificationDto notification)
     {
         Id = notification.Id;
         AdId = notification.Ad.Id;
-        BookedByTenantName = notification.BookedByAd.Author.DisplayName;
+        BookedByTenantName = notification.BookedByAd.AuthorName;
         AdCategoryDisplay = notification.Ad.Category.ToDisplayString();
         BookedByAdDescription = notification.BookedByAd.Description;
         TimeDisplay = notification.CreatedAt.ToString("dd.MM. HH:mm");
