@@ -1,7 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
@@ -62,17 +61,17 @@ public partial class BrowseBuildingsPage : Page
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        Building building = (Building)((Button)sender).Tag;
-        if (!ShowBuildingRequestAccessDialog(building)) return;
+        BuildingDto buildingDto = (BuildingDto)((Button)sender).Tag;
+
+        if (!ShowBuildingRequestAccessDialog(buildingDto)) return;
 
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
-            $"✔ Request Sent Successfully! The administrator of {building.Street} {building.StreetNumber} has been notified.");
+            $"✔ Request Sent Successfully! The administrator of {buildingDto.FullAddress} has been notified.");
         ViewRequestsButton.Visibility = Visibility.Visible;
     }
 
-    private bool ShowBuildingRequestAccessDialog(Building selectedBuilding)
+    private bool ShowBuildingRequestAccessDialog(BuildingDto building)
     {
-        Building building = _viewModel.GetBuildingById(selectedBuilding.Id) ?? selectedBuilding;
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
@@ -81,8 +80,10 @@ public partial class BrowseBuildingsPage : Page
     private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (e.OriginalSource is Button) return;
-        Building building = (Building)((Border)sender).Tag;
-        NavigationService.Navigate(new BuildingDetailsPage(building, _user));
+        BuildingDto buildingDto = (BuildingDto)((Border)sender).Tag;
+        BuildingDto? fullDto = _viewModel.GetFullBuildingDto(buildingDto.Id);
+        if (fullDto == null) return;
+        NavigationService.Navigate(new BuildingDetailsPage(fullDto, _user));
     }
 
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>

@@ -1,5 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Mappings.Buildings;
 
 namespace CommunityHub.Application.Services.Buildings;
 
@@ -34,13 +36,13 @@ public class CommonRoomService
         _repository.Create(name, description, floorNumber, rentalTypeString, buildingId);
     }
 
-    public CommonRoom? GetCalendar(long roomId)
+    public CommonRoomDto? GetCalendar(long roomId)
     {
         CommonRoom? room = _repository.GetById(roomId);
         if (room == null) return null;
 
         List<DateTime> occupiedDates = _repository.GetOccupiedDates(roomId);
         room.SetOccupiedDates(occupiedDates);
-        return room;
+        return room.ToDto();
     }
 }

@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
@@ -12,21 +12,15 @@ public class BuildingDetailsViewModel : BaseViewModel
     private List<string> _imageDotColors = new();
     private int _pendingRequestsCount;
 
-    public BuildingDetailsViewModel(Building building, BuildingService buildingService, BuildingAccessRequestService requestService)
+    public BuildingDetailsViewModel(BuildingDto buildingDto, BuildingAccessRequestService requestService)
     {
-        Building = buildingService.GetById(building.Id) ?? building;
+        BuildingDto = buildingDto;
         _requestService = requestService;
-        _pendingRequestsCount = _requestService.GetPendingRequestsCount(Building.Id);
+        _pendingRequestsCount = _requestService.GetPendingRequestsCount(BuildingDto.Id);
         UpdateImageState();
     }
 
-    public Building Building { get; }
-
-    public string AddressText => $"{Building.Street} {Building.StreetNumber}";
-    public string CityCountryText => $"{Building.City.Name}, {Building.City.Country.Name}";
-    public int NumberOfFloors => Building.NumberOfFloors;
-    public int TotalUnits => Building.TotalUnits;
-    public int VacancyCount => Building.VacancyCount;
+    public BuildingDto BuildingDto { get; }
 
     public int PendingRequestsCount
     {
@@ -46,37 +40,37 @@ public class BuildingDetailsViewModel : BaseViewModel
         private set => SetProperty(ref _imageDotColors, value);
     }
 
-    public bool HasImages => Building.Images.Count > 0;
+    public bool HasImages => BuildingDto.ImagePaths.Count > 0;
 
     public string? CurrentImagePath => HasImages
-        ? Building.Images[_currentImageIndex].Path
+        ? BuildingDto.ImagePaths[_currentImageIndex]
         : null;
 
     public void NextImage()
     {
         if (!HasImages) return;
-        _currentImageIndex = (_currentImageIndex + 1) % Building.Images.Count;
+        _currentImageIndex = (_currentImageIndex + 1) % BuildingDto.ImagePaths.Count;
         UpdateImageState();
     }
 
     public void PreviousImage()
     {
         if (!HasImages) return;
-        _currentImageIndex = (_currentImageIndex - 1 + Building.Images.Count) % Building.Images.Count;
+        _currentImageIndex = (_currentImageIndex - 1 + BuildingDto.ImagePaths.Count) % BuildingDto.ImagePaths.Count;
         UpdateImageState();
     }
 
     public void RefreshPendingRequestsCount()
     {
-        PendingRequestsCount = _requestService.GetPendingRequestsCount(Building.Id);
+        PendingRequestsCount = _requestService.GetPendingRequestsCount(BuildingDto.Id);
     }
 
     private void UpdateImageState()
     {
         if (!HasImages) return;
 
-        ImageCounterText = $"{_currentImageIndex + 1}/{Building.Images.Count}";
-        ImageDotColors = Building.Images
+        ImageCounterText = $"{_currentImageIndex + 1}/{BuildingDto.ImagePaths.Count}";
+        ImageDotColors = BuildingDto.ImagePaths
             .Select((_, index) => index == _currentImageIndex ? "White" : "#88FFFFFF")
             .ToList();
 

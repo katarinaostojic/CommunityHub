@@ -1,13 +1,12 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Mappings.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 
@@ -15,7 +14,7 @@ public partial class MyBuildingsPage : Page
 {
     private readonly User _currentUser;
     private readonly BuildingService _buildingService;
-    private List<Building> _allBuildings = new();
+    private List<BuildingDto> _allBuildings = new();
     private int _currentPage = 1;
     private const int PageSize = 6;
 
@@ -29,7 +28,9 @@ public partial class MyBuildingsPage : Page
 
     private void LoadBuildings()
     {
-        _allBuildings = _buildingService.GetAllByManager(_currentUser.Id);
+        _allBuildings = _buildingService.GetAllByManager(_currentUser.Id)
+                                        .Select(b => b.ToDto())
+                                        .ToList();
         _currentPage = 1;
         ShowCurrentPage();
     }
@@ -71,11 +72,11 @@ public partial class MyBuildingsPage : Page
 
     private void BuildingCard_Click(object sender, MouseButtonEventArgs e)
     {
-        if (sender is Border border && border.DataContext is Building building)
-        {
-            Building? fullBuilding = _buildingService.GetById(building.Id);
-            if (fullBuilding == null) return;
-            NavigationService.Navigate(new BuildingDetailsPage(_currentUser, fullBuilding));
-        }
+    //    if (sender is Border border && border.DataContext is BuildingDto building)
+    //   {
+    //        BuildingDto? fullBuilding = _buildingService.GetById(building.Id);
+    //       if (fullBuilding == null) return;
+     //       NavigationService.Navigate(new BuildingDetailsPage(_currentUser, fullBuilding));
+      //  }
     }
 }

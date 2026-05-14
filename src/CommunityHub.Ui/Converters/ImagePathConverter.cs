@@ -22,13 +22,15 @@ public class ImagePathConverter : IValueConverter
     {
         if (value is List<Image> images && images.Count > 0)
             return LoadImage(images[0].Path);
+        if (value is List<string> paths && paths.Count > 0)
+            return LoadImage(paths[0]);
         return null;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         => throw new NotImplementedException();
 
-    
+
 }
 
 public class SingleImagePathConverter : IValueConverter

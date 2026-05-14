@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels;
@@ -12,10 +12,10 @@ public class MenuPanelViewModel
         _membershipService = membershipService;
     }
 
-    public List<BuildingMembership> GetMemberships(long tenantId)
+    public List<BuildingMembershipDto> GetMemberships(long tenantId)
     {
         return _membershipService.GetByTenant(tenantId)
-            .GroupBy(m => m.Building.Id)
+            .GroupBy(m => m.BuildingId)
             .Select(g => g.First())
             .ToList();
     }

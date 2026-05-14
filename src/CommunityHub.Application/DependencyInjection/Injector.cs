@@ -26,7 +26,8 @@ public static class Injector
             typeof(BuildingAccessRequestService),
             new BuildingAccessRequestService(
                 new BuildingAccessRequestDbRepository(),
-                new BuildingMembershipDbRepository())
+                new BuildingMembershipDbRepository(),
+                new BuildingDbRepository(new ImageDbRepository()))
         },
         {
             typeof(BuildingMembershipService),

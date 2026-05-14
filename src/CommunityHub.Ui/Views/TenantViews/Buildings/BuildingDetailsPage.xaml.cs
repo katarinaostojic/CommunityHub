@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Converters;
 using CommunityHub.Ui.Helpers;
@@ -15,15 +15,14 @@ public partial class BuildingDetailsPage : Page
     private readonly User _user;
     private readonly BuildingDetailsViewModel _viewModel;
 
-    public BuildingDetailsPage(Building building, User user)
+    public BuildingDetailsPage(BuildingDto buildingDto, User user)
     {
         InitializeComponent();
         _user = user;
 
-        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
         BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
 
-        _viewModel = new BuildingDetailsViewModel(building, buildingService, requestService);
+        _viewModel = new BuildingDetailsViewModel(buildingDto, requestService);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -57,14 +56,14 @@ public partial class BuildingDetailsPage : Page
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!ShowBuildingRequestAccessDialog(_viewModel.Building)) return;
+        if (!ShowBuildingRequestAccessDialog(_viewModel.BuildingDto)) return;
 
         _viewModel.RefreshPendingRequestsCount();
         ViewRequestsButton.Visibility = Visibility.Visible;
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request Sent Successfully!");
     }
 
-    private bool ShowBuildingRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(BuildingDto building)
     {
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);

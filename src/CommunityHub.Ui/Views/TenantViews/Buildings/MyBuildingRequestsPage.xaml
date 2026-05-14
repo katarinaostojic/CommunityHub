@@ -124,22 +124,16 @@
 
                                 <!-- Adresa -->
                                 <TextBlock Grid.Row="0" FontSize="15" FontWeight="Bold"
-                                           Text="{Binding Building.Street}"/>
+                                           Text="{Binding BuildingAddress}"/>
 
                                 <!-- Naselje -->
                                 <TextBlock Grid.Row="1" FontSize="13" Margin="0,2,0,0"
-                                           Text="{Binding Building.Neighborhood}"/>
+                                           Text="{Binding BuildingNeighborhood}"/>
 
                                 <!-- Grad, Drzava -->
                                 <TextBlock Grid.Row="2" Style="{StaticResource SecondaryText}"
-                                           Margin="0,2,0,8">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0}, {1}">
-                                            <Binding Path="Building.City.Name"/>
-                                            <Binding Path="Building.City.Country.Name"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
+                                           Margin="0,2,0,8"
+                                           Text="{Binding BuildingLocation}"/>
 
                                 <!-- Unit i datum -->
                                 <Grid Grid.Row="3" Margin="0,0,0,8">

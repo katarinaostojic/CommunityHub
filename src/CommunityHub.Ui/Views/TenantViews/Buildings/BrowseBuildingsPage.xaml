@@ -132,7 +132,7 @@
                                     Margin="0,0,10,0"
                                     Background="{StaticResource BackgroundLightBrush}"
                                     VerticalAlignment="Stretch">
-                                <Image Source="{Binding Images, Converter={StaticResource ImageConverter}}"
+                                <Image Source="{Binding ImagePaths, Converter={StaticResource ImageConverter}}"
                                        Stretch="UniformToFill"
                                        MaxHeight="160"/>
                             </Border>
@@ -151,8 +151,8 @@
                                 <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,0,4">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="📍 {0}, {1}">
-                                            <Binding Path="City.Name"/>
-                                            <Binding Path="City.Country.Name"/>
+                                            <Binding Path="CityName"/>
+                                            <Binding Path="CountryName"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>

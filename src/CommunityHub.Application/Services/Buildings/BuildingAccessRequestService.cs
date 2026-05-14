@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Mappings.Buildings;
 
 namespace CommunityHub.Application.Services.Buildings;
 
@@ -8,24 +10,29 @@ public class BuildingAccessRequestService
 {
     private readonly IBuildingAccessRequestRepository _repository;
     private readonly IBuildingMembershipRepository _membershipRepository;
+    private readonly IBuildingRepository _buildingRepository;
 
     public BuildingAccessRequestService(
         IBuildingAccessRequestRepository repository,
-        IBuildingMembershipRepository membershipRepository)
+        IBuildingMembershipRepository membershipRepository,
+        IBuildingRepository buildingRepository)
     {
         _repository = repository;
         _membershipRepository = membershipRepository;
+        _buildingRepository = buildingRepository;
     }
 
-    public void Create(User user, Building building, string unitNumber)
+    public void CreateForBuilding(long buildingId, User tenant, string unitNumber)
     {
-        BuildingAccessRequest request = new BuildingAccessRequest(user, building, unitNumber);
+        Building building = _buildingRepository.GetById(buildingId)
+            ?? throw new Exception("Building not found.");
+        BuildingAccessRequest request = new BuildingAccessRequest(tenant, building, unitNumber);
         _repository.Create(request);
     }
 
-    public List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
+    public List<BuildingAccessRequestDto> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
     {
-        return _repository.GetAllByTenant(tenantId, status, sortDescending);
+        return _repository.GetAllByTenant(tenantId, status, sortDescending).ToDtoList();
     }
 
     public List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending)

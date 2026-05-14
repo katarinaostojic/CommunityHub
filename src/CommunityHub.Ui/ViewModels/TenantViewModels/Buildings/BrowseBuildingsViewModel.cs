@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using System.Collections.ObjectModel;
 
@@ -9,8 +9,8 @@ public class BrowseBuildingsViewModel : BaseViewModel
     private readonly BuildingService _buildingService;
     private const int PageSize = 3;
 
-    private List<Building> _allBuildings = new();
-    private ObservableCollection<Building> _currentPageBuildings = new();
+    private List<BuildingDto> _allBuildings = new();
+    private ObservableCollection<BuildingDto> _currentPageBuildings = new();
     private int _currentPage = 1;
     private string _pageLabelText = string.Empty;
     private bool _hasPreviousPage;
@@ -22,7 +22,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
         Search(null, null, null, null);
     }
 
-    public ObservableCollection<Building> CurrentPageBuildings
+    public ObservableCollection<BuildingDto> CurrentPageBuildings
     {
         get => _currentPageBuildings;
         private set => SetProperty(ref _currentPageBuildings, value);
@@ -53,7 +53,10 @@ public class BrowseBuildingsViewModel : BaseViewModel
         UpdatePage();
     }
 
-    public Building? GetBuildingById(long id) => _buildingService.GetById(id);
+    public BuildingDto? GetFullBuildingDto(long id)
+    {
+        return _buildingService.GetById(id);
+    }
 
     public void NextPage()
     {
@@ -77,7 +80,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
         HasPreviousPage = _currentPage > 1;
         HasNextPage = _currentPage < totalPages;
 
-        CurrentPageBuildings = new ObservableCollection<Building>(
+        CurrentPageBuildings = new ObservableCollection<BuildingDto>(
             _allBuildings
                 .Skip((_currentPage - 1) * PageSize)
                 .Take(PageSize));
