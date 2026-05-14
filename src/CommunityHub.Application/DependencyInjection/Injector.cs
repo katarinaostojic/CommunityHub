@@ -66,6 +66,11 @@ public static class Injector
             new NeighborhoodAccessRequestService(
                 new NeighborhoodAccessRequestDbRepository())
         },
+        {
+            typeof(EventService),
+            new EventService(
+                new EventDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()

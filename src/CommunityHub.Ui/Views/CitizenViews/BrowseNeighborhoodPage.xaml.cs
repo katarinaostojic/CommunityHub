@@ -129,7 +129,18 @@ public partial class BrowseNeighborhoodPage : Window
                 new MyRequestsPage(_user).Show();
                 Close();
                 break;
-            case "Events": MessageBox.Show("Go to Events page."); break;
+            case "Events":
+                NeighborhoodAccessRequestService requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
+                long? neighborhoodId = requestService.GetMembershipNeighborhoodId(_user.Id);
+                if (neighborhoodId == null)
+                {
+                    MessageBox.Show("You are not a member of any neighborhood.", "No Membership",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                new EventsPage(_user, neighborhoodId.Value).Show();
+                Close();
+                break;
             case "Citizens": MessageBox.Show("Go to Citizens page."); break;
             case "Meetings": MessageBox.Show("Go to Meetings page."); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
