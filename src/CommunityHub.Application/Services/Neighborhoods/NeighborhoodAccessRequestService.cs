@@ -56,4 +56,8 @@ public class NeighborhoodAccessRequestService
         _repository.Create(citizen, neighborhood);
         return AccessRequestResult.RequestCreated;
     }
+    public long? GetMembershipNeighborhoodId(long citizenId)
+    {
+        return _repository.GetMembershipNeighborhoodId(citizenId);
+    }
 }

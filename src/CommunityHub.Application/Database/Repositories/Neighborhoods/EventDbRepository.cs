@@ -27,8 +27,8 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         AddParameter(command, "@organizerId", ev.Organizer.Id);
         AddParameter(command, "@name", ev.Name);
         AddParameter(command, "@description", ev.Description);
-        AddParameter(command, "@eventDate", ev.EventDate);
-        AddParameter(command, "@startTime", ev.StartTime);
+        AddParameter(command, "@eventDate", ev.EventDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc));
+        AddParameter(command, "@startTime", ev.StartTime.ToTimeSpan());
         AddParameter(command, "@durationMinutes", ev.DurationMinutes);
         AddParameter(command, "@minVolunteers", ev.MinVolunteers);
 
@@ -151,7 +151,6 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
             updateItemCmd.ExecuteNonQuery();
         }
     }
-
     private List<Event> ReadEvents(IDataReader reader)
     {
         var events = new List<Event>();
@@ -169,8 +168,8 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
             organizer,
             reader["name"].ToString()!,
             reader["description"].ToString()!,
-            DateOnly.FromDateTime(Convert.ToDateTime(reader["event_date"])),
-            TimeOnly.FromTimeSpan((TimeSpan)reader["start_time"]),
+            (DateOnly)reader["event_date"],
+            (TimeOnly)reader["start_time"],
             Convert.ToInt32(reader["duration_minutes"]),
             Convert.ToInt32(reader["min_volunteers"]),
             ParseEventStatus(reader["status"].ToString()!)

@@ -9,6 +9,7 @@ namespace CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryIn
 public interface IEventRepository
 {
     long Create(Event ev);
+    void CreateItem(long eventId, string itemName);
     List<Event> GetByNeighborhood(long neighborhoodId);
     Event? GetById(long eventId);
     void Update(Event ev);

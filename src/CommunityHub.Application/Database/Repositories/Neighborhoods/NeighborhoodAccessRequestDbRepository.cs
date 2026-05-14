@@ -236,4 +236,20 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }
+    public long? GetMembershipNeighborhoodId(long citizenId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT neighborhood_id FROM neighborhood_memberships
+        WHERE citizen_id = @citizenId LIMIT 1";
+
+        AddParameter(command, "@citizenId", citizenId);
+
+        object? result = command.ExecuteScalar();
+        if (result == null || result == DBNull.Value)
+            return null;
+
+        return Convert.ToInt64(result);
+    }
 }
