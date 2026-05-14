@@ -37,9 +37,9 @@ public class BuildingService
         return _repository.CreateBuilding(street, streetNumber, neighborhood, cityId, numberOfFloors, managerId);
     }
 
-    public long CreateFloorReturningId(long buildingId, int floorNumber)
+    public long CreateFloor(long buildingId, int floorNumber)
     {
-        return _repository.CreateFloorReturningId(buildingId, floorNumber);
+        return _repository.CreateFloor(buildingId, floorNumber);
     }
 
     public void CreateUnit(long floorId, string unitNumber)

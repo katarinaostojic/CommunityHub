@@ -25,6 +25,31 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         command.ExecuteNonQuery();
     }
 
+    public BuildingAccessRequest? GetById(long requestId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
+               b.id AS building_id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+               c.id AS city_id, c.name AS city_name,
+               co.id AS country_id, co.name AS country_name, co.code AS country_code,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM building_access_requests r
+        JOIN buildings b ON r.building_id = b.id
+        JOIN cities c ON b.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        JOIN users u ON r.user_id = u.id
+        WHERE r.id = @id";
+
+        AddParameter(command, "@id", requestId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return reader.Read()
+            ? BuildingAccessRequestMapper.MapWithBuilding(reader)
+            : null;
+    }
+
     public List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
