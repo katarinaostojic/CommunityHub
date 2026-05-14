@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
 
-namespace CommunityHub.Ui.Mappings;
+namespace CommunityHub.Application.Mappings.Buildings;
 
 public static class BuildingMappingExtensions
 {

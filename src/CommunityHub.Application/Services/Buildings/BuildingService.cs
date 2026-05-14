@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Mappings.Buildings;
 
 namespace CommunityHub.Application.Services.Buildings;
 
@@ -15,14 +17,14 @@ public class BuildingService
         _imageRepository = imageRepository;
     }
 
-    public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
+    public List<BuildingDto> Search(string? street, string? neighborhood, string? city, string? country)
     {
-        return _repository.Search(street, neighborhood, city, country);
+        return _repository.Search(street, neighborhood, city, country).ToDtoList();
     }
 
-    public Building? GetById(long buildingId)
+    public BuildingDto? GetById(long buildingId)
     {
-        return _repository.GetById(buildingId);
+        return _repository.GetById(buildingId)?.ToDto();
     }
 
     public List<Building> GetAllByManager(long managerId)
@@ -53,5 +55,29 @@ public class BuildingService
     public bool BuildingExists(string street, string streetNumber, long cityId)
     {
         return _repository.BuildingExists(street, streetNumber, cityId);
+    }
+
+    public List<string> GetSortedUnitNumbers(long buildingId)
+    {
+        Building? building = _repository.GetById(buildingId);
+        return building?.GetSortedUnitNumbers() ?? new List<string>();
+    }
+
+    public bool IsUnitOccupied(long buildingId, string unitNumber)
+    {
+        Building? building = _repository.GetById(buildingId);
+        return building?.IsUnitOccupied(unitNumber) ?? false;
+    }
+
+    public bool ContainsUnit(long buildingId, string unitNumber)
+    {
+        Building? building = _repository.GetById(buildingId);
+        return building?.ContainsUnit(unitNumber) ?? false;
+    }
+
+    public bool HasExistingRequest(long buildingId, long userId, string unitNumber)
+    {
+        Building? building = _repository.GetById(buildingId);
+        return building?.HasExistingRequest(userId, unitNumber) ?? false;
     }
 }

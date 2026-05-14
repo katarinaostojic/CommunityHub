@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
@@ -12,15 +12,16 @@ public partial class BuildingAccessRequestDialog : Window
 {
     private readonly BuildingAccessRequestDialogViewModel _viewModel;
 
-    public BuildingAccessRequestDialog(Building building, User user)
+    public BuildingAccessRequestDialog(BuildingDto building, User user)
     {
         InitializeComponent();
 
         BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
-        _viewModel = new BuildingAccessRequestDialogViewModel(requestService, building, user);
+        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
+        _viewModel = new BuildingAccessRequestDialogViewModel(requestService, buildingService, building, user);
 
-        TitleTextBlock.Text = $"REQUEST ACCESS: {building.Street} {building.StreetNumber}";
-        BuildingInfoTextBlock.Text = $"Building: {building.Street} {building.StreetNumber}, {building.City.Name}, {building.Neighborhood}";
+        TitleTextBlock.Text = $"REQUEST ACCESS: {building.FullAddress}";
+        BuildingInfoTextBlock.Text = $"Building: {building.FullAddress}, {building.CityName}, {building.Neighborhood}";
 
         UnitComboBox.ItemsSource = _viewModel.SortedUnitNumbers;
     }

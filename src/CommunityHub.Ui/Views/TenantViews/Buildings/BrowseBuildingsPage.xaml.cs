@@ -1,8 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Ui.Mappings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
@@ -17,7 +15,6 @@ public partial class BrowseBuildingsPage : Page
 {
     private readonly User _user;
     private readonly BrowseBuildingsViewModel _viewModel;
-    private readonly BuildingService _buildingService;
     private bool _filterPanelOpen = false;
 
     public BrowseBuildingsPage(User user)
@@ -25,8 +22,8 @@ public partial class BrowseBuildingsPage : Page
         InitializeComponent();
         _user = user;
 
-        _buildingService = Injector.CreateInstance<BuildingService>();
-        _viewModel = new BrowseBuildingsViewModel(_buildingService);
+        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
+        _viewModel = new BrowseBuildingsViewModel(buildingService);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -65,17 +62,15 @@ public partial class BrowseBuildingsPage : Page
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
         BuildingDto buildingDto = (BuildingDto)((Button)sender).Tag;
-        Building? building = _buildingService.GetById(buildingDto.Id);
-        if (building == null) return;
 
-        if (!ShowBuildingRequestAccessDialog(building)) return;
+        if (!ShowBuildingRequestAccessDialog(buildingDto)) return;
 
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock,
             $"✔ Request Sent Successfully! The administrator of {buildingDto.FullAddress} has been notified.");
         ViewRequestsButton.Visibility = Visibility.Visible;
     }
 
-    private bool ShowBuildingRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(BuildingDto building)
     {
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);

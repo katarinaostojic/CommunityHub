@@ -1,8 +1,8 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Mappings.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -23,17 +23,17 @@ public partial class ManagerNoticeBoardPage : Page
 
     private void LoadBuildings()
     {
-        List<Building> buildings = _buildingService.GetAllByManager(_currentUser.Id);
+        var buildings = _buildingService.GetAllByManager(_currentUser.Id)
+                                        .Select(b => b.ToDto())
+                                        .ToList();
         BuildingsItemsControl.ItemsSource = buildings;
     }
 
     private void ViewNoticeboard_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button btn && btn.Tag is Building building)
+        if (sender is Button btn && btn.Tag is BuildingDto building)
         {
-            Building? fullBuilding = _buildingService.GetById(building.Id);
-            if (fullBuilding == null) return;
-            NavigationService.Navigate(new ManagerNoticeBoardDetailsPage(_currentUser, fullBuilding));
+            NavigationService.Navigate(new ManagerNoticeBoardDetailsPage(_currentUser, building));
         }
     }
 }

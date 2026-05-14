@@ -1,5 +1,4 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Ui.Mappings;
 using CommunityHub.Application.Services.Buildings;
 using System.Collections.ObjectModel;
 
@@ -49,14 +48,14 @@ public class BrowseBuildingsViewModel : BaseViewModel
 
     public void Search(string? street, string? neighborhood, string? city, string? country)
     {
-        _allBuildings = _buildingService.Search(street, neighborhood, city, country).ToDtoList();
+        _allBuildings = _buildingService.Search(street, neighborhood, city, country);
         _currentPage = 1;
         UpdatePage();
     }
 
     public BuildingDto? GetFullBuildingDto(long id)
     {
-        return _buildingService.GetById(id)?.ToDto();
+        return _buildingService.GetById(id);
     }
 
     public void NextPage()

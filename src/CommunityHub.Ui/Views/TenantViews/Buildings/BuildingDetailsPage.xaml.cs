@@ -1,5 +1,4 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
@@ -15,14 +14,12 @@ public partial class BuildingDetailsPage : Page
 {
     private readonly User _user;
     private readonly BuildingDetailsViewModel _viewModel;
-    private readonly BuildingService _buildingService;
 
     public BuildingDetailsPage(BuildingDto buildingDto, User user)
     {
         InitializeComponent();
         _user = user;
 
-        _buildingService = Injector.CreateInstance<BuildingService>();
         BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
 
         _viewModel = new BuildingDetailsViewModel(buildingDto, requestService);
@@ -59,17 +56,14 @@ public partial class BuildingDetailsPage : Page
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        Building? building = _buildingService.GetById(_viewModel.BuildingDto.Id);
-        if (building == null) return;
-
-        if (!ShowBuildingRequestAccessDialog(building)) return;
+        if (!ShowBuildingRequestAccessDialog(_viewModel.BuildingDto)) return;
 
         _viewModel.RefreshPendingRequestsCount();
         ViewRequestsButton.Visibility = Visibility.Visible;
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request Sent Successfully!");
     }
 
-    private bool ShowBuildingRequestAccessDialog(Building building)
+    private bool ShowBuildingRequestAccessDialog(BuildingDto building)
     {
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user);
         dialog.Owner = Window.GetWindow(this);

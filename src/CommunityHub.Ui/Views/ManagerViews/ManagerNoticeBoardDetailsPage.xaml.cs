@@ -1,10 +1,8 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
-using CommunityHub.Ui.ViewModels.ManagerViewModels;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,12 +13,12 @@ namespace CommunityHub.Ui.Views.ManagerViews;
 public partial class ManagerNoticeBoardDetailsPage : Page
 {
     private readonly User _currentUser;
-    private readonly Building _building;
+    private readonly BuildingDto _building;
     private readonly AdService _adService;
     private List<Ad> _allAds = new();
     private bool _isYearMode = true;
 
-    public ManagerNoticeBoardDetailsPage(User user, Building building)
+    public ManagerNoticeBoardDetailsPage(User user, BuildingDto building)
     {
         InitializeComponent();
         _currentUser = user;

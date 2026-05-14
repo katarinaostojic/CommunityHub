@@ -2,7 +2,6 @@
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Ui.Mappings;
 using CommunityHub.Ui.ViewModels.TenantViewModels;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
@@ -115,7 +114,7 @@ public partial class MenuPanel : UserControl
     private void BuildingName_Click(object sender, MouseButtonEventArgs e)
     {
         BuildingMembership membership = (BuildingMembership)((Border)sender).Tag;
-        var fullDto = _buildingService.GetById(membership.Building.Id)?.ToDto();
+        var fullDto = _buildingService.GetById(membership.Building.Id);
         if (fullDto == null) return;
         Close();
         NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(fullDto, _user));
