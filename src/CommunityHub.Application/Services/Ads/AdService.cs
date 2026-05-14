@@ -27,6 +27,7 @@ public class AdService
 
     public List<AdDto> GetActiveByBuilding(long buildingId)
     {
+        RefreshExpiredAds(buildingId);
         return _adRepository.GetActiveByBuilding(buildingId).ToTenantAdDtoList();
     }
 
@@ -45,7 +46,7 @@ public class AdService
         DateOnly dateTo)
     {
         Ad ad = new Ad(buildingId, author, type, category, description, dateFrom, dateTo);
-        Ad newAd = CreateEntity(ad);
+        Ad newAd = CreateAdWithSlots(ad);
         List<AdDto> matchingAds = FindMatchingAdEntities(newAd).ToTenantAdDtoList();
 
         return (newAd.ToTenantAdDto(), matchingAds);
@@ -117,7 +118,23 @@ public class AdService
         _notificationRepository.MarkAllAsRead(userId);
     }
 
-    private Ad CreateEntity(Ad ad)
+    private void RefreshExpiredAds(long buildingId)
+    {
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+
+        List<Ad> expiredAds = _adRepository
+            .GetActiveByBuilding(buildingId)
+            .Where(ad => ad.IsExpired(today))
+            .ToList();
+
+        foreach (Ad ad in expiredAds)
+        {
+            ad.Archive();
+            _adRepository.Update(ad);
+        }
+    }
+
+    private Ad CreateAdWithSlots(Ad ad)
     {
         long adId = _adRepository.Create(ad);
         _adSlotRepository.CreateSlots(adId, GenerateSlots(ad.DateFrom, ad.DateTo));
@@ -126,6 +143,8 @@ public class AdService
 
     private List<Ad> FindMatchingAdEntities(Ad newAd)
     {
+        RefreshExpiredAds(newAd.BuildingId);
+
         List<Ad> activeAds = _adRepository.GetActiveByBuilding(newAd.BuildingId);
 
         AdType oppositeType = newAd.Type == AdType.Offering
@@ -162,6 +181,7 @@ public class AdService
 
     public List<Ad> GetAllByBuilding(long buildingId)
     {
+        RefreshExpiredAds(buildingId);
         return _adRepository.GetAllByBuilding(buildingId);
     }
 

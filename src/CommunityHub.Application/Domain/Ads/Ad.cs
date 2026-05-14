@@ -51,6 +51,11 @@ public class Ad
 
     public bool IsActive => Status == AdStatus.Active;
 
+    public bool IsExpired(DateOnly today)
+    {
+        return IsActive && DateTo < today;
+    }
+
     public bool OverlapsWith(DateOnly otherFrom, DateOnly otherTo)
         => DateFrom <= otherTo && DateTo >= otherFrom;
 
@@ -58,8 +63,10 @@ public class Ad
     {
         if (dateFrom < DateOnly.FromDateTime(DateTime.Today))
             return "Dates cannot be in the past.";
+
         if (dateFrom > dateTo)
             return "Start date must be before end date.";
+
         return null;
     }
 }

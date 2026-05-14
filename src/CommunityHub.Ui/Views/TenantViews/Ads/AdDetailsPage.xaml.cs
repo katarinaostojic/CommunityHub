@@ -33,9 +33,6 @@ public partial class AdDetailsPage : Page
     private void ArchiveButton_Click(object sender, RoutedEventArgs e)
     {
         _viewModel.ArchiveAd();
-        AdDto? refreshed = _viewModel.GetRefreshedAd();
-        if (refreshed == null) return;
-        NavigationService.Navigate(new AdDetailsPage(_user, _membership, refreshed));
     }
 
     private void RestoreButton_Click(object sender, RoutedEventArgs e)

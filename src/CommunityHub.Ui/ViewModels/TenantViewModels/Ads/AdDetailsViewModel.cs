@@ -63,5 +63,4 @@ public class AdDetailsViewModel : BaseViewModel
         IsActive = true;
     }
 
-    public AdDto? GetRefreshedAd() => _adService.GetById(_adId);
 }
