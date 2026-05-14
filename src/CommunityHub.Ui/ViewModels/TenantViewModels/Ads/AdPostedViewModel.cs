@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
@@ -10,14 +10,14 @@ public class AdPostedViewModel : BaseViewModel
 {
     private readonly AdService _adService;
 
-    public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembership membership, AdService adService)
+    public AdPostedViewModel(Ad postedAd, List<Ad> matchingAds, BuildingMembershipDto membership, AdService adService)
     {
         _adService = adService;
         PostedAdId = postedAd.Id;
         TypeDisplay = postedAd.Type.ToDisplayString();
         CategoryDisplay = postedAd.Category.ToDisplayString();
         DateRangeDisplay = $"{postedAd.DateFrom:dd.MM.yyyy} – {postedAd.DateTo:dd.MM.yyyy}";
-        BuildingDisplay = $"{membership.Building.Street} {membership.Building.StreetNumber}";
+        BuildingDisplay = membership.BuildingFullAddress;
         MatchingAdsTitle = BuildMatchingAdsTitle(postedAd, matchingAds);
         MatchingAds = new ObservableCollection<MatchingAdViewModel>(
             matchingAds.Select(ad => new MatchingAdViewModel(ad, postedAd)));

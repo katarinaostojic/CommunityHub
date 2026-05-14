@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
@@ -13,10 +13,10 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class AdPostedPage : Page
 {
     private readonly User _user;
-    private readonly BuildingMembership _membership;
+    private readonly BuildingMembershipDto _membership;
     private readonly AdPostedViewModel _viewModel;
 
-    public AdPostedPage(User user, BuildingMembership membership, Ad postedAd, List<Ad> matchingAds)
+    public AdPostedPage(User user, BuildingMembershipDto membership, Ad postedAd, List<Ad> matchingAds)
     {
         InitializeComponent();
         _user = user;

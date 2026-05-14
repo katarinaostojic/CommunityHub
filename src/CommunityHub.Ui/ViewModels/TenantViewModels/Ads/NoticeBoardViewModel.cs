@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
@@ -21,12 +21,12 @@ public class NoticeBoardViewModel : BaseViewModel
     private string _resultsCountText = string.Empty;
     private bool _hasNotifications;
 
-    public NoticeBoardViewModel(AdService adService, BuildingMembership membership, long currentUserId)
+    public NoticeBoardViewModel(AdService adService, BuildingMembershipDto membership, long currentUserId)
     {
         _adService = adService;
         _currentUserId = currentUserId;
-        _buildingId = membership.Building.Id;
-        BuildingSubtitle = $"Building: {membership.Building.Street} {membership.Building.StreetNumber}, {membership.Building.Neighborhood}";
+        _buildingId = membership.BuildingId;
+        BuildingSubtitle = membership.BuildingSubtitle;
         CategoryOptions = BuildCategoryOptions();
         LoadAds();
         LoadNotifications();

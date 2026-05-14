@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
@@ -14,11 +14,11 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class NoticeBoardPage : Page
 {
     private readonly User _user;
-    private readonly BuildingMembership _membership;
+    private readonly BuildingMembershipDto _membership;
     private readonly NoticeBoardViewModel _viewModel;
     private long? _lastArchivedAdId = null;
 
-    public NoticeBoardPage(User user, BuildingMembership membership)
+    public NoticeBoardPage(User user, BuildingMembershipDto membership)
     {
         InitializeComponent();
         _user = user;

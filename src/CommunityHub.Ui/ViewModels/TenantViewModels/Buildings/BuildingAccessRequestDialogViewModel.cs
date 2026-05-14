@@ -21,9 +21,11 @@ public class BuildingAccessRequestDialogViewModel
         _buildingService = buildingService;
         _building = building;
         _user = user;
+
+        SortedUnitNumbers = _buildingService.GetSortedUnitNumbers(_building.Id);
     }
 
-    public List<string> SortedUnitNumbers => _buildingService.GetSortedUnitNumbers(_building.Id);
+    public List<string> SortedUnitNumbers { get; }
 
     public bool IsUnitOccupied(string unitNumber) =>
         _buildingService.IsUnitOccupied(_building.Id, unitNumber);

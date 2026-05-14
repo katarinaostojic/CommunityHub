@@ -166,7 +166,7 @@
                                             Style="{StaticResource DangerButton}"
                                             HorizontalAlignment="Right"
                                             Tag="{Binding}"
-                                            Visibility="{Binding CancelButtonVisible, Converter={StaticResource BoolToVis}}"
+                                            Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
                                             Click="CancelRequestButton_Click"/>
                                 </Grid>
                             </Grid>

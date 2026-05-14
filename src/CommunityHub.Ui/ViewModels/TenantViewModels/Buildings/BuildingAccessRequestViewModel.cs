@@ -32,7 +32,7 @@ public class BuildingAccessRequestViewModel : BaseViewModel
         ? $"Note: {_request.RejectionReason}"
         : string.Empty;
 
-    public bool CancelButtonVisible => _request.CanBeCancelled;
+    public bool CanCancel => _request.CanBeCancelled;
 
     public bool RejectionReasonVisible => _request.HasRejectionReason;
 }

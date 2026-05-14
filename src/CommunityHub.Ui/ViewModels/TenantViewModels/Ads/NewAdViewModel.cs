@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 
@@ -18,12 +18,12 @@ public class NewAdViewModel : BaseViewModel
     private string _dateError = string.Empty;
     private bool _hasDateError;
 
-    public NewAdViewModel(AdService adService, BuildingMembership membership, User author)
+    public NewAdViewModel(AdService adService, BuildingMembershipDto membership, User author)
     {
         _adService = adService;
-        _buildingId = membership.Building.Id;
+        _buildingId = membership.BuildingId;
         _author = author;
-        BuildingSubtitle = $"Building: {membership.Building.Street} {membership.Building.StreetNumber}, {membership.Building.Neighborhood}";
+        BuildingSubtitle = membership.BuildingSubtitle;
         CategoryOptions = Enum.GetValues<AdCategory>()
             .Select(c => c.ToDisplayString())
             .ToList();
