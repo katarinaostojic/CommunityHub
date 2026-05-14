@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
+using CommunityHub.Application.DTOs.TenantAds;
+using CommunityHub.Application.Mappings.TenantAds;
 
 namespace CommunityHub.Application.Services.Ads;
 
@@ -13,7 +15,9 @@ public class AdService
     private static readonly TimeOnly SlotStart = new TimeOnly(16, 0);
     private const int SlotsPerDay = 4;
 
-    public AdService(IAdRepository adRepository, IAdSlotRepository adSlotRepository,
+    public AdService(
+        IAdRepository adRepository,
+        IAdSlotRepository adSlotRepository,
         IAdNotificationRepository notificationRepository)
     {
         _adRepository = adRepository;
@@ -21,21 +25,63 @@ public class AdService
         _notificationRepository = notificationRepository;
     }
 
-    public List<Ad> GetActiveByBuilding(long buildingId)
+    // Tenant DTO methods
+
+    public List<AdDto> GetActiveByBuilding(long buildingId)
     {
-        return _adRepository.GetActiveByBuilding(buildingId);
+        return _adRepository.GetActiveByBuilding(buildingId).ToTenantAdDtoList();
     }
 
-    public Ad? GetById(long adId)
+    public AdDto? GetById(long adId)
     {
-        return _adRepository.GetById(adId);
+        return _adRepository.GetById(adId)?.ToTenantAdDto();
     }
 
-    public Ad Create(Ad ad)
+    public (AdDto newAd, List<AdDto> matchingAds) Create(
+        long buildingId,
+        User author,
+        AdType type,
+        AdCategory category,
+        string description,
+        DateOnly dateFrom,
+        DateOnly dateTo)
     {
-        long adId = _adRepository.Create(ad);
-        _adSlotRepository.CreateSlots(adId, GenerateSlots(ad.DateFrom, ad.DateTo));
-        return _adRepository.GetById(adId)!;
+        Ad ad = new Ad(buildingId, author, type, category, description, dateFrom, dateTo);
+        Ad newAd = CreateEntity(ad);
+        List<AdDto> matchingAds = FindMatchingAdEntities(newAd).ToTenantAdDtoList();
+
+        return (newAd.ToTenantAdDto(), matchingAds);
+    }
+
+    public List<AdSlotDto> GetFreeSlots(
+        long adId,
+        DateOnly overlapFrom,
+        DateOnly overlapTo)
+    {
+        return _adSlotRepository
+            .GetFreeSlotsByAd(adId, overlapFrom, overlapTo)
+            .ToTenantAdSlotDtoList();
+    }
+
+    public List<BookedAdSlotDto> GetBookedSlotsWithAds(long adId)
+    {
+        return _adSlotRepository
+            .GetBookedSlotsWithAds(adId)
+            .ToTenantBookedAdSlotDtoList();
+    }
+
+    public List<AdSlotDto> GetBookedSlots(long adId)
+    {
+        return _adSlotRepository
+            .GetBookedSlotsByAd(adId)
+            .ToTenantAdSlotDtoList();
+    }
+
+    public List<AdNotificationDto> GetUnreadNotifications(long userId)
+    {
+        return _notificationRepository
+            .GetUnreadByUser(userId)
+            .ToTenantAdNotificationDtoList();
     }
 
     public void Archive(long adId)
@@ -52,21 +98,6 @@ public class AdService
         _adRepository.Update(ad);
     }
 
-    public List<AdSlot> GetFreeSlots(long adId, DateOnly overlapFrom, DateOnly overlapTo)
-    {
-        return _adSlotRepository.GetFreeSlotsByAd(adId, overlapFrom, overlapTo);
-    }
-
-    public List<(AdSlot slot, Ad? bookedByAd)> GetBookedSlotsWithAds(long adId)
-    {
-        return _adSlotRepository.GetBookedSlotsWithAds(adId);
-    }
-
-    public List<AdSlot> GetBookedSlots(long adId)
-    {
-        return _adSlotRepository.GetBookedSlotsByAd(adId);
-    }
-
     public void BookSlots(IEnumerable<long> slotIds, long bookedByAdId, long ownerAdId)
     {
         foreach (long slotId in slotIds)
@@ -76,11 +107,6 @@ public class AdService
         if (ownerAd == null) return;
 
         _notificationRepository.Create(ownerAd.Author.Id, ownerAdId, bookedByAdId);
-    }
-
-    public List<AdNotification> GetUnreadNotifications(long userId)
-    {
-        return _notificationRepository.GetUnreadByUser(userId);
     }
 
     public void MarkNotificationAsRead(long notificationId)
@@ -93,7 +119,14 @@ public class AdService
         _notificationRepository.MarkAllAsRead(userId);
     }
 
-    public List<Ad> FindMatchingAds(Ad newAd)
+    private Ad CreateEntity(Ad ad)
+    {
+        long adId = _adRepository.Create(ad);
+        _adSlotRepository.CreateSlots(adId, GenerateSlots(ad.DateFrom, ad.DateTo));
+        return _adRepository.GetById(adId)!;
+    }
+
+    private List<Ad> FindMatchingAdEntities(Ad newAd)
     {
         List<Ad> activeAds = _adRepository.GetActiveByBuilding(newAd.BuildingId);
 
@@ -112,7 +145,7 @@ public class AdService
 
     private List<(DateOnly, TimeOnly, TimeOnly)> GenerateSlots(DateOnly dateFrom, DateOnly dateTo)
     {
-        List<(DateOnly, TimeOnly, TimeOnly)> slots = new List<(DateOnly, TimeOnly, TimeOnly)>();
+        List<(DateOnly, TimeOnly, TimeOnly)> slots = new();
 
         for (DateOnly date = dateFrom; date <= dateTo; date = date.AddDays(1))
         {
@@ -126,6 +159,8 @@ public class AdService
 
         return slots;
     }
+
+    // TODO: menadzer metode treba prebaciti da koriste DTO
 
     public List<Ad> GetAllByBuilding(long buildingId)
     {
