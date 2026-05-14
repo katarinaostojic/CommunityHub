@@ -1,8 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
@@ -16,7 +15,7 @@ public partial class AdDetailsPage : Page
     private readonly BuildingMembershipDto _membership;
     private readonly AdDetailsViewModel _viewModel;
 
-    public AdDetailsPage(User user, BuildingMembershipDto membership, Ad ad)
+    public AdDetailsPage(User user, BuildingMembershipDto membership, AdDto ad)
     {
         InitializeComponent();
         _user = user;
@@ -34,7 +33,7 @@ public partial class AdDetailsPage : Page
     private void ArchiveButton_Click(object sender, RoutedEventArgs e)
     {
         _viewModel.ArchiveAd();
-        Ad? refreshed = _viewModel.GetRefreshedAd();
+        AdDto? refreshed = _viewModel.GetRefreshedAd();
         if (refreshed == null) return;
         NavigationService.Navigate(new AdDetailsPage(_user, _membership, refreshed));
     }
