@@ -40,15 +40,15 @@ public partial class MyBuildingRequestsPage : Page
     private void CancelRequestButton_Click(object sender, RoutedEventArgs e)
     {
         BuildingAccessRequestViewModel item = (BuildingAccessRequestViewModel)((Button)sender).Tag;
-        if (!ConfirmCancellation(item.Building.Street, item.Building.StreetNumber)) return;
+        if (!ConfirmCancellation(item.BuildingAddress)) return;
 
         _viewModel.CancelRequest(item.Id);
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
-    private bool ConfirmCancellation(string street, string streetNumber)
+    private bool ConfirmCancellation(string fullAddress)
     {
-        CancelBuildingAccessRequestDialog dialog = new CancelBuildingAccessRequestDialog(street, streetNumber);
+        CancelBuildingAccessRequestDialog dialog = new CancelBuildingAccessRequestDialog(fullAddress);
         dialog.Owner = Window.GetWindow(this);
         return dialog.ShowDialog() == true;
     }

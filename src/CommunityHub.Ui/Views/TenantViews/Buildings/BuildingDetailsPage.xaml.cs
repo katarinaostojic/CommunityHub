@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Converters;
 using CommunityHub.Ui.Helpers;
@@ -14,16 +15,17 @@ public partial class BuildingDetailsPage : Page
 {
     private readonly User _user;
     private readonly BuildingDetailsViewModel _viewModel;
+    private readonly BuildingService _buildingService;
 
-    public BuildingDetailsPage(Building building, User user)
+    public BuildingDetailsPage(BuildingDto buildingDto, User user)
     {
         InitializeComponent();
         _user = user;
 
-        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
+        _buildingService = Injector.CreateInstance<BuildingService>();
         BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
 
-        _viewModel = new BuildingDetailsViewModel(building, buildingService, requestService);
+        _viewModel = new BuildingDetailsViewModel(buildingDto, requestService);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -57,7 +59,10 @@ public partial class BuildingDetailsPage : Page
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!ShowBuildingRequestAccessDialog(_viewModel.Building)) return;
+        Building? building = _buildingService.GetById(_viewModel.BuildingDto.Id);
+        if (building == null) return;
+
+        if (!ShowBuildingRequestAccessDialog(building)) return;
 
         _viewModel.RefreshPendingRequestsCount();
         ViewRequestsButton.Visibility = Visibility.Visible;

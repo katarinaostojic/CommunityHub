@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
+using CommunityHub.Ui.Mappings;
 using CommunityHub.Application.Services.Buildings;
 using System.Collections.ObjectModel;
 
@@ -91,6 +92,7 @@ public class MyBuildingRequestsViewModel : BaseViewModel
     private void LoadRequests()
     {
         var items = _requestService.GetAllByTenant(_tenantId, _currentFilter, _sortDescending)
+            .ToDtoList()
             .Select(r => new BuildingAccessRequestViewModel(r))
             .ToList();
 

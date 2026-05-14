@@ -1,19 +1,21 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
 public class BuildingAccessRequestViewModel : BaseViewModel
 {
-    private readonly BuildingAccessRequest _request;
+    private readonly BuildingAccessRequestDto _request;
 
-    public BuildingAccessRequestViewModel(BuildingAccessRequest request)
+    public BuildingAccessRequestViewModel(BuildingAccessRequestDto request)
     {
         _request = request;
     }
 
     public long Id => _request.Id;
-    public Building Building => _request.Building;
+    public string BuildingAddress => _request.BuildingFullAddress;
+    public string BuildingNeighborhood => _request.BuildingNeighborhood;
+    public string BuildingLocation => _request.BuildingLocation;
     public string UnitNumber => _request.UnitNumber;
     public DateTime CreatedAt => _request.CreatedAt;
     public RequestStatus Status => _request.Status;
