@@ -131,7 +131,7 @@ public class NoticeBoardViewModel : BaseViewModel
         return _adService.GetById(adId);
     }
 
-    public AdDto? GetMyMatchingAd(AdDto theirAd)
+    public AdDto? GetCurrentUserMatchingAd(AdDto theirAd)
     {
         AdType myType = theirAd.Type == AdType.Offering
             ? AdType.Seeking
@@ -204,7 +204,7 @@ public class NoticeBoardViewModel : BaseViewModel
         List<AdViewModel> filtered = _allActiveAds
             .Where(ad => _currentTypeFilter == null || ad.Type == _currentTypeFilter)
             .Where(ad => _currentCategoryFilter == null || ad.Category == _currentCategoryFilter)
-            .Select(ad => new AdViewModel(ad, _currentUserId, GetMyMatchingAd(ad)?.Id))
+            .Select(ad => new AdViewModel(ad, _currentUserId, GetCurrentUserMatchingAd(ad)?.Id))
             .ToList();
 
         FilteredAds = new ObservableCollection<AdViewModel>(filtered);

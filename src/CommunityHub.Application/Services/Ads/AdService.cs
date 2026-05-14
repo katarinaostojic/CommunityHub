@@ -47,7 +47,7 @@ public class AdService
     {
         Ad ad = new Ad(buildingId, author, type, category, description, dateFrom, dateTo);
         Ad newAd = CreateAdWithSlots(ad);
-        List<AdDto> matchingAds = FindMatchingAdEntities(newAd).ToTenantAdDtoList();
+        List<AdDto> matchingAds = FindMatchingAds(newAd).ToTenantAdDtoList();
 
         return (newAd.ToTenantAdDto(), matchingAds);
     }
@@ -141,7 +141,7 @@ public class AdService
         return _adRepository.GetById(adId)!;
     }
 
-    private List<Ad> FindMatchingAdEntities(Ad newAd)
+    private List<Ad> FindMatchingAds(Ad newAd)
     {
         RefreshExpiredAds(newAd.BuildingId);
 
