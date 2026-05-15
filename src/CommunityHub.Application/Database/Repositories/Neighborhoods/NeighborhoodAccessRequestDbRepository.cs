@@ -116,7 +116,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             UPDATE neighborhood_access_requests 
-            SET status = @status, rejection_reason = @reason 
+            SET status = @status::request_status, rejection_reason = @reason 
             WHERE id = @id";
 
         AddParameter(command, "@id", request.Id);
@@ -251,5 +251,31 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
             return null;
 
         return Convert.ToInt64(result);
+    }
+    public NeighborhoodAccessRequest? GetById(long id)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT r.id, r.created_at, r.status, r.rejection_reason,
+               n.id AS neighborhood_id, n.name AS neighborhood_name,
+               n.description, n.city_id, c.name AS city_name,
+               co.name AS country_name, n.budget, n.coordinator_id,
+               u.id AS citizen_id, u.username, u.password, u.name AS citizen_name,
+               u.surname AS citizen_surname, u.birthday, u.role, u.address
+        FROM neighborhood_access_requests r
+        JOIN neighborhoods n ON r.neighborhood_id = n.id
+        JOIN cities c ON n.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        JOIN users u ON r.citizen_id = u.id
+        WHERE r.id = @id";
+
+        AddParameter(command, "@id", id);
+
+        using IDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+            return MapRequest(reader);
+
+        return null;
     }
 }

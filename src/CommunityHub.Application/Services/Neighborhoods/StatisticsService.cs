@@ -5,21 +5,21 @@ namespace CommunityHub.Application.Services;
 
 public class StatisticsService
 {
-    private readonly TrustRecordDbRepository _trustRepository;
+    private readonly TrustRecordDbRepository _repository;
 
-    public StatisticsService()
+    public StatisticsService(TrustRecordDbRepository repository)
     {
-        _trustRepository = new TrustRecordDbRepository();
+        _repository = repository;
     }
 
     public Dictionary<TrustLevel, int> GetTrustStatistics(long neighborhoodId)
     {
-        return _trustRepository.GetTrustLevelCounts(neighborhoodId);
+        return _repository.GetTrustLevelCounts(neighborhoodId);
     }
 
     public MeetingTheme? SuggestMeetingTheme(long neighborhoodId)
     {
-        var stats = _trustRepository.GetTrustLevelCounts(neighborhoodId);
+        var stats = _repository.GetTrustLevelCounts(neighborhoodId);
 
         int newCount = stats.GetValueOrDefault(TrustLevel.New, 0);
         int inactiveCount = stats.GetValueOrDefault(TrustLevel.Inactive, 0);

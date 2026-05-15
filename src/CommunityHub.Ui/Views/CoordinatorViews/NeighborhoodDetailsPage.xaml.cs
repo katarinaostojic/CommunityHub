@@ -1,26 +1,25 @@
-﻿using System.Windows.Controls;
-using CommunityHub.Application.Database.Repositories.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Ui.ViewModels.CoordinatorViewModels;
+using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
+using System.Windows.Controls;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
 public partial class NeighborhoodDetailsPage : Page
 {
-    private readonly Neighborhood _neighborhood;
-    private readonly NeighborhoodMembershipDbRepository _membershipRepository = new();
+    private readonly NeighborhoodDto _neighborhood;
+    private readonly NeighborhoodDetailsViewModel _viewModel;
 
-    public NeighborhoodDetailsPage(Neighborhood neighborhood)
+    public NeighborhoodDetailsPage(NeighborhoodDto neighborhood)
     {
         InitializeComponent();
         _neighborhood = neighborhood;
+        NeighborhoodMembershipService membershipService = Injector.CreateInstance<NeighborhoodMembershipService>();
+        _viewModel = new NeighborhoodDetailsViewModel(membershipService, neighborhood.Id);
+        DataContext = _viewModel;
         NeighborhoodNameText.Text = neighborhood.Name;
-        LoadMembers();
-    }
-
-    private void LoadMembers()
-    {
-        var memberships = _membershipRepository.GetByNeighborhood(_neighborhood.Id);
-        MembersItemsControl.ItemsSource = memberships.Select(m => new MemberDisplay(m)).ToList();
     }
 
     private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -28,19 +27,6 @@ public partial class NeighborhoodDetailsPage : Page
         CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_neighborhood.CoordinatorId), "My Districts");
     }
 
-    private class MemberDisplay
-    {
-        private readonly NeighborhoodMembership _membership;
-
-        public MemberDisplay(NeighborhoodMembership membership)
-        {
-            _membership = membership;
-        }
-
-        public string FullName => $"{_membership.Citizen.Name} {_membership.Citizen.Surname}";
-        public string Address => _membership.Citizen.Address ?? "No address";
-        public string JoinedAt => $"Joined: {_membership.JoinedAt:dd.MM.yyyy}";
-    }
     private void MeetingsButton_Click(object sender, System.Windows.RoutedEventArgs e)
     {
         CoordinatorMainWindow.Instance.NavigateTo(

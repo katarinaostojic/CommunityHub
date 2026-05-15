@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 
@@ -16,7 +17,7 @@ public partial class AddNewMeetingPage : Page
         InitializeComponent();
         _coordinatorId = coordinatorId;
         _neighborhoodId = neighborhoodId;
-        _meetingService = new MeetingService();
+        _meetingService = Injector.CreateInstance<MeetingService>();
     }
 
     private void ScheduleMeetingButton_Click(object sender, RoutedEventArgs e)

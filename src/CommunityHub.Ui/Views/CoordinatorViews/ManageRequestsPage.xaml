@@ -23,13 +23,13 @@
 
         <!-- Sort button -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,10,8">
-            <Button x:Name="SortButton" Content="Sort by Date ↓" Padding="10,5"
+            <Button x:Name="SortButton" Content="{Binding SortButtonLabel}" Padding="10,5"
                     Click="SortButton_Click"/>
         </StackPanel>
 
         <!-- Requests list -->
         <ScrollViewer Grid.Row="2">
-            <ItemsControl x:Name="RequestsItemsControl">
+            <ItemsControl ItemsSource="{Binding Requests}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="#DDDDDD" BorderThickness="1"
@@ -51,17 +51,15 @@
                                 <StackPanel Grid.Column="1">
                                     <TextBlock FontWeight="Bold" FontSize="13">
                                         <Run Text="Citizen: "/>
-                                        <Run Text="{Binding Citizen.Name, Mode=OneWay}"/>
-                                        <Run Text=" "/>
-                                        <Run Text="{Binding Citizen.Surname, Mode=OneWay}"/>
+                                        <Run Text="{Binding CitizenFullName, Mode=OneWay}"/>
                                     </TextBlock>
                                     <TextBlock FontSize="12">
                                         <Run Text="Address: "/>
-                                        <Run Text="{Binding Citizen.Address, Mode=OneWay}"/>
+                                        <Run Text="{Binding CitizenAddress, Mode=OneWay}"/>
                                     </TextBlock>
                                     <TextBlock FontSize="12">
                                         <Run Text="District: "/>
-                                        <Run Text="{Binding Neighborhood.Name, Mode=OneWay}"/>
+                                        <Run Text="{Binding NeighborhoodName, Mode=OneWay}"/>
                                     </TextBlock>
                                     <TextBlock Text="{Binding CreatedAt, StringFormat='Date: {0:dd.MM.yyyy.}', Mode=OneWay}" FontSize="12"/>
                                     <TextBlock Text="{Binding StatusDisplay, Mode=OneWay}" FontSize="12"/>
