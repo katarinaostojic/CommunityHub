@@ -50,16 +50,14 @@ public class CommonRoomDbRepository : BaseDbRepository, ICommonRoomRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT booked_date
-            FROM common_room_bookings
-            WHERE common_room_id = @roomId";
-
+        SELECT booked_date
+        FROM common_room_bookings
+        WHERE common_room_id = @roomId";
         AddParameter(command, "@roomId", roomId);
-
         using IDataReader reader = command.ExecuteReader();
         List<DateTime> dates = new List<DateTime>();
         while (reader.Read())
-            dates.Add(Convert.ToDateTime(reader["booked_date"]));
+            dates.Add(DateTime.Parse(reader["booked_date"].ToString()!));
         return dates;
     }
 
@@ -78,5 +76,18 @@ public class CommonRoomDbRepository : BaseDbRepository, ICommonRoomRepository
         if (reader.Read())
             return CommonRoomMapper.Map(reader);
         return null;
+    }
+
+    public void BookDate(long commonRoomId, DateTime date)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO common_room_bookings (common_room_id, booked_date)
+        VALUES (@commonRoomId, @date)";
+
+        AddParameter(command, "@commonRoomId", commonRoomId);
+        AddParameter(command, "@date", date);
+        command.ExecuteNonQuery();
     }
 }
