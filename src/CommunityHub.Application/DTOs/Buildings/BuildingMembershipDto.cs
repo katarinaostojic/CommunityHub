@@ -12,6 +12,7 @@ public class BuildingMembershipDto
     public string UnitNumber { get; init; }
     public int FloorNumber { get; init; }
     public DateTime ApprovedAt { get; init; }
+    public string TenantFullName { get; init; }
 
     public BuildingMembershipDto(
         long id,
@@ -23,7 +24,8 @@ public class BuildingMembershipDto
         string buildingCountryName,
         string unitNumber,
         int floorNumber,
-        DateTime approvedAt)
+        DateTime approvedAt,
+        string tenantFullName)
     {
         Id = id;
         BuildingId = buildingId;
@@ -35,6 +37,7 @@ public class BuildingMembershipDto
         UnitNumber = unitNumber;
         FloorNumber = floorNumber;
         ApprovedAt = approvedAt;
+        TenantFullName = tenantFullName;
     }
 
     public string BuildingFullAddress => $"{BuildingStreet} {BuildingStreetNumber}";

@@ -11,6 +11,7 @@ public class BuildingDto
     public int NumberOfFloors { get; init; }
     public int TotalUnits { get; init; }
     public int VacancyCount { get; init; }
+    public List<BuildingMembershipDto> Memberships { get; init; }
     public List<string> ImagePaths { get; init; }
 
     public BuildingDto(
@@ -23,6 +24,7 @@ public class BuildingDto
         int numberOfFloors,
         int totalUnits,
         int vacancyCount,
+        List<BuildingMembershipDto> memberships,
         List<string> imagePaths)
     {
         Id = id;
@@ -34,6 +36,7 @@ public class BuildingDto
         NumberOfFloors = numberOfFloors;
         TotalUnits = totalUnits;
         VacancyCount = vacancyCount;
+        Memberships = memberships;
         ImagePaths = imagePaths;
     }
 

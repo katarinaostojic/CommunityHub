@@ -179,18 +179,18 @@ public class AdService
 
     // TODO: menadzer metode treba prebaciti da koriste DTO
 
-    public List<Ad> GetAllByBuilding(long buildingId)
+    public List<AdDto> GetAllByBuilding(long buildingId)
     {
         RefreshExpiredAds(buildingId);
-        return _adRepository.GetAllByBuilding(buildingId);
+        return _adRepository.GetAllByBuilding(buildingId).ToTenantAdDtoList();
     }
 
-    public int CountByType(List<Ad> ads, AdType type)
+    public int CountByType(List<AdDto> ads, AdType type)
     {
         return ads.Count(a => a.Type == type);
     }
 
-    public Dictionary<AdCategory, (int offering, int seeking)> GetStatsByCategory(List<Ad> ads)
+    public Dictionary<AdCategory, (int offering, int seeking)> GetStatsByCategory(List<AdDto> ads)
     {
         return ads
             .GroupBy(a => a.Category)
@@ -203,7 +203,7 @@ public class AdService
             );
     }
 
-    public (int active, int archived) GetCurrentState(List<Ad> ads)
+    public (int active, int archived) GetCurrentState(List<AdDto> ads)
     {
         return (
             active: ads.Count(a => a.Status == AdStatus.Active),
@@ -211,7 +211,7 @@ public class AdService
         );
     }
 
-    public Dictionary<AdCategory, int> GetActiveCountByCategory(List<Ad> ads)
+    public Dictionary<AdCategory, int> GetActiveCountByCategory(List<AdDto> ads)
     {
         return ads
             .Where(a => a.Status == AdStatus.Active)

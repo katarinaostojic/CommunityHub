@@ -16,9 +16,9 @@ public class CommonRoomService
         _buildingRepository = buildingRepository;
     }
 
-    public List<CommonRoom> GetByBuilding(long buildingId)
+    public List<CommonRoomDto> GetByBuilding(long buildingId)
     {
-        return _repository.GetByBuilding(buildingId);
+        return _repository.GetByBuilding(buildingId).ToDtoList();
     }
 
     public void Create(string name, string description, int floorNumber,

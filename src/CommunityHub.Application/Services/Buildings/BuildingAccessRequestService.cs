@@ -38,9 +38,9 @@ public class BuildingAccessRequestService
         return _repository.GetAllByTenant(tenantId, status, sortDescending).ToDtoList();
     }
 
-    public List<BuildingAccessRequest> GetAllByManager(long managerId, string? status, bool sortDescending)
+    public List<BuildingAccessRequestDto> GetAllByManager(long managerId, string? status, bool sortDescending)
     {
-        return _repository.GetAllByManager(managerId, status, sortDescending);
+        return _repository.GetAllByManager(managerId, status, sortDescending).ToDtoList();
     }
 
     public int CountByTenantAndStatus(long tenantId, RequestStatus? status)
@@ -78,6 +78,11 @@ public class BuildingAccessRequestService
     {
         request.Reject(rejectionReason);
         _repository.Update(request);
+    }
+
+    public BuildingAccessRequest? GetById(long requestId)
+    {
+        return _repository.GetById(requestId);
     }
 
     private void ValidateAccessRequest(Building building, long tenantId, string unitNumber)

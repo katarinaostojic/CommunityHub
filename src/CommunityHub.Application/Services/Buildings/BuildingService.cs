@@ -27,9 +27,9 @@ public class BuildingService
         return _repository.GetById(buildingId)?.ToDto();
     }
 
-    public List<Building> GetAllByManager(long managerId)
+    public List<BuildingDto> GetAllByManager(long managerId)
     {
-        return _repository.GetAllByManager(managerId);
+        return _repository.GetAllByManager(managerId).ToDtoList();
     }
 
     public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId)

@@ -15,6 +15,7 @@ public class BuildingAccessRequestDto
     public DateTime CreatedAt { get; init; }
     public RequestStatus Status { get; init; }
     public string? RejectionReason { get; init; }
+    public string TenantFullName { get; init; }
 
     public BuildingAccessRequestDto(
         long id,
@@ -25,6 +26,7 @@ public class BuildingAccessRequestDto
         string buildingCityName,
         string buildingCountryName,
         string unitNumber,
+        string tenantFullName,
         DateTime createdAt,
         RequestStatus status,
         string? rejectionReason = null)
@@ -37,6 +39,7 @@ public class BuildingAccessRequestDto
         BuildingCityName = buildingCityName;
         BuildingCountryName = buildingCountryName;
         UnitNumber = unitNumber;
+        TenantFullName = tenantFullName;
         CreatedAt = createdAt;
         Status = status;
         RejectionReason = rejectionReason;
