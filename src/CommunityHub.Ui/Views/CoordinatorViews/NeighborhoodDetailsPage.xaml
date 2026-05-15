@@ -8,7 +8,7 @@
 
         <TextBlock Text="Members" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,5"/>
 
-        <ItemsControl x:Name="MembersItemsControl">
+        <ItemsControl ItemsSource="{Binding Members}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
@@ -28,7 +28,6 @@
         <Button Content="Back" Width="100" HorizontalAlignment="Left" Margin="0,0,0,0"
         Click="BackButton_Click"/>
         
-        <Button Content="Back" Width="100" HorizontalAlignment="Left" Margin="0,20,0,0"
-                Click="BackButton_Click"/>
+        
     </StackPanel>
 </Page>

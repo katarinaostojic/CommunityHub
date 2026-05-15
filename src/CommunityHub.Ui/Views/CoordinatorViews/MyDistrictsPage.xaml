@@ -9,7 +9,7 @@
 
     <Grid>
         <ScrollViewer>
-            <ItemsControl x:Name="DistrictsItemsControl">
+            <ItemsControl ItemsSource="{Binding Districts}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Tag="{Binding}" Click="DistrictCard_Click"
@@ -24,18 +24,14 @@
 
                                     <Border Grid.Column="0" Background="#EEEEEE"
                                             Width="90" Height="90" Margin="0,0,10,0">
-                                        <Image Source="{Binding Images, Converter={StaticResource ImageConverter}, Mode=OneWay}"
+                                        <Image Source="{Binding ImagePaths, Converter={StaticResource ImageConverter}, Mode=OneWay}"
                                                Stretch="UniformToFill"/>
                                     </Border>
 
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Name, Mode=OneWay}"
                                                    FontWeight="Bold" FontSize="18"/>
-                                        <TextBlock FontSize="13">
-                                            <Run Text="{Binding Location.CityName, Mode=OneWay}"/>
-                                            <Run Text=","/>
-                                            <Run Text="{Binding Location.CountryName, Mode=OneWay}"/>
-                                        </TextBlock>
+                                        <TextBlock Text="{Binding Location, Mode=OneWay}" FontSize="13"/>
                                         <TextBlock Text="requests pending" FontSize="12" Foreground="Gray"/>
                                     </StackPanel>
                                 </Grid>

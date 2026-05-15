@@ -10,6 +10,7 @@ using CommunityHub.Application.Services.Ads;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Application.Services.Neighborhoods;
 
+
 namespace CommunityHub.Application.DependencyInjection;
 
 public static class Injector
@@ -72,6 +73,20 @@ public static class Injector
             new EventService(
                 new EventDbRepository())
         },
+        {
+            typeof(NeighborhoodMembershipService),
+            new NeighborhoodMembershipService(
+                new NeighborhoodMembershipDbRepository())
+        },
+        {
+            typeof(MeetingService),
+            new MeetingService(new MeetingDbRepository())
+        },
+        {
+            typeof(StatisticsService),
+            new StatisticsService(new TrustRecordDbRepository())
+        },
+        
     };
 
     public static T CreateInstance<T>()

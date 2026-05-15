@@ -15,7 +15,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Nov u kvartu" Grid.Column="0"/>
-                    <TextBlock x:Name="NewCount" Grid.Column="1"/>
+                    <TextBlock Text="{Binding NewCount}" Grid.Column="1"/>
                 </Grid>
                 <Grid Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
@@ -23,7 +23,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Neaktivan gradjanin" Grid.Column="0"/>
-                    <TextBlock x:Name="InactiveCount" Grid.Column="1"/>
+                    <TextBlock Text="{Binding InactiveCount}" Grid.Column="1"/>
                 </Grid>
                 <Grid Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
@@ -31,7 +31,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Aktivan gradjanin" Grid.Column="0"/>
-                    <TextBlock x:Name="ActiveCount" Grid.Column="1"/>
+                    <TextBlock Text="{Binding ActiveCount}" Grid.Column="1"/>
                 </Grid>
                 <Grid Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
@@ -39,7 +39,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Istaknut gradjanin" Grid.Column="0"/>
-                    <TextBlock x:Name="DistinguishedCount" Grid.Column="1"/>
+                    <TextBlock Text="{Binding DistinguishedCount}" Grid.Column="1"/>
                 </Grid>
                 <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
@@ -47,11 +47,11 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Gradjanin od povjerenja" Grid.Column="0"/>
-                    <TextBlock x:Name="TrustedCount" Grid.Column="1"/>
+                    <TextBlock Text="{Binding TrustedCount}" Grid.Column="1"/>
                 </Grid>
 
                 <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,0,0,16">
-                    <TextBlock x:Name="SuggestionText" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding SuggestionText}" TextWrapping="Wrap"/>
                 </Border>
 
                 <!-- Filter dugmad -->
@@ -63,7 +63,7 @@
                 </StackPanel>
 
                 <!-- Lista sastanaka -->
-                <ItemsControl x:Name="MeetingsItemsControl">
+                <ItemsControl ItemsSource="{Binding Meetings}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,10" Padding="12">

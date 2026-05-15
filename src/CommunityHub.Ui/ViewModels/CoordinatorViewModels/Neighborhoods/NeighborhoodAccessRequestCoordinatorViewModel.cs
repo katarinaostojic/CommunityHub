@@ -1,21 +1,21 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.DTOs.Neighborhoods;
 
-namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels;
+namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 
 public class NeighborhoodAccessRequestCoordinatorViewModel
 {
-    private readonly NeighborhoodAccessRequest _request;
+    private readonly NeighborhoodAccessRequestDto _request;
 
-    public NeighborhoodAccessRequestCoordinatorViewModel(NeighborhoodAccessRequest request)
+    public NeighborhoodAccessRequestCoordinatorViewModel(NeighborhoodAccessRequestDto request)
     {
         _request = request;
     }
 
-    public NeighborhoodAccessRequest Request => _request;
     public long Id => _request.Id;
-    public User Citizen => _request.Citizen;
-    public Neighborhood Neighborhood => _request.Neighborhood;
+    public string CitizenFullName => _request.CitizenFullName;
+    public string CitizenAddress => _request.Address;
+    public string NeighborhoodName => _request.NeighborhoodName;
     public DateTime CreatedAt => _request.CreatedAt;
     public RequestStatus Status => _request.Status;
 

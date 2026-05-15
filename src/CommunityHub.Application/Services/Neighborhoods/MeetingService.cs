@@ -7,9 +7,9 @@ public class MeetingService
 {
     private readonly MeetingDbRepository _repository;
 
-    public MeetingService()
+    public MeetingService(MeetingDbRepository repository)
     {
-        _repository = new MeetingDbRepository();
+        _repository = repository;
     }
 
     public long CreateMeeting(Meeting meeting)
@@ -20,20 +20,6 @@ public class MeetingService
     public List<Meeting> GetMeetingsByCoordinator(long coordinatorId)
     {
         return _repository.GetByCoordinator(coordinatorId);
-    }
-
-    public MeetingTheme? SuggestMeetingTheme(Dictionary<TrustLevel, int> stats)
-    {
-        int newCount = stats.GetValueOrDefault(TrustLevel.New, 0);
-        int inactiveCount = stats.GetValueOrDefault(TrustLevel.Inactive, 0);
-
-        if (newCount == 0 && inactiveCount == 0)
-            return null;
-
-        if (newCount >= inactiveCount)
-            return MeetingTheme.Welcome;
-
-        return MeetingTheme.Motivation;
     }
 
     public void CheckAndFinalizeVoting(long meetingId)

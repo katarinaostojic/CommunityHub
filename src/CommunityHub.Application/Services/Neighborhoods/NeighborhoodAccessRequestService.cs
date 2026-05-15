@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.Mappings.Neighborhoods;
 
 namespace CommunityHub.Application.Services.Neighborhoods;
 
@@ -14,7 +16,7 @@ public class NeighborhoodAccessRequestService
     }
 
     public List<NeighborhoodAccessRequest> GetAllByCitizen(long citizenId, string? status, bool sortDescending)
-        => _repository.GetAllByCitizen(citizenId, status, sortDescending);
+    => _repository.GetAllByCitizen(citizenId, status, sortDescending);
 
     public int CountByCitizenAndStatus(long citizenId, string? status)
         => _repository.CountByCitizenAndStatus(citizenId, status);
@@ -22,8 +24,11 @@ public class NeighborhoodAccessRequestService
     public void Delete(long id)
         => _repository.Delete(id);
 
-    public List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
-        => _repository.GetAllByCoordinator(coordinatorId, status, sortDescending);
+    public List<NeighborhoodAccessRequestDto> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
+        => _repository.GetAllByCoordinator(coordinatorId, status, sortDescending).ToDtoList();
+
+    public NeighborhoodAccessRequest? GetById(long id)
+        => _repository.GetById(id);
 
     public void ApproveRequestWithMembership(NeighborhoodAccessRequest request)
     {
@@ -56,8 +61,7 @@ public class NeighborhoodAccessRequestService
         _repository.Create(citizen, neighborhood);
         return AccessRequestResult.RequestCreated;
     }
+
     public long? GetMembershipNeighborhoodId(long citizenId)
-    {
-        return _repository.GetMembershipNeighborhoodId(citizenId);
-    }
+        => _repository.GetMembershipNeighborhoodId(citizenId);
 }

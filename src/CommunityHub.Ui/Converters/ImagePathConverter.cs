@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using CommunityHub.Application.Domain.Neighborhoods;
 
 namespace CommunityHub.Ui.Converters;
 
@@ -37,6 +38,18 @@ public class SingleImagePathConverter : IValueConverter
     {
         if (value is string path)
             return ImagePathConverter.LoadImage(path);
+        return null;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+public class NeighborhoodImageConverter : IValueConverter
+{
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is List<Image> images && images.Count > 0)
+            return ImagePathConverter.LoadImage(images[0].Path);
         return null;
     }
 

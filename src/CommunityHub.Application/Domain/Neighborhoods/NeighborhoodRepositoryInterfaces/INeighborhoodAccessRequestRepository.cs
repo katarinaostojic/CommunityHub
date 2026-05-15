@@ -14,4 +14,5 @@ public interface INeighborhoodAccessRequestRepository
     void CreateMembership(NeighborhoodAccessRequest request);
     List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending);
     long? GetMembershipNeighborhoodId(long citizenId);
+    NeighborhoodAccessRequest? GetById(long id);
 }
