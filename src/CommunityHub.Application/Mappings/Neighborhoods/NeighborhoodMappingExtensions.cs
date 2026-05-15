@@ -1,6 +1,7 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Domain;
+using static CommunityHub.Application.DTOs.Neighborhoods.NeighborhoodAccessRequestDto;
 
 namespace CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -56,5 +57,46 @@ public static class NeighborhoodMappingExtensions
     public static List<NeighborhoodAccessRequestDto> ToDtoList(this IEnumerable<NeighborhoodAccessRequest> requests)
     {
         return requests.Select(r => r.ToDto()).ToList();
+    }
+
+    public static ForumDto ToDto(this Forum forum, long currentCoordinatorId)
+    {
+        return new ForumDto(
+            id: forum.Id,
+            title: forum.Title,
+            description: forum.Description,
+            coordinatorId: forum.CoordinatorId,
+            coordinatorFullName: $"{forum.CoordinatorName} {forum.CoordinatorSurname}",
+            isClosed: forum.IsClosed,
+            createdAt: forum.CreatedAt,
+            isAuthor: forum.CoordinatorId == currentCoordinatorId
+        );
+    }
+
+    public static List<ForumDto> ToDtoList(this IEnumerable<Forum> forums, long currentCoordinatorId)
+    {
+        return forums.Select(f => f.ToDto(currentCoordinatorId)).ToList();
+    }
+
+    public static ForumCommentDto ToDto(this ForumComment comment, long forumCoordinatorId)
+    {
+        return new ForumCommentDto(
+            id: comment.Id,
+            forumId: comment.ForumId,
+            coordinatorId: comment.CoordinatorId,
+            coordinatorFullName: $"{comment.CoordinatorName} {comment.CoordinatorSurname}",
+            neighborhoodName: comment.NeighborhoodName,
+            text: comment.Text,
+            createdAt: comment.CreatedAt,
+            likeCount: comment.LikeCount,
+            dislikeCount: comment.DislikeCount,
+            currentUserReaction: comment.CurrentUserReaction,
+            isAuthor: comment.CoordinatorId == forumCoordinatorId
+        );
+    }
+
+    public static List<ForumCommentDto> ToDtoList(this IEnumerable<ForumComment> comments, long forumCoordinatorId)
+    {
+        return comments.Select(c => c.ToDto(forumCoordinatorId)).ToList();
     }
 }

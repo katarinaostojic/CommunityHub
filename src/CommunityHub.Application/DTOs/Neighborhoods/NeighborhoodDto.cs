@@ -1,6 +1,8 @@
 ﻿namespace CommunityHub.Application.DTOs.Neighborhoods;
 
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
+
 public class NeighborhoodDto
 {
     public long Id { get; init; }
@@ -48,6 +50,7 @@ public class NeighborhoodMembershipDto
     public string Address => CitizenAddress ?? "No address";
     public string JoinedAtFormatted => $"Joined: {JoinedAt:dd.MM.yyyy}";
 }
+
 public class NeighborhoodAccessRequestDto
 {
     public long Id { get; init; }
@@ -82,4 +85,66 @@ public class NeighborhoodAccessRequestDto
     public string CitizenFullName => $"{CitizenName} {CitizenSurname}";
     public string Address => CitizenAddress ?? "No address";
     public bool HasRejectionReason => Status == RequestStatus.Rejected && RejectionReason != null;
+}
+
+public class ForumDto
+{
+    public long Id { get; init; }
+    public string Title { get; init; }
+    public string Description { get; init; }
+    public long CoordinatorId { get; init; }
+    public string CoordinatorFullName { get; init; }
+    public bool IsClosed { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public bool IsAuthor { get; init; }
+
+    public ForumDto(long id, string title, string description, long coordinatorId,
+        string coordinatorFullName, bool isClosed, DateTime createdAt, bool isAuthor)
+    {
+        Id = id;
+        Title = title;
+        Description = description;
+        CoordinatorId = coordinatorId;
+        CoordinatorFullName = coordinatorFullName;
+        IsClosed = isClosed;
+        CreatedAt = createdAt;
+        IsAuthor = isAuthor;
+    }
+
+    public string CreatedAtFormatted => $"{CreatedAt:dd.MM.yyyy HH:mm}";
+}
+
+public class ForumCommentDto
+{
+    public long Id { get; init; }
+    public long ForumId { get; init; }
+    public long CoordinatorId { get; init; }
+    public string CoordinatorFullName { get; init; }
+    public string NeighborhoodName { get; init; }
+    public string Text { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public int LikeCount { get; init; }
+    public int DislikeCount { get; init; }
+    public ReactionType? CurrentUserReaction { get; init; }
+    public bool IsAuthor { get; init; }
+
+    public ForumCommentDto(long id, long forumId, long coordinatorId, string coordinatorFullName,
+        string neighborhoodName, string text, DateTime createdAt, int likeCount, int dislikeCount,
+        ReactionType? currentUserReaction, bool isAuthor)
+    {
+        Id = id;
+        ForumId = forumId;
+        CoordinatorId = coordinatorId;
+        CoordinatorFullName = coordinatorFullName;
+        NeighborhoodName = neighborhoodName;
+        Text = text;
+        CreatedAt = createdAt;
+        LikeCount = likeCount;
+        DislikeCount = dislikeCount;
+        CurrentUserReaction = currentUserReaction;
+        IsAuthor = isAuthor;
+    }
+
+    public string CreatedAtFormatted => $"{CreatedAt:dd.MM.yyyy HH:mm}";
+    public string AuthorLabel => IsAuthor ? " [author]" : string.Empty;
 }

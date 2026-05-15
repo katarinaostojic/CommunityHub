@@ -32,7 +32,7 @@
                 <Button Content="My Districts" Click="MyDistrictsButton_Click" Margin="5" FontSize="14"/>
                 <Button Content="Requests" Click="RequestsButton_Click" Margin="5" FontSize="14"/>
                 <Button Content="Meetings" Click="MeetingsButton_Click" Margin="5" FontSize="14"/>
-                <Button Content="Forums" Margin="5" FontSize="14"/>
+                <Button Content="Forums" Click="ForumsButton_Click" Margin="5" FontSize="14"/>
                 <Button Content="Budget" Margin="5" FontSize="14"/>
                 <Button Content="City Objects" Margin="5" FontSize="14"/>
                 <Button Content="Citizen Statistics" Margin="5" FontSize="14"/>
