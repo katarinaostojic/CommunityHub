@@ -9,15 +9,16 @@ public static class BuildingMembershipMappingExtensions
     {
         return new BuildingMembershipDto(
             id: membership.Id,
-            buildingId: membership.Building.Id,
-            buildingStreet: membership.Building.Street,
-            buildingStreetNumber: membership.Building.StreetNumber,
-            buildingNeighborhood: membership.Building.Neighborhood,
-            buildingCityName: membership.Building.City.Name,
-            buildingCountryName: membership.Building.City.Country.Name,
+            buildingId: membership.Building?.Id ?? 0,
+            buildingStreet: membership.Building?.Street ?? string.Empty,
+            buildingStreetNumber: membership.Building?.StreetNumber ?? string.Empty,
+            buildingNeighborhood: membership.Building?.Neighborhood ?? string.Empty,
+            buildingCityName: membership.Building?.City?.Name ?? string.Empty,
+            buildingCountryName: membership.Building?.City?.Country?.Name ?? string.Empty,
             unitNumber: membership.UnitNumber,
             floorNumber: membership.FloorNumber,
-            approvedAt: membership.ApprovedAt
+            approvedAt: membership.ApprovedAt,
+            tenantFullName: $"{membership.User.Name} {membership.User.Surname}"
         );
     }
 

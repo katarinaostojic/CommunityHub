@@ -18,7 +18,8 @@ public static class BuildingAccessRequestMappingExtensions
             unitNumber: request.UnitNumber,
             createdAt: request.CreatedAt,
             status: request.Status,
-            rejectionReason: request.RejectionReason
+            rejectionReason: request.RejectionReason,
+            tenantFullName: $"{request.Tenant.Name} {request.Tenant.Surname}"
         );
     }
 

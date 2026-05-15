@@ -17,6 +17,7 @@ public static class BuildingMappingExtensions
             numberOfFloors: building.NumberOfFloors,
             totalUnits: building.TotalUnits,
             vacancyCount: building.VacancyCount,
+            memberships: building.Memberships.ToDtoList(),
             imagePaths: building.Images.Select(i => i.Path).ToList()
         );
     }
