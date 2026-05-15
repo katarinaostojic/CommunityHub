@@ -20,8 +20,6 @@ public class ImagePathConverter : IValueConverter
 
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is List<Image> images && images.Count > 0)
-            return LoadImage(images[0].Path);
         if (value is List<string> paths && paths.Count > 0)
             return LoadImage(paths[0]);
         return null;

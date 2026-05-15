@@ -160,7 +160,7 @@
 
                     <!-- Rows -->
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl x:Name="RequestsItemsControl">
+                        <ItemsControl ItemsSource="{Binding RowViewModels}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border x:Name="RowBorder"
@@ -178,35 +178,17 @@
                                                 <ColumnDefinition Width="200"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Grid.Column="0" Style="{StaticResource DataCell}">
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0} {1}">
-                                                        <Binding Path="User.Name"/>
-                                                        <Binding Path="User.Surname"/>
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
+                                            <TextBlock Grid.Column="0" Style="{StaticResource DataCell}"
+                                                       Text="{Binding TenantFullName}"/>
 
-                                            <TextBlock Grid.Column="1" Style="{StaticResource DataCell}">
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0} {1}">
-                                                        <Binding Path="Building.Street"/>
-                                                        <Binding Path="Building.StreetNumber"/>
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
+                                            <TextBlock Grid.Column="1" Style="{StaticResource DataCell}"
+                                                       Text="{Binding BuildingFullAddress}"/>
 
                                             <TextBlock Grid.Column="2" Style="{StaticResource DataCell}"
-                                                       Text="{Binding Building.Neighborhood}"/>
+                                                       Text="{Binding BuildingNeighborhood}"/>
 
-                                            <TextBlock Grid.Column="3" Style="{StaticResource DataCell}">
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0}, {1}">
-                                                        <Binding Path="Building.City.Name"/>
-                                                        <Binding Path="Building.City.Country.Name"/>
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
+                                            <TextBlock Grid.Column="3" Style="{StaticResource DataCell}"
+                                                       Text="{Binding BuildingLocation}"/>
 
                                             <TextBlock Grid.Column="4" Style="{StaticResource DataCell}"
                                                        Text="{Binding UnitNumber}"/>
@@ -232,13 +214,13 @@
                                                         Style="{StaticResource ActionButton}"
                                                         Foreground="White" Background="#27AE60"
                                                         Margin="0,0,6,0"
-                                                        Tag="{Binding}"
+                                                        Tag="{Binding Id}"
                                                         Visibility="{Binding PendingVisible, Converter={StaticResource BoolToVis}}"
                                                         Click="AcceptButton_Click"/>
                                                 <Button Content="Reject"
                                                         Style="{StaticResource ActionButton}"
                                                         Foreground="White" Background="#E74C3C"
-                                                        Tag="{Binding}"
+                                                        Tag="{Binding Id}"
                                                         Visibility="{Binding PendingVisible, Converter={StaticResource BoolToVis}}"
                                                         Click="RejectButton_Click"/>
                                                 <Button Content="Explanation"

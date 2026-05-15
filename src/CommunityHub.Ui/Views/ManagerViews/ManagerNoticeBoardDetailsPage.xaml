@@ -23,7 +23,7 @@
                         Background="Transparent" BorderThickness="0"
                         Foreground="#2980B9" FontSize="13" FontWeight="SemiBold"
                         Cursor="Hand" Click="BackButton_Click"/>
-                <TextBlock x:Name="BuildingTitleText"
+                <TextBlock Text="{Binding BuildingTitle}"
                            FontSize="20" FontWeight="Bold"
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"
@@ -57,7 +57,7 @@
                 <StackPanel x:Name="PanelAds">
                     <TextBlock Text="Ads" FontSize="16" FontWeight="Bold"
                                Foreground="#2C3E50" Margin="0,0,0,20"/>
-                    <ItemsControl x:Name="AdsItemsControl">
+                    <ItemsControl ItemsSource="{Binding Ads}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="White" CornerRadius="10"
@@ -139,7 +139,7 @@
                                   SelectionChanged="PeriodComboBox_SelectionChanged"/>
                     </StackPanel>
 
-                    <!-- Brojevi oglasa -->
+                    <!-- Ads overview -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
@@ -147,12 +147,14 @@
                         <StackPanel>
                             <TextBlock Text="Ads overview" FontSize="15" FontWeight="Bold"
                                        Foreground="#2C3E50" Margin="0,0,0,12"/>
-                            <TextBlock x:Name="TxtOffering" FontSize="13" Foreground="#2C3E50" Margin="0,0,0,6"/>
-                            <TextBlock x:Name="TxtSeeking" FontSize="13" Foreground="#2C3E50" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding OfferingText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding SeekingText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,6"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Statistika po kategorijama -->
+                    <!-- By category -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
@@ -160,7 +162,7 @@
                         <StackPanel>
                             <TextBlock Text="By category" FontSize="15" FontWeight="Bold"
                                        Foreground="#2C3E50" Margin="0,0,0,12"/>
-                            <ItemsControl x:Name="CategoryStatsItemsControl">
+                            <ItemsControl ItemsSource="{Binding CategoryStats}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,0,0,8">
@@ -187,7 +189,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Trenutno stanje -->
+                    <!-- Current state -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
@@ -195,15 +197,17 @@
                         <StackPanel>
                             <TextBlock Text="Current state" FontSize="15" FontWeight="Bold"
                                        Foreground="#2C3E50" Margin="0,0,0,12"/>
-                            <TextBlock x:Name="TxtActive" FontSize="13" Foreground="#2C3E50" Margin="0,0,0,6"/>
-                            <TextBlock x:Name="TxtArchived" FontSize="13" Foreground="#2C3E50" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding ActiveText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding ArchivedText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,12"/>
                             <TextBlock Text="Active by category:" FontSize="13"
                                        FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,8"/>
-                            <ItemsControl x:Name="ActiveByCategoryItemsControl">
+                            <ItemsControl ItemsSource="{Binding ActiveByCategoryItems}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock FontSize="13" Foreground="#2C3E50" Margin="0,0,0,4"
-                                                   Text="{Binding Display}"/>
+                                        <TextBlock FontSize="13" Foreground="#2C3E50"
+                                                   Margin="0,0,0,4" Text="{Binding}"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -218,7 +222,8 @@
                         <StackPanel>
                             <TextBlock Text="Top helper" FontSize="15" FontWeight="Bold"
                                        Foreground="#2C3E50" Margin="0,0,0,12"/>
-                            <TextBlock x:Name="TxtTopHelper" FontSize="13" Foreground="#2C3E50"/>
+                            <TextBlock Text="{Binding TopHelperText}" FontSize="13"
+                                       Foreground="#2C3E50"/>
                         </StackPanel>
                     </Border>
 

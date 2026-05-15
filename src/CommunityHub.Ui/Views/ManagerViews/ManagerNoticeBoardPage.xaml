@@ -25,7 +25,7 @@
             <StackPanel>
                 <TextBlock Text="My Buildings" FontSize="16" FontWeight="Bold"
                            Foreground="#2C3E50" Margin="0,0,0,20"/>
-                <ItemsControl x:Name="BuildingsItemsControl">
+                <ItemsControl ItemsSource="{Binding Buildings}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="White" CornerRadius="10"
@@ -38,7 +38,7 @@
                                     <StackPanel>
                                         <TextBlock FontSize="15" FontWeight="Bold"
                                                    Foreground="#2C3E50"
-                                                   Text="{Binding Street}"/>
+                                                   Text="{Binding FullAddress}"/>
                                         <TextBlock FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,0"
                                                    Text="{Binding Neighborhood}"/>
                                     </StackPanel>

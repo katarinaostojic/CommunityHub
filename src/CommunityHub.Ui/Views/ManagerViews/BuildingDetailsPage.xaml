@@ -29,7 +29,7 @@
                         Background="Transparent" BorderThickness="0"
                         Foreground="#2980B9" FontSize="13" FontWeight="SemiBold"
                         Cursor="Hand" Click="BackButton_Click"/>
-                <TextBlock x:Name="BuildingTitleText"
+                <TextBlock Text="{Binding Building.FullAddress}"
                            FontSize="20" FontWeight="Bold"
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"
@@ -66,7 +66,8 @@
                                Foreground="#2C3E50" Margin="0,0,0,15"/>
 
                     <!-- Slike -->
-                    <ItemsControl x:Name="ImagesItemsControl" Margin="0,0,0,20">
+                    <ItemsControl ItemsSource="{Binding Building.ImagePaths}"
+                                  Margin="0,0,0,20">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel/>
@@ -76,28 +77,28 @@
                             <DataTemplate>
                                 <Border Width="180" Height="120" Margin="0,0,10,10"
                                         CornerRadius="8" ClipToBounds="True">
-                                    <Image Source="{Binding Path, Converter={StaticResource SingleImagePathConverter}}"
+                                    <Image Source="{Binding Converter={StaticResource SingleImagePathConverter}}"
                                            Stretch="UniformToFill"/>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <TextBlock x:Name="TxtStreet" FontSize="14"
-                               Foreground="#2C3E50" Margin="0,0,0,8"/>
-                    <TextBlock x:Name="TxtNeighborhood" FontSize="14"
-                               Foreground="#2C3E50" Margin="0,0,0,8"/>
-                    <TextBlock x:Name="TxtCity" FontSize="14"
-                               Foreground="#2C3E50" Margin="0,0,0,8"/>
-                    <TextBlock x:Name="TxtFloors" FontSize="14"
-                               Foreground="#2C3E50" Margin="0,0,0,8"/>
-                    <TextBlock x:Name="TxtUnits" FontSize="14"
-                               Foreground="#2C3E50" Margin="0,0,0,25"/>
+                    <TextBlock FontSize="14" Foreground="#2C3E50" Margin="0,0,0,8"
+                               Text="{Binding Building.FullAddress, StringFormat='Street: {0}'}"/>
+                    <TextBlock FontSize="14" Foreground="#2C3E50" Margin="0,0,0,8"
+                               Text="{Binding Building.Neighborhood, StringFormat='Neighborhood: {0}'}"/>
+                    <TextBlock FontSize="14" Foreground="#2C3E50" Margin="0,0,0,8"
+                               Text="{Binding Building.Location, StringFormat='City: {0}'}"/>
+                    <TextBlock FontSize="14" Foreground="#2C3E50" Margin="0,0,0,8"
+                               Text="{Binding Building.NumberOfFloors, StringFormat='Floors: {0}'}"/>
+                    <TextBlock FontSize="14" Foreground="#2C3E50" Margin="0,0,0,25"
+                               Text="{Binding Building.TotalUnits, StringFormat='Total units: {0}'}"/>
 
                     <!-- Membership lista -->
                     <TextBlock Text="Tenants with Membership" FontSize="16"
                                FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,15"/>
-                    <DataGrid x:Name="MembershipsDataGrid"
+                    <DataGrid ItemsSource="{Binding Memberships}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               Background="White"
@@ -108,7 +109,7 @@
                               HorizontalGridLinesBrush="#F0F0F0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Tenant" Width="*"
-                                Binding="{Binding User.FullName}"/>
+                                Binding="{Binding TenantFullName}"/>
                             <DataGridTextColumn Header="Floor" Width="100"
                                 Binding="{Binding FloorNumber}"/>
                             <DataGridTextColumn Header="Unit" Width="100"
@@ -138,7 +139,7 @@
                         </Button>
                     </Grid>
 
-                    <ItemsControl x:Name="CommonRoomsItemsControl">
+                    <ItemsControl ItemsSource="{Binding CommonRooms}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="White" CornerRadius="10"
@@ -159,7 +160,7 @@
                                             <TextBlock FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,0"
                                                        Text="{Binding FloorNumber, StringFormat='Floor: {0}'}"/>
                                             <TextBlock FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,0"
-                                                       Text="{Binding RentalType, StringFormat='Rental type: {0}'}"/>
+                                                       Text="{Binding RentalTypeDisplay}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="Requests"
                                                 Width="100" Height="34"

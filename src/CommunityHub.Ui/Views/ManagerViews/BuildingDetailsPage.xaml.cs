@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,36 +12,14 @@ namespace CommunityHub.Ui.Views.ManagerViews;
 public partial class BuildingDetailsPage : Page
 {
     private readonly User _currentUser;
-    private readonly Building _building;
-    private readonly BuildingService _buildingService;
-    private readonly CommonRoomService _commonRoomService;
+    private readonly BuildingDetailsViewModel _viewModel;
 
-    public BuildingDetailsPage(User user, Building building)
+    public BuildingDetailsPage(User user, long buildingId)
     {
         InitializeComponent();
         _currentUser = user;
-        _building = building;
-        _buildingService = Injector.CreateInstance<BuildingService>();
-        _commonRoomService = Injector.CreateInstance<CommonRoomService>();
-        LoadBuildingInfo();
-    }
-
-    private void LoadBuildingInfo()
-    {
-        BuildingTitleText.Text = $"{_building.Street} {_building.StreetNumber}";
-        TxtStreet.Text = $"Street: {_building.Street} {_building.StreetNumber}";
-        TxtNeighborhood.Text = $"Neighborhood: {_building.Neighborhood}";
-        TxtCity.Text = $"City: {_building.City.Name}, {_building.City.Country.Name}";
-        TxtFloors.Text = $"Floors: {_building.NumberOfFloors}";
-        TxtUnits.Text = $"Total units: {_building.TotalUnits}";
-        MembershipsDataGrid.ItemsSource = _building.Memberships;
-        ImagesItemsControl.ItemsSource = _building.Images;
-    }
-
-    private void LoadCommonRooms()
-    {
-        List<CommonRoom> rooms = _commonRoomService.GetByBuilding(_building.Id);
-        CommonRoomsItemsControl.ItemsSource = rooms;
+        _viewModel = new BuildingDetailsViewModel(buildingId);
+        DataContext = _viewModel;
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -63,7 +41,21 @@ public partial class BuildingDetailsPage : Page
         PanelCommonRoom.Visibility = Visibility.Visible;
         SetActiveTab(TabCommonRoom);
         SetInactiveTab(TabBuildingInfo);
-        LoadCommonRooms();
+        _viewModel.LoadCommonRooms();
+    }
+
+    private void AddCommonRoom_Click(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.Building == null) return;
+        AddCommonRoomDialog dialog = new AddCommonRoomDialog(
+            _currentUser, _viewModel.Building, _viewModel);
+        dialog.Owner = Window.GetWindow(this);
+        dialog.ShowDialog();
+    }
+
+    private void ViewRequests_Click(object sender, RoutedEventArgs e)
+    {
+        // Dolazi kasnije
     }
 
     private void SetActiveTab(Button tab)
@@ -79,18 +71,5 @@ public partial class BuildingDetailsPage : Page
         tab.Foreground = new SolidColorBrush(Color.FromRgb(127, 140, 141));
         tab.BorderThickness = new Thickness(0);
         tab.FontWeight = FontWeights.Normal;
-    }
-
-    private void AddCommonRoom_Click(object sender, RoutedEventArgs e)
-    {
-        AddCommonRoomDialog dialog = new AddCommonRoomDialog(_currentUser, _building, _commonRoomService);
-        dialog.Owner = Window.GetWindow(this);
-        dialog.ShowDialog();
-        LoadCommonRooms();
-    }
-
-    private void ViewRequests_Click(object sender, RoutedEventArgs e)
-    {
-        // Dolazi kasnije
     }
 }

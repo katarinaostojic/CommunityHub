@@ -1,22 +1,21 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using System.Windows;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
 public partial class AddCommonRoomDialog : Window
 {
-    private readonly User _currentUser;
-    private readonly Building _building;
-    private readonly CommonRoomService _commonRoomService;
+    private readonly BuildingDto _building;
+    private readonly BuildingDetailsViewModel _viewModel;
 
-    public AddCommonRoomDialog(User currentUser, Building building, CommonRoomService commonRoomService)
+    public AddCommonRoomDialog(User currentUser, BuildingDto building, BuildingDetailsViewModel viewModel)
     {
         InitializeComponent();
-        _currentUser = currentUser;
         _building = building;
-        _commonRoomService = commonRoomService;
+        _viewModel = viewModel;
     }
 
     private void AddButton_Click(object sender, RoutedEventArgs e)
@@ -30,12 +29,11 @@ public partial class AddCommonRoomDialog : Window
                 ? RentalType.PerDay
                 : RentalType.MultiDay;
 
-            _commonRoomService.Create(
+            _viewModel.CreateCommonRoom(
                 NameTextBox.Text.Trim(),
                 DescriptionTextBox.Text.Trim(),
                 floorNumber,
-                rentalType,
-                _building.Id
+                rentalType
             );
 
             MessageBox.Show("A new common room has been added successfully.",

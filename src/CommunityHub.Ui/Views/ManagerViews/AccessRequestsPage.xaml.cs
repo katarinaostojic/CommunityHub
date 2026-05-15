@@ -1,82 +1,67 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Ui.Views.ManagerViews.Dialogs;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
+using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 
 public partial class AccessRequestsPage : Page
 {
     private readonly User _currentUser;
-    private readonly BuildingAccessRequestService _requestService;
-    private bool _sortDescending = true;
-    private string? _currentStatusFilter = null;
+    private readonly AccessRequestsViewModel _viewModel;
 
     public AccessRequestsPage(User user)
     {
         InitializeComponent();
         _currentUser = user;
-        _requestService = Injector.CreateInstance<BuildingAccessRequestService>();
-        LoadRequests();
-    }
-
-    private void LoadRequests()
-    {
-        List<BuildingAccessRequest> requests = _requestService.GetAllByManager(
-            _currentUser.Id, _currentStatusFilter, _sortDescending);
-
-        List<BuildingAccessRequestViewModel> viewModels = requests
-            .Select(r => new BuildingAccessRequestViewModel(r))
-            .ToList();
-
-        RequestsItemsControl.ItemsSource = viewModels;
+        _viewModel = new AccessRequestsViewModel(_currentUser.Id);
+        DataContext = _viewModel;
     }
 
     private void StatusFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_currentUser == null) return;
-
         if (StatusFilterCombo.SelectedItem is ComboBoxItem item)
         {
             string tag = item.Tag?.ToString() ?? "";
-            _currentStatusFilter = string.IsNullOrEmpty(tag) ? null : tag;
-            LoadRequests();
+            _viewModel.SetStatusFilter(string.IsNullOrEmpty(tag) ? null : tag);
         }
     }
 
     private void SortDateButton_Click(object sender, RoutedEventArgs e)
     {
-        _sortDescending = !_sortDescending;
-        SortArrow.Text = _sortDescending ? " ↓" : " ↑";
-        LoadRequests();
+        SortArrow.Text = _viewModel.SortDescending ? " ↑" : " ↓";
+        _viewModel.ToggleSort();
     }
 
     private void AcceptButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button btn && btn.Tag is BuildingAccessRequestViewModel vm)
+        if (sender is Button btn && btn.Tag is long id)
         {
-            _requestService.ApproveRequest(vm.Request);
-            LoadRequests();
-
+            _viewModel.ApproveRequest(id);
             ShowConfirmationDialog("A request has been accepted successfully.");
         }
     }
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!(sender is Button btn && btn.Tag is BuildingAccessRequestViewModel vm)) return;
-
+        if (!(sender is Button btn && btn.Tag is long id)) return;
         string? explanation = AskForRejectionExplanation();
         if (explanation == null) return;
-
-        _requestService.RejectRequest(vm.Request, string.IsNullOrEmpty(explanation) ? null : explanation);
-        LoadRequests();
+        _viewModel.RejectRequest(id, string.IsNullOrEmpty(explanation) ? null : explanation);
         ShowConfirmationDialog("A request has been rejected successfully.");
+    }
+
+    private void ExplanationButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is AccessRequestRowViewModel vm)
+        {
+            var dialog = new ExplanationViewDialog(vm.RejectionReason);
+            dialog.Owner = Window.GetWindow(this);
+            dialog.ShowDialog();
+        }
     }
 
     private string? AskForRejectionExplanation()
@@ -101,21 +86,9 @@ public partial class AccessRequestsPage : Page
         dialog.ShowDialog();
     }
 
-    private void ExplanationButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is Button btn && btn.Tag is BuildingAccessRequestViewModel vm)
-        {
-            var dialog = new ExplanationViewDialog(vm.Request.RejectionReason);
-            dialog.Owner = Window.GetWindow(this);
-            dialog.ShowDialog();
-        }
-    }
-
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
         if (Window.GetWindow(this) is ManagerMainWindow mw)
             mw.NavigateToBuildings();
     }
-
-    
 }
