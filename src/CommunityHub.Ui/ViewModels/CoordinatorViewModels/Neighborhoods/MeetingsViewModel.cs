@@ -100,6 +100,12 @@ public class MeetingsViewModel : BaseViewModel
 
     private void LoadStatistics()
     {
+        if (_neighborhoodId == -1)
+        {
+            SuggestionText = string.Empty;
+            return;
+        }
+
         var stats = _statisticsService.GetTrustStatistics(_neighborhoodId);
         NewCount = stats.GetValueOrDefault(TrustLevel.New, 0);
         InactiveCount = stats.GetValueOrDefault(TrustLevel.Inactive, 0);

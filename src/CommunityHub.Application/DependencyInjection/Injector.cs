@@ -9,6 +9,7 @@ using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Shared;
 
 
 namespace CommunityHub.Application.DependencyInjection;
@@ -93,6 +94,10 @@ public static class Injector
             new CommonRoomRequestService(
                 new CommonRoomRequestDbRepository(),
                 new CommonRoomDbRepository())
+        },
+        {
+            typeof(ForumService),
+            new ForumService(new ForumDbRepository())
         },
     };
 

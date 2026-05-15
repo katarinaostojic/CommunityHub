@@ -55,6 +55,10 @@ public partial class CoordinatorMainWindow : Window
     }
     private void MeetingsButton_Click(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show("Please select a neighborhood first.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+        NavigateTo(new MeetingsPage(_userId, -1), "Meetings");
+    }
+    private void ForumsButton_Click(object sender, RoutedEventArgs e)
+    {
+        NavigateTo(new ForumsPage(_userId), "Forums");
     }
 }

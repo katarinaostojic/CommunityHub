@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Services;
+﻿namespace CommunityHub.Application.Services.Shared;
 
 using CommunityHub.Application.Domain;
 

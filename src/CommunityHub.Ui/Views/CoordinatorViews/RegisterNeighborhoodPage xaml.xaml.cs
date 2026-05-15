@@ -4,8 +4,8 @@ using Microsoft.Win32;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Shared;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 

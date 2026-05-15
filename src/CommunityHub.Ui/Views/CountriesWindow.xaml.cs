@@ -3,7 +3,7 @@ using CommunityHub.Application.DependencyInjection;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.Services.Shared;
 
 namespace CommunityHub.Ui.Views
 {
