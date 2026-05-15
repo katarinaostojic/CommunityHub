@@ -72,6 +72,12 @@ public static class Injector
             new EventService(
                 new EventDbRepository())
         },
+        {
+            typeof(CommonRoomRequestService),
+            new CommonRoomRequestService(
+                new CommonRoomRequestDbRepository(),
+                new CommonRoomDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()

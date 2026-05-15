@@ -45,4 +45,14 @@ public class CommonRoomService
         room.SetOccupiedDates(occupiedDates);
         return room.ToDto();
     }
+
+    public void BookDate(long commonRoomId, DateTime date)
+    {
+        _repository.BookDate(commonRoomId, date);
+    }
+
+    public List<DateTime> GetOccupiedDates(long commonRoomId)
+    {
+        return _repository.GetOccupiedDates(commonRoomId);
+    }
 }
