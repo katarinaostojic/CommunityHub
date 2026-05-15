@@ -151,6 +151,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
                                             <TextBlock Text="{Binding Name}" FontSize="15"
@@ -169,6 +170,20 @@
                                                 VerticalAlignment="Center"
                                                 Cursor="Hand" Tag="{Binding Id}"
                                                 Click="ViewRequests_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="6"/>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                        <Button Grid.Column="2" Content="📅"
+                                                Width="40" Height="34"
+                                                Background="#8E44AD" Foreground="White"
+                                                BorderThickness="0" FontSize="12"
+                                                VerticalAlignment="Center"
+                                                Cursor="Hand" Tag="{Binding Id}"
+                                                Margin="0,0,5,0"
+                                                Click="ViewCalendar_Click">
                                             <Button.Resources>
                                                 <Style TargetType="Border">
                                                     <Setter Property="CornerRadius" Value="6"/>

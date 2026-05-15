@@ -55,7 +55,14 @@ public partial class BuildingDetailsPage : Page
 
     private void ViewRequests_Click(object sender, RoutedEventArgs e)
     {
-        // Dolazi kasnije
+        if (sender is Button btn && btn.Tag is long commonRoomId)
+        {
+            CommonRoomDto? room = _viewModel.CommonRooms
+                .FirstOrDefault(r => r.Id == commonRoomId);
+            if (room == null) return;
+            NavigationService.Navigate(
+                new CommonRoomRequestsPage(_currentUser, commonRoomId, room.Name));
+        }
     }
 
     private void SetActiveTab(Button tab)
@@ -71,5 +78,18 @@ public partial class BuildingDetailsPage : Page
         tab.Foreground = new SolidColorBrush(Color.FromRgb(127, 140, 141));
         tab.BorderThickness = new Thickness(0);
         tab.FontWeight = FontWeights.Normal;
+    }
+
+    private void ViewCalendar_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is long commonRoomId)
+        {
+            CommonRoomDto? room = _viewModel.CommonRooms
+                .FirstOrDefault(r => r.Id == commonRoomId);
+            if (room == null) return;
+            var dialog = new CommonRoomCalendarDialog(commonRoomId, room.Name);
+            dialog.Owner = Window.GetWindow(this);
+            dialog.ShowDialog();
+        }
     }
 }

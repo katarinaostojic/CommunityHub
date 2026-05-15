@@ -74,6 +74,7 @@ public static class Injector
                 new EventDbRepository())
         },
         {
+
             typeof(NeighborhoodMembershipService),
             new NeighborhoodMembershipService(
                 new NeighborhoodMembershipDbRepository())
@@ -86,7 +87,13 @@ public static class Injector
             typeof(StatisticsService),
             new StatisticsService(new TrustRecordDbRepository())
         },
-        
+        { 
+
+            typeof(CommonRoomRequestService),
+            new CommonRoomRequestService(
+                new CommonRoomRequestDbRepository(),
+                new CommonRoomDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()
