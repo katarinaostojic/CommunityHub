@@ -54,8 +54,9 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
 
     public void CancelRequest(long requestId)
     {
-        var request = _requestService.GetById(requestId);
+        var request = _requestService.GetDtoById(requestId);
         if (request == null) return;
+
         _requestService.CancelRequest(request);
         LoadRequests();
         UpdateCounts();
@@ -63,7 +64,7 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
 
     public void AcceptDateChange(long requestId)
     {
-        var request = _requestService.GetById(requestId);
+        var request = _requestService.GetDtoById(requestId);
         if (request == null) return;
         _requestService.AcceptProposedDateChange(request);
         LoadRequests();

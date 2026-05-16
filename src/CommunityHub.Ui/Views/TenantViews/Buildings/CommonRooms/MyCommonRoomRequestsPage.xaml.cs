@@ -43,7 +43,7 @@ public partial class MyCommonRoomRequestsPage : Page
     {
         CommonRoomRequestRowViewModel item = (CommonRoomRequestRowViewModel)((Button)sender).Tag;
         _viewModel.AcceptDateChange(item.Id);
-        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Date change accepted. Status: Pending approval.");
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Date change accepted.");
     }
 
     private void CancelRequestButton_Click(object sender, RoutedEventArgs e)
