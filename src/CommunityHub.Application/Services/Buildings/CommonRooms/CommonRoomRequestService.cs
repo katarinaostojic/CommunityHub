@@ -1,7 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces.CommonRoomRepositoryInterfaces;
 using CommunityHub.Application.Domain.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
-using CommunityHub.Application.Mappings.Buildings;
 using CommunityHub.Application.Mappings.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.Services.Buildings.CommonRooms;
@@ -40,11 +39,13 @@ public class CommonRoomRequestService
         request.CommonRoom.SetOccupiedDates(occupied);
 
         List<DateTime> freeDays = new List<DateTime>();
+
         for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
         {
             if (request.CommonRoom.IsFreeOnDate(date))
                 freeDays.Add(date);
         }
+
         return freeDays;
     }
 
@@ -54,18 +55,25 @@ public class CommonRoomRequestService
         request.CommonRoom.SetOccupiedDates(occupied);
 
         int requestedDays = (int)(request.DateTo - request.DateFrom).TotalDays + 1;
-        List<(DateTime, DateTime)> alternatives = new List<(DateTime, DateTime)>();
+        List<(DateTime, DateTime)> alternatives = new();
+
         DateTime searchStart = DateTime.Today;
         DateTime searchEnd = request.DateTo.AddDays(30);
 
         for (DateTime start = searchStart; start <= searchEnd; start = start.AddDays(1))
         {
             DateTime end = start.AddDays(requestedDays - 1);
-            if (start == request.DateFrom) continue;
+
+            if (start == request.DateFrom)
+                continue;
+
             if (IsRangeFree(start, end, request.CommonRoom))
                 alternatives.Add((start, end));
-            if (alternatives.Count >= 5) break;
+
+            if (alternatives.Count >= 5)
+                break;
         }
+
         return alternatives;
     }
 
@@ -76,6 +84,7 @@ public class CommonRoomRequestService
             if (!commonRoom.IsFreeOnDate(date))
                 return false;
         }
+
         return true;
     }
 
@@ -91,24 +100,20 @@ public class CommonRoomRequestService
         List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
         request.CommonRoom.SetOccupiedDates(occupied);
 
-        bool isFree = IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom);
-        if (isFree)
+        if (IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom))
         {
-            request.AutoApprove();
-            _requestRepository.Update(request);
-            for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
-                _commonRoomRepository.BookDate(request.CommonRoom.Id, date);
+            ApproveAndBookRange(request);
+            return;
         }
-        else
-        {
-            List<(DateTime, DateTime)> alternatives = FindAlternativeRanges(request);
-            if (alternatives.Count > 0)
-            {
-                var (newFrom, newTo) = alternatives[0];
-                request.ProposeNewDateRange(newFrom, newTo);
-                _requestRepository.Update(request);
-            }
-        }
+
+        List<(DateTime, DateTime)> alternatives = FindAlternativeRanges(request);
+
+        if (alternatives.Count == 0)
+            return;
+
+        var (newFrom, newTo) = alternatives[0];
+        request.ProposeNewDateRange(newFrom, newTo);
+        _requestRepository.Update(request);
     }
 
     public void RejectRequest(CommonRoomRequest request)
@@ -139,7 +144,8 @@ public class CommonRoomRequestService
         long requestId = _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
 
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
-        if (request == null) return;
+        if (request == null)
+            return;
 
         TryAutoApproveMultiDay(request);
     }
@@ -158,13 +164,20 @@ public class CommonRoomRequestService
 
     private void TryAutoApproveMultiDay(CommonRoomRequest request)
     {
-        if (request.CommonRoom.RentalType != RentalType.MultiDay) return;
+        if (request.CommonRoom.RentalType != RentalType.MultiDay)
+            return;
 
         List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
         request.CommonRoom.SetOccupiedDates(occupied);
 
-        if (!IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom)) return;
+        if (!IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom))
+            return;
 
+        ApproveAndBookRange(request);
+    }
+
+    private void ApproveAndBookRange(CommonRoomRequest request)
+    {
         request.AutoApprove();
         _requestRepository.Update(request);
 
