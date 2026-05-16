@@ -5,6 +5,7 @@ using CommunityHub.Application.Services.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
+using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -34,40 +35,25 @@ public partial class CommonRoomsPage : Page
 
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = $"Building: {_buildingInfo}";
-        DialogBuildingInfo.Text = _buildingInfo;
         AppMenu.Initialize(_user);
     }
 
     private void RequestButton_Click(object sender, RoutedEventArgs e)
     {
-        _selectedRoom = (CommonRoomCardViewModel)((Button)sender).Tag;
-        DialogRoomName.Text = _selectedRoom.Name;
-        DialogFloor.Text = _selectedRoom.FloorDisplay;
-        DialogRentalType.Text = _selectedRoom.RentalTypeDisplay;
-        DateFromPicker.SelectedDate = null;
-        DateToPicker.SelectedDate = null;
-        RequestOverlay.Visibility = Visibility.Visible;
-    }
+        CommonRoomCardViewModel room = (CommonRoomCardViewModel)((Button)sender).Tag;
 
-    private void DialogCancelButton_Click(object sender, RoutedEventArgs e)
-    {
-        RequestOverlay.Visibility = Visibility.Collapsed;
-        _selectedRoom = null;
-    }
+        CommonRoomRequestDialogViewModel dialogViewModel = new CommonRoomRequestDialogViewModel(
+            _buildingInfo,
+            room.Name,
+            room.FloorDisplay,
+            room.RentalTypeDisplay);
 
-    private void DialogSendButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (_selectedRoom == null) return;
+        CommonRoomRequestDialog dialog = new CommonRoomRequestDialog(dialogViewModel);
+        dialog.Owner = Window.GetWindow(this);
 
-        bool success = _viewModel.TrySendRequest(
-            _selectedRoom.Id,
-            DateFromPicker.SelectedDate,
-            DateToPicker.SelectedDate);
+        if (dialog.ShowDialog() != true) return;
 
-        if (!success) return;
-
-        RequestOverlay.Visibility = Visibility.Collapsed;
-        _selectedRoom = null;
+        _viewModel.SendRequest(room.Id, dialog.SelectedDateFrom!.Value, dialog.SelectedDateTo!.Value);
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Common room request sent successfully!");
     }
 

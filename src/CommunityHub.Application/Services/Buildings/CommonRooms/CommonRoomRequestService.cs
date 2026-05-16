@@ -50,7 +50,7 @@ public class CommonRoomRequestService
 
         int requestedDays = (int)(request.DateTo - request.DateFrom).TotalDays + 1;
         List<(DateTime, DateTime)> alternatives = new List<(DateTime, DateTime)>();
-        DateTime searchStart = request.DateFrom.AddDays(-30);
+        DateTime searchStart = DateTime.Today;
         DateTime searchEnd = request.DateTo.AddDays(30);
 
         for (DateTime start = searchStart; start <= searchEnd; start = start.AddDays(1))

@@ -114,7 +114,6 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
                                 <!-- Status badge -->
@@ -125,15 +124,10 @@
 
                                 <!-- Naziv prostorije -->
                                 <TextBlock Grid.Row="0" Text="{Binding CommonRoomName}"
-                                           FontSize="15" FontWeight="Bold"/>
-
-                                <!-- Adresa zgrade -->
-                                <TextBlock Grid.Row="1" Text="{Binding BuildingInfo}"
-                                           Style="{StaticResource SecondaryText}"
-                                           Margin="0,2,0,8"/>
+                                           FontSize="18" FontWeight="Bold"/>
 
                                 <!-- Rental type i datumi -->
-                                <Grid Grid.Row="2" Margin="0,0,0,8">
+                                <Grid Grid.Row="1" Margin="0,8,0,16">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="40"/>
@@ -150,7 +144,7 @@
                                 </Grid>
 
                                 <!-- Approved date -->
-                                <TextBlock Grid.Row="3"
+                                <TextBlock Grid.Row="2"
                                            Text="{Binding ApprovedDateDisplay}"
                                            FontSize="13" FontWeight="SemiBold"
                                            Foreground="{StaticResource SuccessTextBrush}"
@@ -158,7 +152,7 @@
                                            Visibility="{Binding ApprovedDateVisible, Converter={StaticResource BoolToVis}}"/>
 
                                 <!-- Date change sekcija -->
-                                <Border Grid.Row="4"
+                                <Border Grid.Row="3"
                                         Background="{StaticResource WarningBrush}"
                                         CornerRadius="4"
                                         Padding="12" Margin="0,0,0,8"
@@ -177,7 +171,7 @@
                                 </Border>
 
                                 <!-- Akcije -->
-                                <Grid Grid.Row="5">
+                                <Grid Grid.Row="4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>

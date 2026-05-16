@@ -45,17 +45,19 @@
 
         <!-- Success banner -->
         <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="{StaticResource SuccessBrush}" Padding="12,8"
-                Visibility="Collapsed">
-            <StackPanel Orientation="Horizontal">
+        Background="{StaticResource SuccessBrush}" Padding="12,8"
+        Visibility="Collapsed">
+            <Grid>
                 <TextBlock x:Name="SuccessTextBlock"
-                           Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
-                <Button x:Name="ViewRequestsButton"
-                        Content="View requests"
-                        Style="{StaticResource GhostButton}"
-                        Margin="12,0,0,0"
-                        Click="ViewRequestsButton_Click"/>
-            </StackPanel>
+                   Foreground="{StaticResource SuccessTextBrush}" FontSize="13"
+                   VerticalAlignment="Center"/>
+                <Button x:Name="ViewRequestsButton" Content="View Requests →"
+                HorizontalAlignment="Right"
+                Style="{StaticResource GhostButton}"
+                Foreground="{StaticResource SuccessTextBrush}"
+                FontWeight="Bold"
+                Click="ViewRequestsButton_Click"/>
+            </Grid>
         </Border>
 
         <!-- Building info + Tabs -->
@@ -127,107 +129,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-
-        <!-- Request dialog overlay -->
-        <Grid x:Name="RequestOverlay" Grid.Row="0" Grid.RowSpan="5"
-              Background="#66000000" Visibility="Collapsed">
-            <Border Background="White" CornerRadius="8"
-                    Padding="32" MaxWidth="500"
-                    VerticalAlignment="Center" HorizontalAlignment="Center">
-                <StackPanel>
-                    <TextBlock Text="Request rental" FontSize="18"
-                               FontWeight="Bold" Margin="0,0,0,20"/>
-
-                    <!-- Building info -->
-                    <Border BorderBrush="{StaticResource BorderBrush}"
-                            BorderThickness="1" CornerRadius="6"
-                            Padding="16,12" Margin="0,0,0,16">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Building: " FontSize="13"
-                                       Style="{StaticResource SecondaryText}"/>
-                            <TextBlock x:Name="DialogBuildingInfo"
-                                       FontSize="13" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Info o prostoriji -->
-                    <Border BorderBrush="{StaticResource BorderBrush}"
-                            BorderThickness="1" CornerRadius="6"
-                            Padding="16,12" Margin="0,0,0,16">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="ROOM"
-                                       Style="{StaticResource SecondaryText}" FontSize="11" Margin="0,0,0,4"/>
-                            <TextBlock Grid.Row="0" Grid.Column="1" Text="FLOOR"
-                                       Style="{StaticResource SecondaryText}" FontSize="11" Margin="0,0,0,4"/>
-                            <TextBlock Grid.Row="0" Grid.Column="2" Text="RENTAL TYPE"
-                                       Style="{StaticResource SecondaryText}" FontSize="11" Margin="0,0,0,4"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="DialogRoomName"
-                                       FontSize="13" FontWeight="SemiBold"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="DialogFloor"
-                                       FontSize="13"/>
-                            <TextBlock Grid.Row="1" Grid.Column="2" x:Name="DialogRentalType"
-                                       FontSize="13"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Date range -->
-                    <TextBlock Text="DATE RANGE *" Style="{StaticResource SecondaryText}"
-                               FontSize="11" Margin="0,0,0,6"/>
-                    <Grid Margin="0,0,0,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <DatePicker Grid.Column="0" x:Name="DateFromPicker"
-                                    DisplayDateStart="{x:Static sys:DateTime.Today}"/>
-                        <TextBlock Grid.Column="1" Text=" - "
-                                   VerticalAlignment="Center" Margin="8,0"/>
-                        <DatePicker Grid.Column="2" x:Name="DateToPicker"
-                                    DisplayDateStart="{x:Static sys:DateTime.Today}"/>
-                    </Grid>
-                    <TextBlock Text="{Binding DateError}"
-                               Foreground="{StaticResource DangerBrush}"
-                               FontSize="13" Margin="0,0,0,12"
-                               Visibility="{Binding HasDateError, Converter={StaticResource BoolToVis}}"
-                               TextWrapping="Wrap"/>
-
-                    <!-- What happens next -->
-                    <Border BorderBrush="{StaticResource BorderBrush}"
-                            BorderThickness="1" CornerRadius="6"
-                            Padding="16,12" Margin="0,0,0,24">
-                        <StackPanel>
-                            <TextBlock Text="What happens next?"
-                                       FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="12"
-                                       Style="{StaticResource SecondaryText}"
-                                       Text="Your request will be sent to the building administrator. Status will be set to Pending. If your requested dates are not available, the administrator may suggest alternative dates."/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Dugmad -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="Cancel"
-                                Style="{StaticResource OutlineButton}"
-                                Margin="0,0,8,0"
-                                Click="DialogCancelButton_Click"/>
-                        <Button Content="Send request"
-                                Style="{StaticResource PrimaryButton}"
-                                Click="DialogSendButton_Click"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </Grid>
-
         <controls:MenuPanel Grid.Row="0" Grid.RowSpan="5" x:Name="AppMenu"/>
     </Grid>
 </Page>
