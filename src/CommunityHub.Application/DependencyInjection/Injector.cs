@@ -102,6 +102,12 @@ public static class Injector
             typeof(ForumService),
             new ForumService(new ForumDbRepository())
         },
+        {
+            typeof(TrustRecordService),
+            new TrustRecordService(
+            new TrustRecordDbRepository(),
+            new NeighborhoodMembershipDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()

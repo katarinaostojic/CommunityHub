@@ -286,4 +286,14 @@ public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepositor
         var neighborhoods = ReadNeighborhoodsWithStreets(reader);
         return neighborhoods.FirstOrDefault();
     }
+
+    public string? GetNameById(long id)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = "SELECT name FROM neighborhoods WHERE id = @id";
+        AddParameter(command, "@id", id);
+        object? result = command.ExecuteScalar();
+        return result == null || result == DBNull.Value ? null : result.ToString();
+    }
 }

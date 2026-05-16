@@ -3,7 +3,6 @@ using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
-using CommunityHub.Ui.Views.CoordinatorViews;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -66,6 +65,22 @@ public partial class MyRequestsPage : Window
         _viewModel.DeleteRequest(item.Id);
     }
 
+    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        NeighborhoodAccessRequestService requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
+        long? neighborhoodId = requestService.GetMembershipNeighborhoodId(_user.Id);
+        if (neighborhoodId == null)
+        {
+            MessageBox.Show("You need to be a member of a neighborhood to view your profile.", "No Membership",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
+        string neighborhoodName = neighborhoodService.GetNameById(neighborhoodId.Value) ?? "";
+        new MyProfilePage(_user, neighborhoodId.Value, neighborhoodName).Show();
+        Close();
+    }
+
     private void BurgerButton_Click(object sender, RoutedEventArgs e)
         => CitizenMenu.Visibility = Visibility.Visible;
 
@@ -94,7 +109,13 @@ public partial class MyRequestsPage : Window
                 new EventsPage(_user, neighborhoodId.Value).Show();
                 Close();
                 break;
-            case "Citizens": MessageBox.Show("Go to Citizens page."); break;
+            case "Citizens":
+                NeighborhoodAccessRequestService rs = Injector.CreateInstance<NeighborhoodAccessRequestService>();
+                long? nId = rs.GetMembershipNeighborhoodId(_user.Id);
+                if (nId == null) { MessageBox.Show("You are not a member of any neighborhood."); return; }
+                new NeighborhoodCitizensPage(_user, nId.Value).Show();
+                Close();
+                break;
             case "Meetings": MessageBox.Show("Go to Meetings page."); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;

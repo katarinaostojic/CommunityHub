@@ -28,4 +28,6 @@ public class NeighborhoodService
 
     public void AddImage(long neighborhoodId, string imagePath)
         => _repository.AddImage(neighborhoodId, imagePath);
+    public string? GetNameById(long id)
+    => _repository.GetNameById(id);
 }

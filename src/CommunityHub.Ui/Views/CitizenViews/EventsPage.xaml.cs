@@ -61,6 +61,20 @@ public partial class EventsPage : Window
         dialog.ShowDialog();
     }
 
+    private void ViewCitizensButton_Click(object sender, RoutedEventArgs e)
+    {
+        new NeighborhoodCitizensPage(_user, _neighborhoodId).Show();
+        Close();
+    }
+
+    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
+        string neighborhoodName = neighborhoodService.GetNameById(_neighborhoodId) ?? "";
+        new MyProfilePage(_user, _neighborhoodId, neighborhoodName).Show();
+        Close();
+    }
+
     private void MarkAttendedButton_Click(object sender, RoutedEventArgs e)
     {
         AttendanceItemViewModel item = (AttendanceItemViewModel)((Button)sender).Tag;
@@ -93,7 +107,10 @@ public partial class EventsPage : Window
                 Close();
                 break;
             case "Events": break;
-            case "Citizens": MessageBox.Show("Go to Citizens page."); break;
+            case "Citizens":
+                new NeighborhoodCitizensPage(_user, _neighborhoodId).Show();
+                Close();
+                break;
             case "Meetings": MessageBox.Show("Go to Meetings page."); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
