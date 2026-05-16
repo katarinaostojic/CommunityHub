@@ -77,15 +77,20 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
+
         command.CommandText = @"
-            UPDATE common_room_requests
-            SET status = @status::common_room_request_status,
-                approved_date = @approvedDate,
-                proposed_date_from = @proposedDateFrom,
-                proposed_date_to = @proposedDateTo
-            WHERE id = @id";
+        UPDATE common_room_requests
+        SET date_from = @dateFrom,
+            date_to = @dateTo,
+            status = @status::common_room_request_status,
+            approved_date = @approvedDate,
+            proposed_date_from = @proposedDateFrom,
+            proposed_date_to = @proposedDateTo
+        WHERE id = @id";
 
         AddParameter(command, "@id", request.Id);
+        AddParameter(command, "@dateFrom", request.DateFrom);
+        AddParameter(command, "@dateTo", request.DateTo);
         AddParameter(command, "@status", CommonRoomRequestStatusToString(request.Status));
         AddParameter(command, "@approvedDate", request.ApprovedDate);
         AddParameter(command, "@proposedDateFrom", request.ProposedDateFrom);

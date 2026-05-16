@@ -187,6 +187,15 @@ public class CommonRoomRequestService
     {
         CommonRoomRequest? request = _requestRepository.GetById(requestDto.Id);
 
+        if (request == null)
+            return;
+
+        if (request.Status != CommonRoomRequestStatus.PendingDateChange)
+            return;
+
+        if (request.ProposedDateFrom == null || request.ProposedDateTo == null)
+            return;
+
         ValidateRequestedDateRange(request.ProposedDateFrom.Value, request.ProposedDateTo.Value);
 
         request.AcceptProposedDates();
