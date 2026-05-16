@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.Converters;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
@@ -14,7 +14,7 @@ public partial class NeighborhoodAccessRequestDialog : Window
     private readonly User _user;
     private readonly NeighborhoodAccessRequestDialogViewModel _viewModel;
 
-    public NeighborhoodAccessRequestDialog(User user, Neighborhood neighborhood)
+    public NeighborhoodAccessRequestDialog(User user, NeighborhoodDto neighborhood)
     {
         InitializeComponent();
         _user = user;
@@ -46,17 +46,16 @@ public partial class NeighborhoodAccessRequestDialog : Window
     {
         switch (result)
         {
-            case AccessRequestResult.Granted:
-                new NeighborhoodAccessGrantedDialog(_user, _viewModel.NeighborhoodName, this.Owner).ShowDialog();
-                break;
             case AccessRequestResult.RequestCreated:
                 new NeighborhoodRequestCreatedDialog(_user, _viewModel.NeighborhoodName).ShowDialog();
                 break;
             case AccessRequestResult.AlreadyPending:
-                MessageBox.Show("You already have a pending request for this neighborhood.", "Request already exists", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("You already have a pending request for this neighborhood.", "Request already exists",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 break;
             case AccessRequestResult.AlreadyMember:
-                MessageBox.Show("You are already a member of a neighborhood.", "Already a member", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("You are already a member of a neighborhood.", "Already a member",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 break;
         }
     }

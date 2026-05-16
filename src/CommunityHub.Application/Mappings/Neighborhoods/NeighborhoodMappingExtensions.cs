@@ -1,7 +1,5 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using static CommunityHub.Application.DTOs.Neighborhoods.NeighborhoodAccessRequestDto;
 
 namespace CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -16,47 +14,22 @@ public static class NeighborhoodMappingExtensions
             cityName: neighborhood.Location.CityName,
             countryName: neighborhood.Location.CountryName,
             coordinatorId: neighborhood.CoordinatorId,
+            streets: neighborhood.Streets.Select(s => s.ToDto()).ToList(),
             imagePaths: neighborhood.Images.Select(i => i.Path).ToList()
         );
     }
 
     public static List<NeighborhoodDto> ToDtoList(this IEnumerable<Neighborhood> neighborhoods)
-    {
-        return neighborhoods.Select(n => n.ToDto()).ToList();
-    }
+        => neighborhoods.Select(n => n.ToDto()).ToList();
 
-    public static NeighborhoodMembershipDto ToDto(this NeighborhoodMembership membership)
+    public static StreetDto ToDto(this Street street)
     {
-        return new NeighborhoodMembershipDto(
-            id: membership.Id,
-            citizenName: membership.Citizen.Name,
-            citizenSurname: membership.Citizen.Surname,
-            citizenAddress: membership.Citizen.Address,
-            joinedAt: membership.JoinedAt
+        return new StreetDto(
+            id: street.Id,
+            streetName: street.StreetName,
+            startNumber: street.StartNumber,
+            endNumber: street.EndNumber
         );
-    }
-
-    public static List<NeighborhoodMembershipDto> ToDtoList(this IEnumerable<NeighborhoodMembership> memberships)
-    {
-        return memberships.Select(m => m.ToDto()).ToList();
-    }
-    public static NeighborhoodAccessRequestDto ToDto(this NeighborhoodAccessRequest request)
-    {
-        return new NeighborhoodAccessRequestDto(
-            id: request.Id,
-            citizenName: request.Citizen.Name,
-            citizenSurname: request.Citizen.Surname,
-            citizenAddress: request.Citizen.Address,
-            neighborhoodName: request.Neighborhood.Name,
-            createdAt: request.CreatedAt,
-            status: request.Status,
-            rejectionReason: request.RejectionReason
-        );
-    }
-
-    public static List<NeighborhoodAccessRequestDto> ToDtoList(this IEnumerable<NeighborhoodAccessRequest> requests)
-    {
-        return requests.Select(r => r.ToDto()).ToList();
     }
 
     public static ForumDto ToDto(this Forum forum, long currentCoordinatorId)
@@ -74,9 +47,7 @@ public static class NeighborhoodMappingExtensions
     }
 
     public static List<ForumDto> ToDtoList(this IEnumerable<Forum> forums, long currentCoordinatorId)
-    {
-        return forums.Select(f => f.ToDto(currentCoordinatorId)).ToList();
-    }
+        => forums.Select(f => f.ToDto(currentCoordinatorId)).ToList();
 
     public static ForumCommentDto ToDto(this ForumComment comment, long forumCoordinatorId)
     {
@@ -96,7 +67,5 @@ public static class NeighborhoodMappingExtensions
     }
 
     public static List<ForumCommentDto> ToDtoList(this IEnumerable<ForumComment> comments, long forumCoordinatorId)
-    {
-        return comments.Select(c => c.ToDto(forumCoordinatorId)).ToList();
-    }
+        => comments.Select(c => c.ToDto(forumCoordinatorId)).ToList();
 }

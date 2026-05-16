@@ -151,6 +151,46 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
             updateItemCmd.ExecuteNonQuery();
         }
     }
+
+    public void MarkAttendance(long registrationId, bool attended)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            UPDATE event_registrations 
+            SET attended = @attended 
+            WHERE id = @id";
+
+        AddParameter(command, "@attended", attended);
+        AddParameter(command, "@id", registrationId);
+        command.ExecuteNonQuery();
+    }
+
+    public List<Event> GetAllForStatusCheck()
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT e.id, e.neighborhood_id, e.name, e.description,
+                   e.event_date, e.start_time, e.duration_minutes, e.min_volunteers, e.status,
+                   u.id AS organizer_id, u.username, u.password, u.name AS organizer_name,
+                   u.surname AS organizer_surname, u.birthday, u.role, u.address
+            FROM events e
+            JOIN users u ON e.organizer_id = u.id
+            WHERE e.status IN ('preparation', 'scheduled')";
+
+        using IDataReader reader = command.ExecuteReader();
+        var events = ReadEvents(reader);
+
+        foreach (var ev in events)
+        {
+            AttachItems(ev);
+            AttachRegistrations(ev);
+        }
+
+        return events;
+    }
+
     private List<Event> ReadEvents(IDataReader reader)
     {
         var events = new List<Event>();
@@ -218,7 +258,7 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT er.id, er.event_id, er.citizen_id, er.registered_at,
+            SELECT er.id, er.event_id, er.citizen_id, er.registered_at, er.attended,
                    u.username, u.password, u.name AS citizen_name,
                    u.surname AS citizen_surname, u.birthday, u.role, u.address
             FROM event_registrations er
@@ -243,7 +283,8 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
                     UserMapper.ParseRole(reader["role"].ToString()!),
                     reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
                 ),
-                Convert.ToDateTime(reader["registered_at"])
+                Convert.ToDateTime(reader["registered_at"]),
+                reader.IsDBNull(reader.GetOrdinal("attended")) ? null : Convert.ToBoolean(reader["attended"])
             );
             ev.AddRegistration(registration);
         }

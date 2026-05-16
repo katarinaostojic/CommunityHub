@@ -14,7 +14,5 @@ public class NeighborhoodMembershipService
     }
 
     public List<NeighborhoodMembershipDto> GetByNeighborhood(long neighborhoodId)
-    {
-        return _repository.GetByNeighborhood(neighborhoodId).ToDtoList();
-    }
+        => _repository.GetByNeighborhood(neighborhoodId).ToDtoList();
 }

@@ -11,10 +11,12 @@ public class NeighborhoodDto
     public string CityName { get; init; }
     public string CountryName { get; init; }
     public long CoordinatorId { get; init; }
+    public List<StreetDto> Streets { get; init; }
     public List<string> ImagePaths { get; init; }
 
     public NeighborhoodDto(long id, string name, string description,
-        string cityName, string countryName, long coordinatorId, List<string> imagePaths)
+        string cityName, string countryName, long coordinatorId,
+        List<StreetDto> streets, List<string> imagePaths)
     {
         Id = id;
         Name = name;
@@ -22,71 +24,30 @@ public class NeighborhoodDto
         CityName = cityName;
         CountryName = countryName;
         CoordinatorId = coordinatorId;
+        Streets = streets;
         ImagePaths = imagePaths;
     }
 
     public string Location => $"{CityName}, {CountryName}";
 }
 
-public class NeighborhoodMembershipDto
+public class StreetDto
 {
     public long Id { get; init; }
-    public string CitizenName { get; init; }
-    public string CitizenSurname { get; init; }
-    public string? CitizenAddress { get; init; }
-    public DateTime JoinedAt { get; init; }
+    public string StreetName { get; init; }
+    public int StartNumber { get; init; }
+    public int EndNumber { get; init; }
 
-    public NeighborhoodMembershipDto(long id, string citizenName, string citizenSurname,
-        string? citizenAddress, DateTime joinedAt)
+    public StreetDto(long id, string streetName, int startNumber, int endNumber)
     {
         Id = id;
-        CitizenName = citizenName;
-        CitizenSurname = citizenSurname;
-        CitizenAddress = citizenAddress;
-        JoinedAt = joinedAt;
+        StreetName = streetName;
+        StartNumber = startNumber;
+        EndNumber = endNumber;
     }
 
-    public string FullName => $"{CitizenName} {CitizenSurname}";
-    public string Address => CitizenAddress ?? "No address";
-    public string JoinedAtFormatted => $"Joined: {JoinedAt:dd.MM.yyyy}";
+    public string Display => $"{StreetName} {StartNumber} - {EndNumber}";
 }
-
-public class NeighborhoodAccessRequestDto
-{
-    public long Id { get; init; }
-    public string CitizenName { get; init; }
-    public string CitizenSurname { get; init; }
-    public string? CitizenAddress { get; init; }
-    public string NeighborhoodName { get; init; }
-    public DateTime CreatedAt { get; init; }
-    public RequestStatus Status { get; init; }
-    public string? RejectionReason { get; init; }
-
-    public NeighborhoodAccessRequestDto(
-        long id,
-        string citizenName,
-        string citizenSurname,
-        string? citizenAddress,
-        string neighborhoodName,
-        DateTime createdAt,
-        RequestStatus status,
-        string? rejectionReason = null)
-    {
-        Id = id;
-        CitizenName = citizenName;
-        CitizenSurname = citizenSurname;
-        CitizenAddress = citizenAddress;
-        NeighborhoodName = neighborhoodName;
-        CreatedAt = createdAt;
-        Status = status;
-        RejectionReason = rejectionReason;
-    }
-
-    public string CitizenFullName => $"{CitizenName} {CitizenSurname}";
-    public string Address => CitizenAddress ?? "No address";
-    public bool HasRejectionReason => Status == RequestStatus.Rejected && RejectionReason != null;
-}
-
 public class ForumDto
 {
     public long Id { get; init; }

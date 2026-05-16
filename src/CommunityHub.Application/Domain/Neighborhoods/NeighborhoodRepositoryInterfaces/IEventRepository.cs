@@ -14,4 +14,6 @@ public interface IEventRepository
     Event? GetById(long eventId);
     void Update(Event ev);
     void AddRegistration(long eventId, long citizenId, List<long> itemIds);
+    void MarkAttendance(long registrationId, bool attended);
+    List<Event> GetAllForStatusCheck();
 }
