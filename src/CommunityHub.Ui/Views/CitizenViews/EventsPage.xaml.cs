@@ -67,6 +67,12 @@ public partial class EventsPage : Window
         Close();
     }
 
+    private void ViewMeetingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        new MeetingsPage(_user, _neighborhoodId).Show();
+        Close();
+    }
+
     private void ProfileButton_Click(object sender, RoutedEventArgs e)
     {
         NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
@@ -111,7 +117,10 @@ public partial class EventsPage : Window
                 new NeighborhoodCitizensPage(_user, _neighborhoodId).Show();
                 Close();
                 break;
-            case "Meetings": MessageBox.Show("Go to Meetings page."); break;
+            case "Meetings":
+                new MeetingsPage(_user, _neighborhoodId).Show();
+                Close();
+                break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }

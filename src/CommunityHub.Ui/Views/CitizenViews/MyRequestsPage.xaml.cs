@@ -116,7 +116,13 @@ public partial class MyRequestsPage : Window
                 new NeighborhoodCitizensPage(_user, nId.Value).Show();
                 Close();
                 break;
-            case "Meetings": MessageBox.Show("Go to Meetings page."); break;
+            case "Meetings":
+                NeighborhoodAccessRequestService meetingRequestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
+                long? meetingNId = meetingRequestService.GetMembershipNeighborhoodId(_user.Id);
+                if (meetingNId == null) { MessageBox.Show("You are not a member of any neighborhood."); return; }
+                new MeetingsPage(_user, meetingNId.Value).Show();
+                Close();
+                break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }

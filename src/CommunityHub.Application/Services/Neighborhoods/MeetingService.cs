@@ -1,5 +1,7 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.Mappings.Neighborhoods;
 
 namespace CommunityHub.Application.Services;
 
@@ -13,14 +15,10 @@ public class MeetingService
     }
 
     public long CreateMeeting(Meeting meeting)
-    {
-        return _repository.Create(meeting);
-    }
+        => _repository.Create(meeting);
 
     public List<Meeting> GetMeetingsByCoordinator(long coordinatorId)
-    {
-        return _repository.GetByCoordinator(coordinatorId);
-    }
+        => _repository.GetByCoordinator(coordinatorId);
 
     public void CheckAndFinalizeVoting(long meetingId)
     {
@@ -40,5 +38,30 @@ public class MeetingService
     {
         var vote = new MeetingVote(meetingId, citizenId, votedDate);
         _repository.AddVote(vote);
+    }
+
+    public List<MeetingDto> GetByNeighborhoodForCitizen(long neighborhoodId, long citizenId)
+    {
+        var meetings = _repository.GetByNeighborhood(neighborhoodId);
+        return meetings.ToDtoList(
+            canVoteFunc: m => CanVote(m),
+            getVoteFunc: m =>
+            {
+                var vote = _repository.GetVoteForCitizen(m.Id, citizenId);
+                return (vote?.VotedDate, vote?.Id);
+            }
+        );
+    }
+
+    public MeetingVote? GetVoteForCitizen(long meetingId, long citizenId)
+        => _repository.GetVoteForCitizen(meetingId, citizenId);
+
+    public void UpdateVote(long voteId, DateOnly newDate)
+        => _repository.UpdateVote(voteId, newDate);
+
+    public bool CanVote(Meeting meeting)
+    {
+        DateTime deadline = meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
+        return DateTime.Now < deadline && meeting.Status == MeetingStatus.InPreparation;
     }
 }

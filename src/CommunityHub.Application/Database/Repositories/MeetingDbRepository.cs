@@ -144,4 +144,63 @@ public class MeetingDbRepository : BaseDbRepository
         MeetingStatus.Cancelled => "cancelled",
         _ => throw new ArgumentException($"Unknown status: {status}")
     };
+
+    public List<Meeting> GetByNeighborhood(long neighborhoodId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT m.id, m.neighborhood_id, m.theme, m.meeting_time,
+               m.date_range_start, m.date_range_end, m.status, m.scheduled_date
+        FROM meetings m
+        WHERE m.neighborhood_id = @neighborhoodId
+        ORDER BY m.date_range_start";
+
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+
+        using IDataReader reader = command.ExecuteReader();
+        var meetings = new List<Meeting>();
+        while (reader.Read())
+            meetings.Add(MapMeeting(reader));
+        return meetings;
+    }
+
+    public MeetingVote? GetVoteForCitizen(long meetingId, long citizenId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT id, meeting_id, citizen_id, voted_date
+        FROM meeting_votes
+        WHERE meeting_id = @meetingId AND citizen_id = @citizenId";
+
+        AddParameter(command, "@meetingId", meetingId);
+        AddParameter(command, "@citizenId", citizenId);
+
+        using IDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            return new MeetingVote(
+                Convert.ToInt64(reader["id"]),
+                Convert.ToInt64(reader["meeting_id"]),
+                Convert.ToInt64(reader["citizen_id"]),
+                (DateOnly)reader["voted_date"]
+            );
+        }
+        return null;
+    }
+
+    public void UpdateVote(long voteId, DateOnly newDate)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        UPDATE meeting_votes 
+        SET voted_date = @votedDate 
+        WHERE id = @id";
+
+        AddParameter(command, "@id", voteId);
+        AddParameter(command, "@votedDate", newDate.ToDateTime(TimeOnly.MinValue));
+        command.ExecuteNonQuery();
+    }
 }
