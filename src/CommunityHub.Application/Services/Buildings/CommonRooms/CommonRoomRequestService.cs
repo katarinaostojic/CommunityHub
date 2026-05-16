@@ -134,8 +134,23 @@ public class CommonRoomRequestService
 
         if (request == null) return;
 
-        if (request.CommonRoom.RentalType == RentalType.MultiDay)
-            ApproveMultiDay(request);
+        TryAutoApproveMultiDay(request);
+    }
+
+    private void TryAutoApproveMultiDay(CommonRoomRequest request)
+    {
+        if (request.CommonRoom.RentalType != RentalType.MultiDay) return;
+
+        List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
+        request.CommonRoom.SetOccupiedDates(occupied);
+
+        if (!IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom)) return;
+
+        request.AutoApprove();
+        _requestRepository.Update(request);
+
+        for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
+            _commonRoomRepository.BookDate(request.CommonRoom.Id, date);
     }
 
     public void CancelRequest(CommonRoomRequest request)
@@ -148,6 +163,10 @@ public class CommonRoomRequestService
         if (request.ProposedDateFrom == null || request.ProposedDateTo == null) return;
 
         request.AcceptProposedDates();
+        request.AutoApprove();
         _requestRepository.Update(request);
+
+        for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
+            _commonRoomRepository.BookDate(request.CommonRoom.Id, date);
     }
 }
