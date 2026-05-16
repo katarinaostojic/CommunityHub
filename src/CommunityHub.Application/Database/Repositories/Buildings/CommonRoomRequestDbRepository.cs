@@ -151,4 +151,13 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
 
         command.ExecuteNonQuery();
     }
+
+    public void Delete(long requestId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM common_room_requests WHERE id = @id";
+        AddParameter(command, "@id", requestId);
+        command.ExecuteNonQuery();
+    }
 }

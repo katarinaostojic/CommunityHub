@@ -7,4 +7,5 @@ public interface ICommonRoomRequestRepository
     CommonRoomRequest? GetById(long requestId);
     void Create(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo);
     void Update(CommonRoomRequest request);
+    void Delete(long requestId);
 }

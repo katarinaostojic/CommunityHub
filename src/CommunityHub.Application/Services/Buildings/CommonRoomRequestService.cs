@@ -115,4 +115,55 @@ public class CommonRoomRequestService
     {
         _requestRepository.Update(request);
     }
+
+    public List<CommonRoomRequestDto> GetByTenant(long tenantId)
+    {
+        return _requestRepository.GetByTenant(tenantId).ToDtoList();
+    }
+
+    public void CreateRequest(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
+    {
+        _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
+
+        CommonRoomRequest? request = _requestRepository.GetByTenant(tenantId)
+            .FirstOrDefault(r => r.CommonRoom.Id == commonRoomId
+                              && r.DateFrom.Date == dateFrom.Date
+                              && r.DateTo.Date == dateTo.Date
+                              && r.Status == CommonRoomRequestStatus.Pending);
+
+        if (request == null) return;
+
+        if (request.CommonRoom.RentalType == RentalType.MultiDay)
+            ApproveMultiDay(request);
+        else
+            ProcessPerDayRequest(request);
+    }
+
+    public void ProcessPerDayRequest(CommonRoomRequest request)
+    {
+        List<DateTime> freeDays = GetFreeDaysInRange(request);
+        if (freeDays.Count == 0)
+        {
+            request.Reject();
+            _requestRepository.Update(request);
+        }
+    }
+
+    public void CancelRequest(CommonRoomRequest request)
+    {
+        _requestRepository.Delete(request.Id);
+    }
+
+    public void AcceptProposedDateChange(CommonRoomRequest request)
+    {
+        if (request.ProposedDateFrom == null || request.ProposedDateTo == null) return;
+
+        request.AcceptProposedDates();
+        _requestRepository.Update(request);
+
+        List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
+        request.CommonRoom.SetOccupiedDates(occupied);
+
+        ApproveMultiDay(request);
+    }
 }
