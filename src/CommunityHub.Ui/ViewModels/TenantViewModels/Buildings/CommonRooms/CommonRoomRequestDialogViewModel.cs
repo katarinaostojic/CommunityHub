@@ -47,6 +47,20 @@ public class CommonRoomRequestDialogViewModel : BaseViewModel
             return false;
         }
 
+        if (dateFrom.Value.Date < DateTime.Today)
+        {
+            HasDateError = true;
+            DateError = "Start date cannot be in the past.";
+            return false;
+        }
+
+        if (dateTo.Value.Date < DateTime.Today)
+        {
+            HasDateError = true;
+            DateError = "End date cannot be in the past.";
+            return false;
+        }
+
         if (dateTo.Value.Date < dateFrom.Value.Date)
         {
             HasDateError = true;

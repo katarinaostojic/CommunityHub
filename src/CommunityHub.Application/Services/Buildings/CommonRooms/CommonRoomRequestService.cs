@@ -129,6 +129,8 @@ public class CommonRoomRequestService
 
     public void CreateRequest(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
     {
+        ValidateRequestedDateRange(dateFrom, dateTo);
+
         _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
 
         CommonRoomRequest? request = _requestRepository.GetByTenant(tenantId)
@@ -140,6 +142,18 @@ public class CommonRoomRequestService
         if (request == null) return;
 
         TryAutoApproveMultiDay(request);
+    }
+
+    private static void ValidateRequestedDateRange(DateTime dateFrom, DateTime dateTo)
+    {
+        if (dateFrom.Date < DateTime.Today)
+            throw new InvalidOperationException("Start date cannot be in the past.");
+
+        if (dateTo.Date < DateTime.Today)
+            throw new InvalidOperationException("End date cannot be in the past.");
+
+        if (dateTo.Date < dateFrom.Date)
+            throw new InvalidOperationException("End date must be after start date.");
     }
 
     private void TryAutoApproveMultiDay(CommonRoomRequest request)
