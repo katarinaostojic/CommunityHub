@@ -122,6 +122,11 @@ public class CommonRoomRequestService
         return _requestRepository.GetByTenant(tenantId).ToDtoList();
     }
 
+    public List<CommonRoomRequestDto> GetByTenantAndBuilding(long tenantId, long buildingId)
+    {
+        return _requestRepository.GetByTenantAndBuilding(tenantId, buildingId).ToDtoList();
+    }
+
     public void CreateRequest(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
     {
         _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);

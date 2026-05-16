@@ -42,7 +42,7 @@ public class CommonRoomsViewModel : BaseViewModel
     public void LoadRooms()
     {
         List<CommonRoomDto> rooms = _commonRoomService.GetByBuilding(_buildingId);
-        List<CommonRoomRequestDto> tenantRequests = _requestService.GetByTenant(_tenantId);
+        List<CommonRoomRequestDto> tenantRequests = _requestService.GetByTenantAndBuilding(_tenantId, _buildingId);
 
         List<CommonRoomCardViewModel> cards = rooms
             .Select(r => new CommonRoomCardViewModel(r, tenantRequests))

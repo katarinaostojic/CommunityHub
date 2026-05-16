@@ -8,6 +8,7 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
 {
     private readonly CommonRoomRequestService _requestService;
     private readonly long _tenantId;
+    private readonly long _buildingId;
 
     private ObservableCollection<CommonRoomRequestRowViewModel> _requests = new();
     private CommonRoomRequestStatus? _currentFilter = null;
@@ -18,10 +19,11 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
     private int _approvedCount;
     private int _rejectedCount;
 
-    public MyCommonRoomRequestsViewModel(CommonRoomRequestService requestService, long tenantId)
+    public MyCommonRoomRequestsViewModel(CommonRoomRequestService requestService, long tenantId, long buildingId)
     {
         _requestService = requestService;
         _tenantId = tenantId;
+        _buildingId = buildingId;
         LoadRequests();
         UpdateCounts();
     }
@@ -70,10 +72,10 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
 
     private void LoadRequests()
     {
-        var items = _requestService.GetByTenant(_tenantId)
-            .Where(r => _currentFilter == null || r.Status == _currentFilter)
-            .Select(r => new CommonRoomRequestRowViewModel(r))
-            .ToList();
+        var items = _requestService.GetByTenantAndBuilding(_tenantId, _buildingId)
+                    .Where(r => _currentFilter == null || r.Status == _currentFilter)
+                    .Select(r => new CommonRoomRequestRowViewModel(r))
+                    .ToList();
 
         Requests = new ObservableCollection<CommonRoomRequestRowViewModel>(items);
         ResultsCountText = $"Showing {items.Count} result{(items.Count == 1 ? "" : "s")}";
@@ -81,7 +83,7 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
 
     private void UpdateCounts()
     {
-        var all = _requestService.GetByTenant(_tenantId);
+        var all = _requestService.GetByTenantAndBuilding(_tenantId, _buildingId);
         _allCount = all.Count;
         _pendingCount = all.Count(r => r.Status == CommonRoomRequestStatus.Pending);
         _dateChangeCount = all.Count(r => r.Status == CommonRoomRequestStatus.PendingDateChange);

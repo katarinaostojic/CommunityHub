@@ -25,7 +25,7 @@ public partial class MyCommonRoomRequestsPage : Page
         _buildingInfo = buildingInfo;
 
         CommonRoomRequestService requestService = Injector.CreateInstance<CommonRoomRequestService>();
-        _viewModel = new MyCommonRoomRequestsViewModel(requestService, user.Id);
+        _viewModel = new MyCommonRoomRequestsViewModel(requestService, user.Id, buildingId);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;

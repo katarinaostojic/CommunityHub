@@ -136,6 +136,44 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         return requests;
     }
 
+    public List<CommonRoomRequest> GetByTenantAndBuilding(long tenantId, long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT r.id, r.date_from, r.date_to, r.status,
+               r.approved_date, r.proposed_date_from, r.proposed_date_to,
+               cr.id AS cr_id, cr.name, cr.description, cr.floor_number,
+               cr.rental_type, cr.building_id,
+               u.id AS user_id, u.username AS tenant_username,
+               u.password AS tenant_password,
+               u.name AS tenant_name, u.surname AS tenant_surname,
+               u.birthday AS tenant_birthday, u.role AS tenant_role
+        FROM common_room_requests r
+        JOIN common_rooms cr ON r.common_room_id = cr.id
+        JOIN users u ON r.tenant_id = u.id
+        WHERE r.tenant_id = @tenantId
+          AND cr.building_id = @buildingId
+        ORDER BY r.id DESC";
+
+        AddParameter(command, "@tenantId", tenantId);
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<CommonRoomRequest> requests = new List<CommonRoomRequest>();
+
+        while (reader.Read())
+        {
+            User tenant = UserMapper.MapWithAliases(reader,
+                "user_id", "tenant_username", "tenant_password",
+                "tenant_name", "tenant_surname", "tenant_birthday", "tenant_role");
+
+            requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
+        }
+
+        return requests;
+    }
+
     public void Create(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
