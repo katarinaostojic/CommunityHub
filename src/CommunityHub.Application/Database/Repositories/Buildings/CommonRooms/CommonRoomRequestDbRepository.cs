@@ -1,11 +1,11 @@
 ﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Buildings;
+using CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Domain.Buildings.CommonRooms;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories.Buildings;
+namespace CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 
 public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomRequestRepository
 {

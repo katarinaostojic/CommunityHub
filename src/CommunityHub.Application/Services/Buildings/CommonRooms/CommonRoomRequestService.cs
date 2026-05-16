@@ -1,9 +1,10 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
-using CommunityHub.Application.DTOs.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces.CommonRoomRepositoryInterfaces;
+using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 using CommunityHub.Application.Mappings.Buildings;
+using CommunityHub.Application.Mappings.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.Services.Buildings;
+namespace CommunityHub.Application.Services.Buildings.CommonRooms;
 
 public class CommonRoomRequestService
 {

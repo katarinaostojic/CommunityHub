@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
 
 public interface ICommonRoomRequestRepository
 {

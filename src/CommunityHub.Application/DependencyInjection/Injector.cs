@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Database.Repositories;
 using CommunityHub.Application.Database.Repositories.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings;
+using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
@@ -8,6 +9,7 @@ using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Application.Services.Shared;
 

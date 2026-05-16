@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.DTOs.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.Mappings.Buildings;
+namespace CommunityHub.Application.Mappings.Buildings.CommonRooms;
 
 public static class CommonRoomRequestMappingExtensions
 {
@@ -9,6 +9,7 @@ public static class CommonRoomRequestMappingExtensions
     {
         return new CommonRoomRequestDto(
             id: request.Id,
+            commonRoomId: request.CommonRoom.Id,
             commonRoomName: request.CommonRoom.Name,
             tenantFullName: $"{request.Tenant.Name} {request.Tenant.Surname}",
             dateFrom: request.DateFrom,

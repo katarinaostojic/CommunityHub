@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.DTOs.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.Mappings.Buildings;
+namespace CommunityHub.Application.Mappings.Buildings.CommonRooms;
 
 public static class CommonRoomMappingExtensions
 {
