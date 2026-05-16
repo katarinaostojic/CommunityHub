@@ -265,4 +265,25 @@ public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepositor
             (!number.HasValue || (number.Value >= s.StartNumber && number.Value <= s.EndNumber))
         );
     }
+
+    public Neighborhood? GetById(long id)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT n.id, n.name, n.description, n.city_id, c.name AS city_name,
+               co.name AS country_name, n.budget, n.coordinator_id,
+               s.id AS street_id, s.street_name, s.start_number, s.end_number
+        FROM neighborhoods n
+        JOIN cities c ON n.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
+        WHERE n.id = @id";
+
+        AddParameter(command, "@id", id);
+
+        using IDataReader reader = command.ExecuteReader();
+        var neighborhoods = ReadNeighborhoodsWithStreets(reader);
+        return neighborhoods.FirstOrDefault();
+    }
 }

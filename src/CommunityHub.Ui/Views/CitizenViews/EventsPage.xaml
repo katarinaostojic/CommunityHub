@@ -16,7 +16,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- WEB TOP -->
         <Border Grid.Row="0" Background="#D8D8D8" BorderBrush="#8A8A8A" BorderThickness="0,0,0,1">
             <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
                     Margin="14,0,0,0" Background="#F4F4F4" BorderBrush="#A0A0A0"
@@ -26,7 +25,6 @@
             </Border>
         </Border>
 
-        <!-- ADDRESS BAR -->
         <Grid Grid.Row="1" Background="#ECECEC">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
@@ -44,7 +42,6 @@
             </Border>
         </Grid>
 
-        <!-- HEADER -->
         <Border Grid.Row="2" Background="#F4F4F4" BorderBrush="#4A4A4A" BorderThickness="0,2,0,2">
             <Grid Margin="16,0,16,0">
                 <Grid.ColumnDefinitions>
@@ -69,14 +66,12 @@
             </Grid>
         </Border>
 
-        <!-- CONTENT -->
         <Grid Grid.Row="3" Margin="24,14,24,14">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- TOOLBAR -->
             <Grid Margin="0,0,0,14">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -94,7 +89,6 @@
                         BorderThickness="0"/>
             </Grid>
 
-            <!-- LIST -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding Events}">
                     <ItemsControl.ItemTemplate>
@@ -102,72 +96,130 @@
                             <Border BorderBrush="#4F4F4F" BorderThickness="2"
                                     Background="#F9F9F9" Margin="0,0,0,16"
                                     Padding="18" CornerRadius="6">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="300"/>
-                                        <ColumnDefinition Width="160"/>
-                                    </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="200"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <!-- LEFT -->
-                                    <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                                        <TextBlock Text="{Binding Name}"
-                                                   FontSize="24" FontWeight="Bold"
-                                                   Margin="0,0,0,12"/>
+                                        <!-- LEFT -->
+                                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                                            <Border Background="#2C3E50"
+                                                    CornerRadius="4"
+                                                    Padding="8,4"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="0,0,0,8"
+                                                    Visibility="{Binding OrganizerVisibility}">
+                                                <TextBlock Text="⭐ You are organizer"
+                                                           FontSize="16" FontWeight="Bold"
+                                                           Foreground="White"/>
+                                            </Border>
 
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="📋 Description: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding Description}"
-                                                       FontSize="18" Width="400" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="24" FontWeight="Bold"
+                                                       Margin="0,0,0,12"/>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="📋 Description: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Description}"
+                                                           FontSize="18" Width="400" TextWrapping="Wrap"/>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="📅 Date: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding EventDate}" FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="🕐 Time: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding StartTime}" FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text=" | Duration: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding DurationMinutes}" FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="min" FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
                                         </StackPanel>
 
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="📅 Date: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding EventDate}" FontSize="18" FontWeight="Bold"/>
+                                        <!-- MIDDLE -->
+                                        <StackPanel Grid.Column="1" Margin="0,0,20,0">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="👥 Volunteers: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding VolunteerCount}" FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="/" FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="🎒 Min volunteers: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
+
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="⚡ Status: " FontSize="18" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding StatusDisplay}" FontSize="18" FontWeight="Bold"/>
+                                            </StackPanel>
                                         </StackPanel>
 
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="🕐 Time: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding StartTime}" FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text=" | Duration: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding DurationMinutes}" FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="min" FontSize="18" FontWeight="Bold"/>
+                                        <!-- RIGHT -->
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                            <Button Content="Join"
+                                                    Tag="{Binding}"
+                                                    Click="JoinButton_Click"
+                                                    FontSize="20" FontWeight="Bold"
+                                                    Width="140" Height="60"
+                                                    Background="#2C3E50"
+                                                    Foreground="White"
+                                                    BorderThickness="0"
+                                                    Visibility="{Binding JoinVisibility}"/>
                                         </StackPanel>
-                                    </StackPanel>
+                                    </Grid>
 
-                                    <!-- MIDDLE -->
-                                    <StackPanel Grid.Column="1" Margin="0,0,20,0">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="👥 Volunteers: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding VolunteerCount}" FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="/" FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"/>
+                                    <!-- ATTENDANCE SECTION -->
+                                    <Border Margin="0,12,0,0"
+                                            BorderBrush="#CCCCCC"
+                                            BorderThickness="0,1,0,0"
+                                            Padding="0,12,0,0"
+                                            Visibility="{Binding AttendanceVisibility}">
+                                        <StackPanel>
+                                            <TextBlock Text="📋 Mark Attendance:"
+                                                       FontSize="18" FontWeight="Bold"
+                                                       Margin="0,0,0,8"/>
+                                            <ItemsControl ItemsSource="{Binding AttendanceItems}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                            <TextBlock Text="{Binding CitizenFullName}"
+                                                                       FontSize="18" FontWeight="Bold"
+                                                                       Width="200" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding AttendanceDisplay}"
+                                                                       FontSize="16" Width="150"
+                                                                       VerticalAlignment="Center"
+                                                                       Margin="0,0,10,0"/>
+                                                            <Button Content="✔ Attended"
+                                                                    Tag="{Binding}"
+                                                                    FontSize="16" FontWeight="Bold"
+                                                                    Height="36" Padding="10,0"
+                                                                    Background="#27AE60"
+                                                                    Foreground="White"
+                                                                    BorderThickness="0"
+                                                                    Margin="0,0,8,0"
+                                                                    Click="MarkAttendedButton_Click"/>
+                                                            <Button Content="✕ Absent"
+                                                                    Tag="{Binding}"
+                                                                    FontSize="16" FontWeight="Bold"
+                                                                    Height="36" Padding="10,0"
+                                                                    Background="#C0392B"
+                                                                    Foreground="White"
+                                                                    BorderThickness="0"
+                                                                    Click="MarkAbsentButton_Click"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </StackPanel>
-
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="🎒 Min volunteers: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"/>
-                                        </StackPanel>
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="⚡ Status: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding StatusDisplay}" FontSize="18" FontWeight="Bold"/>
-                                        </StackPanel>
-                                    </StackPanel>
-
-                                    <!-- RIGHT -->
-                                    <Button Grid.Column="2"
-                                            Content="Join"
-                                            Tag="{Binding}"
-                                            Click="JoinButton_Click"
-                                            FontSize="20" FontWeight="Bold"
-                                            Width="140" Height="60"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Right"
-                                            Background="#2C3E50"
-                                            Foreground="White"
-                                            BorderThickness="0"/>
-                                </Grid>
+                                    </Border>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

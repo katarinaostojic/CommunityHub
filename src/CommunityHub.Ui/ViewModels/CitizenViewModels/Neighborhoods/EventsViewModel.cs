@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using System.Collections.ObjectModel;
 
@@ -12,14 +9,17 @@ public class EventsViewModel : BaseViewModel
 {
     private readonly EventService _service;
     private readonly long _neighborhoodId;
+    private readonly long _currentUserId;
 
     private ObservableCollection<EventViewModel> _events = new();
     private string _resultsText = string.Empty;
 
-    public EventsViewModel(EventService service, long neighborhoodId)
+    public EventsViewModel(EventService service, long neighborhoodId, long currentUserId)
     {
         _service = service;
         _neighborhoodId = neighborhoodId;
+        _currentUserId = currentUserId;
+        _service.CheckAndUpdateStatuses();
         LoadEvents();
     }
 
@@ -37,7 +37,7 @@ public class EventsViewModel : BaseViewModel
 
     public void LoadEvents()
     {
-        var items = _service.GetByNeighborhood(_neighborhoodId)
+        var items = _service.GetByNeighborhood(_neighborhoodId, _currentUserId)
             .Select(e => new EventViewModel(e))
             .ToList();
 
@@ -55,12 +55,18 @@ public class EventsViewModel : BaseViewModel
         return eventId;
     }
 
-    public void RegisterVolunteer(Event ev, User citizen, List<long> selectedItemIds)
+    public void RegisterVolunteer(long eventId, User citizen, List<long> selectedItemIds)
     {
-        _service.RegisterVolunteer(ev, citizen, selectedItemIds);
+        _service.RegisterVolunteer(eventId, citizen, selectedItemIds);
         LoadEvents();
     }
 
-    public bool IsAlreadyRegistered(Event ev, long citizenId)
-        => _service.IsAlreadyRegistered(ev, citizenId);
+    public bool IsAlreadyRegistered(long eventId, long citizenId)
+        => _service.IsAlreadyRegistered(eventId, citizenId);
+
+    public void MarkAttendance(long registrationId, bool attended)
+    {
+        _service.MarkAttendance(registrationId, attended);
+        LoadEvents();
+    }
 }

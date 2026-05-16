@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
@@ -59,7 +59,7 @@ public partial class BrowseNeighborhoodPage : Window
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        Neighborhood neighborhood = (Neighborhood)((Button)sender).Tag;
+        NeighborhoodDto neighborhood = (NeighborhoodDto)((Button)sender).Tag;
         NeighborhoodAccessRequestDialog dialog = new NeighborhoodAccessRequestDialog(_user, neighborhood);
         dialog.Owner = Window.GetWindow(this);
         dialog.ShowDialog();

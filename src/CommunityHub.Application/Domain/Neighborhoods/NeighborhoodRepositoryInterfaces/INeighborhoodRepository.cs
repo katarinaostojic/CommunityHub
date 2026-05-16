@@ -9,4 +9,5 @@ public interface INeighborhoodRepository
     long Create(string name, string description, long cityId, long coordinatorId);
     void AddStreet(long neighborhoodId, string streetName, int startNumber, int endNumber);
     void AddImage(long neighborhoodId, string imagePath);
+    Neighborhood? GetById(long id);
 }

@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
 public class JoinEventItemViewModel
 {
-    private readonly EventItem _item;
+    private readonly EventItemDto _item;
 
-    public JoinEventItemViewModel(EventItem item)
+    public JoinEventItemViewModel(EventItemDto item)
     {
         _item = item;
     }
 
     public long ItemId => _item.Id;
     public string ItemName => _item.Name;
-    public bool IsAvailable => !_item.IsTaken;
-    public string StatusDisplay => _item.IsTaken ? "Already taken" : "Available";
+    public bool IsAvailable => _item.IsAvailable;
+    public string StatusDisplay => _item.StatusDisplay;
     public string StatusColor => _item.IsTaken ? "Red" : "Green";
 }

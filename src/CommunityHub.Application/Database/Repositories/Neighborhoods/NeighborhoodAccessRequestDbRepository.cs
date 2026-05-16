@@ -120,7 +120,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
             WHERE id = @id";
 
         AddParameter(command, "@id", request.Id);
-        AddParameter(command, "@status", request.Status == RequestStatus.Approved ? "accepted" : "rejected");
+        AddParameter(command, "@status", request.Status == RequestStatus.Approved ? "approved" : "rejected");
         AddParameter(command, "@reason", request.RejectionReason);
 
         command.ExecuteNonQuery();

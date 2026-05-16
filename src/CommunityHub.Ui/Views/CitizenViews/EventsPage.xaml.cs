@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using CommunityHub.Application.DependencyInjection;
+﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using CommunityHub.Ui.Views;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 
@@ -31,7 +22,7 @@ public partial class EventsPage : Window
         _neighborhoodId = neighborhoodId;
 
         EventService service = Injector.CreateInstance<EventService>();
-        _viewModel = new EventsViewModel(service, neighborhoodId);
+        _viewModel = new EventsViewModel(service, neighborhoodId, user.Id);
         DataContext = _viewModel;
 
         LoggedInUserTextBlock.Text = _user.Username;
@@ -51,7 +42,7 @@ public partial class EventsPage : Window
     {
         EventViewModel eventVm = (EventViewModel)((Button)sender).Tag;
 
-        if (_viewModel.IsAlreadyRegistered(eventVm.Event, _user.Id))
+        if (_viewModel.IsAlreadyRegistered(eventVm.Id, _user.Id))
         {
             MessageBox.Show("You are already registered for this event.", "Already Registered",
                 MessageBoxButton.OK, MessageBoxImage.Information);
@@ -68,6 +59,18 @@ public partial class EventsPage : Window
         JoinEventDialog dialog = new JoinEventDialog(_user, eventVm.Event, _viewModel);
         dialog.Owner = this;
         dialog.ShowDialog();
+    }
+
+    private void MarkAttendedButton_Click(object sender, RoutedEventArgs e)
+    {
+        AttendanceItemViewModel item = (AttendanceItemViewModel)((Button)sender).Tag;
+        _viewModel.MarkAttendance(item.RegistrationId, true);
+    }
+
+    private void MarkAbsentButton_Click(object sender, RoutedEventArgs e)
+    {
+        AttendanceItemViewModel item = (AttendanceItemViewModel)((Button)sender).Tag;
+        _viewModel.MarkAttendance(item.RegistrationId, false);
     }
 
     private void BurgerButton_Click(object sender, RoutedEventArgs e)

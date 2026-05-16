@@ -9,14 +9,18 @@ namespace CommunityHub.Application.Services.Neighborhoods;
 public class NeighborhoodAccessRequestService
 {
     private readonly INeighborhoodAccessRequestRepository _repository;
+    private readonly INeighborhoodRepository _neighborhoodRepository;
 
-    public NeighborhoodAccessRequestService(INeighborhoodAccessRequestRepository repository)
+    public NeighborhoodAccessRequestService(
+        INeighborhoodAccessRequestRepository repository,
+        INeighborhoodRepository neighborhoodRepository)
     {
         _repository = repository;
+        _neighborhoodRepository = neighborhoodRepository;
     }
 
-    public List<NeighborhoodAccessRequest> GetAllByCitizen(long citizenId, string? status, bool sortDescending)
-    => _repository.GetAllByCitizen(citizenId, status, sortDescending);
+    public List<NeighborhoodAccessRequestDto> GetAllByCitizen(long citizenId, string? status, bool sortDescending)
+        => _repository.GetAllByCitizen(citizenId, status, sortDescending).ToDtoList();
 
     public int CountByCitizenAndStatus(long citizenId, string? status)
         => _repository.CountByCitizenAndStatus(citizenId, status);
@@ -51,15 +55,16 @@ public class NeighborhoodAccessRequestService
         if (_repository.HasMembership(citizen.Id))
             return AccessRequestResult.AlreadyMember;
 
-        if (neighborhood.ContainsAddress(citizen.Address ?? string.Empty))
-        {
-            NeighborhoodAccessRequest request = new NeighborhoodAccessRequest(citizen, neighborhood);
-            _repository.CreateMembership(request);
-            return AccessRequestResult.Granted;
-        }
-
         _repository.Create(citizen, neighborhood);
         return AccessRequestResult.RequestCreated;
+    }
+
+    public AccessRequestResult RequestAccessById(User citizen, long neighborhoodId)
+    {
+        Neighborhood? neighborhood = _neighborhoodRepository.GetById(neighborhoodId);
+        if (neighborhood == null)
+            throw new InvalidOperationException("Neighborhood not found.");
+        return RequestAccess(citizen, neighborhood);
     }
 
     public long? GetMembershipNeighborhoodId(long citizenId)
