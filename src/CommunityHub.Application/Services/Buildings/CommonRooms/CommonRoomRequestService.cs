@@ -136,14 +136,9 @@ public class CommonRoomRequestService
     {
         ValidateRequestedDateRange(dateFrom, dateTo);
 
-        _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
+        long requestId = _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
 
-        CommonRoomRequest? request = _requestRepository.GetByTenant(tenantId)
-            .FirstOrDefault(r => r.CommonRoom.Id == commonRoomId
-                              && r.DateFrom.Date == dateFrom.Date
-                              && r.DateTo.Date == dateTo.Date
-                              && r.Status == CommonRoomRequestStatus.Pending);
-
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
         if (request == null) return;
 
         TryAutoApproveMultiDay(request);

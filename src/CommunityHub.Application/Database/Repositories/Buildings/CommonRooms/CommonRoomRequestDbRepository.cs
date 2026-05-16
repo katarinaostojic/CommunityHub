@@ -174,20 +174,24 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         return requests;
     }
 
-    public void Create(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
+    public long Create(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
+
         command.CommandText = @"
-        INSERT INTO common_room_requests (common_room_id, tenant_id, date_from, date_to, status)
-        VALUES (@commonRoomId, @tenantId, @dateFrom, @dateTo, 'pending')";
+        INSERT INTO common_room_requests
+        (common_room_id, tenant_id, date_from, date_to)
+        VALUES
+        (@commonRoomId, @tenantId, @dateFrom, @dateTo)
+        RETURNING id";
 
         AddParameter(command, "@commonRoomId", commonRoomId);
         AddParameter(command, "@tenantId", tenantId);
         AddParameter(command, "@dateFrom", dateFrom);
         AddParameter(command, "@dateTo", dateTo);
 
-        command.ExecuteNonQuery();
+        return Convert.ToInt64(command.ExecuteScalar());
     }
 
     public void Delete(long requestId)
