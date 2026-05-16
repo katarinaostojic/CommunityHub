@@ -34,6 +34,10 @@ public class CommonRoomRequestDialogViewModel : BaseViewModel
         private set => SetProperty(ref _hasDateError, value);
     }
 
+    public string WhatHappensNextText => RentalTypeDisplay == "1 day only"
+    ? "Your request will be sent to the building administrator. The administrator will select an available day within your requested date range."
+    : "Your request will be sent to the building administrator. If your requested dates are available, the request will be automatically approved. If not, the administrator may suggest alternative dates.";
+
     public bool Validate(DateTime? dateFrom, DateTime? dateTo)
     {
         if (dateFrom == null || dateTo == null)

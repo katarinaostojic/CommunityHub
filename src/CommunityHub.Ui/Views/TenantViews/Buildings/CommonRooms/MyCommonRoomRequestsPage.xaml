@@ -59,7 +59,8 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" x:Name="BuildingInfoTextBlock"
                        Style="{StaticResource SecondaryText}"
-                       Margin="0,0,0,8"/>
+                       Margin="0,0,0,12"
+                       FontSize="16"/>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <Button Content="Common Rooms"
                         Style="{StaticResource OutlineButton}"

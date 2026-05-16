@@ -20,7 +20,7 @@ public class CommonRoomRequestRowViewModel : BaseViewModel
 
     public string StatusDisplay => _request.Status switch
     {
-        CommonRoomRequestStatus.Pending => "⏳ Pending",
+        CommonRoomRequestStatus.Pending => "⏳ Pending Approval",
         CommonRoomRequestStatus.Approved => "✔ Approved",
         CommonRoomRequestStatus.Rejected => "✕ Rejected",
         CommonRoomRequestStatus.PendingDateChange => "⏳ Pending date change",

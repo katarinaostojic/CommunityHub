@@ -72,11 +72,13 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <DatePicker Grid.Column="0" x:Name="DateFromPicker"
-                        DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                        DisplayDateStart="{x:Static sys:DateTime.Today}"
+                        Padding="5"/>
             <TextBlock Grid.Column="1" Text=" - "
                        VerticalAlignment="Center" Margin="8,0"/>
             <DatePicker Grid.Column="2" x:Name="DateToPicker"
-                        DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                        DisplayDateStart="{x:Static sys:DateTime.Today}"
+                        Padding="5"/>
         </Grid>
         <TextBlock Text="{Binding DateError}"
                    Foreground="{StaticResource DangerBrush}"
@@ -93,7 +95,7 @@
                            FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
                 <TextBlock TextWrapping="Wrap" FontSize="12"
                            Style="{StaticResource SecondaryText}"
-                           Text="Your request will be sent to the building administrator. Status will be set to Pending. If your requested dates are not available, the administrator may suggest alternative dates."/>
+                           Text="{Binding WhatHappensNextText}"/>
             </StackPanel>
         </Border>
 
