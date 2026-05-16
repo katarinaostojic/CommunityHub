@@ -1,6 +1,6 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.DTOs.Buildings;
+namespace CommunityHub.Application.DTOs.Buildings.CommonRooms;
 
 public class CommonRoomDto
 {

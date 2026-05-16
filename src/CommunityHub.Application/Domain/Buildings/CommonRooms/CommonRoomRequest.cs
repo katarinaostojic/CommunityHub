@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Domain.Buildings;
+﻿namespace CommunityHub.Application.Domain.Buildings.CommonRooms;
 
 public enum CommonRoomRequestStatus
 {
@@ -57,5 +57,15 @@ public class CommonRoomRequest
     {
         Status = CommonRoomRequestStatus.Approved;
         ApprovedDate = approvedDate;
+    }
+
+    public void AcceptProposedDates()
+    {
+        if (ProposedDateFrom == null || ProposedDateTo == null) return;
+        DateFrom = ProposedDateFrom.Value;
+        DateTo = ProposedDateTo.Value;
+        ProposedDateFrom = null;
+        ProposedDateTo = null;
+        Status = CommonRoomRequestStatus.Pending;
     }
 }

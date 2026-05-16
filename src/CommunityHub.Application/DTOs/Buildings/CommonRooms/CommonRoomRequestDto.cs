@@ -1,10 +1,11 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.DTOs.Buildings;
+namespace CommunityHub.Application.DTOs.Buildings.CommonRooms;
 
 public class CommonRoomRequestDto
 {
     public long Id { get; init; }
+    public long CommonRoomId { get; init; }
     public string CommonRoomName { get; init; }
     public string TenantFullName { get; init; }
     public DateTime DateFrom { get; init; }
@@ -15,12 +16,13 @@ public class CommonRoomRequestDto
     public DateTime? ProposedDateTo { get; init; }
     public RentalType RentalType { get; init; }
 
-    public CommonRoomRequestDto(long id, string commonRoomName, string tenantFullName,
+    public CommonRoomRequestDto(long id, long commonRoomId, string commonRoomName, string tenantFullName,
         DateTime dateFrom, DateTime dateTo, CommonRoomRequestStatus status,
         RentalType rentalType, DateTime? approvedDate = null,
         DateTime? proposedDateFrom = null, DateTime? proposedDateTo = null)
     {
         Id = id;
+        CommonRoomId = commonRoomId;
         CommonRoomName = commonRoomName;
         TenantFullName = tenantFullName;
         DateFrom = dateFrom;

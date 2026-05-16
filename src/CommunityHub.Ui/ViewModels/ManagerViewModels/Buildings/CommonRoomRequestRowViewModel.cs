@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.DTOs.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 
 namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 

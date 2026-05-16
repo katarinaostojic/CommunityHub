@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Mappers.Buildings;
+namespace CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
 
 public static class CommonRoomMapper
 {

@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+
+namespace CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces.CommonRoomRepositoryInterfaces;
 
 public interface ICommonRoomRepository
 {
