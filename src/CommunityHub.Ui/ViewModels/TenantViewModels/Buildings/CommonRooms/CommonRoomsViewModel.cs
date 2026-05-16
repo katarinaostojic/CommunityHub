@@ -13,6 +13,8 @@ public class CommonRoomsViewModel : BaseViewModel
 
     private ObservableCollection<CommonRoomCardViewModel> _rooms = new();
     private string _roomCountText = string.Empty;
+    private string _dateError = string.Empty;
+    private bool _hasDateError;
 
     public CommonRoomsViewModel(
         CommonRoomService commonRoomService,
@@ -39,6 +41,18 @@ public class CommonRoomsViewModel : BaseViewModel
         private set => SetProperty(ref _roomCountText, value);
     }
 
+    public string DateError
+    {
+        get => _dateError;
+        private set => SetProperty(ref _dateError, value);
+    }
+
+    public bool HasDateError
+    {
+        get => _hasDateError;
+        private set => SetProperty(ref _hasDateError, value);
+    }
+
     public void LoadRooms()
     {
         List<CommonRoomDto> rooms = _commonRoomService.GetByBuilding(_buildingId);
@@ -56,5 +70,24 @@ public class CommonRoomsViewModel : BaseViewModel
     {
         _requestService.CreateRequest(commonRoomId, _tenantId, dateFrom, dateTo);
         LoadRooms();
+    }
+
+    public bool TrySendRequest(long commonRoomId, DateTime? dateFrom, DateTime? dateTo)
+    {
+        HasDateError = dateFrom == null || dateTo == null;
+        DateError = HasDateError ? "Please select both start and end date." : string.Empty;
+
+        if (!HasDateError && dateTo!.Value.Date < dateFrom!.Value.Date)
+        {
+            HasDateError = true;
+            DateError = "End date must be after start date.";
+        }
+
+        if (HasDateError) return false;
+
+        SendRequest(commonRoomId, dateFrom!.Value, dateTo!.Value);
+        HasDateError = false;
+        DateError = string.Empty;
+        return true;
     }
 }

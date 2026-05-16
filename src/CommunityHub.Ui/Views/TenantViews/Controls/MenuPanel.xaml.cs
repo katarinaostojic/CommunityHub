@@ -1,10 +1,11 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
+using CommunityHub.Ui.Views.TenantViews.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -125,5 +126,14 @@ public partial class MenuPanel : UserControl
         BuildingMembershipDto membership = (BuildingMembershipDto)((Button)sender).Tag;
         Close();
         NavigationService.GetNavigationService(this)?.Navigate(new NoticeBoardPage(_user, membership));
+    }
+
+    private void CommonRoomsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingMembershipDto membership = (BuildingMembershipDto)((Button)sender).Tag;
+        string buildingInfo = $"{membership.BuildingStreet} {membership.BuildingStreetNumber}, {membership.BuildingNeighborhood}";
+        Close();
+        NavigationService.GetNavigationService(this)?.Navigate(
+            new CommonRoomsPage(_user, membership.BuildingId, buildingInfo));
     }
 }

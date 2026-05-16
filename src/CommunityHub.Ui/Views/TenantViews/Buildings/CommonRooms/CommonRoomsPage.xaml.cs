@@ -5,7 +5,6 @@ using CommunityHub.Application.Services.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
-using CommunityHub.Ui.Views.ManagerViews;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -35,6 +34,7 @@ public partial class CommonRoomsPage : Page
 
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = $"Building: {_buildingInfo}";
+        DialogBuildingInfo.Text = _buildingInfo;
         AppMenu.Initialize(_user);
     }
 
@@ -59,45 +59,23 @@ public partial class CommonRoomsPage : Page
     {
         if (_selectedRoom == null) return;
 
-        if (DateFromPicker.SelectedDate == null || DateToPicker.SelectedDate == null)
-        {
-            MessageBox.Show("Please select both dates.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        bool success = _viewModel.TrySendRequest(
+            _selectedRoom.Id,
+            DateFromPicker.SelectedDate,
+            DateToPicker.SelectedDate);
 
-        DateTime dateFrom = DateFromPicker.SelectedDate.Value;
-        DateTime dateTo = DateToPicker.SelectedDate.Value;
+        if (!success) return;
 
-        if (dateTo < dateFrom)
-        {
-            MessageBox.Show("End date must be after start date.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        _viewModel.SendRequest(_selectedRoom.Id, dateFrom, dateTo);
         RequestOverlay.Visibility = Visibility.Collapsed;
         _selectedRoom = null;
-
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Common room request sent successfully!");
     }
 
-    private void MyRequestsTab_Click(object sender, RoutedEventArgs e)
-    {
-        //MainWindow.Instance.NavigateTo(
-        //   new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
-    }
+    private void MyRequestsTab_Click(object sender, RoutedEventArgs e) =>
+        MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 
-    private void MyRequestsLink_Click(object sender, RoutedEventArgs e)
-    {
-        //MainWindow.Instance.NavigateTo(
-        //    new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
-    }
-
-    private void ViewRequestsButton_Click(object sender, RoutedEventArgs e)
-    {
-        //MainWindow.Instance.NavigateTo(
-        //    new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
-    }
+    private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
+        MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
 }

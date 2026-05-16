@@ -140,11 +140,13 @@
                                             Background="Transparent" BorderThickness="0"
                                             Tag="{Binding}"
                                             Click="NoticeBoardMenuItem_Click"/>
-                                    <Button Content="→ Common Areas"
+                                    <Button Content="→ Common Rooms"
                                             HorizontalAlignment="Stretch"
                                             HorizontalContentAlignment="Left"
                                             Padding="32,8" FontSize="12"
-                                            Background="Transparent" BorderThickness="0"/>
+                                            Background="Transparent" BorderThickness="0"
+                                            Tag="{Binding}"
+                                            Click="CommonRoomsMenuItem_Click"/>
                                     <Button Content="→ Residents' Meeting"
                                             HorizontalAlignment="Stretch"
                                             HorizontalContentAlignment="Left"
