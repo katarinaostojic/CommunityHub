@@ -19,4 +19,5 @@ INSERT INTO images (id, path, entity, entity_id) VALUES
     (-18, 'images/buildings/la_rambla_3.jpg', 'building', -6),
     (-19, 'images/neighborhoods/liman.jpg', 'neighborhood', -1),
     (-20, 'images/neighborhoods/dorcol.jpg', 'neighborhood', -2),
-    (-21,'images/neighborhoods/podbara.jpg', 'neighborhood', 1);
+    (-21, 'images/neighborhoods/sajmiste.jpg', 'neighborhood', 1),
+    (-22, 'images/neighborhoods/telep.jpg', 'neighborhood', 2);

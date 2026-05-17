@@ -1,5 +1,7 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
+using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Shared;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
@@ -20,9 +22,9 @@ public partial class RegisterBuildingDialog : Window
     {
         InitializeComponent();
         _currentUser = user;
-        _buildingService = ServiceFactory.CreateBuildingService();
-        _cityService = ServiceFactory.CreateCityService();
-        _countryService = ServiceFactory.CreateCountryService();
+        _buildingService = Injector.CreateInstance<BuildingService>();
+        _cityService = Injector.CreateInstance<CityService>();
+        _countryService = Injector.CreateInstance<CountryService>();
         LoadCountries();
         LoadCities();
     }
@@ -174,7 +176,7 @@ public partial class RegisterBuildingDialog : Window
         {
             TextBox unitTextBox = (TextBox)floorGrid.Children[1];
             int floorNumber = (int)unitTextBox.Tag;
-            long floorId = _buildingService.CreateFloorReturningId(buildingId, floorNumber);
+            long floorId = _buildingService.CreateFloor(buildingId, floorNumber);
             CreateUnitsForFloor(floorId, unitTextBox.Text);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers;

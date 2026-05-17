@@ -6,7 +6,7 @@ public interface IBuildingRepository
     Building? GetById(long buildingId);
     List<Building> GetAllByManager(long managerId);
     long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId);
-    long CreateFloorReturningId(long buildingId, int floorNumber);
+    long CreateFloor(long buildingId, int floorNumber);
     void CreateUnit(long floorId, string unitNumber);
     bool BuildingExists(string street, string streetNumber, long cityId);
 }

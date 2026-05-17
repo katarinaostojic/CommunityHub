@@ -1,0 +1,325 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.TenantViews.NoticeBoardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top bar -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
+                        Style="{StaticResource GhostWhiteButton}"
+                        Margin="0,0,10,0"
+                        Click="MenuButton_Click"/>
+
+                <Button Grid.Column="2"
+                        Content="Demo"
+                        Style="{StaticResource GhostWhiteOutlinedButton}"
+                        IsEnabled="False"
+                        Margin="0,0,10,0"/>
+
+                <TextBlock Grid.Column="3"
+                           x:Name="UserNameTextBlock"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="15"
+                           Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="4"
+                           Text="👤"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="17"/>
+            </Grid>
+        </Border>
+
+        <!-- Success banner -->
+        <Border x:Name="SuccessBanner"
+                Grid.Row="1"
+                Background="{StaticResource SuccessBrush}"
+                Padding="12,8"
+                Visibility="Collapsed">
+            <Grid>
+                <TextBlock x:Name="SuccessTextBlock"
+                           Foreground="{StaticResource SuccessTextBrush}"
+                           FontSize="13"
+                           VerticalAlignment="Center"/>
+
+                <Button x:Name="RestoreAdButton"
+                        Content="Restore"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource GhostButton}"
+                        Foreground="{StaticResource SuccessTextBrush}"
+                        FontWeight="Bold"
+                        Visibility="Collapsed"
+                        Click="RestoreAdButton_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Notifications -->
+        <ItemsControl Grid.Row="2"
+                      ItemsSource="{Binding Notifications}"
+                      Margin="16,10,16,0"
+                      Visibility="{Binding HasNotifications, Converter={StaticResource BoolToVis}}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#EBF5FB"
+                            BorderBrush="#3498DB"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="12,10"
+                            Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{Binding Title}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           Foreground="#1A5276"/>
+
+                                <TextBlock Text="{Binding Body}"
+                                           FontSize="12"
+                                           Foreground="#2E86C1"
+                                           FontStyle="Italic"
+                                           TextWrapping="Wrap"
+                                           Margin="0,2,0,0"/>
+
+                                <TextBlock Text="{Binding TimeDisplay}"
+                                           FontSize="11"
+                                           Foreground="#5DADE2"
+                                           Margin="0,4,0,0"/>
+                            </StackPanel>
+
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Button Grid.Row="0"
+                                        Content="✕"
+                                        Tag="{Binding Id}"
+                                        Style="{StaticResource GhostButton}"
+                                        VerticalAlignment="Top"
+                                        Click="DismissNotificationButton_Click"/>
+
+                                <Button Grid.Row="1"
+                                        Content="View Ad →"
+                                        Style="{StaticResource GhostButton}"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        Foreground="#2E86C1"
+                                        Click="ViewSlotsFromNotificationButton_Click"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Title row -->
+        <Grid Grid.Row="3" Margin="16,12,16,8">
+            <StackPanel>
+                <TextBlock Text="Notice Board"
+                           Style="{StaticResource PageTitle}"/>
+
+                <TextBlock Text="{Binding BuildingSubtitle}"
+                           Style="{StaticResource SecondaryText}"
+                           Margin="0,2,0,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="Export PDF"
+                        Style="{StaticResource OutlineButton}"
+                        Margin="0,0,8,0"
+                        Click="ExportPdfButton_Click"/>
+
+                <Button Content="+ New Ad"
+                        Style="{StaticResource PrimaryButton}"
+                        Click="NewAdButton_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Filters -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    Margin="16,8,16,8">
+            <TextBlock Text="Type:"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"/>
+
+            <Button x:Name="FilterAllButton"
+                    Content="{Binding AllFilterText}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
+                    Click="FilterAllButton_Click"/>
+
+            <Button x:Name="FilterOfferingButton"
+                    Content="{Binding OfferingFilterText}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
+                    Click="FilterOfferingButton_Click"/>
+
+            <Button x:Name="FilterSeekingButton"
+                    Content="{Binding SeekingFilterText}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,16,0"
+                    Click="FilterSeekingButton_Click"/>
+
+            <TextBlock Text="Category:"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"/>
+
+            <ComboBox x:Name="CategoryComboBox"
+                      Width="160"
+                      SelectionChanged="CategoryComboBox_SelectionChanged"/>
+        </StackPanel>
+
+        <!-- Results count -->
+        <TextBlock Grid.Row="5"
+                   Text="{Binding ResultsCountText}"
+                   Style="{StaticResource SecondaryText}"
+                   Margin="16,0,16,10"/>
+
+        <!-- Ad list -->
+        <ScrollViewer Grid.Row="6"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,16">
+            <ItemsControl ItemsSource="{Binding FilteredAds}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorder}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Author + badges -->
+                                <Grid Grid.Row="0" Margin="0,0,0,6">
+                                    <TextBlock Text="{Binding AuthorName}"
+                                               FontSize="15"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"/>
+
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                        <Border Visibility="{Binding ArchiveButtonVisible}"
+                                                Background="{StaticResource BackgroundLightBrush}"
+                                                CornerRadius="4"
+                                                Padding="8,3"
+                                                Margin="0,0,6,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="your ad"
+                                                       FontSize="11"
+                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        </Border>
+
+                                        <Border Style="{StaticResource StatusBadge}"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding TypeDisplay}"
+                                                       FontSize="13"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Description -->
+                                <TextBlock Grid.Row="1"
+                                           Text="{Binding Description}"
+                                           Style="{StaticResource SecondaryText}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,10"/>
+
+                                <!-- Footer -->
+                                <Grid Grid.Row="2">
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <Border Background="#EEF2FF"
+                                                CornerRadius="4"
+                                                Padding="8,3"
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding CategoryDisplay}"
+                                                       FontSize="12"
+                                                       Foreground="#4338CA"/>
+                                        </Border>
+
+                                        <TextBlock Text="{Binding DateRangeDisplay}"
+                                                   Style="{StaticResource SecondaryText}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                        <Button Content="{Binding ViewBookingsDisplay}"
+                                                Style="{StaticResource GhostButton}"
+                                                Foreground="{StaticResource AccentBrush}"
+                                                Visibility="{Binding ViewBookingsVisible}"
+                                                Tag="{Binding}"
+                                                Margin="0,0,8,0"
+                                                Click="ViewBookingsButton_Click"/>
+
+                                        <Button Content="Archive"
+                                                Style="{StaticResource DangerButton}"
+                                                Visibility="{Binding ArchiveButtonVisible}"
+                                                Tag="{Binding}"
+                                                Margin="0,0,8,0"
+                                                Click="ArchiveButton_Click"/>
+
+                                        <Button Content="View Slots"
+                                                Style="{StaticResource OutlineButton}"
+                                                Visibility="{Binding ViewSlotsVisible}"
+                                                Tag="{Binding}"
+                                                Click="ViewSlotsButton_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="7"
+                            x:Name="AppMenu"/>
+    </Grid>
+</Page>

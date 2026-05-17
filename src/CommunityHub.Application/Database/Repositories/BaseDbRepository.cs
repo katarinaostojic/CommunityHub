@@ -33,8 +33,7 @@ public abstract class BaseDbRepository
     {
         IDbDataParameter dbParam = command.CreateParameter();
         dbParam.ParameterName = name;
-        dbParam.Value = value;
-        dbParam.DbType = DbType.DateTime;
+        dbParam.Value = DateOnly.FromDateTime(value);
         command.Parameters.Add(dbParam);
     }
 
@@ -44,6 +43,22 @@ public abstract class BaseDbRepository
         dbParam.ParameterName = name;
         dbParam.Value = value;
         dbParam.DbType = DbType.Time;
+        command.Parameters.Add(dbParam);
+    }
+
+    protected void AddParameter(IDbCommand command, string name, DateTime? value)
+    {
+        IDbDataParameter dbParam = command.CreateParameter();
+        dbParam.ParameterName = name;
+        dbParam.Value = value.HasValue ? (object)DateOnly.FromDateTime(value.Value) : DBNull.Value;
+        command.Parameters.Add(dbParam);
+    }
+    protected void AddParameter(IDbCommand command, string name, bool value)
+    {
+        IDbDataParameter dbParam = command.CreateParameter();
+        dbParam.ParameterName = name;
+        dbParam.Value = value;
+        dbParam.DbType = DbType.Boolean;
         command.Parameters.Add(dbParam);
     }
 }

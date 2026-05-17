@@ -1,37 +1,34 @@
-﻿using System.Windows;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Ui.ViewModels.CoordinatorViewModels;
+using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
+using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
 public partial class MyDistrictsPage : Page
 {
-    private readonly long _userId;
-    private readonly NeighborhoodDbRepository _repository = new();
+    private readonly MyDistrictsViewModel _viewModel;
 
     public MyDistrictsPage(long userId)
     {
         InitializeComponent();
-        _userId = userId;
-        LoadDistricts();
-    }
-
-    private void LoadDistricts()
-    {
-        var districts = _repository.GetByCoordinator(_userId);
-        DistrictsItemsControl.ItemsSource = districts;
+        NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
+        _viewModel = new MyDistrictsViewModel(neighborhoodService, userId);
+        DataContext = _viewModel;
     }
 
     private void DistrictCard_Click(object sender, RoutedEventArgs e)
     {
-        var neighborhood = (Neighborhood)((Button)sender).Tag;
-        CoordinatorMainWindow.Instance.NavigateTo(new NeighborhoodDetailsPage(neighborhood), neighborhood.Name);
+        var dto = (NeighborhoodDto)((Button)sender).Tag;
+        CoordinatorMainWindow.Instance.NavigateTo(new NeighborhoodDetailsPage(dto), dto.Name);
     }
 
     private void AddDistrictButton_Click(object sender, RoutedEventArgs e)
     {
-        CoordinatorMainWindow.Instance.NavigateTo(new RegisterNeighborhoodPage(_userId), "Add New District");
+        CoordinatorMainWindow.Instance.NavigateTo(new RegisterNeighborhoodPage(_viewModel.CoordinatorId), "Add New District");
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)

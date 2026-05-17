@@ -1,8 +1,11 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Services;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Ui.ViewModels.TenantViewModels;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
+using CommunityHub.Ui.Views.TenantViews.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,18 +18,20 @@ namespace CommunityHub.Ui.Controls;
 public partial class MenuPanel : UserControl
 {
     private User _user;
-    private readonly BuildingMembershipService _membershipService;
+    private readonly MenuPanelViewModel _viewModel;
+    private readonly BuildingService _buildingService;
 
     public MenuPanel()
     {
         InitializeComponent();
-        _membershipService = ServiceFactory.CreateBuildingMembershipService();
+        BuildingMembershipService membershipService = Injector.CreateInstance<BuildingMembershipService>();
+        _buildingService = Injector.CreateInstance<BuildingService>();
+        _viewModel = new MenuPanelViewModel(membershipService);
     }
 
     public void Initialize(User user)
     {
         _user = user;
-        // Reset My Buildings toggle state on each navigation
         MyBuildingsToggle.IsChecked = false;
         MyBuildingsScrollViewer.Visibility = Visibility.Collapsed;
         MyBuildingsArrow.Text = "▼";
@@ -61,11 +66,7 @@ public partial class MenuPanel : UserControl
 
     private void LoadMemberships()
     {
-        var memberships = _membershipService.GetByTenant(_user.Id)
-            .GroupBy(m => m.Building.Id)
-            .Select(g => g.First())
-            .ToList();
-        MyBuildingsMenuPanel.ItemsSource = memberships;
+        MyBuildingsMenuPanel.ItemsSource = _viewModel.GetMemberships(_user.Id);
     }
 
     private void MenuOverlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -113,15 +114,26 @@ public partial class MenuPanel : UserControl
 
     private void BuildingName_Click(object sender, MouseButtonEventArgs e)
     {
-        BuildingMembership membership = (BuildingMembership)((Border)sender).Tag;
+        BuildingMembershipDto membership = (BuildingMembershipDto)((Border)sender).Tag;
+        var fullDto = _buildingService.GetById(membership.BuildingId);
+        if (fullDto == null) return;
         Close();
-        NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(membership.Building, _user));
+        NavigationService.GetNavigationService(this)?.Navigate(new BuildingDetailsPage(fullDto, _user));
     }
 
     private void NoticeBoardMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        BuildingMembership membership = (BuildingMembership)((Button)sender).Tag;
+        BuildingMembershipDto membership = (BuildingMembershipDto)((Button)sender).Tag;
         Close();
         NavigationService.GetNavigationService(this)?.Navigate(new NoticeBoardPage(_user, membership));
+    }
+
+    private void CommonRoomsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingMembershipDto membership = (BuildingMembershipDto)((Button)sender).Tag;
+        string buildingInfo = $"{membership.BuildingStreet} {membership.BuildingStreetNumber}, {membership.BuildingNeighborhood}";
+        Close();
+        NavigationService.GetNavigationService(this)?.Navigate(
+            new CommonRoomsPage(_user, membership.BuildingId, buildingInfo));
     }
 }

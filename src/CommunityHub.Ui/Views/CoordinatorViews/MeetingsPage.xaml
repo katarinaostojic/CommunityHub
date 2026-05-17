@@ -1,0 +1,90 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.MeetingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Meetings">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="16">
+
+                <!-- Statistika -->
+                <TextBlock Text="Citizen Trust Statistics" FontSize="16" FontWeight="Bold" Margin="0,0,0,8"/>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Nov u kvartu" Grid.Column="0"/>
+                    <TextBlock Text="{Binding NewCount}" Grid.Column="1"/>
+                </Grid>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Neaktivan gradjanin" Grid.Column="0"/>
+                    <TextBlock Text="{Binding InactiveCount}" Grid.Column="1"/>
+                </Grid>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Aktivan gradjanin" Grid.Column="0"/>
+                    <TextBlock Text="{Binding ActiveCount}" Grid.Column="1"/>
+                </Grid>
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Istaknut gradjanin" Grid.Column="0"/>
+                    <TextBlock Text="{Binding DistinguishedCount}" Grid.Column="1"/>
+                </Grid>
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Gradjanin od povjerenja" Grid.Column="0"/>
+                    <TextBlock Text="{Binding TrustedCount}" Grid.Column="1"/>
+                </Grid>
+
+                <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,0,0,16">
+                    <TextBlock Text="{Binding SuggestionText}" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Filter dugmad -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <Button Content="All" Margin="0,0,8,0" Click="FilterAllButton_Click"/>
+                    <Button Content="Scheduled" Margin="0,0,8,0" Click="FilterScheduledButton_Click"/>
+                    <Button Content="Cancelled" Margin="0,0,8,0" Click="FilterCancelledButton_Click"/>
+                    <Button Content="In Preparation" Click="FilterInPreparationButton_Click"/>
+                </StackPanel>
+
+                <!-- Lista sastanaka -->
+                <ItemsControl ItemsSource="{Binding Meetings}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,0,10" Padding="12">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding TopicDisplay}" FontWeight="Bold" FontSize="15"/>
+                                    <TextBlock Text="{Binding DateDisplay}" Margin="0,4,0,0"/>
+                                    <TextBlock Text="{Binding TimeDisplay}" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding StatusDisplay}" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Add dugme -->
+        <Button Content="+" Width="50" Height="50" 
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="0,0,16,16" FontSize="24"
+                Click="AddMeetingButton_Click"/>
+    </Grid>
+</Page>

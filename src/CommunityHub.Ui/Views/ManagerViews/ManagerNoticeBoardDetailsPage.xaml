@@ -1,0 +1,234 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.ManagerViews.ManagerNoticeBoardDetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Noticeboard Details"
+      Background="#F4F6F9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="White">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="6" Opacity="0.1" ShadowDepth="2"/>
+            </Border.Effect>
+            <Grid Margin="20,0">
+                <Button Content="← Back" HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Width="80" Height="34"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="#2980B9" FontSize="13" FontWeight="SemiBold"
+                        Cursor="Hand" Click="BackButton_Click"/>
+                <TextBlock Text="{Binding BuildingTitle}"
+                           FontSize="20" FontWeight="Bold"
+                           Foreground="#2C3E50"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- TABOVI -->
+        <Border Grid.Row="1" Background="White"
+                BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Margin="20,0">
+                <Button x:Name="TabAds" Content="Ads"
+                        Height="50" Background="Transparent"
+                        BorderThickness="0,0,0,3" BorderBrush="#2980B9"
+                        Foreground="#2980B9" FontSize="13" FontWeight="SemiBold"
+                        Padding="15,0" Cursor="Hand"
+                        Click="TabAds_Click"/>
+                <Button x:Name="TabStatistics" Content="Statistics"
+                        Height="50" Background="Transparent" BorderThickness="0"
+                        Foreground="#7F8C8D" FontSize="13"
+                        Padding="15,0" Cursor="Hand"
+                        Click="TabStatistics_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- SADRZAJ -->
+        <ScrollViewer Grid.Row="2" Margin="25">
+            <Grid>
+
+                <!-- ADS panel -->
+                <StackPanel x:Name="PanelAds">
+                    <TextBlock Text="Ads" FontSize="16" FontWeight="Bold"
+                               Foreground="#2C3E50" Margin="0,0,0,20"/>
+                    <ItemsControl ItemsSource="{Binding Ads}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White" CornerRadius="10"
+                                        Margin="0,0,0,12" Padding="20">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                                    </Border.Effect>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Bedz za tip -->
+                                        <Border Grid.Column="0" CornerRadius="6"
+                                                Background="{Binding TypeBadgeColor}"
+                                                Padding="10,4" Margin="0,0,15,0"
+                                                VerticalAlignment="Top">
+                                            <TextBlock Text="{Binding TypeDisplay}"
+                                                       Foreground="White" FontSize="12"
+                                                       FontWeight="SemiBold"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding TenantName}"
+                                                       FontSize="15" FontWeight="Bold"
+                                                       Foreground="#2C3E50"/>
+                                            <TextBlock Text="{Binding CategoryDisplay}"
+                                                       FontSize="13" Foreground="#7F8C8D"
+                                                       Margin="0,4,0,0"/>
+                                            <TextBlock Text="{Binding DateRangeDisplay}"
+                                                       FontSize="13" Foreground="#7F8C8D"
+                                                       Margin="0,4,0,0"/>
+                                            <!-- Bedz za status -->
+                                            <Border CornerRadius="6" Margin="0,8,0,0"
+                                                    Background="{Binding StatusBadgeColor}"
+                                                    Padding="10,4" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding StatusDisplay}"
+                                                           Foreground="White" FontSize="12"
+                                                           FontWeight="SemiBold"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- STATISTICS panel -->
+                <StackPanel x:Name="PanelStatistics" Visibility="Collapsed">
+
+                    <!-- Period selektor -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <Button x:Name="BtnYear" Content="Year"
+                                Width="80" Height="34" Margin="0,0,10,0"
+                                Background="#2980B9" Foreground="White"
+                                BorderThickness="0" FontSize="13"
+                                Cursor="Hand" Click="BtnYear_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        <Button x:Name="BtnMonth" Content="Month"
+                                Width="80" Height="34"
+                                Background="#F0F0F0" Foreground="#2C3E50"
+                                BorderThickness="0" FontSize="13"
+                                Cursor="Hand" Click="BtnMonth_Click">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        <ComboBox x:Name="PeriodComboBox" Width="150" Height="34"
+                                  Margin="10,0,0,0" FontSize="13"
+                                  SelectionChanged="PeriodComboBox_SelectionChanged"/>
+                    </StackPanel>
+
+                    <!-- Ads overview -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock Text="Ads overview" FontSize="15" FontWeight="Bold"
+                                       Foreground="#2C3E50" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding OfferingText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding SeekingText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,6"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- By category -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock Text="By category" FontSize="15" FontWeight="Bold"
+                                       Foreground="#2C3E50" Margin="0,0,0,12"/>
+                            <ItemsControl ItemsSource="{Binding CategoryStats}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Category}"
+                                                       FontSize="13" Foreground="#2C3E50"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1" FontSize="13"
+                                                       Foreground="#27AE60" Margin="0,0,15,0"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding Offering, StringFormat='Offering: {0}'}"/>
+                                            <TextBlock Grid.Column="2" FontSize="13"
+                                                       Foreground="#E74C3C"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding Seeking, StringFormat='Seeking: {0}'}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Current state -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock Text="Current state" FontSize="15" FontWeight="Bold"
+                                       Foreground="#2C3E50" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding ActiveText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding ArchivedText}" FontSize="13"
+                                       Foreground="#2C3E50" Margin="0,0,0,12"/>
+                            <TextBlock Text="Active by category:" FontSize="13"
+                                       FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,8"/>
+                            <ItemsControl ItemsSource="{Binding ActiveByCategoryItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock FontSize="13" Foreground="#2C3E50"
+                                                   Margin="0,0,0,4" Text="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Top helper -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,15">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock Text="Top helper" FontSize="15" FontWeight="Bold"
+                                       Foreground="#2C3E50" Margin="0,0,0,12"/>
+                            <TextBlock Text="{Binding TopHelperText}" FontSize="13"
+                                       Foreground="#2C3E50"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

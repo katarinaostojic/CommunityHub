@@ -1,16 +1,19 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
-using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Shared;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
 public partial class RegisterNeighborhoodPage : Page
 {
     private readonly long _coordinatorId;
-    private readonly NeighborhoodDbRepository _neighborhoodRepository = new();
-    private readonly CityDbRepository _cityRepository = new();
+    private readonly NeighborhoodService _neighborhoodService;
+    private readonly CityService _cityService;
     private readonly List<Street> _streets = new();
     private readonly List<string> _imagePaths = new();
 
@@ -18,12 +21,14 @@ public partial class RegisterNeighborhoodPage : Page
     {
         InitializeComponent();
         _coordinatorId = coordinatorId;
+        _neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
+        _cityService = Injector.CreateInstance<CityService>();
         LoadCities();
     }
 
     private void LoadCities()
     {
-        var cities = _cityRepository.GetAll();
+        var cities = _cityService.GetAll();
         CityComboBox.ItemsSource = cities;
     }
 
@@ -99,13 +104,13 @@ public partial class RegisterNeighborhoodPage : Page
         if (!ValidateInputs(name, description, selectedCity))
             return;
 
-        long neighborhoodId = _neighborhoodRepository.Create(name, description, selectedCity!.Id, _coordinatorId);
+        long neighborhoodId = _neighborhoodService.Create(name, description, selectedCity!.Id, _coordinatorId);
 
         foreach (Street street in _streets)
-            _neighborhoodRepository.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
+            _neighborhoodService.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
 
         foreach (string path in _imagePaths)
-            _neighborhoodRepository.AddImage(neighborhoodId, path);
+            _neighborhoodService.AddImage(neighborhoodId, path);
 
         MessageBox.Show("Neighborhood registered successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_coordinatorId), "My Districts");

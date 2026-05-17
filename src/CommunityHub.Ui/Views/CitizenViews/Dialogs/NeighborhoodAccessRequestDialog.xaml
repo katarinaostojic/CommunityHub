@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:conv="clr-namespace:CommunityHub.Ui.Converters"
         mc:Ignorable="d"
         Title="Request Access"
         Height="620"
@@ -12,10 +11,6 @@
         ResizeMode="NoResize"
         Background="#F4F4F4"
         WindowStyle="SingleBorderWindow">
-
-    <Window.Resources>
-        <conv:ImagePathConverter x:Key="ImagePathConverter"/>
-    </Window.Resources>
 
     <Border Background="White" BorderBrush="Black" BorderThickness="1.5" Margin="10">
         <Grid>
@@ -58,8 +53,8 @@
                             BorderThickness="1.5"
                             Background="#EAEAEA"
                             HorizontalAlignment="Center">
-                        <Image Source="{Binding Images, Converter={StaticResource ImagePathConverter}}"
-                               Stretch="UniformToFill"/>
+                        <Image x:Name="NeighborhoodImage"
+                               Stretch="Fill"/>
                     </Border>
 
                     <TextBlock x:Name="NeighborhoodNameText"

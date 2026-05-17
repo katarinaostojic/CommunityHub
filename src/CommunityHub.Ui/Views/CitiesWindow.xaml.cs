@@ -1,8 +1,9 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services;
+using CommunityHub.Application.DependencyInjection;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.Services.Shared;
 
 namespace CommunityHub.Ui.Views
 {
@@ -18,8 +19,8 @@ namespace CommunityHub.Ui.Views
 
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                _cityService = ServiceFactory.CreateCityService();
-                _countryService = ServiceFactory.CreateCountryService();
+                _cityService = Injector.CreateInstance<CityService>();
+                _countryService = Injector.CreateInstance<CountryService>();
                 LoadCities();
                 LoadCountries();
             }

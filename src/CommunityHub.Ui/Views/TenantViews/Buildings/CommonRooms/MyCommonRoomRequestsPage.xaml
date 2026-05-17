@@ -1,0 +1,204 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.TenantViews.Buildings.MyCommonRoomRequestsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top bar -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="☰  Menu"
+                        Style="{StaticResource GhostWhiteButton}"
+                        Margin="0,0,10,0"
+                        Click="MenuButton_Click"/>
+                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
+                           VerticalAlignment="Center"
+                           Foreground="White" FontSize="15"
+                           Margin="0,0,8,0"/>
+                <TextBlock Grid.Column="3" Text="👤"
+                           VerticalAlignment="Center"
+                           Foreground="White" FontSize="17"/>
+            </Grid>
+        </Border>
+
+        <!-- Success banner -->
+        <Border x:Name="SuccessBanner" Grid.Row="1"
+                Background="{StaticResource SuccessBrush}" Padding="12,8"
+                Visibility="Collapsed">
+            <TextBlock x:Name="SuccessTextBlock"
+                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
+        </Border>
+
+        <!-- Tabs + building info -->
+        <Grid Grid.Row="2" Margin="16,12,16,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" x:Name="BuildingInfoTextBlock"
+                       Style="{StaticResource SecondaryText}"
+                       Margin="0,0,0,12"
+                       FontSize="16"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button Content="Common Rooms"
+                        Style="{StaticResource OutlineButton}"
+                        Margin="0,0,8,0"
+                        Click="CommonRoomsTab_Click"/>
+                <Button Content="My Requests"
+                        Style="{StaticResource PrimaryButton}"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Filteri -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="16,12,16,0">
+            <TextBlock Text="Filters:" FontSize="13" FontWeight="SemiBold"
+                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <Button Content="{Binding AllButtonLabel}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
+                    Click="FilterAllButton_Click"/>
+            <Button Content="{Binding PendingButtonLabel}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
+                    Click="FilterPendingButton_Click"/>
+            <Button Content="{Binding DateChangeButtonLabel}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
+                    Click="FilterDateChangeButton_Click"/>
+            <Button Content="{Binding ApprovedButtonLabel}"
+                    Style="{StaticResource FilterChipButton}"
+                    Margin="0,0,6,0"
+                    Click="FilterApprovedButton_Click"/>
+            <Button Content="{Binding RejectedButtonLabel}"
+                    Style="{StaticResource FilterChipButton}"
+                    Click="FilterRejectedButton_Click"/>
+        </StackPanel>
+
+        <!-- Showing X results -->
+        <TextBlock Grid.Row="4"
+                   Text="{Binding ResultsCountText}"
+                   Style="{StaticResource SecondaryText}"
+                   Margin="16,8,16,8"/>
+
+        <!-- Lista zahteva -->
+        <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
+            <ItemsControl ItemsSource="{Binding Requests}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorder}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Status badge -->
+                                <Border Grid.Row="0" HorizontalAlignment="Right"
+                                        Style="{StaticResource StatusBadge}">
+                                    <TextBlock Text="{Binding StatusDisplay}" FontSize="13"/>
+                                </Border>
+
+                                <!-- Naziv prostorije -->
+                                <TextBlock Grid.Row="0" Text="{Binding CommonRoomName}"
+                                           FontSize="18" FontWeight="Bold"/>
+
+                                <!-- Rental type i datumi -->
+                                <Grid Grid.Row="1" Margin="0,8,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Rental type:" Style="{StaticResource SecondaryText}"/>
+                                        <TextBlock Text="{Binding RentalType}" FontSize="13"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Requested Dates:" Style="{StaticResource SecondaryText}"/>
+                                        <TextBlock Text="{Binding DateRange}" FontSize="13"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Approved date -->
+                                <TextBlock Grid.Row="2"
+                                           Text="{Binding ApprovedDateDisplay}"
+                                           FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{StaticResource SuccessTextBrush}"
+                                           Margin="0,0,0,8"
+                                           Visibility="{Binding ApprovedDateVisible, Converter={StaticResource BoolToVis}}"/>
+
+                                <!-- Date change sekcija -->
+                                <Border Grid.Row="3"
+                                        Background="{StaticResource WarningBrush}"
+                                        CornerRadius="4"
+                                        Padding="12" Margin="0,0,0,8"
+                                        Visibility="{Binding CanAcceptDateChange, Converter={StaticResource BoolToVis}}">
+                                    <StackPanel>
+                                        <TextBlock Text="ADMINISTRATOR SUGGESTED NEW DATES"
+                                                   Style="{StaticResource SecondaryText}"
+                                                   FontSize="11" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding ProposedDateRangeDisplay}"
+                                                   FontSize="13" FontWeight="SemiBold"
+                                                   Margin="0,0,0,6"/>
+                                        <TextBlock Text="Review and accept or cancel the request"
+                                                   Style="{StaticResource SecondaryText}"
+                                                   FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Akcije -->
+                                <Grid Grid.Row="4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="1"
+                                            Content="Accept suggestion"
+                                            Style="{StaticResource PrimaryButton}"
+                                            Margin="0,0,8,0"
+                                            Tag="{Binding}"
+                                            Visibility="{Binding CanAcceptDateChange, Converter={StaticResource BoolToVis}}"
+                                            Click="AcceptSuggestionButton_Click"/>
+                                    <Button Grid.Column="2"
+                                            Content="Cancel request"
+                                            Style="{StaticResource DangerButton}"
+                                            Tag="{Binding}"
+                                            Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
+                                            Click="CancelRequestButton_Click"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+    </Grid>
+</Page>

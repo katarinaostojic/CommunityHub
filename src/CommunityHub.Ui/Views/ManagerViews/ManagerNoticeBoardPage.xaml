@@ -1,0 +1,67 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.ManagerViews.ManagerNoticeBoardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Noticeboard"
+      Background="#F4F6F9">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="White">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="6" Opacity="0.1" ShadowDepth="2"/>
+            </Border.Effect>
+            <TextBlock Text="Noticeboards" FontSize="20" FontWeight="Bold"
+                       Foreground="#2C3E50" HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- LISTA ZGRADA -->
+        <ScrollViewer Grid.Row="1" Margin="25">
+            <StackPanel>
+                <TextBlock Text="My Buildings" FontSize="16" FontWeight="Bold"
+                           Foreground="#2C3E50" Margin="0,0,0,20"/>
+                <ItemsControl ItemsSource="{Binding Buildings}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" CornerRadius="10"
+                                    Margin="0,0,0,12" Padding="20"
+                                    Cursor="Hand">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <StackPanel>
+                                        <TextBlock FontSize="15" FontWeight="Bold"
+                                                   Foreground="#2C3E50"
+                                                   Text="{Binding FullAddress}"/>
+                                        <TextBlock FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,0"
+                                                   Text="{Binding Neighborhood}"/>
+                                    </StackPanel>
+                                    <Button Content="View noticeboard"
+                                            HorizontalAlignment="Right"
+                                            Width="150" Height="34"
+                                            Background="#2980B9" Foreground="White"
+                                            BorderThickness="0" FontSize="12"
+                                            FontWeight="SemiBold" Cursor="Hand"
+                                            Tag="{Binding}"
+                                            Click="ViewNoticeboard_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

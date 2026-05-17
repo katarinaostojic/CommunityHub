@@ -50,13 +50,13 @@
             <StackPanel Grid.Row="1"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
-                <TextBlock Text="Your address does not match this neighborhood."
+                <TextBlock Text="Your request has been successfully submitted."
                            FontSize="24"
                            FontWeight="Bold"
                            TextWrapping="Wrap"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,16"/>
-                <TextBlock Text="A request has been sent for manual review."
+                <TextBlock Text="A coordinator will review your request shortly."
                            FontSize="24"
                            FontWeight="Bold"
                            TextWrapping="Wrap"

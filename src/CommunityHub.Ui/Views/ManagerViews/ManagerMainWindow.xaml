@@ -71,7 +71,7 @@
                     <Button x:Name="BtnNoticeboard" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand">
+                            Cursor="Hand" Click="NoticeboardButton_Click"> 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📢" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Noticeboard" VerticalAlignment="Center"/>
