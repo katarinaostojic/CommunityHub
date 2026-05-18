@@ -23,9 +23,9 @@ public class CommonRoomRequestService
         return _requestRepository.GetAllByCommonRoom(commonRoomId).ToDtoList();
     }
 
-    public CommonRoomRequest? GetById(long requestId)
+    public CommonRoomRequestDto? GetById(long requestId)
     {
-        return _requestRepository.GetById(requestId);
+        return _requestRepository.GetById(requestId)?.ToDto();
     }
 
     public CommonRoomRequestDto? GetDtoById(long requestId)
@@ -33,8 +33,11 @@ public class CommonRoomRequestService
         return _requestRepository.GetById(requestId)?.ToDto();
     }
 
-    public List<DateTime> GetFreeDaysInRange(CommonRoomRequest request)
+    public List<DateTime> GetFreeDaysInRange(long requestId)
     {
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
+        if (request == null) return new List<DateTime>();
+
         List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
         request.CommonRoom.SetOccupiedDates(occupied);
 
@@ -46,11 +49,20 @@ public class CommonRoomRequestService
                 freeDays.Add(date);
         }
 
+        if (freeDays.Count == 0)
+        {
+            request.Reject();
+            _requestRepository.Update(request);
+        }
+
         return freeDays;
     }
 
-    public List<(DateTime, DateTime)> FindAlternativeRanges(CommonRoomRequest request)
+    public List<(DateTime, DateTime)> FindAlternativeRanges(long requestId)
     {
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
+        if (request == null) return new List<(DateTime, DateTime)>();
+
         List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
         request.CommonRoom.SetOccupiedDates(occupied);
 
@@ -77,7 +89,7 @@ public class CommonRoomRequestService
         return alternatives;
     }
 
-    public bool IsRangeFree(DateTime dateFrom, DateTime dateTo, CommonRoom commonRoom)
+    private bool IsRangeFree(DateTime dateFrom, DateTime dateTo, CommonRoom commonRoom)
     {
         for (DateTime date = dateFrom; date <= dateTo; date = date.AddDays(1))
         {
@@ -88,14 +100,24 @@ public class CommonRoomRequestService
         return true;
     }
 
-    public void ApproveWithDate(CommonRoomRequest request, DateTime selectedDate)
+    public void ApproveWithDate(long requestId, DateTime selectedDate)
     {
-        request.ApproveWithDate(selectedDate);
-        _requestRepository.Update(request);
-        _commonRoomRepository.BookDate(request.CommonRoom.Id, selectedDate);
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
+        if (request == null) return;
+
+        try
+        {
+            request.ApproveWithDate(selectedDate);
+            _requestRepository.Update(request);
+            _commonRoomRepository.BookDate(request.CommonRoom.Id, selectedDate);
+        }
+        catch (Exception)
+        {
+            throw new InvalidOperationException("This date is already booked. Please select a different day.");
+        }
     }
 
-    public void ApproveMultiDay(CommonRoomRequest request)
+    private void ApproveMultiDay(CommonRoomRequest request)
     {
         List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
         request.CommonRoom.SetOccupiedDates(occupied);
@@ -106,7 +128,7 @@ public class CommonRoomRequestService
             return;
         }
 
-        List<(DateTime, DateTime)> alternatives = FindAlternativeRanges(request);
+        List<(DateTime, DateTime)> alternatives = FindAlternativeRanges(request.Id);
 
         if (alternatives.Count == 0)
             return;
@@ -116,14 +138,27 @@ public class CommonRoomRequestService
         _requestRepository.Update(request);
     }
 
-    public void RejectRequest(CommonRoomRequest request)
+    public void RejectRequest(long requestId)
     {
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
+        if (request == null) return;
         request.Reject();
         _requestRepository.Update(request);
     }
 
-    public void UpdateRequest(CommonRoomRequest request)
+    private void UpdateRequest(CommonRoomRequest request)
     {
+        _requestRepository.Update(request);
+    }
+
+    public void ProposeAlternative(long requestId, int alternativeIndex)
+    {
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
+        if (request == null) return;
+
+        List<(DateTime, DateTime)> alternatives = FindAlternativeRanges(requestId);
+        var (newFrom, newTo) = alternatives[alternativeIndex];
+        request.ProposeNewDateRange(newFrom, newTo);
         _requestRepository.Update(request);
     }
 
@@ -146,6 +181,12 @@ public class CommonRoomRequestService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
         if (request == null)
             return;
+
+        if (request.CommonRoom.RentalType == RentalType.PerDay)
+        {
+            GetFreeDaysInRange(request.Id);
+            return;
+        }
 
         TryAutoApproveMultiDay(request);
     }
