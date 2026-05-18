@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using CommunityHub.Application.Database.Mappers;
+﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
-using System.Data;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
+using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
 public class EventDbRepository : BaseDbRepository, IEventRepository
 {
     public long Create(long organizerId, long neighborhoodId, string name, string description,
-    DateOnly eventDate, TimeOnly startTime, int durationMinutes, int minVolunteers)
+        DateOnly eventDate, TimeOnly startTime, int durationMinutes, int minVolunteers)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        INSERT INTO events (neighborhood_id, organizer_id, name, description, 
-                           event_date, start_time, duration_minutes, min_volunteers, status)
-        VALUES (@neighborhoodId, @organizerId, @name, @description,
-                @eventDate, @startTime, @durationMinutes, @minVolunteers, 'preparation')
-        RETURNING id";
+            INSERT INTO events (neighborhood_id, organizer_id, name, description, 
+                               event_date, start_time, duration_minutes, min_volunteers, status)
+            VALUES (@neighborhoodId, @organizerId, @name, @description,
+                    @eventDate, @startTime, @durationMinutes, @minVolunteers, 'preparation')
+            RETURNING id";
 
         AddParameter(command, "@neighborhoodId", neighborhoodId);
         AddParameter(command, "@organizerId", organizerId);
@@ -46,7 +42,6 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
 
         AddParameter(command, "@eventId", eventId);
         AddParameter(command, "@name", itemName);
-
         command.ExecuteNonQuery();
     }
 
@@ -67,15 +62,7 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         AddParameter(command, "@neighborhoodId", neighborhoodId);
 
         using IDataReader reader = command.ExecuteReader();
-        var events = ReadEvents(reader);
-
-        foreach (var ev in events)
-        {
-            AttachItems(ev);
-            AttachRegistrations(ev);
-        }
-
-        return events;
+        return ReadAndAttach(reader);
     }
 
     public Event? GetById(long eventId)
@@ -94,15 +81,7 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         AddParameter(command, "@eventId", eventId);
 
         using IDataReader reader = command.ExecuteReader();
-        var events = ReadEvents(reader);
-        var ev = events.FirstOrDefault();
-
-        if (ev != null)
-        {
-            AttachItems(ev);
-            AttachRegistrations(ev);
-        }
-
+        var ev = ReadAndAttach(reader).FirstOrDefault();
         return ev;
     }
 
@@ -110,12 +89,10 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            UPDATE events SET status = @status WHERE id = @id";
+        command.CommandText = "UPDATE events SET status = @status WHERE id = @id";
 
         AddParameter(command, "@id", ev.Id);
         AddParameter(command, "@status", ev.Status.ToString().ToLower());
-
         command.ExecuteNonQuery();
     }
 
@@ -131,36 +108,17 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
 
         AddParameter(regCmd, "@eventId", eventId);
         AddParameter(regCmd, "@citizenId", citizenId);
-
         long registrationId = Convert.ToInt64(regCmd.ExecuteScalar());
 
         foreach (long itemId in itemIds)
-        {
-            IDbCommand itemCmd = connection.CreateCommand();
-            itemCmd.CommandText = @"
-                INSERT INTO event_registration_items (registration_id, item_id)
-                VALUES (@registrationId, @itemId)";
-
-            AddParameter(itemCmd, "@registrationId", registrationId);
-            AddParameter(itemCmd, "@itemId", itemId);
-            itemCmd.ExecuteNonQuery();
-
-            IDbCommand updateItemCmd = connection.CreateCommand();
-            updateItemCmd.CommandText = @"
-                UPDATE event_items SET is_taken = true WHERE id = @itemId";
-            AddParameter(updateItemCmd, "@itemId", itemId);
-            updateItemCmd.ExecuteNonQuery();
-        }
+            RegisterItem(connection, registrationId, itemId);
     }
 
     public void MarkAttendance(long registrationId, bool attended)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            UPDATE event_registrations 
-            SET attended = @attended 
-            WHERE id = @id";
+        command.CommandText = "UPDATE event_registrations SET attended = @attended WHERE id = @id";
 
         AddParameter(command, "@attended", attended);
         AddParameter(command, "@id", registrationId);
@@ -181,7 +139,14 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
             WHERE e.status IN ('preparation', 'scheduled')";
 
         using IDataReader reader = command.ExecuteReader();
-        var events = ReadEvents(reader);
+        return ReadAndAttach(reader);
+    }
+
+    private List<Event> ReadAndAttach(IDataReader reader)
+    {
+        var events = new List<Event>();
+        while (reader.Read())
+            events.Add(EventMapper.MapEvent(reader));
 
         foreach (var ev in events)
         {
@@ -192,53 +157,27 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         return events;
     }
 
-    private List<Event> ReadEvents(IDataReader reader)
+    private void RegisterItem(IDbConnection connection, long registrationId, long itemId)
     {
-        var events = new List<Event>();
-        while (reader.Read())
-            events.Add(MapEvent(reader));
-        return events;
-    }
+        IDbCommand itemCmd = connection.CreateCommand();
+        itemCmd.CommandText = @"
+            INSERT INTO event_registration_items (registration_id, item_id)
+            VALUES (@registrationId, @itemId)";
+        AddParameter(itemCmd, "@registrationId", registrationId);
+        AddParameter(itemCmd, "@itemId", itemId);
+        itemCmd.ExecuteNonQuery();
 
-    private Event MapEvent(IDataReader reader)
-    {
-        User organizer = MapOrganizer(reader);
-        return new Event(
-            Convert.ToInt64(reader["id"]),
-            Convert.ToInt64(reader["neighborhood_id"]),
-            organizer,
-            reader["name"].ToString()!,
-            reader["description"].ToString()!,
-            (DateOnly)reader["event_date"],
-            (TimeOnly)reader["start_time"],
-            Convert.ToInt32(reader["duration_minutes"]),
-            Convert.ToInt32(reader["min_volunteers"]),
-            ParseEventStatus(reader["status"].ToString()!)
-        );
-    }
-
-    private User MapOrganizer(IDataReader reader)
-    {
-        return new User(
-            Convert.ToInt64(reader["organizer_id"]),
-            reader["username"].ToString()!,
-            reader["password"].ToString()!,
-            reader["organizer_name"].ToString()!,
-            reader["organizer_surname"].ToString()!,
-            ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
-            UserMapper.ParseRole(reader["role"].ToString()!),
-            reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
-        );
+        IDbCommand updateItemCmd = connection.CreateCommand();
+        updateItemCmd.CommandText = "UPDATE event_items SET is_taken = true WHERE id = @itemId";
+        AddParameter(updateItemCmd, "@itemId", itemId);
+        updateItemCmd.ExecuteNonQuery();
     }
 
     private void AttachItems(Event ev)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT id, event_id, name, is_taken
-            FROM event_items
-            WHERE event_id = @eventId";
+        command.CommandText = "SELECT id, event_id, name, is_taken FROM event_items WHERE event_id = @eventId";
 
         AddParameter(command, "@eventId", ev.Id);
 
@@ -271,35 +210,13 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         using IDataReader reader = command.ExecuteReader();
         while (reader.Read())
         {
-            var registration = new EventRegistration(
+            ev.AddRegistration(new EventRegistration(
                 Convert.ToInt64(reader["id"]),
                 Convert.ToInt64(reader["event_id"]),
-                new User(
-                    Convert.ToInt64(reader["citizen_id"]),
-                    reader["username"].ToString()!,
-                    reader["password"].ToString()!,
-                    reader["citizen_name"].ToString()!,
-                    reader["citizen_surname"].ToString()!,
-                    ((DateOnly)reader["birthday"]).ToDateTime(TimeOnly.MinValue),
-                    UserMapper.ParseRole(reader["role"].ToString()!),
-                    reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader["address"].ToString()
-                ),
+                EventMapper.MapCitizen(reader),
                 Convert.ToDateTime(reader["registered_at"]),
                 reader.IsDBNull(reader.GetOrdinal("attended")) ? null : Convert.ToBoolean(reader["attended"])
-            );
-            ev.AddRegistration(registration);
+            ));
         }
-    }
-
-    private static EventStatus ParseEventStatus(string status)
-    {
-        return status.ToLower() switch
-        {
-            "preparation" => EventStatus.Preparation,
-            "scheduled" => EventStatus.Scheduled,
-            "cancelled" => EventStatus.Cancelled,
-            "finished" => EventStatus.Finished,
-            _ => throw new ArgumentException($"Unknown event status: {status}")
-        };
     }
 }
