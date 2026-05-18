@@ -33,7 +33,7 @@ public partial class EventsPage : Window
 
     private void CreateEventButton_Click(object sender, RoutedEventArgs e)
     {
-        CreateEventDialog dialog = new CreateEventDialog(_user, _neighborhoodId, _viewModel);
+        CreateEventDialog dialog = new CreateEventDialog(_user.Id, _neighborhoodId, _viewModel);
         dialog.Owner = this;
         dialog.ShowDialog();
     }
@@ -56,7 +56,7 @@ public partial class EventsPage : Window
             return;
         }
 
-        JoinEventDialog dialog = new JoinEventDialog(_user, eventVm.Event, _viewModel);
+        JoinEventDialog dialog = new JoinEventDialog(_user.Id, eventVm.Event, _viewModel);
         dialog.Owner = this;
         dialog.ShowDialog();
     }

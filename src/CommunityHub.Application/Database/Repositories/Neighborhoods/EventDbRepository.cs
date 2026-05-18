@@ -12,25 +12,26 @@ namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
 public class EventDbRepository : BaseDbRepository, IEventRepository
 {
-    public long Create(Event ev)
+    public long Create(long organizerId, long neighborhoodId, string name, string description,
+    DateOnly eventDate, TimeOnly startTime, int durationMinutes, int minVolunteers)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            INSERT INTO events (neighborhood_id, organizer_id, name, description, 
-                               event_date, start_time, duration_minutes, min_volunteers, status)
-            VALUES (@neighborhoodId, @organizerId, @name, @description,
-                    @eventDate, @startTime, @durationMinutes, @minVolunteers, 'preparation')
-            RETURNING id";
+        INSERT INTO events (neighborhood_id, organizer_id, name, description, 
+                           event_date, start_time, duration_minutes, min_volunteers, status)
+        VALUES (@neighborhoodId, @organizerId, @name, @description,
+                @eventDate, @startTime, @durationMinutes, @minVolunteers, 'preparation')
+        RETURNING id";
 
-        AddParameter(command, "@neighborhoodId", ev.NeighborhoodId);
-        AddParameter(command, "@organizerId", ev.Organizer.Id);
-        AddParameter(command, "@name", ev.Name);
-        AddParameter(command, "@description", ev.Description);
-        AddParameter(command, "@eventDate", ev.EventDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc));
-        AddParameter(command, "@startTime", ev.StartTime.ToTimeSpan());
-        AddParameter(command, "@durationMinutes", ev.DurationMinutes);
-        AddParameter(command, "@minVolunteers", ev.MinVolunteers);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        AddParameter(command, "@organizerId", organizerId);
+        AddParameter(command, "@name", name);
+        AddParameter(command, "@description", description);
+        AddParameter(command, "@eventDate", eventDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc));
+        AddParameter(command, "@startTime", startTime.ToTimeSpan());
+        AddParameter(command, "@durationMinutes", durationMinutes);
+        AddParameter(command, "@minVolunteers", minVolunteers);
 
         return Convert.ToInt64(command.ExecuteScalar());
     }

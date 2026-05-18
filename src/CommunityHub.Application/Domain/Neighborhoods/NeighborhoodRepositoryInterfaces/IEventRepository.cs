@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
 
 namespace CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 
 public interface IEventRepository
 {
-    long Create(Event ev);
+    long Create(long organizerId, long neighborhoodId, string name, string description,
+        DateOnly eventDate, TimeOnly startTime, int durationMinutes, int minVolunteers);
     void CreateItem(long eventId, string itemName);
     List<Event> GetByNeighborhood(long neighborhoodId);
     Event? GetById(long eventId);

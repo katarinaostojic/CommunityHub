@@ -47,24 +47,16 @@ public class NeighborhoodAccessRequestService
         _repository.Update(request);
     }
 
-    public AccessRequestResult RequestAccess(User citizen, Neighborhood neighborhood)
+    public AccessRequestResult RequestAccessById(long citizenId, long neighborhoodId)
     {
-        if (_repository.HasExistingPendingRequest(citizen, neighborhood))
+        if (_repository.HasExistingPendingRequest(citizenId, neighborhoodId))
             return AccessRequestResult.AlreadyPending;
 
-        if (_repository.HasMembership(citizen.Id))
+        if (_repository.HasMembership(citizenId))
             return AccessRequestResult.AlreadyMember;
 
-        _repository.Create(citizen, neighborhood);
+        _repository.Create(citizenId, neighborhoodId);
         return AccessRequestResult.RequestCreated;
-    }
-
-    public AccessRequestResult RequestAccessById(User citizen, long neighborhoodId)
-    {
-        Neighborhood? neighborhood = _neighborhoodRepository.GetById(neighborhoodId);
-        if (neighborhood == null)
-            throw new InvalidOperationException("Neighborhood not found.");
-        return RequestAccess(citizen, neighborhood);
     }
 
     public long? GetMembershipNeighborhoodId(long citizenId)

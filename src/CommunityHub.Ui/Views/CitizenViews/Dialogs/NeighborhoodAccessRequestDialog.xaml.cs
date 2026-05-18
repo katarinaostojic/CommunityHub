@@ -20,7 +20,7 @@ public partial class NeighborhoodAccessRequestDialog : Window
         _user = user;
 
         NeighborhoodAccessRequestService service = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-        _viewModel = new NeighborhoodAccessRequestDialogViewModel(service, user, neighborhood);
+        _viewModel = new NeighborhoodAccessRequestDialogViewModel(service, user.Id, neighborhood);
 
         NeighborhoodNameText.Text = _viewModel.NeighborhoodName;
         DescriptionText.Text = _viewModel.Description;

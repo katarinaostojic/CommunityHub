@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.DTOs.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +10,16 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
 public partial class JoinEventDialog : Window
 {
-    private readonly User _user;
+    private readonly long _citizenId;
     private readonly EventDto _event;
     private readonly EventsViewModel _eventsViewModel;
 
-    public JoinEventDialog(User user, EventDto ev, EventsViewModel eventsViewModel)
+    public JoinEventDialog(long citizenId, EventDto ev, EventsViewModel eventsViewModel)
     {
         InitializeComponent();
-        _user = user;
+        _citizenId = citizenId;
         _event = ev;
         _eventsViewModel = eventsViewModel;
-
         LoadData();
     }
 
@@ -39,7 +37,7 @@ public partial class JoinEventDialog : Window
     private void JoinButton_Click(object sender, RoutedEventArgs e)
     {
         var selectedItemIds = GetSelectedItemIds();
-        _eventsViewModel.RegisterVolunteer(_event.Id, _user, selectedItemIds);
+        _eventsViewModel.RegisterVolunteer(_event.Id, _citizenId, selectedItemIds);
 
         MessageBox.Show("You have successfully joined the event!", "Success",
             MessageBoxButton.OK, MessageBoxImage.Information);

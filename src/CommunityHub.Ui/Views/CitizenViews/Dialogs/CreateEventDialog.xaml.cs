@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using CommunityHub.Application.Domain;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Collections.ObjectModel;
 
@@ -17,18 +7,17 @@ namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
 public partial class CreateEventDialog : Window
 {
-    private readonly User _user;
+    private readonly long _organizerId;
     private readonly long _neighborhoodId;
     private readonly EventsViewModel _eventsViewModel;
     private ObservableCollection<string> _items = new();
 
-    public CreateEventDialog(User user, long neighborhoodId, EventsViewModel eventsViewModel)
+    public CreateEventDialog(long organizerId, long neighborhoodId, EventsViewModel eventsViewModel)
     {
         InitializeComponent();
-        _user = user;
+        _organizerId = organizerId;
         _neighborhoodId = neighborhoodId;
         _eventsViewModel = eventsViewModel;
-
         ItemsListControl.ItemsSource = _items;
     }
 
@@ -61,7 +50,7 @@ public partial class CreateEventDialog : Window
         int duration = int.Parse(DurationTextBox.Text.Trim());
         int minVolunteers = int.Parse(MinVolunteersTextBox.Text.Trim());
 
-        _eventsViewModel.CreateEvent(_user, TitleTextBox.Text.Trim(),
+        _eventsViewModel.CreateEvent(_organizerId, TitleTextBox.Text.Trim(),
             DescriptionTextBox.Text.Trim(), eventDate, startTime,
             duration, minVolunteers, _items.ToList());
 

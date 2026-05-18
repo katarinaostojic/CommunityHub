@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.DTOs.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using System.Collections.ObjectModel;
 
@@ -45,19 +44,19 @@ public class EventsViewModel : BaseViewModel
         ResultsText = $"Showing {items.Count} events";
     }
 
-    public long CreateEvent(User organizer, string name, string description,
+    public long CreateEvent(long organizerId, string name, string description,
         DateOnly eventDate, TimeOnly startTime, int durationMinutes,
         int minVolunteers, List<string> itemNames)
     {
-        long eventId = _service.CreateEvent(organizer, _neighborhoodId, name, description,
+        long eventId = _service.CreateEvent(organizerId, _neighborhoodId, name, description,
             eventDate, startTime, durationMinutes, minVolunteers, itemNames);
         LoadEvents();
         return eventId;
     }
 
-    public void RegisterVolunteer(long eventId, User citizen, List<long> selectedItemIds)
+    public void RegisterVolunteer(long eventId, long citizenId, List<long> selectedItemIds)
     {
-        _service.RegisterVolunteer(eventId, citizen, selectedItemIds);
+        _service.RegisterVolunteer(eventId, citizenId, selectedItemIds);
         LoadEvents();
     }
 

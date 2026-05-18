@@ -4,8 +4,8 @@ namespace CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryIn
 
 public interface INeighborhoodAccessRequestRepository
 {
-    void Create(User citizen, Neighborhood neighborhood);
-    bool HasExistingPendingRequest(User citizen, Neighborhood neighborhood);
+    void Create(long citizenId, long neighborhoodId);
+    bool HasExistingPendingRequest(long citizenId, long neighborhoodId);
     bool HasMembership(long citizenId);
     List<NeighborhoodAccessRequest> GetAllByCitizen(long citizenId, string? status, bool sortDescending);
     int CountByCitizenAndStatus(long citizenId, string? status);
