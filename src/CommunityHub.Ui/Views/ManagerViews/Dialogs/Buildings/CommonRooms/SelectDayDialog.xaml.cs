@@ -1,4 +1,4 @@
-﻿using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
+﻿using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.CommonRooms;
 using System.Windows;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
@@ -21,9 +21,17 @@ public partial class SelectDayDialog : Window
     {
         if (DaysListBox.SelectedItem is DateTime selectedDay)
         {
-            _viewModel.ApproveWithDate(_requestId, selectedDay);
-            DialogResult = true;
-            Close();
+            try
+            {
+                _viewModel.ApproveWithDate(_requestId, selectedDay);
+                DialogResult = true;
+                Close();
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
         else
         {

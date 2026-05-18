@@ -1,8 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
+using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.CommonRooms;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 
@@ -29,6 +29,13 @@ public partial class CommonRoomRequestsPage : Page
         if (sender is Button btn && btn.Tag is long requestId)
         {
             _viewModel.LoadFreeDays(requestId);
+
+            if (_viewModel.FreeDays.Count == 0)
+            {
+                _viewModel.LoadRequests();
+                return;
+            }
+
             var dialog = new SelectDayDialog(_viewModel.FreeDays.ToList(), requestId, _viewModel);
             dialog.Owner = Window.GetWindow(this);
             dialog.ShowDialog();
