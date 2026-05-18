@@ -2,15 +2,13 @@
 using System.Collections.ObjectModel;
 using CommunityHub.Application.Services.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Buildings.CommonRooms;
 
-namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
+namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.CommonRooms;
 
 public class CommonRoomRequestViewModel : BaseViewModel
 {
     private readonly CommonRoomRequestService _requestService;
     private readonly long _commonRoomId;
-    private List<(DateTime, DateTime)> _rawAlternatives = new();
 
     public string RoomTitle { get; }
 
@@ -53,45 +51,33 @@ public class CommonRoomRequestViewModel : BaseViewModel
 
     public void LoadFreeDays(long requestId)
     {
-        CommonRoomRequest? request = _requestService.GetById(requestId);
-        if (request == null) return;
-        List<DateTime> freeDays = _requestService.GetFreeDaysInRange(request);
+        List<DateTime> freeDays = _requestService.GetFreeDaysInRange(requestId);
         FreeDays = new ObservableCollection<DateTime>(freeDays);
     }
 
     public void LoadAlternativeRanges(long requestId)
     {
-        CommonRoomRequest? request = _requestService.GetById(requestId);
-        if (request == null) return;
-        _rawAlternatives = _requestService.FindAlternativeRanges(request);
+        List<(DateTime, DateTime)> alternatives = _requestService.FindAlternativeRanges(requestId);
         AlternativeRanges = new ObservableCollection<string>(
-            _rawAlternatives.Select(r => $"{r.Item1:dd.MM.yyyy} - {r.Item2:dd.MM.yyyy}").ToList()
+            alternatives.Select(r => $"{r.Item1:dd.MM.yyyy} - {r.Item2:dd.MM.yyyy}").ToList()
         );
     }
 
     public void ApproveWithDate(long requestId, DateTime selectedDate)
     {
-        CommonRoomRequest? request = _requestService.GetById(requestId);
-        if (request == null) return;
-        _requestService.ApproveWithDate(request, selectedDate);
+        _requestService.ApproveWithDate(requestId, selectedDate);
         LoadRequests();
     }
 
     public void ProposeAlternative(long requestId, int alternativeIndex)
     {
-        CommonRoomRequest? request = _requestService.GetById(requestId);
-        if (request == null) return;
-        var (newFrom, newTo) = _rawAlternatives[alternativeIndex];
-        request.ProposeNewDateRange(newFrom, newTo);
-        _requestService.UpdateRequest(request);
+        _requestService.ProposeAlternative(requestId, alternativeIndex);
         LoadRequests();
     }
 
     public void RejectRequest(long requestId)
     {
-        CommonRoomRequest? request = _requestService.GetById(requestId);
-        if (request == null) return;
-        _requestService.RejectRequest(request);
+        _requestService.RejectRequest(requestId);
         LoadRequests();
     }
 }
