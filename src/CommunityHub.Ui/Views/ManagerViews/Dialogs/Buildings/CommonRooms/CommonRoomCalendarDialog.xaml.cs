@@ -29,30 +29,40 @@ public partial class CommonRoomCalendarDialog : Window
         MonthYearText.Text = _currentMonth.ToString("MMMM yyyy");
 
         var calendarDays = new List<CalendarDayItem>();
+        AddEmptyDays(calendarDays);
+        AddMonthDays(calendarDays);
 
-        // Prazni dani pre prvog dana u mesecu
+        CalendarItemsControl.ItemsSource = calendarDays;
+    }
+
+    private void AddEmptyDays(List<CalendarDayItem> calendarDays)
+    {
         int firstDayOfWeek = (int)_currentMonth.DayOfWeek;
-        firstDayOfWeek = firstDayOfWeek == 0 ? 6 : firstDayOfWeek - 1; // Ponedeljak = 0
+        firstDayOfWeek = firstDayOfWeek == 0 ? 6 : firstDayOfWeek - 1;
 
         for (int i = 0; i < firstDayOfWeek; i++)
             calendarDays.Add(new CalendarDayItem { Day = "", Color = "Transparent" });
+    }
 
-        // Dani u mesecu
+    private void AddMonthDays(List<CalendarDayItem> calendarDays)
+    {
         int daysInMonth = DateTime.DaysInMonth(_currentMonth.Year, _currentMonth.Month);
         for (int day = 1; day <= daysInMonth; day++)
         {
             DateTime date = new DateTime(_currentMonth.Year, _currentMonth.Month, day);
-            bool isOccupied = _occupiedDates.Any(d => d.Date == date.Date);
-            bool isToday = date.Date == DateTime.Today;
-
             calendarDays.Add(new CalendarDayItem
             {
                 Day = day.ToString(),
-                Color = isOccupied ? "#E74C3C" : isToday ? "#2980B9" : "#27AE60"
+                Color = GetDayColor(date)
             });
         }
+    }
 
-        CalendarItemsControl.ItemsSource = calendarDays;
+    private string GetDayColor(DateTime date)
+    {
+        if (_occupiedDates.Any(d => d.Date == date.Date)) return "#E74C3C";
+        if (date.Date == DateTime.Today) return "#2980B9";
+        return "#27AE60";
     }
 
     private void PrevMonth_Click(object sender, RoutedEventArgs e)

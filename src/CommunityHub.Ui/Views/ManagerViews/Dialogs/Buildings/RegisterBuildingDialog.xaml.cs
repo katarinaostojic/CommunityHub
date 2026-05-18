@@ -139,12 +139,7 @@ public partial class RegisterBuildingDialog : Window
 
     private bool ValidateFields()
     {
-        if (string.IsNullOrWhiteSpace(StreetTextBox.Text) ||
-            string.IsNullOrWhiteSpace(NumberTextBox.Text) ||
-            string.IsNullOrWhiteSpace(SettlementTextBox.Text) ||
-            CityComboBox.SelectedItem == null ||
-            CountryComboBox.SelectedItem == null ||
-            string.IsNullOrWhiteSpace(FloorsTextBox.Text))
+        if (!AreRequiredFieldsFilled())
         {
             MessageBox.Show("Please fill in all required fields.", "Error");
             return false;
@@ -158,6 +153,16 @@ public partial class RegisterBuildingDialog : Window
         }
 
         return true;
+    }
+
+    private bool AreRequiredFieldsFilled()
+    {
+        return !string.IsNullOrWhiteSpace(StreetTextBox.Text) &&
+               !string.IsNullOrWhiteSpace(NumberTextBox.Text) &&
+               !string.IsNullOrWhiteSpace(SettlementTextBox.Text) &&
+               CityComboBox.SelectedItem != null &&
+               CountryComboBox.SelectedItem != null &&
+               !string.IsNullOrWhiteSpace(FloorsTextBox.Text);
     }
 
     private bool ValidateFloors()

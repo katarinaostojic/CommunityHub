@@ -120,16 +120,30 @@ public class ManagerNoticeBoardDetailsViewModel : BaseViewModel
 
     private List<AdDto> FilterAds(int? year, int? month)
     {
-        if (year.HasValue && !month.HasValue)
-            return _allAds
-                .Where(a => a.DateFrom.Year == year || a.DateTo.Year == year)
-                .ToList();
-        if (year.HasValue && month.HasValue)
-            return _allAds
-                .Where(a => (a.DateFrom.Year == year && a.DateFrom.Month == month) ||
-                            (a.DateTo.Year == year && a.DateTo.Month == month))
-                .ToList();
-        return _allAds;
+        if (!year.HasValue) return _allAds;
+        if (!month.HasValue) return FilterByYear(year.Value);
+        return FilterByYearAndMonth(year.Value, month.Value);
+    }
+
+    private List<AdDto> FilterByYear(int year)
+    {
+        return _allAds
+            .Where(a => a.DateFrom.Year == year || a.DateTo.Year == year)
+            .ToList();
+    }
+
+    private List<AdDto> FilterByYearAndMonth(int year, int month)
+    {
+        return _allAds
+            .Where(a => MatchesYearAndMonth(a, year, month))
+            .ToList();
+    }
+
+    private static bool MatchesYearAndMonth(AdDto ad, int year, int month)
+    {
+        bool fromMatches = ad.DateFrom.Year == year && ad.DateFrom.Month == month;
+        bool toMatches = ad.DateTo.Year == year && ad.DateTo.Month == month;
+        return fromMatches || toMatches;
     }
 }
 

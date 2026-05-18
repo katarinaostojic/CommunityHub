@@ -10,17 +10,32 @@ public static class BuildingMembershipMappingExtensions
         return new BuildingMembershipDto(
             id: membership.Id,
             buildingId: membership.Building?.Id ?? 0,
-            buildingStreet: membership.Building?.Street ?? string.Empty,
-            buildingStreetNumber: membership.Building?.StreetNumber ?? string.Empty,
-            buildingNeighborhood: membership.Building?.Neighborhood ?? string.Empty,
-            buildingCityName: membership.Building?.City?.Name ?? string.Empty,
-            buildingCountryName: membership.Building?.City?.Country?.Name ?? string.Empty,
+            buildingStreet: GetBuildingStreet(membership),
+            buildingStreetNumber: GetBuildingStreetNumber(membership),
+            buildingNeighborhood: GetBuildingNeighborhood(membership),
+            buildingCityName: GetBuildingCityName(membership),
+            buildingCountryName: GetBuildingCountryName(membership),
             unitNumber: membership.UnitNumber,
             floorNumber: membership.FloorNumber,
             approvedAt: membership.ApprovedAt,
             tenantFullName: $"{membership.User.Name} {membership.User.Surname}"
         );
     }
+
+    private static string GetBuildingStreet(BuildingMembership membership)
+        => membership.Building?.Street ?? string.Empty;
+
+    private static string GetBuildingStreetNumber(BuildingMembership membership)
+        => membership.Building?.StreetNumber ?? string.Empty;
+
+    private static string GetBuildingNeighborhood(BuildingMembership membership)
+        => membership.Building?.Neighborhood ?? string.Empty;
+
+    private static string GetBuildingCityName(BuildingMembership membership)
+        => membership.Building?.City?.Name ?? string.Empty;
+
+    private static string GetBuildingCountryName(BuildingMembership membership)
+        => membership.Building?.City?.Country?.Name ?? string.Empty;
 
     public static List<BuildingMembershipDto> ToDtoList(this IEnumerable<BuildingMembership> memberships)
     {
