@@ -38,24 +38,36 @@ public class CommonRoomRequestService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
         if (request == null) return new List<DateTime>();
 
-        List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
-        request.CommonRoom.SetOccupiedDates(occupied);
+        LoadOccupiedDates(request.CommonRoom);
+        List<DateTime> freeDays = CollectFreeDays(request);
 
+        if (freeDays.Count == 0)
+            RejectAndSave(request);
+
+        return freeDays;
+    }
+
+    private void LoadOccupiedDates(CommonRoom room)
+    {
+        List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(room.Id);
+        room.SetOccupiedDates(occupied);
+    }
+
+    private static List<DateTime> CollectFreeDays(CommonRoomRequest request)
+    {
         List<DateTime> freeDays = new List<DateTime>();
-
         for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
         {
             if (request.CommonRoom.IsFreeOnDate(date))
                 freeDays.Add(date);
         }
-
-        if (freeDays.Count == 0)
-        {
-            request.Reject();
-            _requestRepository.Update(request);
-        }
-
         return freeDays;
+    }
+
+    private void RejectAndSave(CommonRoomRequest request)
+    {
+        request.Reject();
+        _requestRepository.Update(request);
     }
 
     public List<(DateTime, DateTime)> FindAlternativeRanges(long requestId)
@@ -63,9 +75,12 @@ public class CommonRoomRequestService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
         if (request == null) return new List<(DateTime, DateTime)>();
 
-        List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
-        request.CommonRoom.SetOccupiedDates(occupied);
+        LoadOccupiedDates(request.CommonRoom);
+        return SearchAlternativeRanges(request);
+    }
 
+    private List<(DateTime, DateTime)> SearchAlternativeRanges(CommonRoomRequest request)
+    {
         int requestedDays = (int)(request.DateTo - request.DateFrom).TotalDays + 1;
         List<(DateTime, DateTime)> alternatives = new();
 
@@ -74,19 +89,20 @@ public class CommonRoomRequestService
 
         for (DateTime start = searchStart; start <= searchEnd; start = start.AddDays(1))
         {
-            DateTime end = start.AddDays(requestedDays - 1);
-
-            if (start == request.DateFrom)
-                continue;
-
-            if (IsRangeFree(start, end, request.CommonRoom))
-                alternatives.Add((start, end));
-
-            if (alternatives.Count >= 5)
-                break;
+            if (alternatives.Count >= 5) break;
+            TryAddAlternative(start, requestedDays, request, alternatives);
         }
 
         return alternatives;
+    }
+
+    private void TryAddAlternative(DateTime start, int requestedDays, CommonRoomRequest request, List<(DateTime, DateTime)> alternatives)
+    {
+        if (start == request.DateFrom) return;
+
+        DateTime end = start.AddDays(requestedDays - 1);
+        if (IsRangeFree(start, end, request.CommonRoom))
+            alternatives.Add((start, end));
     }
 
     private bool IsRangeFree(DateTime dateFrom, DateTime dateTo, CommonRoom commonRoom)
@@ -115,27 +131,6 @@ public class CommonRoomRequestService
         {
             throw new InvalidOperationException("This date is already booked. Please select a different day.");
         }
-    }
-
-    private void ApproveMultiDay(CommonRoomRequest request)
-    {
-        List<DateTime> occupied = _commonRoomRepository.GetOccupiedDates(request.CommonRoom.Id);
-        request.CommonRoom.SetOccupiedDates(occupied);
-
-        if (IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom))
-        {
-            ApproveAndBookRange(request);
-            return;
-        }
-
-        List<(DateTime, DateTime)> alternatives = FindAlternativeRanges(request.Id);
-
-        if (alternatives.Count == 0)
-            return;
-
-        var (newFrom, newTo) = alternatives[0];
-        request.ProposeNewDateRange(newFrom, newTo);
-        _requestRepository.Update(request);
     }
 
     public void RejectRequest(long requestId)

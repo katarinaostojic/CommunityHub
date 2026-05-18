@@ -22,7 +22,8 @@ public partial class AccessRequestsPage : Page
 
     private void StatusFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (_currentUser == null) return;
+        if (_viewModel == null) return;
+
         if (StatusFilterCombo.SelectedItem is ComboBoxItem item)
         {
             string tag = item.Tag?.ToString() ?? "";
