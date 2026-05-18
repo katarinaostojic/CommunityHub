@@ -42,8 +42,7 @@ public partial class MyRequestsPage : Window
         }
     }
 
-    private void SortButton_Click(object sender, RoutedEventArgs e)
-        => _viewModel.ToggleSort();
+    private void SortButton_Click(object sender, RoutedEventArgs e) => _viewModel.ToggleSort();
 
     private void ResetButton_Click(object sender, RoutedEventArgs e)
     {
@@ -54,32 +53,13 @@ public partial class MyRequestsPage : Window
     private void DeleteRequestButton_Click(object sender, RoutedEventArgs e)
     {
         NeighborhoodAccessRequestViewModel item = (NeighborhoodAccessRequestViewModel)((Button)sender).Tag;
-
-        MessageBoxResult result = MessageBox.Show(
-            "Are you sure you want to delete this request?",
-            "Delete request",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-
+        MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this request?",
+            "Delete request", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result != MessageBoxResult.Yes) return;
         _viewModel.DeleteRequest(item.Id);
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e)
-    {
-        NeighborhoodAccessRequestService requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-        long? neighborhoodId = requestService.GetMembershipNeighborhoodId(_user.Id);
-        if (neighborhoodId == null)
-        {
-            MessageBox.Show("You need to be a member of a neighborhood to view your profile.", "No Membership",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
-        string neighborhoodName = neighborhoodService.GetNameById(neighborhoodId.Value) ?? "";
-        new MyProfilePage(_user, neighborhoodId.Value, neighborhoodName).Show();
-        Close();
-    }
+    private void ProfileButton_Click(object sender, RoutedEventArgs e) => NavigateToProfile();
 
     private void BurgerButton_Click(object sender, RoutedEventArgs e)
         => CitizenMenu.Visibility = Visibility.Visible;
@@ -92,37 +72,12 @@ public partial class MyRequestsPage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods":
-                new BrowseNeighborhoodPage(_user).Show();
-                Close();
-                break;
+            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
             case "MyRequests": break;
-            case "Events":
-                NeighborhoodAccessRequestService requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-                long? neighborhoodId = requestService.GetMembershipNeighborhoodId(_user.Id);
-                if (neighborhoodId == null)
-                {
-                    MessageBox.Show("You are not a member of any neighborhood.", "No Membership",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-                new EventsPage(_user, neighborhoodId.Value).Show();
-                Close();
-                break;
-            case "Citizens":
-                NeighborhoodAccessRequestService rs = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-                long? nId = rs.GetMembershipNeighborhoodId(_user.Id);
-                if (nId == null) { MessageBox.Show("You are not a member of any neighborhood."); return; }
-                new NeighborhoodCitizensPage(_user, nId.Value).Show();
-                Close();
-                break;
-            case "Meetings":
-                NeighborhoodAccessRequestService meetingRequestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-                long? meetingNId = meetingRequestService.GetMembershipNeighborhoodId(_user.Id);
-                if (meetingNId == null) { MessageBox.Show("You are not a member of any neighborhood."); return; }
-                new MeetingsPage(_user, meetingNId.Value).Show();
-                Close();
-                break;
+            case "Events": NavigateToEvents(); break;
+            case "Citizens": NavigateToCitizens(); break;
+            case "Meetings": NavigateToMeetings(); break;
+            case "Profile": NavigateToProfile(); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
@@ -133,5 +88,47 @@ public partial class MyRequestsPage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         new LogInForm().Show();
         Close();
+    }
+
+    private void NavigateToEvents()
+    {
+        long? nId = GetMembershipId();
+        if (nId == null) return;
+        new EventsPage(_user, nId.Value).Show();
+        Close();
+    }
+
+    private void NavigateToCitizens()
+    {
+        long? nId = GetMembershipId();
+        if (nId == null) return;
+        new NeighborhoodCitizensPage(_user, nId.Value).Show();
+        Close();
+    }
+
+    private void NavigateToMeetings()
+    {
+        long? nId = GetMembershipId();
+        if (nId == null) return;
+        new MeetingsPage(_user, nId.Value).Show();
+        Close();
+    }
+
+    private void NavigateToProfile()
+    {
+        long? nId = GetMembershipId();
+        if (nId == null) return;
+        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
+        string name = ns.GetNameById(nId.Value) ?? "";
+        new MyProfilePage(_user, nId.Value, name).Show();
+        Close();
+    }
+
+    private long? GetMembershipId()
+    {
+        NeighborhoodAccessRequestService s = Injector.CreateInstance<NeighborhoodAccessRequestService>();
+        long? nId = s.GetMembershipNeighborhoodId(_user.Id);
+        if (nId == null) MessageBox.Show("You are not a member of any neighborhood.");
+        return nId;
     }
 }

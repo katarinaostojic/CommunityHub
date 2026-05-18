@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using CommunityHub.Application.DependencyInjection;
+﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 
@@ -47,9 +38,7 @@ public partial class MeetingsPage : Window
         VoteDateDialog dialog = new VoteDateDialog(meetingVm.Dto);
         dialog.Owner = this;
         if (dialog.ShowDialog() == true)
-        {
             _viewModel.Vote(meetingVm.Id, dialog.SelectedDate);
-        }
     }
 
     private void ChangeVoteButton_Click(object sender, RoutedEventArgs e)
@@ -58,18 +47,10 @@ public partial class MeetingsPage : Window
         VoteDateDialog dialog = new VoteDateDialog(meetingVm.Dto);
         dialog.Owner = this;
         if (dialog.ShowDialog() == true)
-        {
             _viewModel.ChangeVote(meetingVm.CitizenVoteId!.Value, dialog.SelectedDate);
-        }
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e)
-    {
-        NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
-        string neighborhoodName = neighborhoodService.GetNameById(_neighborhoodId) ?? "";
-        new MyProfilePage(_user, _neighborhoodId, neighborhoodName).Show();
-        Close();
-    }
+    private void ProfileButton_Click(object sender, RoutedEventArgs e) => NavigateToProfile();
 
     private void BurgerButton_Click(object sender, RoutedEventArgs e)
         => CitizenMenu.Visibility = Visibility.Visible;
@@ -82,23 +63,12 @@ public partial class MeetingsPage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods":
-                new BrowseNeighborhoodPage(_user).Show();
-                Close();
-                break;
-            case "MyRequests":
-                new MyRequestsPage(_user).Show();
-                Close();
-                break;
-            case "Events":
-                new EventsPage(_user, _neighborhoodId).Show();
-                Close();
-                break;
-            case "Citizens":
-                new NeighborhoodCitizensPage(_user, _neighborhoodId).Show();
-                Close();
-                break;
+            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
+            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
+            case "Events": new EventsPage(_user, _neighborhoodId).Show(); Close(); break;
+            case "Citizens": new NeighborhoodCitizensPage(_user, _neighborhoodId).Show(); Close(); break;
             case "Meetings": break;
+            case "Profile": NavigateToProfile(); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
@@ -108,6 +78,14 @@ public partial class MeetingsPage : Window
     {
         CitizenMenu.Visibility = Visibility.Collapsed;
         new LogInForm().Show();
+        Close();
+    }
+
+    private void NavigateToProfile()
+    {
+        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
+        string name = ns.GetNameById(_neighborhoodId) ?? "";
+        new MyProfilePage(_user, _neighborhoodId, name).Show();
         Close();
     }
 }

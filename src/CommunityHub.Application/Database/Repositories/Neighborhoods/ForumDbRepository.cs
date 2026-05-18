@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;

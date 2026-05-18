@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -17,13 +17,13 @@ public class EventService
     public List<EventDto> GetByNeighborhood(long neighborhoodId, long currentUserId = 0)
         => _repository.GetByNeighborhood(neighborhoodId).ToDtoList(currentUserId);
 
-    public long CreateEvent(long organizerId, long neighborhoodId, string name, string description,
-        DateOnly eventDate, TimeOnly startTime, int durationMinutes, int minVolunteers, List<string> itemNames)
+    public long CreateEvent(CreateEventRequest req)
     {
-        long eventId = _repository.Create(organizerId, neighborhoodId, name, description,
-            eventDate, startTime, durationMinutes, minVolunteers);
+        long eventId = _repository.Create(req.OrganizerId, req.NeighborhoodId,
+            req.Name, req.Description, req.EventDate, req.StartTime,
+            req.DurationMinutes, req.MinVolunteers);
 
-        foreach (string itemName in itemNames)
+        foreach (string itemName in req.ItemNames)
             _repository.CreateItem(eventId, itemName);
 
         return eventId;

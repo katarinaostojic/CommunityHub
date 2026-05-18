@@ -44,12 +44,9 @@ public class EventsViewModel : BaseViewModel
         ResultsText = $"Showing {items.Count} events";
     }
 
-    public long CreateEvent(long organizerId, string name, string description,
-        DateOnly eventDate, TimeOnly startTime, int durationMinutes,
-        int minVolunteers, List<string> itemNames)
+    public long CreateEvent(CreateEventRequest req)
     {
-        long eventId = _service.CreateEvent(organizerId, _neighborhoodId, name, description,
-            eventDate, startTime, durationMinutes, minVolunteers, itemNames);
+        long eventId = _service.CreateEvent(req);
         LoadEvents();
         return eventId;
     }

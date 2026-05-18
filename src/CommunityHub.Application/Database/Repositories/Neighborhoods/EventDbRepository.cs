@@ -5,8 +5,8 @@ using System.Text;
 using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 using System.Data;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 

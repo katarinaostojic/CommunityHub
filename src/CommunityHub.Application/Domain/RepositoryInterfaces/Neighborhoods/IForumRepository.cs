@@ -1,5 +1,6 @@
-﻿
-namespace CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
+
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 
 public interface IForumRepository
 {
