@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Database.Mappers.Ads;
+﻿using CommunityHub.Application.Database.Readers.Ads;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using System.Data;
@@ -18,6 +18,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
         AddParameter(command, "@recipientId", recipientId);
         AddParameter(command, "@adId", adId);
         AddParameter(command, "@bookedByAdId", bookedByAdId);
+
         command.ExecuteNonQuery();
     }
 
@@ -51,8 +52,9 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             ORDER BY n.created_at DESC";
 
         AddParameter(command, "@userId", userId);
+
         using IDataReader reader = command.ExecuteReader();
-        return ReadNotifications(reader);
+        return AdNotificationReader.ReadNotifications(reader);
     }
 
     public void MarkAsRead(long notificationId)
@@ -65,6 +67,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             WHERE id = @notificationId";
 
         AddParameter(command, "@notificationId", notificationId);
+
         command.ExecuteNonQuery();
     }
 
@@ -78,16 +81,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             WHERE recipient_id = @userId";
 
         AddParameter(command, "@userId", userId);
+
         command.ExecuteNonQuery();
-    }
-
-     private static List<AdNotification> ReadNotifications(IDataReader reader)
-    {
-        List<AdNotification> notifications = new();
-
-        while (reader.Read())
-            notifications.Add(AdNotificationMapper.Map(reader));
-
-        return notifications;
     }
 }
