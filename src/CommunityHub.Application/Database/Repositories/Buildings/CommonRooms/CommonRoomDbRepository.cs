@@ -1,5 +1,4 @@
 ﻿using CommunityHub.Application.Database.Readers.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces.CommonRoomRepositoryInterfaces;
 using CommunityHub.Application.Domain.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using System.Data;

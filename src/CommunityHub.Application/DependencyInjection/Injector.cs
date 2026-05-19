@@ -16,9 +16,17 @@ namespace CommunityHub.Application.DependencyInjection;
 public static class Injector
 {
     private static readonly ImageDbRepository _imageRepository = new();
+
+    private static readonly BuildingDetailsDbRepository _buildingDetailsRepository = new(
+        _imageRepository);
+
+    private static readonly BuildingDbRepository _buildingRepository = new(
+        _buildingDetailsRepository);
+
     private static readonly AdDbRepository _adRepository = new();
     private static readonly AdSlotDbRepository _adSlotRepository = new();
     private static readonly AdNotificationDbRepository _adNotificationRepository = new();
+
     private static readonly CommonRoomDbRepository _commonRoomRepository = new();
     private static readonly CommonRoomRequestDbRepository _commonRoomRequestRepository = new();
 
@@ -40,7 +48,7 @@ public static class Injector
         {
             typeof(BuildingService),
             new BuildingService(
-                new BuildingDbRepository(_imageRepository),
+                _buildingRepository,
                 _imageRepository)
         },
         {
@@ -48,7 +56,7 @@ public static class Injector
             new BuildingAccessRequestService(
                 new BuildingAccessRequestDbRepository(),
                 new BuildingMembershipDbRepository(),
-                new BuildingDbRepository(_imageRepository))
+                _buildingRepository)
         },
         {
             typeof(BuildingMembershipService),
@@ -90,7 +98,7 @@ public static class Injector
             typeof(CommonRoomService),
             new CommonRoomService(
                 _commonRoomRepository,
-                new BuildingDbRepository(_imageRepository))
+                _buildingRepository)
         },
         {
             typeof(CommonRoomRequestAvailabilityService),
