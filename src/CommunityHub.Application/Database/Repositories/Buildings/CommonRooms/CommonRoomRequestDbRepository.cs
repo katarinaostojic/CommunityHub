@@ -31,22 +31,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@commonRoomId", commonRoomId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<CommonRoomRequest> requests = new List<CommonRoomRequest>();
-        while (reader.Read())
-        {
-            User tenant = UserMapper.MapWithAliases(
-                reader,
-                new UserColumnAliases(
-                    "user_id",
-                    "tenant_username",
-                    "tenant_password",
-                    "tenant_name",
-                    "tenant_surname",
-                    "tenant_birthday",
-                    "tenant_role"));
-            requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
-        }
-        return requests;
+        return ReadRequests(reader);
     }
 
     public CommonRoomRequest? GetById(long requestId)
@@ -70,21 +55,13 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@requestId", requestId);
 
         using IDataReader reader = command.ExecuteReader();
-        if (reader.Read())
+
+        if (!reader.Read())
         {
-            User tenant = UserMapper.MapWithAliases(
-                reader,
-                new UserColumnAliases(
-                    "user_id",
-                    "tenant_username",
-                    "tenant_password",
-                    "tenant_name",
-                    "tenant_surname",
-                    "tenant_birthday",
-                    "tenant_role"));
-            return CommonRoomRequestMapper.Map(reader, tenant);
+            return null;
         }
-        return null;
+
+        return ReadRequest(reader);
     }
 
     public void Update(CommonRoomRequest request)
@@ -105,22 +82,13 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@id", request.Id);
         AddParameter(command, "@dateFrom", request.DateFrom);
         AddParameter(command, "@dateTo", request.DateTo);
-        AddParameter(command, "@status", CommonRoomRequestStatusToString(request.Status));
+        AddParameter(command, "@status", CommonRoomRequestStatusMapper.ToDatabaseValue(request.Status));
         AddParameter(command, "@approvedDate", request.ApprovedDate);
         AddParameter(command, "@proposedDateFrom", request.ProposedDateFrom);
         AddParameter(command, "@proposedDateTo", request.ProposedDateTo);
 
         command.ExecuteNonQuery();
     }
-
-    private string CommonRoomRequestStatusToString(CommonRoomRequestStatus status) => status switch
-    {
-        CommonRoomRequestStatus.Pending => "pending",
-        CommonRoomRequestStatus.Approved => "approved",
-        CommonRoomRequestStatus.Rejected => "rejected",
-        CommonRoomRequestStatus.PendingDateChange => "pending_date_change",
-        _ => throw new ArgumentException($"Unknown status: {status}")
-    };
 
     public List<CommonRoomRequest> GetByTenant(long tenantId)
     {
@@ -144,22 +112,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@tenantId", tenantId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<CommonRoomRequest> requests = new List<CommonRoomRequest>();
-        while (reader.Read())
-        {
-            User tenant = UserMapper.MapWithAliases(
-                reader,
-                new UserColumnAliases(
-                    "user_id",
-                    "tenant_username",
-                    "tenant_password",
-                    "tenant_name",
-                    "tenant_surname",
-                    "tenant_birthday",
-                    "tenant_role"));
-            requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
-        }
-        return requests;
+        return ReadRequests(reader);
     }
 
     public List<CommonRoomRequest> GetByTenantAndBuilding(long tenantId, long buildingId)
@@ -186,25 +139,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<CommonRoomRequest> requests = new List<CommonRoomRequest>();
-
-        while (reader.Read())
-        {
-            User tenant = UserMapper.MapWithAliases(
-                reader,
-                new UserColumnAliases(
-                    "user_id",
-                    "tenant_username",
-                    "tenant_password",
-                    "tenant_name",
-                    "tenant_surname",
-                    "tenant_birthday",
-                    "tenant_role"));
-
-            requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
-        }
-
-        return requests;
+        return ReadRequests(reader);
     }
 
     public long Create(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
@@ -234,5 +169,33 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         command.CommandText = "DELETE FROM common_room_requests WHERE id = @id";
         AddParameter(command, "@id", requestId);
         command.ExecuteNonQuery();
+    }
+
+    private static List<CommonRoomRequest> ReadRequests(IDataReader reader)
+    {
+        List<CommonRoomRequest> requests = new();
+
+        while (reader.Read())
+        {
+            requests.Add(ReadRequest(reader));
+        }
+
+        return requests;
+    }
+
+    private static CommonRoomRequest ReadRequest(IDataReader reader)
+    {
+        User tenant = UserMapper.MapWithAliases(
+            reader,
+            new UserColumnAliases(
+                "user_id",
+                "tenant_username",
+                "tenant_password",
+                "tenant_name",
+                "tenant_surname",
+                "tenant_birthday",
+                "tenant_role"));
+
+        return CommonRoomRequestMapper.Map(reader, tenant);
     }
 }
