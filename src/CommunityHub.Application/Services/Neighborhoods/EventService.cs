@@ -1,6 +1,5 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -18,26 +17,21 @@ public class EventService
     public List<EventDto> GetByNeighborhood(long neighborhoodId, long currentUserId = 0)
         => _repository.GetByNeighborhood(neighborhoodId).ToDtoList(currentUserId);
 
-    public Event? GetById(long eventId)
-        => _repository.GetById(eventId);
-
-    public long CreateEvent(User organizer, long neighborhoodId, string name, string description,
-        DateOnly eventDate, TimeOnly startTime, int durationMinutes, int minVolunteers, List<string> itemNames)
+    public long CreateEvent(CreateEventRequest req)
     {
-        Event ev = new Event(0, neighborhoodId, organizer, name, description,
-            eventDate, startTime, durationMinutes, minVolunteers, EventStatus.Preparation);
+        long eventId = _repository.Create(req.OrganizerId, req.NeighborhoodId,
+            req.Name, req.Description, req.EventDate, req.StartTime,
+            req.DurationMinutes, req.MinVolunteers);
 
-        long eventId = _repository.Create(ev);
-
-        foreach (string itemName in itemNames)
+        foreach (string itemName in req.ItemNames)
             _repository.CreateItem(eventId, itemName);
 
         return eventId;
     }
 
-    public void RegisterVolunteer(long eventId, User citizen, List<long> selectedItemIds)
+    public void RegisterVolunteer(long eventId, long citizenId, List<long> selectedItemIds)
     {
-        _repository.AddRegistration(eventId, citizen.Id, selectedItemIds);
+        _repository.AddRegistration(eventId, citizenId, selectedItemIds);
 
         Event? updated = _repository.GetById(eventId);
         if (updated == null) return;

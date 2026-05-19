@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
@@ -69,12 +69,13 @@ public class ForumDbRepository : BaseDbRepository, IForumRepository
         return forum;
     }
 
-    public void Close(long forumId)
+    public void Update(Forum forum)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = "UPDATE forums SET is_closed = true WHERE id = @id";
-        AddParameter(command, "@id", forumId);
+        command.CommandText = "UPDATE forums SET is_closed = @isClosed WHERE id = @id";
+        AddParameter(command, "@isClosed", forum.IsClosed);
+        AddParameter(command, "@id", forum.Id);
         command.ExecuteNonQuery();
     }
 

@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.DTOs.TenantAds;
+using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
@@ -24,8 +24,8 @@ public partial class BookSlotsPage : Page
         _membership = membership;
         _returnPage = returnPage;
 
-        AdService adService = Injector.CreateInstance<AdService>();
-        _viewModel = new BookSlotsViewModel(adService, theirAd, myAd);
+        AdSlotBookingService slotBookingService = Injector.CreateInstance<AdSlotBookingService>();
+        _viewModel = new BookSlotsViewModel(slotBookingService, theirAd, myAd);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -42,15 +42,18 @@ public partial class BookSlotsPage : Page
     {
         bool booked = _viewModel.BookSelectedSlots();
         if (!booked) return;
+
         if (_returnPage is NoticeBoardPage noticePage)
             noticePage.ShowBookingSuccess();
         else if (_returnPage is AdPostedPage adPostedPage)
             adPostedPage.ShowBookingSuccess();
+
         NavigationService.Navigate(_returnPage);
     }
 
     private void GoBackButton_Click(object sender, RoutedEventArgs e) =>
         NavigationService.GoBack();
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
+    private void MenuButton_Click(object sender, RoutedEventArgs e) =>
+        AppMenu.Open();
 }

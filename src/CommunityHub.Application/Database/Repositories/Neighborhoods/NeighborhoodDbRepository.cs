@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using System.Data;
 using System.Linq;
 
@@ -184,13 +184,13 @@ public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepositor
 
         while (reader.Read())
         {
-            long id = Convert.ToInt64(reader["id"]);
+            long neighborhoodId = Convert.ToInt64(reader["id"]);
 
-            if (!neighborhoods.ContainsKey(id))
-                neighborhoods[id] = MapNeighborhood(reader);
+            if (!neighborhoods.ContainsKey(neighborhoodId))
+                neighborhoods[neighborhoodId] = MapNeighborhood(reader);
 
             if (!reader.IsDBNull(reader.GetOrdinal("street_id")))
-                TryAddStreet(reader, id, neighborhoods, addedStreets);
+                TryAddStreet(reader, neighborhoodId, neighborhoods, addedStreets);
         }
 
         return neighborhoods.Values.ToList();
@@ -266,7 +266,7 @@ public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepositor
         );
     }
 
-    public Neighborhood? GetById(long id)
+    public Neighborhood? GetById(long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -280,20 +280,21 @@ public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepositor
         LEFT JOIN neighborhood_streets s ON s.neighborhood_id = n.id
         WHERE n.id = @id";
 
-        AddParameter(command, "@id", id);
+        AddParameter(command, "@id", neighborhoodId);
 
         using IDataReader reader = command.ExecuteReader();
         var neighborhoods = ReadNeighborhoodsWithStreets(reader);
         return neighborhoods.FirstOrDefault();
     }
 
-    public string? GetNameById(long id)
+    public string? GetNameById(long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = "SELECT name FROM neighborhoods WHERE id = @id";
-        AddParameter(command, "@id", id);
+        AddParameter(command, "@id", neighborhoodId);
         object? result = command.ExecuteScalar();
         return result == null || result == DBNull.Value ? null : result.ToString();
     }
+    
 }

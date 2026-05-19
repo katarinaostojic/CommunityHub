@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Services.Ads;
@@ -85,7 +86,7 @@ public class NewAdViewModel : BaseViewModel
         DateOnly to = DateOnly.FromDateTime(dateTo!.Value);
         AdCategory category = (AdCategory)categoryIndex;
 
-        return _adService.Create(
+        CreateAdDto request = new CreateAdDto(
             _buildingId,
             _author,
             SelectedType,
@@ -93,6 +94,8 @@ public class NewAdViewModel : BaseViewModel
             description.Trim(),
             from,
             to);
+
+        return _adService.Create(request);
     }
 
     private bool Validate(string description, DateTime? dateFrom, DateTime? dateTo)

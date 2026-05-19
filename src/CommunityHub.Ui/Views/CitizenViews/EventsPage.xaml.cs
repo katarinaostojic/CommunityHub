@@ -33,7 +33,7 @@ public partial class EventsPage : Window
 
     private void CreateEventButton_Click(object sender, RoutedEventArgs e)
     {
-        CreateEventDialog dialog = new CreateEventDialog(_user, _neighborhoodId, _viewModel);
+        CreateEventDialog dialog = new CreateEventDialog(_user.Id, _neighborhoodId, _viewModel);
         dialog.Owner = this;
         dialog.ShowDialog();
     }
@@ -56,7 +56,7 @@ public partial class EventsPage : Window
             return;
         }
 
-        JoinEventDialog dialog = new JoinEventDialog(_user, eventVm.Event, _viewModel);
+        JoinEventDialog dialog = new JoinEventDialog(_user.Id, eventVm.Event, _viewModel);
         dialog.Owner = this;
         dialog.ShowDialog();
     }
@@ -75,8 +75,8 @@ public partial class EventsPage : Window
 
     private void ProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        NeighborhoodService neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
-        string neighborhoodName = neighborhoodService.GetNameById(_neighborhoodId) ?? "";
+        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
+        string neighborhoodName = ns.GetNameById(_neighborhoodId) ?? "";
         new MyProfilePage(_user, _neighborhoodId, neighborhoodName).Show();
         Close();
     }
@@ -104,23 +104,12 @@ public partial class EventsPage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods":
-                new BrowseNeighborhoodPage(_user).Show();
-                Close();
-                break;
-            case "MyRequests":
-                new MyRequestsPage(_user).Show();
-                Close();
-                break;
+            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
+            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
             case "Events": break;
-            case "Citizens":
-                new NeighborhoodCitizensPage(_user, _neighborhoodId).Show();
-                Close();
-                break;
-            case "Meetings":
-                new MeetingsPage(_user, _neighborhoodId).Show();
-                Close();
-                break;
+            case "Citizens": new NeighborhoodCitizensPage(_user, _neighborhoodId).Show(); Close(); break;
+            case "Meetings": new MeetingsPage(_user, _neighborhoodId).Show(); Close(); break;
+            case "Profile": NavigateToProfile(); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
@@ -130,6 +119,14 @@ public partial class EventsPage : Window
     {
         CitizenMenu.Visibility = Visibility.Collapsed;
         new LogInForm().Show();
+        Close();
+    }
+
+    private void NavigateToProfile()
+    {
+        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
+        string name = ns.GetNameById(_neighborhoodId) ?? "";
+        new MyProfilePage(_user, _neighborhoodId, name).Show();
         Close();
     }
 }

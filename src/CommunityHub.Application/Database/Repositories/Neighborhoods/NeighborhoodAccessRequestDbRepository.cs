@@ -1,40 +1,40 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
 public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighborhoodAccessRequestRepository
 {
-    public void Create(User citizen, Neighborhood neighborhood)
+    public void Create(long citizenId, long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            INSERT INTO neighborhood_access_requests (citizen_id, neighborhood_id, created_at, status, rejection_reason)
-            VALUES (@citizenId, @neighborhoodId, @createdAt, 'pending approval', NULL)";
+        INSERT INTO neighborhood_access_requests (citizen_id, neighborhood_id, created_at, status, rejection_reason)
+        VALUES (@citizenId, @neighborhoodId, @createdAt, 'pending approval', NULL)";
 
-        AddParameter(command, "@citizenId", citizen.Id);
-        AddParameter(command, "@neighborhoodId", neighborhood.Id);
+        AddParameter(command, "@citizenId", citizenId);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
         AddParameter(command, "@createdAt", DateTime.UtcNow);
 
         command.ExecuteNonQuery();
     }
 
-    public bool HasExistingPendingRequest(User citizen, Neighborhood neighborhood)
+    public bool HasExistingPendingRequest(long citizenId, long neighborhoodId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT COUNT(*) FROM neighborhood_access_requests
-            WHERE citizen_id = @citizenId 
-              AND neighborhood_id = @neighborhoodId
-              AND status = 'pending approval'";
+        SELECT COUNT(*) FROM neighborhood_access_requests
+        WHERE citizen_id = @citizenId 
+          AND neighborhood_id = @neighborhoodId
+          AND status = 'pending approval'";
 
-        AddParameter(command, "@citizenId", citizen.Id);
-        AddParameter(command, "@neighborhoodId", neighborhood.Id);
+        AddParameter(command, "@citizenId", citizenId);
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
 
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
     }
@@ -247,14 +247,14 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
 
         AddParameter(command, "@citizenId", citizenId);
 
-        object? result = command.ExecuteScalar();
-        if (result == null || result == DBNull.Value)
+        object? membershipResult = command.ExecuteScalar();
+        if (membershipResult == null || membershipResult == DBNull.Value)
             return null;
 
-        return Convert.ToInt64(result);
+        return Convert.ToInt64(membershipResult);
     }
 
-    public NeighborhoodAccessRequest? GetById(long id)
+    public NeighborhoodAccessRequest? GetById(long requestId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
@@ -272,7 +272,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
         JOIN users u ON r.citizen_id = u.id
         WHERE r.id = @id";
 
-        AddParameter(command, "@id", id);
+        AddParameter(command, "@id", requestId);
 
         using IDataReader reader = command.ExecuteReader();
         if (reader.Read())

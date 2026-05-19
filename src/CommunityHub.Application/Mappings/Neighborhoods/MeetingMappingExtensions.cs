@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 
 namespace CommunityHub.Application.Mappings.Neighborhoods;
@@ -14,7 +11,14 @@ public static class MeetingMappingExtensions
     {
         return new MeetingDto(
             id: meeting.Id,
-            theme: meeting.Theme == MeetingTheme.Welcome ? "welcome" : "motivation",
+            theme: meeting.Theme switch
+            {
+                MeetingTheme.Welcome => "welcome",
+                MeetingTheme.Motivation => "motivation",
+                MeetingTheme.Custom => "custom",
+                _ => "welcome"
+            },
+            customThemeName: meeting.Theme == MeetingTheme.Custom ? meeting.CustomThemeName : null,
             meetingTime: meeting.MeetingTime.ToString("HH:mm"),
             dateRangeStart: meeting.DateRangeStart.ToString("dd/MM/yyyy"),
             dateRangeEnd: meeting.DateRangeEnd.ToString("dd/MM/yyyy"),

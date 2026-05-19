@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 
@@ -7,16 +7,16 @@ namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 public class NeighborhoodAccessRequestDialogViewModel
 {
     private readonly NeighborhoodAccessRequestService _service;
-    private readonly User _user;
+    private readonly long _citizenId;
     private readonly NeighborhoodDto _neighborhood;
 
     public NeighborhoodAccessRequestDialogViewModel(
         NeighborhoodAccessRequestService service,
-        User user,
+        long citizenId,
         NeighborhoodDto neighborhood)
     {
         _service = service;
-        _user = user;
+        _citizenId = citizenId;
         _neighborhood = neighborhood;
     }
 
@@ -37,5 +37,5 @@ public class NeighborhoodAccessRequestDialogViewModel
     }
 
     public AccessRequestResult RequestAccess()
-        => _service.RequestAccessById(_user, _neighborhood.Id);
+        => _service.RequestAccessById(_citizenId, _neighborhood.Id);
 }

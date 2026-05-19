@@ -11,7 +11,7 @@
         </Grid.RowDefinitions>
 
         <!-- Action Bar -->
-        <Border Grid.Row="0" Background="#F5F5F5" BorderBrush="#DDDDDD" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}">
             <Grid Margin="10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -19,26 +19,36 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="≡" FontSize="22" VerticalAlignment="Center"
-                           Cursor="Hand" MouseLeftButtonUp="HamburgerButton_Click"/>
+                           Foreground="White" Cursor="Hand" MouseLeftButtonUp="HamburgerButton_Click"/>
                 <TextBlock x:Name="PageTitleTextBlock" Grid.Column="1" Text="KvartApp" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="10,0,0,0"/>
-                <TextBlock Grid.Column="2" Text="⋮" FontSize="22" VerticalAlignment="Center"/>
+                           VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White"/>
+                <TextBlock Grid.Column="2" Text="⋮" FontSize="22" VerticalAlignment="Center" Foreground="White"/>
             </Grid>
         </Border>
 
         <!-- Sadrzaj -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Background="{StaticResource BackgroundLightBrush}">
             <UniformGrid x:Name="DashboardGrid" Columns="2" Margin="15">
-                <Button Content="My Districts" Click="MyDistrictsButton_Click" Margin="5" FontSize="14"/>
-                <Button Content="Requests" Click="RequestsButton_Click" Margin="5" FontSize="14"/>
-                <Button Content="Meetings" Click="MeetingsButton_Click" Margin="5" FontSize="14"/>
-                <Button Content="Forums" Click="ForumsButton_Click" Margin="5" FontSize="14"/>
-                <Button Content="Budget" Margin="5" FontSize="14"/>
-                <Button Content="City Objects" Margin="5" FontSize="14"/>
-                <Button Content="Citizen Statistics" Margin="5" FontSize="14"/>
-                <Button Content="Reviews" Margin="5" FontSize="14"/>
-                <Button Content="City Gifts" Margin="5" FontSize="14"/>
-                <Button Content="Log Out" Click="LogoutButton_Click" Margin="5" FontSize="14"/>
+                <Button Content="My Districts" Click="MyDistrictsButton_Click" Margin="5"
+                        FontSize="14" Style="{StaticResource PrimaryButton}"/>
+                <Button Content="Requests" Click="RequestsButton_Click" Margin="5"
+                        FontSize="14" Style="{StaticResource PrimaryButton}"/>
+                <Button Content="Meetings" Click="MeetingsButton_Click" Margin="5"
+                        FontSize="14" Style="{StaticResource PrimaryButton}"/>
+                <Button Content="Forums" Click="ForumsButton_Click" Margin="5"
+                        FontSize="14" Style="{StaticResource PrimaryButton}"/>
+                <Button Content="Budget" Margin="5"
+                        FontSize="14" Style="{StaticResource OutlineButton}"/>
+                <Button Content="City Objects" Margin="5"
+                        FontSize="14" Style="{StaticResource OutlineButton}"/>
+                <Button Content="Citizen Statistics" Margin="5"
+                        FontSize="14" Style="{StaticResource OutlineButton}"/>
+                <Button Content="Reviews" Margin="5"
+                        FontSize="14" Style="{StaticResource OutlineButton}"/>
+                <Button Content="City Gifts" Margin="5"
+                        FontSize="14" Style="{StaticResource OutlineButton}"/>
+                <Button Content="Log Out" Click="LogoutButton_Click" Margin="5"
+                        FontSize="14" Style="{StaticResource DangerButton}"/>
             </UniformGrid>
 
             <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Visibility="Collapsed"/>

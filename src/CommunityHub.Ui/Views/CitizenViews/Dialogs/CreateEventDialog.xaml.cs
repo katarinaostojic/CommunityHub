@@ -1,34 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
 public partial class CreateEventDialog : Window
 {
-    private readonly User _user;
+    private readonly long _organizerId;
     private readonly long _neighborhoodId;
     private readonly EventsViewModel _eventsViewModel;
     private ObservableCollection<string> _items = new();
 
-    public CreateEventDialog(User user, long neighborhoodId, EventsViewModel eventsViewModel)
+    public CreateEventDialog(long organizerId, long neighborhoodId, EventsViewModel eventsViewModel)
     {
         InitializeComponent();
-        _user = user;
+        _organizerId = organizerId;
         _neighborhoodId = neighborhoodId;
         _eventsViewModel = eventsViewModel;
-
         ItemsListControl.ItemsSource = _items;
     }
 
@@ -56,14 +46,20 @@ public partial class CreateEventDialog : Window
     {
         if (!ValidateInputs()) return;
 
-        DateOnly eventDate = DateOnly.FromDateTime(EventDatePicker.SelectedDate!.Value);
-        TimeOnly startTime = TimeOnly.Parse(StartTimeTextBox.Text.Trim());
-        int duration = int.Parse(DurationTextBox.Text.Trim());
-        int minVolunteers = int.Parse(MinVolunteersTextBox.Text.Trim());
+        var req = new CreateEventRequest
+        {
+            OrganizerId = _organizerId,
+            NeighborhoodId = _neighborhoodId,
+            Name = TitleTextBox.Text.Trim(),
+            Description = DescriptionTextBox.Text.Trim(),
+            EventDate = DateOnly.FromDateTime(EventDatePicker.SelectedDate!.Value),
+            StartTime = TimeOnly.Parse(StartTimeTextBox.Text.Trim()),
+            DurationMinutes = int.Parse(DurationTextBox.Text.Trim()),
+            MinVolunteers = int.Parse(MinVolunteersTextBox.Text.Trim()),
+            ItemNames = _items.ToList()
+        };
 
-        _eventsViewModel.CreateEvent(_user, TitleTextBox.Text.Trim(),
-            DescriptionTextBox.Text.Trim(), eventDate, startTime,
-            duration, minVolunteers, _items.ToList());
+        _eventsViewModel.CreateEvent(req);
 
         MessageBox.Show("Event created successfully!", "Success",
             MessageBoxButton.OK, MessageBoxImage.Information);
@@ -72,16 +68,31 @@ public partial class CreateEventDialog : Window
 
     private bool ValidateInputs()
     {
-        if (string.IsNullOrWhiteSpace(TitleTextBox.Text))
-        {
-            MessageBox.Show("Please enter a title.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
-        if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text))
-        {
-            MessageBox.Show("Please enter a description.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
+        return ValidateTitle()
+            && ValidateDescription()
+            && ValidateDate()
+            && ValidateTime()
+            && ValidateDuration()
+            && ValidateMinVolunteers()
+            && ValidateItems();
+    }
+
+    private bool ValidateTitle()
+    {
+        if (!string.IsNullOrWhiteSpace(TitleTextBox.Text)) return true;
+        MessageBox.Show("Please enter a title.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool ValidateDescription()
+    {
+        if (!string.IsNullOrWhiteSpace(DescriptionTextBox.Text)) return true;
+        MessageBox.Show("Please enter a description.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool ValidateDate()
+    {
         if (!EventDatePicker.SelectedDate.HasValue)
         {
             MessageBox.Show("Please select a date.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -92,27 +103,35 @@ public partial class CreateEventDialog : Window
             MessageBox.Show("Date cannot be in the past.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
-        if (!TimeOnly.TryParse(StartTimeTextBox.Text.Trim(), out _))
-        {
-            MessageBox.Show("Please enter valid start time (HH:mm).", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
-        if (!int.TryParse(DurationTextBox.Text.Trim(), out int dur) || dur <= 0)
-        {
-            MessageBox.Show("Please enter valid duration.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
-        if (!int.TryParse(MinVolunteersTextBox.Text.Trim(), out int min) || min <= 0)
-        {
-            MessageBox.Show("Please enter valid minimum volunteers.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
-        if (_items.Count == 0)
-        {
-            MessageBox.Show("Please add at least one item.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
         return true;
+    }
+
+    private bool ValidateTime()
+    {
+        if (TimeOnly.TryParse(StartTimeTextBox.Text.Trim(), out _)) return true;
+        MessageBox.Show("Please enter valid start time (HH:mm).", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool ValidateDuration()
+    {
+        if (int.TryParse(DurationTextBox.Text.Trim(), out int dur) && dur > 0) return true;
+        MessageBox.Show("Please enter valid duration.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool ValidateMinVolunteers()
+    {
+        if (int.TryParse(MinVolunteersTextBox.Text.Trim(), out int min) && min > 0) return true;
+        MessageBox.Show("Please enter valid minimum volunteers.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool ValidateItems()
+    {
+        if (_items.Count > 0) return true;
+        MessageBox.Show("Please add at least one item.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();

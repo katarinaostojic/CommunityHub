@@ -1,7 +1,6 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services.Neighborhoods;
+﻿using CommunityHub.Application.Services.Neighborhoods;
 using System.Collections.ObjectModel;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 

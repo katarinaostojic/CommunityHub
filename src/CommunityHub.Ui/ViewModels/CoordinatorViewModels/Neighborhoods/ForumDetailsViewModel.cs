@@ -55,7 +55,7 @@ public class ForumDetailsViewModel : BaseViewModel
 
     public void CloseForum()
     {
-        _forumService.Close(_forum.Id);
+        _forumService.Close(_forum.Id, _coordinatorId);
     }
 
     private void LoadComments()

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
 using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Application.DTOs.Neighborhoods;

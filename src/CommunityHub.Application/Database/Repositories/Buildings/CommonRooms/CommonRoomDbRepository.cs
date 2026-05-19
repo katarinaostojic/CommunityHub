@@ -1,6 +1,6 @@
-﻿using CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces.CommonRoomRepositoryInterfaces;
+﻿using CommunityHub.Application.Database.Readers.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
@@ -20,14 +20,15 @@ public class CommonRoomDbRepository : BaseDbRepository, ICommonRoomRepository
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<CommonRoom> rooms = new List<CommonRoom>();
-        while (reader.Read())
-            rooms.Add(CommonRoomMapper.Map(reader));
-        return rooms;
+        return CommonRoomReader.ReadRooms(reader);
     }
 
-    public long Create(string name, string description, int floorNumber,
-                       string rentalType, long buildingId)
+    public long Create(
+        string name,
+        string description,
+        int floorNumber,
+        string rentalType,
+        long buildingId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
@@ -53,12 +54,11 @@ public class CommonRoomDbRepository : BaseDbRepository, ICommonRoomRepository
         SELECT booked_date
         FROM common_room_bookings
         WHERE common_room_id = @roomId";
+
         AddParameter(command, "@roomId", roomId);
+
         using IDataReader reader = command.ExecuteReader();
-        List<DateTime> dates = new List<DateTime>();
-        while (reader.Read())
-            dates.Add(DateTime.Parse(reader["booked_date"].ToString()!));
-        return dates;
+        return CommonRoomReader.ReadOccupiedDates(reader);
     }
 
     public CommonRoom? GetById(long roomId)
@@ -73,9 +73,7 @@ public class CommonRoomDbRepository : BaseDbRepository, ICommonRoomRepository
         AddParameter(command, "@roomId", roomId);
 
         using IDataReader reader = command.ExecuteReader();
-        if (reader.Read())
-            return CommonRoomMapper.Map(reader);
-        return null;
+        return CommonRoomReader.ReadSingleRoom(reader);
     }
 
     public void BookDate(long commonRoomId, DateTime date)
@@ -88,6 +86,7 @@ public class CommonRoomDbRepository : BaseDbRepository, ICommonRoomRepository
 
         AddParameter(command, "@commonRoomId", commonRoomId);
         AddParameter(command, "@date", date);
+
         command.ExecuteNonQuery();
     }
 }

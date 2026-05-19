@@ -1,6 +1,5 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -25,14 +24,14 @@ public class NeighborhoodAccessRequestService
     public int CountByCitizenAndStatus(long citizenId, string? status)
         => _repository.CountByCitizenAndStatus(citizenId, status);
 
-    public void Delete(long id)
-        => _repository.Delete(id);
+    public void Delete(long requestId)
+        => _repository.Delete(requestId);
 
     public List<NeighborhoodAccessRequestDto> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending)
         => _repository.GetAllByCoordinator(coordinatorId, status, sortDescending).ToDtoList();
 
-    public NeighborhoodAccessRequest? GetById(long id)
-        => _repository.GetById(id);
+    public NeighborhoodAccessRequest? GetById(long requestId)
+        => _repository.GetById(requestId);
 
     public void ApproveRequestWithMembership(NeighborhoodAccessRequest request)
     {
@@ -47,24 +46,16 @@ public class NeighborhoodAccessRequestService
         _repository.Update(request);
     }
 
-    public AccessRequestResult RequestAccess(User citizen, Neighborhood neighborhood)
+    public AccessRequestResult RequestAccessById(long citizenId, long neighborhoodId)
     {
-        if (_repository.HasExistingPendingRequest(citizen, neighborhood))
+        if (_repository.HasExistingPendingRequest(citizenId, neighborhoodId))
             return AccessRequestResult.AlreadyPending;
 
-        if (_repository.HasMembership(citizen.Id))
+        if (_repository.HasMembership(citizenId))
             return AccessRequestResult.AlreadyMember;
 
-        _repository.Create(citizen, neighborhood);
+        _repository.Create(citizenId, neighborhoodId);
         return AccessRequestResult.RequestCreated;
-    }
-
-    public AccessRequestResult RequestAccessById(User citizen, long neighborhoodId)
-    {
-        Neighborhood? neighborhood = _neighborhoodRepository.GetById(neighborhoodId);
-        if (neighborhood == null)
-            throw new InvalidOperationException("Neighborhood not found.");
-        return RequestAccess(citizen, neighborhood);
     }
 
     public long? GetMembershipNeighborhoodId(long citizenId)

@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -28,6 +28,6 @@ public class NeighborhoodService
 
     public void AddImage(long neighborhoodId, string imagePath)
         => _repository.AddImage(neighborhoodId, imagePath);
-    public string? GetNameById(long id)
-    => _repository.GetNameById(id);
+    public string? GetNameById(long neighborhoodId)
+    => _repository.GetNameById(neighborhoodId);
 }

@@ -40,14 +40,14 @@ public partial class ForumDetailsPage : Page
 
     private void LikeButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (ForumCommentViewModel)((Button)sender).Tag;
-        _viewModel.React(vm.Id, ReactionType.Like);
+        var commentViewModel = (ForumCommentViewModel)((Button)sender).Tag;
+        _viewModel.React(commentViewModel.Id, ReactionType.Like);
     }
 
     private void DislikeButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (ForumCommentViewModel)((Button)sender).Tag;
-        _viewModel.React(vm.Id, ReactionType.Dislike);
+        var commentViewModel = (ForumCommentViewModel)((Button)sender).Tag;
+        _viewModel.React(commentViewModel.Id, ReactionType.Dislike);
     }
 
     private void CloseForumButton_Click(object sender, RoutedEventArgs e)

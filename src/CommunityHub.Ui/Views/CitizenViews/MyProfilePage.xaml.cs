@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using CommunityHub.Application.DependencyInjection;
+﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
+using System.Windows;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 
 public partial class MyProfilePage : Window
 {
     private readonly User _user;
+    private readonly long _neighborhoodId;
     private readonly MyProfileViewModel _viewModel;
 
     public MyProfilePage(User user, long neighborhoodId, string neighborhoodName)
     {
         InitializeComponent();
         _user = user;
+        _neighborhoodId = neighborhoodId;
 
         TrustRecordService service = Injector.CreateInstance<TrustRecordService>();
         _viewModel = new MyProfileViewModel(service, user, neighborhoodId, neighborhoodName);
@@ -51,30 +43,12 @@ public partial class MyProfilePage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods":
-                new BrowseNeighborhoodPage(_user).Show();
-                Close();
-                break;
-            case "MyRequests":
-                new MyRequestsPage(_user).Show();
-                Close();
-                break;
-            case "Events":
-                NeighborhoodAccessRequestService requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-                long? nId = requestService.GetMembershipNeighborhoodId(_user.Id);
-                if (nId == null) { MessageBox.Show("You are not a member of any neighborhood."); return; }
-                new EventsPage(_user, nId.Value).Show();
-                Close();
-                break;
+            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
+            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
+            case "Events": NavigateToEvents(); break;
+            case "Citizens": NavigateToCitizens(); break;
+            case "Meetings": NavigateToMeetings(); break;
             case "Profile": break;
-            case "Citizens": MessageBox.Show("Go to Citizens page."); break;
-            case "Meetings":
-                NeighborhoodAccessRequestService meetingRequestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-                long? meetingNId = meetingRequestService.GetMembershipNeighborhoodId(_user.Id);
-                if (meetingNId == null) { MessageBox.Show("You are not a member of any neighborhood."); return; }
-                new MeetingsPage(_user, meetingNId.Value).Show();
-                Close();
-                break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
@@ -85,5 +59,35 @@ public partial class MyProfilePage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         new LogInForm().Show();
         Close();
+    }
+
+    private void NavigateToEvents()
+    {
+        long? nId = GetMembershipId();
+        if (nId == null) return;
+        new EventsPage(_user, nId.Value).Show();
+        Close();
+    }
+
+    private void NavigateToCitizens()
+    {
+        new NeighborhoodCitizensPage(_user, _neighborhoodId).Show();
+        Close();
+    }
+
+    private void NavigateToMeetings()
+    {
+        long? nId = GetMembershipId();
+        if (nId == null) return;
+        new MeetingsPage(_user, nId.Value).Show();
+        Close();
+    }
+
+    private long? GetMembershipId()
+    {
+        NeighborhoodAccessRequestService s = Injector.CreateInstance<NeighborhoodAccessRequestService>();
+        long? nId = s.GetMembershipNeighborhoodId(_user.Id);
+        if (nId == null) MessageBox.Show("You are not a member of any neighborhood.");
+        return nId;
     }
 }

@@ -1,33 +1,42 @@
 ﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.NeighborhoodDetailsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Neighborhood Details">
+      Title="Neighborhood Details"
+      Background="{StaticResource BackgroundLightBrush}">
 
-    <StackPanel Margin="20">
-        <TextBlock x:Name="NeighborhoodNameText" FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+    <ScrollViewer>
+        <StackPanel Margin="16">
 
-        <TextBlock Text="Members" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,5"/>
+            <TextBlock x:Name="NeighborhoodNameText" FontSize="22" FontWeight="Bold"
+                       Foreground="{StaticResource PrimaryBrush}" Margin="0,0,0,16"/>
 
-        <ItemsControl ItemsSource="{Binding Members}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
-                        <StackPanel>
-                            <TextBlock Text="{Binding FullName}" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding Address}" Foreground="Gray"/>
-                            <TextBlock Text="{Binding JoinedAt}" Foreground="Gray"/>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            <TextBlock Text="Members" Style="{StaticResource PageTitle}" Margin="0,0,0,12"/>
 
-        <Button Content="Meetings" Width="150" HorizontalAlignment="Left" Margin="0,20,0,8"
-        Click="MeetingsButton_Click"/>
+            <ItemsControl ItemsSource="{Binding Members}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorder}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding FullName}" FontWeight="SemiBold"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                                <TextBlock Text="{Binding Address}" Style="{StaticResource SecondaryText}"
+                                           Margin="0,4,0,0"/>
+                                <TextBlock Text="{Binding JoinedAt}" Style="{StaticResource SecondaryText}"
+                                           Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
-        <Button Content="Back" Width="100" HorizontalAlignment="Left" Margin="0,0,0,0"
-        Click="BackButton_Click"/>
-        
-        
-    </StackPanel>
+            <Button Content="Meetings" HorizontalAlignment="Stretch" Margin="0,16,0,8"
+                    Click="MeetingsButton_Click"
+                    Style="{StaticResource PrimaryButton}"/>
+
+            <Button Content="Back" HorizontalAlignment="Stretch"
+                    Click="BackButton_Click"
+                    Style="{StaticResource OutlineButton}"/>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>
