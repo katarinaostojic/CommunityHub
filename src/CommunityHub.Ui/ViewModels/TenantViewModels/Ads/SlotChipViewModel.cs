@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.DTOs.TenantAds;
+﻿using CommunityHub.Application.DTOs.Ads;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 

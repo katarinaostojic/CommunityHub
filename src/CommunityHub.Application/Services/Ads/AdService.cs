@@ -1,8 +1,8 @@
 ﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
-using CommunityHub.Application.DTOs.TenantAds;
-using CommunityHub.Application.Mappings.TenantAds;
+using CommunityHub.Application.DTOs.Ads;
+using CommunityHub.Application.Mappings.Ads;
 
 namespace CommunityHub.Application.Services.Ads;
 
@@ -28,12 +28,12 @@ public class AdService
     public List<AdDto> GetActiveByBuilding(long buildingId)
     {
         RefreshExpiredAds(buildingId);
-        return _adRepository.GetActiveByBuilding(buildingId).ToTenantAdDtoList();
+        return _adRepository.GetActiveByBuilding(buildingId).ToAdDtoList();
     }
 
     public AdDto? GetById(long adId)
     {
-        return _adRepository.GetById(adId)?.ToTenantAdDto();
+        return _adRepository.GetById(adId)?.ToAdDto();
     }
 
     public (AdDto newAd, List<AdDto> matchingAds) Create(
@@ -47,9 +47,9 @@ public class AdService
     {
         Ad ad = new Ad(buildingId, author, type, category, description, dateFrom, dateTo);
         Ad newAd = CreateAdWithSlots(ad);
-        List<AdDto> matchingAds = FindMatchingAds(newAd).ToTenantAdDtoList();
+        List<AdDto> matchingAds = FindMatchingAds(newAd).ToAdDtoList();
 
-        return (newAd.ToTenantAdDto(), matchingAds);
+        return (newAd.ToAdDto(), matchingAds);
     }
 
     public List<AdSlotDto> GetFreeSlots(
@@ -59,28 +59,28 @@ public class AdService
     {
         return _adSlotRepository
             .GetFreeSlotsByAd(adId, overlapFrom, overlapTo)
-            .ToTenantAdSlotDtoList();
+            .ToAdSlotDtoList();
     }
 
     public List<BookedAdSlotDto> GetBookedSlotsWithAds(long adId)
     {
         return _adSlotRepository
             .GetBookedSlotsWithAds(adId)
-            .ToTenantBookedAdSlotDtoList();
+            .ToBookedAdSlotDtoList();
     }
 
     public List<AdSlotDto> GetBookedSlots(long adId)
     {
         return _adSlotRepository
             .GetBookedSlotsByAd(adId)
-            .ToTenantAdSlotDtoList();
+            .ToAdSlotDtoList();
     }
 
     public List<AdNotificationDto> GetUnreadNotifications(long userId)
     {
         return _notificationRepository
             .GetUnreadByUser(userId)
-            .ToTenantAdNotificationDtoList();
+            .ToAdNotificationDtoList();
     }
 
     public void Archive(long adId)
@@ -182,7 +182,7 @@ public class AdService
     public List<AdDto> GetAllByBuilding(long buildingId)
     {
         RefreshExpiredAds(buildingId);
-        return _adRepository.GetAllByBuilding(buildingId).ToTenantAdDtoList();
+        return _adRepository.GetAllByBuilding(buildingId).ToAdDtoList();
     }
 
     public int CountByType(List<AdDto> ads, AdType type)
