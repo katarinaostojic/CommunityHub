@@ -27,10 +27,10 @@ public partial class ManageRequestsPage : Page
 
     private void ApproveButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
+        var requestViewModel = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
         try
         {
-            _viewModel.Approve(vm);
+            _viewModel.Approve(requestViewModel);
             MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
@@ -41,14 +41,14 @@ public partial class ManageRequestsPage : Page
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
+        var requestViewModel = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
         try
         {
             RejectReasonWindow rejectWindow = new RejectReasonWindow();
             rejectWindow.ShowDialog();
             if (rejectWindow.Confirmed)
             {
-                _viewModel.Reject(vm, rejectWindow.Reason);
+                _viewModel.Reject(requestViewModel, rejectWindow.Reason);
                 MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

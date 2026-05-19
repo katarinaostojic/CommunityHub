@@ -34,4 +34,18 @@ public partial class MeetingsPage : Page
         CoordinatorMainWindow.Instance.NavigateTo(
             new AddNewMeetingPage(_coordinatorId, _neighborhoodId), "Add New Meeting");
     }
+
+    private void FinalizeVotingButton_Click(object sender, RoutedEventArgs e)
+    {
+        MeetingViewModel meetingViewModel = (MeetingViewModel)((Button)sender).Tag;
+        try
+        {
+            _viewModel.FinalizeVoting(meetingViewModel.MeetingId);
+            MessageBox.Show("Voting finalized!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 }

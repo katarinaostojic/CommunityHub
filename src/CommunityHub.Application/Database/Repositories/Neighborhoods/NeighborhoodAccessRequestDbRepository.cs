@@ -236,6 +236,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }
+
     public long? GetMembershipNeighborhoodId(long citizenId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -246,13 +247,14 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
 
         AddParameter(command, "@citizenId", citizenId);
 
-        object? result = command.ExecuteScalar();
-        if (result == null || result == DBNull.Value)
+        object? membershipResult = command.ExecuteScalar();
+        if (membershipResult == null || membershipResult == DBNull.Value)
             return null;
 
-        return Convert.ToInt64(result);
+        return Convert.ToInt64(membershipResult);
     }
-    public NeighborhoodAccessRequest? GetById(long id)
+
+    public NeighborhoodAccessRequest? GetById(long requestId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
@@ -270,7 +272,7 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
         JOIN users u ON r.citizen_id = u.id
         WHERE r.id = @id";
 
-        AddParameter(command, "@id", id);
+        AddParameter(command, "@id", requestId);
 
         using IDataReader reader = command.ExecuteReader();
         if (reader.Read())

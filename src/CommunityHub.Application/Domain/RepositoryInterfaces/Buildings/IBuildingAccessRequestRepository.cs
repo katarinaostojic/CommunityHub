@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings;
 
 namespace CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 

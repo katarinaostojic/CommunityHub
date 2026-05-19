@@ -24,9 +24,9 @@ public partial class ForumsPage : Page
 
     private void OpenForumButton_Click(object sender, RoutedEventArgs e)
     {
-        var vm = (ForumItemViewModel)((Button)sender).Tag;
+        var forumViewModel = (ForumItemViewModel)((Button)sender).Tag;
         CoordinatorMainWindow.Instance.NavigateTo(
-            new ForumDetailsPage(vm.Forum, _coordinatorId), vm.Title);
+            new ForumDetailsPage(forumViewModel.Forum, _coordinatorId), forumViewModel.Title);
     }
 
     private void NewForumButton_Click(object sender, RoutedEventArgs e)
