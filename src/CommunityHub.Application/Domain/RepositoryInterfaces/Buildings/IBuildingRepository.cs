@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+﻿using CommunityHub.Application.Domain.Buildings;
+
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 
 public interface IBuildingRepository
 {

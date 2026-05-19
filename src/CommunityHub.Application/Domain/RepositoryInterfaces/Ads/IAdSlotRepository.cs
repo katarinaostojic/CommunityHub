@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Ads;
+
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 
 public interface IAdSlotRepository
 {

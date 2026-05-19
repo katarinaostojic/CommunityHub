@@ -2,10 +2,10 @@
 using System.Windows.Controls;
 using Microsoft.Win32;
 using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Application.Services.Shared;
+using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 

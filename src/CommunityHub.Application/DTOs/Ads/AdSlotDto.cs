@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.DTOs.TenantAds;
+﻿namespace CommunityHub.Application.DTOs.Ads;
 
 public class AdSlotDto
 {

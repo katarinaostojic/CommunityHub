@@ -1,6 +1,6 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Buildings;
 
-namespace CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 
 public interface IBuildingAccessRequestRepository
 {

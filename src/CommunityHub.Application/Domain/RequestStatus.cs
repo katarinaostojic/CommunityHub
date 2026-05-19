@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Domain.Neighborhoods;
+﻿namespace CommunityHub.Application.Domain;
 
 public enum RequestStatus
 {

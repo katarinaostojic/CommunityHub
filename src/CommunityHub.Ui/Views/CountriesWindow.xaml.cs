@@ -1,9 +1,9 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.DependencyInjection;
+﻿using CommunityHub.Application.DependencyInjection;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Services.Shared;
+using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Ui.Views
 {

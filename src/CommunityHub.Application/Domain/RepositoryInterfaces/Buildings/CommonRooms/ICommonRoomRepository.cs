@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces.CommonRoomRepositoryInterfaces;
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 
 public interface ICommonRoomRepository
 {

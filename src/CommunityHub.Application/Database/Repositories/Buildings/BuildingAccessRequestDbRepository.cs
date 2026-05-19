@@ -1,8 +1,8 @@
 ﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Buildings;
+using CommunityHub.Application.Database.Readers.Buildings;
+using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Buildings;
@@ -45,9 +45,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         AddParameter(command, "@id", requestId);
 
         using IDataReader reader = command.ExecuteReader();
-        return reader.Read()
-            ? BuildingAccessRequestMapper.MapWithBuilding(reader)
-            : null;
+        return BuildingAccessRequestReader.ReadSingleRequest(reader);
     }
 
     public List<BuildingAccessRequest> GetAllByTenant(long tenantId, RequestStatus? status, bool sortDescending)
@@ -73,7 +71,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         AddParameter(command, "@status", status.HasValue ? RequestStatusMapper.ToDbString(status.Value) : null);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
+        return BuildingAccessRequestReader.ReadRequests(reader);
     }
 
     public int CountByTenantAndStatus(long tenantId, RequestStatus? status)
@@ -138,7 +136,7 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         AddParameter(command, "@status", status);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
+        return BuildingAccessRequestReader.ReadRequests(reader);
     }
 
     public void Update(BuildingAccessRequest request)
@@ -155,13 +153,5 @@ public class BuildingAccessRequestDbRepository : BaseDbRepository, IBuildingAcce
         AddParameter(command, "@reason", request.RejectionReason);
 
         command.ExecuteNonQuery();
-    }
-
-    private List<BuildingAccessRequest> ReadRequests(IDataReader reader)
-    {
-        List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
-        while (reader.Read())
-            requests.Add(BuildingAccessRequestMapper.MapWithBuilding(reader));
-        return requests;
     }
 }

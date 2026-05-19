@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain;
 
 namespace CommunityHub.Application.Database.Mappers;
 

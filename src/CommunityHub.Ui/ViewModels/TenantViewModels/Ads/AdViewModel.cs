@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.DTOs.TenantAds;
+﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Windows;
 
