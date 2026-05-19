@@ -147,14 +147,6 @@ public class NoticeBoardViewModel : BaseViewModel
         HasNotifications = Notifications.Count > 0;
     }
 
-    public void MarkAllNotificationsAsRead()
-    {
-        _adService.MarkAllNotificationsAsRead(_currentUserId);
-
-        Notifications.Clear();
-        HasNotifications = false;
-    }
-
     private void LoadAds()
     {
         UpdateFilterCounts();
