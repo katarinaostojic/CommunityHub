@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Database.Mappers.Buildings;
+using CommunityHub.Application.Database.Readers.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
@@ -43,7 +44,8 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         AddParameter(command, "@country", country);
 
         using IDataReader reader = command.ExecuteReader();
-        List<Building> buildings = ReadBuildings(reader);
+        List<Building> buildings = BuildingReader.ReadBuildings(reader);
+
         AttachImages(buildings);
         return buildings;
     }
@@ -70,63 +72,18 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
 
         List<Building> buildings;
         using (IDataReader reader = command.ExecuteReader())
-            buildings = ReadBuildings(reader);
+        {
+            buildings = BuildingReader.ReadBuildings(reader);
+        }
 
-        if (buildings.Count == 0) return null;
+        if (buildings.Count == 0)
+        {
+            return null;
+        }
 
         Building building = buildings[0];
         PopulateBuildingDetails(building, connection, buildingId);
         return building;
-    }
-
-    private void PopulateBuildingDetails(Building building, IDbConnection connection, long buildingId)
-    {
-        foreach (Image image in _imageRepository.GetByEntity("building", buildingId))
-            building.AddImage(image);
-
-        foreach (BuildingMembership membership in GetMembershipsByBuilding(connection, buildingId))
-            building.AddMembership(membership);
-
-        foreach (BuildingAccessRequest request in GetAccessRequestsByBuilding(connection, buildingId))
-            building.AddAccessRequest(request);
-    }
-
-    private List<BuildingMembership> GetMembershipsByBuilding(IDbConnection connection, long buildingId)
-    {
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
-                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-            FROM building_memberships bm
-            JOIN users u ON bm.user_id = u.id
-            WHERE bm.building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<BuildingMembership> memberships = new List<BuildingMembership>();
-        while (reader.Read())
-            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
-        return memberships;
-    }
-
-    private List<BuildingAccessRequest> GetAccessRequestsByBuilding(IDbConnection connection, long buildingId)
-    {
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
-                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-            FROM building_access_requests r
-            JOIN users u ON r.user_id = u.id
-            WHERE r.building_id = @buildingId";
-
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        List<BuildingAccessRequest> requests = new List<BuildingAccessRequest>();
-        while (reader.Read())
-            requests.Add(BuildingAccessRequestMapper.MapWithoutBuilding(reader));
-        return requests;
     }
 
     public List<Building> GetAllByManager(long managerId)
@@ -150,7 +107,8 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         AddParameter(command, "@managerId", managerId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<Building> buildings = ReadBuildings(reader);
+        List<Building> buildings = BuildingReader.ReadBuildings(reader);
+
         AttachImages(buildings);
         return buildings;
     }
@@ -203,66 +161,6 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         command.ExecuteNonQuery();
     }
 
-    private List<Building> ReadBuildings(IDataReader reader)
-    {
-        Dictionary<long, Building> buildings = new Dictionary<long, Building>();
-        Dictionary<long, Floor> floors = new Dictionary<long, Floor>();
-        HashSet<long> addedUnits = new HashSet<long>();
-
-        while (reader.Read())
-        {
-            long buildingId = Convert.ToInt64(reader["id"]);
-
-            if (!buildings.ContainsKey(buildingId))
-                buildings[buildingId] = BuildingMapper.Map(reader);
-
-            AddFloorIfMissing(reader, buildings, floors);
-            AddUnitIfMissing(reader, floors, addedUnits);
-        }
-
-        return buildings.Values.ToList();
-    }
-
-    private void AddFloorIfMissing(IDataReader reader, Dictionary<long, Building> buildings, Dictionary<long, Floor> floors)
-    {
-        if (reader.IsDBNull(reader.GetOrdinal("floor_id"))) return;
-
-        long floorId = Convert.ToInt64(reader["floor_id"]);
-        long buildingId = Convert.ToInt64(reader["id"]);
-
-        if (floors.ContainsKey(floorId)) return;
-
-        Floor floor = new Floor(floorId, buildings[buildingId], Convert.ToInt32(reader["floor_number"]));
-        floors[floorId] = floor;
-        buildings[buildingId].AddFloor(floor);
-    }
-
-    private void AddUnitIfMissing(IDataReader reader, Dictionary<long, Floor> floors, HashSet<long> addedUnits)
-    {
-        if (reader.IsDBNull(reader.GetOrdinal("floor_id"))) return;
-        if (reader.IsDBNull(reader.GetOrdinal("unit_id"))) return;
-
-        long unitId = Convert.ToInt64(reader["unit_id"]);
-        if (addedUnits.Contains(unitId)) return;
-
-        long floorId = Convert.ToInt64(reader["floor_id"]);
-        Unit unit = new Unit(unitId, floors[floorId], reader["unit_number"].ToString()!);
-        floors[floorId].AddUnit(unit);
-        addedUnits.Add(unitId);
-    }
-
-    private void AttachImages(List<Building> buildings)
-    {
-        if (buildings.Count == 0) return;
-
-        Dictionary<long, List<Image>> imageMap =
-            _imageRepository.GetByEntities("building", buildings.Select(b => b.Id));
-
-        foreach (Building building in buildings)
-            foreach (Image image in imageMap[building.Id])
-                building.AddImage(image);
-    }
-
     public bool BuildingExists(string street, string streetNumber, long cityId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -278,5 +176,111 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         AddParameter(command, "@cityId", cityId);
 
         return Convert.ToInt64(command.ExecuteScalar()) > 0;
+    }
+
+    private void PopulateBuildingDetails(Building building, IDbConnection connection, long buildingId)
+    {
+        AddImages(building, buildingId);
+        AddMemberships(building, connection, buildingId);
+        AddAccessRequests(building, connection, buildingId);
+    }
+
+    private void AddImages(Building building, long buildingId)
+    {
+        foreach (Image image in _imageRepository.GetByEntity("building", buildingId))
+        {
+            building.AddImage(image);
+        }
+    }
+
+    private void AddMemberships(Building building, IDbConnection connection, long buildingId)
+    {
+        foreach (BuildingMembership membership in GetMembershipsByBuilding(connection, buildingId))
+        {
+            building.AddMembership(membership);
+        }
+    }
+
+    private void AddAccessRequests(Building building, IDbConnection connection, long buildingId)
+    {
+        foreach (BuildingAccessRequest request in GetAccessRequestsByBuilding(connection, buildingId))
+        {
+            building.AddAccessRequest(request);
+        }
+    }
+
+    private List<BuildingMembership> GetMembershipsByBuilding(IDbConnection connection, long buildingId)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT bm.id, bm.unit_number, bm.floor_number, bm.approved_at,
+                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+            FROM building_memberships bm
+            JOIN users u ON bm.user_id = u.id
+            WHERE bm.building_id = @buildingId";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<BuildingMembership> memberships = new();
+
+        while (reader.Read())
+        {
+            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
+        }
+
+        return memberships;
+    }
+
+    private List<BuildingAccessRequest> GetAccessRequestsByBuilding(IDbConnection connection, long buildingId)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            SELECT r.id, r.unit_number, r.created_at, r.status, r.rejection_reason,
+                   u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+            FROM building_access_requests r
+            JOIN users u ON r.user_id = u.id
+            WHERE r.building_id = @buildingId";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        List<BuildingAccessRequest> requests = new();
+
+        while (reader.Read())
+        {
+            requests.Add(BuildingAccessRequestMapper.MapWithoutBuilding(reader));
+        }
+
+        return requests;
+    }
+
+    private void AttachImages(List<Building> buildings)
+    {
+        if (buildings.Count == 0)
+        {
+            return;
+        }
+
+        Dictionary<long, List<Image>> imageMap =
+            _imageRepository.GetByEntities("building", buildings.Select(b => b.Id));
+
+        foreach (Building building in buildings)
+        {
+            AddImagesFromMap(building, imageMap);
+        }
+    }
+
+    private static void AddImagesFromMap(Building building, Dictionary<long, List<Image>> imageMap)
+    {
+        if (!imageMap.TryGetValue(building.Id, out List<Image>? images))
+        {
+            return;
+        }
+
+        foreach (Image image in images)
+        {
+            building.AddImage(image);
+        }
     }
 }
