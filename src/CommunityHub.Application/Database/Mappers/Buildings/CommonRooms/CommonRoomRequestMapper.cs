@@ -42,14 +42,7 @@ public static class CommonRoomRequestMapper
 
     private static CommonRoomRequestStatus MapStatus(IDataReader reader)
     {
-        return reader["status"].ToString() switch
-        {
-            "pending" => CommonRoomRequestStatus.Pending,
-            "approved" => CommonRoomRequestStatus.Approved,
-            "rejected" => CommonRoomRequestStatus.Rejected,
-            "pending_date_change" => CommonRoomRequestStatus.PendingDateChange,
-            _ => throw new ArgumentException($"Unknown status: {reader["status"]}")
-        };
+        return CommonRoomRequestStatusMapper.FromDatabaseValue(reader["status"].ToString()!);
     }
 
     private static DateTime? MapNullableDate(IDataReader reader, string column)

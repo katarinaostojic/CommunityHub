@@ -29,11 +29,6 @@ public class CommonRoomRequestService
         return _requestRepository.GetById(requestId)?.ToDto();
     }
 
-    public CommonRoomRequestDto? GetDtoById(long requestId)
-    {
-        return GetById(requestId);
-    }
-
     public List<DateTime> GetFreeDaysInRange(long requestId)
     {
         return _approvalService.GetFreeDaysInRange(requestId);
@@ -93,8 +88,13 @@ public class CommonRoomRequestService
         _approvalService.TryAutoApproveMultiDay(request);
     }
 
-    public void CancelRequest(CommonRoomRequestDto request)
+    public void CancelRequest(long requestId)
     {
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
+
+        if (request == null)
+            return;
+
         if (!CanCancel(request.Status))
         {
             throw new InvalidOperationException("Only pending requests can be cancelled.");
@@ -103,9 +103,9 @@ public class CommonRoomRequestService
         _requestRepository.Delete(request.Id);
     }
 
-    public void AcceptProposedDateChange(CommonRoomRequestDto requestDto)
+    public void AcceptProposedDateChange(long requestId)
     {
-        CommonRoomRequest? request = _requestRepository.GetById(requestDto.Id);
+        CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
         if (!CanAcceptProposedDateChange(request))
             return;

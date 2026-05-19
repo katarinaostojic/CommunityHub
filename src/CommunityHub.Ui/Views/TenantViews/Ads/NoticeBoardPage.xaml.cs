@@ -97,7 +97,7 @@ public partial class NoticeBoardPage : Page
         NavigateTo(_navigationHelper.CreateBookSlotsPage(ad));
     }
 
-    private void ViewBookingsButton_Click(object sender, RoutedEventArgs e)
+    private void ViewDetailsButton_Click(object sender, RoutedEventArgs e)
     {
         AdViewModel ad = GetAdFromButton(sender);
         NavigateTo(_navigationHelper.CreateAdDetailsPage(ad));

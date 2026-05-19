@@ -62,8 +62,6 @@ public partial class NewAdPage : Page
             : (Style)FindResource("FilterChipButton");
     }
 
-    private void CategoryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
-
     private void PostAdButton_Click(object sender, RoutedEventArgs e)
     {
         var result = _viewModel.TryCreateAd(

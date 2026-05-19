@@ -28,9 +28,7 @@ public class AdViewModel : BaseViewModel
 
     public Visibility ArchiveButtonVisible => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
     public Visibility ViewSlotsVisible => (!IsOwnAd && MyMatchingAdId != null) ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility ViewBookingsVisible => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility ViewDetailssVisible => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
 
-    public string ViewBookingsDisplay => _ad.Slots.Any(s => !s.IsFree)
-        ? $"→ View bookings ({_ad.Slots.Count(s => !s.IsFree)})"
-        : "→ View details";
+    public string ViewDetailsDisplay => "→ View details";
 }

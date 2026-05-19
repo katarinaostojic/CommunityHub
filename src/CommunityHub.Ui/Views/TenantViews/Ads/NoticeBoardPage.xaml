@@ -289,13 +289,13 @@
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center">
-                                        <Button Content="{Binding ViewBookingsDisplay}"
+                                        <Button Content="{Binding ViewDetailsDisplay}"
                                                 Style="{StaticResource GhostButton}"
                                                 Foreground="{StaticResource AccentBrush}"
-                                                Visibility="{Binding ViewBookingsVisible}"
+                                                Visibility="{Binding ViewDetailsVisible}"
                                                 Tag="{Binding}"
                                                 Margin="0,0,8,0"
-                                                Click="ViewBookingsButton_Click"/>
+                                                Click="ViewDetailsButton_Click"/>
 
                                         <Button Content="Archive"
                                                 Style="{StaticResource DangerButton}"
