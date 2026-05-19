@@ -7,7 +7,7 @@ public interface IForumRepository
     long Create(Forum forum);
     List<Forum> GetAll(long currentCoordinatorId);
     Forum? GetById(long id, long currentCoordinatorId);
-    void Close(long forumId);
+    void Update(Forum forum);
     long CreateComment(ForumComment comment);
     void AddReaction(long commentId, long coordinatorId, ReactionType reaction);
     void UpdateReaction(long commentId, long coordinatorId, ReactionType reaction);

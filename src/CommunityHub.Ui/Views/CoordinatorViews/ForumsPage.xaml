@@ -1,50 +1,56 @@
 ﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.ForumsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Forums">
+      Title="Forums"
+      Background="{StaticResource BackgroundLightBrush}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="0" Margin="10,8"
+        <TextBox Grid.Row="0" Margin="16,12"
                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                 Tag="Search forums..."/>
+                 Padding="10,8" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
 
         <ScrollViewer Grid.Row="1">
-            <ItemsControl ItemsSource="{Binding Forums}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="#DDDDDD" BorderThickness="1"
-                                Margin="10,5" Padding="12">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding Title}"
-                                           FontWeight="Bold" FontSize="14"/>
-                                <TextBlock Grid.Row="1" FontSize="12" Foreground="Gray">
-                                           <Run Text="Coordinator: "/>
-                                            <Run Text="{Binding CoordinatorFullName, Mode=OneWay}"/>
-                                </TextBlock>
-                                <TextBlock Grid.Row="2" Text="{Binding CreatedAtFormatted}"
-                                           FontSize="12" Foreground="Gray"/>
-                                <Button Grid.Row="3" Content="Open" HorizontalAlignment="Right"
-                                        Padding="10,4" Margin="0,6,0,0"
-                                        Tag="{Binding}" Click="OpenForumButton_Click"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <StackPanel Margin="16,0,16,16">
+                <ItemsControl ItemsSource="{Binding Forums}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorder}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="{Binding Title}"
+                                               FontWeight="Bold" FontSize="15"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                    <TextBlock Grid.Row="1" FontSize="12"
+                                               Style="{StaticResource SecondaryText}" Margin="0,4,0,0">
+                                        <Run Text="Coordinator: "/>
+                                        <Run Text="{Binding CoordinatorFullName, Mode=OneWay}"/>
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="2" Text="{Binding CreatedAtFormatted}"
+                                               FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,2,0,0"/>
+                                    <Button Grid.Row="3" Content="Open" HorizontalAlignment="Left"
+                                            Margin="0,10,0,0"
+                                            Tag="{Binding}" Click="OpenForumButton_Click"
+                                            Style="{StaticResource PrimaryButton}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </ScrollViewer>
 
         <Button HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Content="+" Width="50" Height="50" FontSize="24"
-                Margin="0,0,16,16" Click="NewForumButton_Click"/>
+                Margin="0,0,16,16" Click="NewForumButton_Click"
+                Style="{StaticResource PrimaryButton}"/>
     </Grid>
 </Page>

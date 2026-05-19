@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
@@ -40,7 +41,7 @@ public partial class CreateForumPage : Page
             return;
         }
 
-        _forumService.Create(title, description, _coordinatorId);
+        _forumService.Create(new CreateForumRequest(title, description, _coordinatorId));
         MessageBox.Show("Forum created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         CoordinatorMainWindow.Instance.NavigateTo(new ForumsPage(_coordinatorId), "Forums");
     }

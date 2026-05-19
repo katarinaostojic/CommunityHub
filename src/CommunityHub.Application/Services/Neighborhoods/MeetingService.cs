@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Repositories.Neighborhoods;
+using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 

@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services.Neighborhoods;
+﻿using CommunityHub.Application.Services.Neighborhoods;
 using System.Collections.ObjectModel;
 using CommunityHub.Application.Domain.Neighborhoods;
 

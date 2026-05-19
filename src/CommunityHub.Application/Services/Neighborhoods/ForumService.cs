@@ -15,9 +15,9 @@ public class ForumService
         _repository = repository;
     }
 
-    public long Create(string title, string description, long coordinatorId)
+    public long Create(CreateForumRequest request)
     {
-        Forum forum = new Forum(title, description, coordinatorId);
+        Forum forum = new Forum(request.Title, request.Description, request.CoordinatorId);
         return _repository.Create(forum);
     }
 
@@ -38,9 +38,12 @@ public class ForumService
         return forum.Comments.ToDtoList(forum.CoordinatorId);
     }
 
-    public void Close(long forumId)
+    public void Close(long forumId,long coordinatorId)
     {
-        _repository.Close(forumId);
+        Forum? forum = _repository.GetById(forumId, coordinatorId);
+        if (forum == null) return;
+        forum.Close();
+        _repository.Update(forum);
     }
 
     public void AddComment(long forumId, long coordinatorId, string coordinatorName,
