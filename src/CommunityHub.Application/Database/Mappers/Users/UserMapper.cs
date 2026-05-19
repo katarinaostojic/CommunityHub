@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Mappers;
+namespace CommunityHub.Application.Database.Mappers.Users;
 
 public static class UserMapper
 {

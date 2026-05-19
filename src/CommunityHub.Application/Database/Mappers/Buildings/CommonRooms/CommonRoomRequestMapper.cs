@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;

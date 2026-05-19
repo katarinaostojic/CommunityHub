@@ -1,6 +1,6 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Shared;
 
-namespace CommunityHub.Application.Domain;
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
 
 public interface IImageRepository
 {

@@ -1,9 +1,9 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.DependencyInjection;
+﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
+using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

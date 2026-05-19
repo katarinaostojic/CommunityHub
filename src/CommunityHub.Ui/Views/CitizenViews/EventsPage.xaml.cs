@@ -1,11 +1,11 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using CommunityHub.Ui.Views;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 

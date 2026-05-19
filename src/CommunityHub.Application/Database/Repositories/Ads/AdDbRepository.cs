@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Database.Mappers.Ads;
 using CommunityHub.Application.Database.Readers.Ads;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using System.Data;

@@ -1,7 +1,8 @@
 ﻿using CommunityHub.Application.Database.Readers.Ads;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Ads;

@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Shared;
+
+namespace CommunityHub.Application.Domain.Buildings.CommonRooms;
 
 public enum CommonRoomRequestStatus
 {

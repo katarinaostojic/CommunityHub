@@ -1,4 +1,4 @@
-namespace CommunityHub.Application.Domain;
+namespace CommunityHub.Application.Domain.Shared;
 
 public class Post
 {

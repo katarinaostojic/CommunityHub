@@ -5,7 +5,7 @@ using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Application.Services.Shared;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
