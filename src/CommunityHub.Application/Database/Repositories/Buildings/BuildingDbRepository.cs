@@ -1,7 +1,6 @@
 ﻿using CommunityHub.Application.Database.Readers.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using System.Data;
 
