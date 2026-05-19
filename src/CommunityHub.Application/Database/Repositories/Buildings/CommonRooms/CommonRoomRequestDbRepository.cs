@@ -1,7 +1,5 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
-using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
+using CommunityHub.Application.Database.Readers.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.Buildings.CommonRooms;
 using System.Data;
 
@@ -9,15 +7,6 @@ namespace CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 
 public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomRequestRepository
 {
-    private static readonly UserColumnAliases TenantAliases = new(
-        "user_id",
-        "tenant_username",
-        "tenant_password",
-        "tenant_name",
-        "tenant_surname",
-        "tenant_birthday",
-        "tenant_role");
-
     public List<CommonRoomRequest> GetAllByCommonRoom(long commonRoomId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -41,7 +30,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@commonRoomId", commonRoomId);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
+        return CommonRoomRequestReader.ReadRequests(reader);
     }
 
     public CommonRoomRequest? GetById(long requestId)
@@ -66,7 +55,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@requestId", requestId);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadSingleRequest(reader);
+        return CommonRoomRequestReader.ReadSingleRequest(reader);
     }
 
     public List<CommonRoomRequest> GetByTenant(long tenantId)
@@ -92,7 +81,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@tenantId", tenantId);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
+        return CommonRoomRequestReader.ReadRequests(reader);
     }
 
     public List<CommonRoomRequest> GetByTenantAndBuilding(long tenantId, long buildingId)
@@ -120,7 +109,7 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadRequests(reader);
+        return CommonRoomRequestReader.ReadRequests(reader);
     }
 
     public long Create(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
@@ -178,33 +167,5 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
 
         AddParameter(command, "@id", requestId);
         command.ExecuteNonQuery();
-    }
-
-    private static CommonRoomRequest? ReadSingleRequest(IDataReader reader)
-    {
-        if (!reader.Read())
-        {
-            return null;
-        }
-
-        return ReadRequest(reader);
-    }
-
-    private static List<CommonRoomRequest> ReadRequests(IDataReader reader)
-    {
-        List<CommonRoomRequest> requests = new();
-
-        while (reader.Read())
-        {
-            requests.Add(ReadRequest(reader));
-        }
-
-        return requests;
-    }
-
-    private static CommonRoomRequest ReadRequest(IDataReader reader)
-    {
-        User tenant = UserMapper.MapWithAliases(reader, TenantAliases);
-        return CommonRoomRequestMapper.Map(reader, tenant);
     }
 }
