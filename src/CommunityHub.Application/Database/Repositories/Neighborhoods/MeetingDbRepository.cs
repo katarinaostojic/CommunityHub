@@ -217,4 +217,41 @@ public class MeetingDbRepository : BaseDbRepository
         AddParameter(command, "@votedDate", newDate.ToDateTime(TimeOnly.MinValue));
         command.ExecuteNonQuery();
     }
+    public Meeting? GetById(long meetingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT m.id, m.neighborhood_id, m.theme, m.custom_theme_name, m.meeting_time,
+               m.date_range_start, m.date_range_end, m.status, m.scheduled_date
+        FROM meetings m
+        WHERE m.id = @meetingId";
+
+        AddParameter(command, "@meetingId", meetingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+            return MapMeeting(reader);
+        return null;
+    }
+    public void Update(Meeting meeting)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        using IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        UPDATE meetings 
+        SET status = @status, scheduled_date = @scheduledDate
+        WHERE id = @id";
+
+        AddParameter(command, "@id", meeting.Id);
+        AddParameter(command, "@status", ParseStatusToString(meeting.Status));
+        IDbDataParameter scheduledDateParam = command.CreateParameter();
+        scheduledDateParam.ParameterName = "@scheduledDate";
+        scheduledDateParam.Value = meeting.ScheduledDate.HasValue
+            ? (object)DateTime.SpecifyKind(meeting.ScheduledDate.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
+            : DBNull.Value;
+        scheduledDateParam.DbType = DbType.DateTime;
+        command.Parameters.Add(scheduledDateParam);
+        command.ExecuteNonQuery();
+    }
 }
