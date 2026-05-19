@@ -31,6 +31,40 @@ public class AdService
         return _adRepository.GetActiveByBuilding(buildingId).ToAdDtoList();
     }
 
+    public List<AdDto> GetFilteredActiveByBuilding(
+    long buildingId,
+    AdType? type,
+    AdCategory? category)
+    {
+        RefreshExpiredAds(buildingId);
+
+        return _adRepository
+            .GetFilteredActiveByBuilding(buildingId, type, category)
+            .ToAdDtoList();
+    }
+
+    public int CountFilteredActiveByBuilding(
+        long buildingId,
+        AdType? type,
+        AdCategory? category)
+    {
+        RefreshExpiredAds(buildingId);
+
+        return _adRepository.CountFilteredActiveByBuilding(buildingId, type, category);
+    }
+
+    public AdDto? GetCurrentUserMatchingAd(long buildingId, long currentUserId, AdDto theirAd)
+    {
+        AdType myType = theirAd.Type == AdType.Offering
+            ? AdType.Seeking
+            : AdType.Offering;
+
+        return GetFilteredActiveByBuilding(buildingId, myType, theirAd.Category)
+            .FirstOrDefault(ad =>
+                ad.AuthorId == currentUserId
+                && ad.OverlapsWith(theirAd.DateFrom, theirAd.DateTo));
+    }
+
     public AdDto? GetById(long adId)
     {
         return _adRepository.GetById(adId)?.ToAdDto();
@@ -145,19 +179,21 @@ public class AdService
     {
         RefreshExpiredAds(newAd.BuildingId);
 
-        List<Ad> activeAds = _adRepository.GetActiveByBuilding(newAd.BuildingId);
-
         AdType oppositeType = newAd.Type == AdType.Offering
             ? AdType.Seeking
             : AdType.Offering;
 
-        return activeAds
-            .Where(ad => ad.Id != newAd.Id
-                && ad.Author.Id != newAd.Author.Id
-                && ad.Type == oppositeType
-                && ad.Category == newAd.Category
-                && ad.OverlapsWith(newAd.DateFrom, newAd.DateTo))
+        return _adRepository
+            .GetFilteredActiveByBuilding(newAd.BuildingId, oppositeType, newAd.Category)
+            .Where(ad => IsMatchingAd(ad, newAd))
             .ToList();
+    }
+
+    private static bool IsMatchingAd(Ad ad, Ad newAd)
+    {
+        return ad.Id != newAd.Id
+            && ad.Author.Id != newAd.Author.Id
+            && ad.OverlapsWith(newAd.DateFrom, newAd.DateTo);
     }
 
     private List<(DateOnly, TimeOnly, TimeOnly)> GenerateSlots(DateOnly dateFrom, DateOnly dateTo)

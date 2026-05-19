@@ -28,6 +28,51 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         return ReadAds(reader);
     }
 
+    public List<Ad> GetFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT a.id, a.building_id, a.type, a.category, a.description,
+               a.date_from, a.date_to, a.status,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM notice_board_ads a
+        JOIN users u ON a.user_id = u.id
+        WHERE a.building_id = @buildingId
+          AND a.status = 'active'
+          AND (@type IS NULL OR a.type = @type::ad_type)
+          AND (@category IS NULL OR a.category = @category::ad_category)
+        ORDER BY a.id DESC";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@type", GetTypeParameterValue(type));
+        AddParameter(command, "@category", GetCategoryParameterValue(category));
+
+        using IDataReader reader = command.ExecuteReader();
+        return ReadAds(reader);
+    }
+
+    public int CountFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT COUNT(*)
+        FROM notice_board_ads
+        WHERE building_id = @buildingId
+          AND status = 'active'
+          AND (@type IS NULL OR type = @type::ad_type)
+          AND (@category IS NULL OR category = @category::ad_category)";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@type", GetTypeParameterValue(type));
+        AddParameter(command, "@category", GetCategoryParameterValue(category));
+
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
+
     public Ad? GetById(long adId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -82,6 +127,20 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@id", ad.Id);
         AddParameter(command, "@status", AdMapper.ToDbStatus(ad.Status));
         command.ExecuteNonQuery();
+    }
+
+    private static string? GetTypeParameterValue(AdType? type)
+    {
+        return type.HasValue
+            ? AdMapper.ToDbType(type.Value)
+            : null;
+    }
+
+    private static string? GetCategoryParameterValue(AdCategory? category)
+    {
+        return category.HasValue
+            ? AdMapper.ToDbCategory(category.Value)
+            : null;
     }
 
     private List<Ad> ReadAds(IDataReader reader)

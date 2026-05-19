@@ -13,7 +13,6 @@ public class NoticeBoardViewModel : BaseViewModel
     private readonly long _currentUserId;
     private readonly long _buildingId;
 
-    private List<AdDto> _allActiveAds = new();
     private ObservableCollection<AdViewModel> _filteredAds = new();
     private ObservableCollection<AdNotificationViewModel> _notifications = new();
 
@@ -89,19 +88,19 @@ public class NoticeBoardViewModel : BaseViewModel
     public void FilterAll()
     {
         _currentTypeFilter = null;
-        ApplyFilters();
+        LoadAds();
     }
 
     public void FilterOffering()
     {
         _currentTypeFilter = AdType.Offering;
-        ApplyFilters();
+        LoadAds();
     }
 
     public void FilterSeeking()
     {
         _currentTypeFilter = AdType.Seeking;
-        ApplyFilters();
+        LoadAds();
     }
 
     public void FilterByCategory(int selectedIndex)
@@ -110,8 +109,7 @@ public class NoticeBoardViewModel : BaseViewModel
             ? null
             : (AdCategory)(selectedIndex - 1);
 
-        UpdateFilterCounts();
-        ApplyFilters();
+        LoadAds();
     }
 
     public void ArchiveAd(long adId)
@@ -133,15 +131,7 @@ public class NoticeBoardViewModel : BaseViewModel
 
     public AdDto? GetCurrentUserMatchingAd(AdDto theirAd)
     {
-        AdType myType = theirAd.Type == AdType.Offering
-            ? AdType.Seeking
-            : AdType.Offering;
-
-        return _allActiveAds.FirstOrDefault(ad =>
-            ad.AuthorId == _currentUserId
-            && ad.Type == myType
-            && ad.Category == theirAd.Category
-            && ad.OverlapsWith(theirAd.DateFrom, theirAd.DateTo));
+        return _adService.GetCurrentUserMatchingAd(_buildingId, _currentUserId, theirAd);
     }
 
     public void DismissNotification(long notificationId)
@@ -167,10 +157,23 @@ public class NoticeBoardViewModel : BaseViewModel
 
     private void LoadAds()
     {
-        _allActiveAds = _adService.GetActiveByBuilding(_buildingId);
-
         UpdateFilterCounts();
-        ApplyFilters();
+        LoadFilteredAds();
+    }
+
+    private void LoadFilteredAds()
+    {
+        List<AdDto> ads = _adService.GetFilteredActiveByBuilding(
+            _buildingId,
+            _currentTypeFilter,
+            _currentCategoryFilter);
+
+        List<AdViewModel> filtered = ads
+            .Select(ad => new AdViewModel(ad, _currentUserId, GetCurrentUserMatchingAd(ad)?.Id))
+            .ToList();
+
+        FilteredAds = new ObservableCollection<AdViewModel>(filtered);
+        ResultsCountText = $"Showing {filtered.Count} active ad{(filtered.Count != 1 ? "s" : "")}";
     }
 
     private void LoadNotifications()
@@ -186,30 +189,24 @@ public class NoticeBoardViewModel : BaseViewModel
 
     private void UpdateFilterCounts()
     {
-        List<AdDto> adsForSelectedCategory = _allActiveAds
-            .Where(ad => _currentCategoryFilter == null || ad.Category == _currentCategoryFilter)
-            .ToList();
+        int allCount = _adService.CountFilteredActiveByBuilding(
+            _buildingId,
+            null,
+            _currentCategoryFilter);
 
-        int allCount = adsForSelectedCategory.Count;
-        int offeringCount = adsForSelectedCategory.Count(ad => ad.Type == AdType.Offering);
-        int seekingCount = adsForSelectedCategory.Count(ad => ad.Type == AdType.Seeking);
+        int offeringCount = _adService.CountFilteredActiveByBuilding(
+            _buildingId,
+            AdType.Offering,
+            _currentCategoryFilter);
+
+        int seekingCount = _adService.CountFilteredActiveByBuilding(
+            _buildingId,
+            AdType.Seeking,
+            _currentCategoryFilter);
 
         AllFilterText = $"All ({allCount})";
         OfferingFilterText = $"Offering ({offeringCount})";
         SeekingFilterText = $"Seeking ({seekingCount})";
-    }
-
-    private void ApplyFilters()
-    {
-        List<AdViewModel> filtered = _allActiveAds
-            .Where(ad => _currentTypeFilter == null || ad.Type == _currentTypeFilter)
-            .Where(ad => _currentCategoryFilter == null || ad.Category == _currentCategoryFilter)
-            .Select(ad => new AdViewModel(ad, _currentUserId, GetCurrentUserMatchingAd(ad)?.Id))
-            .ToList();
-
-        FilteredAds = new ObservableCollection<AdViewModel>(filtered);
-
-        ResultsCountText = $"Showing {filtered.Count} active ad{(filtered.Count != 1 ? "s" : "")}";
     }
 
     private static List<string> BuildCategoryOptions()
