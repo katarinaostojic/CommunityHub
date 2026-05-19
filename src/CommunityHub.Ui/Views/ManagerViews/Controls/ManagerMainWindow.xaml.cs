@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Shared;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

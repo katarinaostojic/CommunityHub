@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Database.Mappers;
+﻿namespace CommunityHub.Application.Database.Mappers.Users;
 
 public class UserColumnAliases
 {

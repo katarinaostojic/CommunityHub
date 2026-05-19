@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;

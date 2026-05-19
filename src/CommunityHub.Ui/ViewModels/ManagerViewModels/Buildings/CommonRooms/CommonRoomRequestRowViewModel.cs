@@ -14,8 +14,6 @@ public class CommonRoomRequestRowViewModel
 
     public long Id => _dto.Id;
     public string TenantFullName => _dto.TenantFullName;
-    public string DateRangeDisplay => _dto.DateRangeDisplay;
-    public string RentalTypeDisplay => _dto.RentalTypeDisplay;
     public DateTime? ApprovedDate => _dto.ApprovedDate;
     public DateTime? ProposedDateFrom => _dto.ProposedDateFrom;
     public DateTime? ProposedDateTo => _dto.ProposedDateTo;

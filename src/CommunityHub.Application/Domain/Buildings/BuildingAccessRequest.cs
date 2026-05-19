@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Shared;
+
+namespace CommunityHub.Application.Domain.Buildings;
 
 public class BuildingAccessRequest
 {

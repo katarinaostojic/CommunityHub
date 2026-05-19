@@ -15,4 +15,16 @@ public static class CommonRoomRequestStatusMapper
             _ => throw new ArgumentException($"Unknown status: {status}")
         };
     }
+
+    public static CommonRoomRequestStatus FromDatabaseValue(string status)
+    {
+        return status switch
+        {
+            "pending" => CommonRoomRequestStatus.Pending,
+            "approved" => CommonRoomRequestStatus.Approved,
+            "rejected" => CommonRoomRequestStatus.Rejected,
+            "pending_date_change" => CommonRoomRequestStatus.PendingDateChange,
+            _ => throw new ArgumentException($"Unknown status: {status}")
+        };
+    }
 }

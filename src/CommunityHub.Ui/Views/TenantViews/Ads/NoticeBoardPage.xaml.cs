@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
@@ -97,7 +97,7 @@ public partial class NoticeBoardPage : Page
         NavigateTo(_navigationHelper.CreateBookSlotsPage(ad));
     }
 
-    private void ViewBookingsButton_Click(object sender, RoutedEventArgs e)
+    private void ViewDetailsButton_Click(object sender, RoutedEventArgs e)
     {
         AdViewModel ad = GetAdFromButton(sender);
         NavigateTo(_navigationHelper.CreateAdDetailsPage(ad));

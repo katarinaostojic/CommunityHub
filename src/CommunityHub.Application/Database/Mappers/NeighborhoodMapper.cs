@@ -1,5 +1,6 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Mappers.Users;
 using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers;

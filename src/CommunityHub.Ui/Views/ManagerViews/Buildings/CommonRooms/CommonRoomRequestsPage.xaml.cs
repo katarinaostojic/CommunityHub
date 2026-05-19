@@ -1,8 +1,8 @@
-﻿using CommunityHub.Application.Domain;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 

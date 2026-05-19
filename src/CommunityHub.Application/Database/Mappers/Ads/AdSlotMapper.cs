@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Database.Mappers.Users;
+using CommunityHub.Application.Domain.Ads;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Ads;

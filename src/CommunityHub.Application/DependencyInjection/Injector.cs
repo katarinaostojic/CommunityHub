@@ -3,6 +3,7 @@ using CommunityHub.Application.Database.Repositories.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings;
 using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Ads;

@@ -136,7 +136,7 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="Rental type:" Style="{StaticResource SecondaryText}"/>
-                                        <TextBlock Text="{Binding RentalType}" FontSize="13"/>
+                                        <TextBlock Text="{Binding RentalTypeDisplay}" FontSize="13"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="Requested Dates:" Style="{StaticResource SecondaryText}"/>

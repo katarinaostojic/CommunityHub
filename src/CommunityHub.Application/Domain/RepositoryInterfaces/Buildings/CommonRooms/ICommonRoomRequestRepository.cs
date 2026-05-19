@@ -1,5 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
 
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
+
 public interface ICommonRoomRequestRepository
 {
     List<CommonRoomRequest> GetAllByCommonRoom(long commonRoomId);
