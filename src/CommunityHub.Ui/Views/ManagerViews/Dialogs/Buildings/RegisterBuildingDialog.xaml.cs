@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Application.Services.Shared;
 using Microsoft.Win32;

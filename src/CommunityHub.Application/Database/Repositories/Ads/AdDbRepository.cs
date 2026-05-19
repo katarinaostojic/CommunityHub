@@ -1,7 +1,8 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Ads;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Mappers.Ads;
+using CommunityHub.Application.Database.Readers.Ads;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Ads;
@@ -25,7 +26,52 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        return ReadAds(reader);
+        return AdReader.ReadAds(reader);
+    }
+
+    public List<Ad> GetFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT a.id, a.building_id, a.type, a.category, a.description,
+               a.date_from, a.date_to, a.status,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM notice_board_ads a
+        JOIN users u ON a.user_id = u.id
+        WHERE a.building_id = @buildingId
+          AND a.status = 'active'
+          AND (@type IS NULL OR a.type = @type::ad_type)
+          AND (@category IS NULL OR a.category = @category::ad_category)
+        ORDER BY a.id DESC";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@type", GetTypeParameterValue(type));
+        AddParameter(command, "@category", GetCategoryParameterValue(category));
+
+        using IDataReader reader = command.ExecuteReader();
+        return AdReader.ReadAds(reader);
+    }
+
+    public int CountFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT COUNT(*)
+        FROM notice_board_ads
+        WHERE building_id = @buildingId
+          AND status = 'active'
+          AND (@type IS NULL OR type = @type::ad_type)
+          AND (@category IS NULL OR category = @category::ad_category)";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@type", GetTypeParameterValue(type));
+        AddParameter(command, "@category", GetCategoryParameterValue(category));
+
+        return Convert.ToInt32(command.ExecuteScalar());
     }
 
     public Ad? GetById(long adId)
@@ -43,8 +89,26 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@adId", adId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<Ad> ads = ReadAds(reader);
-        return ads.Count == 0 ? null : ads[0];
+        return AdReader.ReadSingleAd(reader);
+    }
+
+    public List<Ad> GetAllByBuilding(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT a.id, a.building_id, a.type, a.category, a.description,
+               a.date_from, a.date_to, a.status,
+               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+        FROM notice_board_ads a
+        JOIN users u ON a.user_id = u.id
+        WHERE a.building_id = @buildingId
+        ORDER BY a.id DESC";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return AdReader.ReadAds(reader);
     }
 
     public long Create(Ad ad)
@@ -64,8 +128,8 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@type", AdMapper.ToDbType(ad.Type));
         AddParameter(command, "@category", AdMapper.ToDbCategory(ad.Category));
         AddParameter(command, "@description", ad.Description);
-        AddParameter(command, "@dateFrom", DateTime.SpecifyKind(ad.DateFrom.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
-        AddParameter(command, "@dateTo", DateTime.SpecifyKind(ad.DateTo.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@dateFrom", ToUtcDateTime(ad.DateFrom));
+        AddParameter(command, "@dateTo", ToUtcDateTime(ad.DateTo));
 
         return Convert.ToInt64(command.ExecuteScalar());
     }
@@ -81,36 +145,26 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
 
         AddParameter(command, "@id", ad.Id);
         AddParameter(command, "@status", AdMapper.ToDbStatus(ad.Status));
+
         command.ExecuteNonQuery();
     }
 
-    private List<Ad> ReadAds(IDataReader reader)
+    private static string? GetTypeParameterValue(AdType? type)
     {
-        List<Ad> ads = new List<Ad>();
-        while (reader.Read())
-        {
-            User author = UserMapper.Map(reader);
-            ads.Add(AdMapper.Map(reader, author));
-        }
-        return ads;
+        return type.HasValue
+            ? AdMapper.ToDbType(type.Value)
+            : null;
     }
 
-    public List<Ad> GetAllByBuilding(long buildingId)
+    private static string? GetCategoryParameterValue(AdCategory? category)
     {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT a.id, a.building_id, a.type, a.category, a.description,
-               a.date_from, a.date_to, a.status,
-               u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
-        FROM notice_board_ads a
-        JOIN users u ON a.user_id = u.id
-        WHERE a.building_id = @buildingId
-        ORDER BY a.id DESC";
+        return category.HasValue
+            ? AdMapper.ToDbCategory(category.Value)
+            : null;
+    }
 
-        AddParameter(command, "@buildingId", buildingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        return ReadAds(reader);
+    private static DateTime ToUtcDateTime(DateOnly date)
+    {
+        return DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
     }
 }

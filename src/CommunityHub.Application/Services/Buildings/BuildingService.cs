@@ -1,6 +1,6 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+﻿using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
 

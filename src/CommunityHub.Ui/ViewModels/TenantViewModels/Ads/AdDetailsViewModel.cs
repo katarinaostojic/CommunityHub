@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.DTOs.TenantAds;
+﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Windows;
@@ -11,7 +11,10 @@ public class AdDetailsViewModel : BaseViewModel
     private readonly long _adId;
     private bool _isActive;
 
-    public AdDetailsViewModel(AdDto ad, AdService adService)
+    public AdDetailsViewModel(
+        AdDto ad,
+        AdService adService,
+        AdSlotBookingService slotBookingService)
     {
         _adService = adService;
         _adId = ad.Id;
@@ -22,7 +25,7 @@ public class AdDetailsViewModel : BaseViewModel
         Description = ad.Description;
         _isActive = ad.IsActive;
 
-        Slots = new AdSlotsViewModel(adService, ad.Id, ad.DateFrom, ad.DateTo);
+        Slots = new AdSlotsViewModel(slotBookingService, ad.Id, ad.DateFrom, ad.DateTo);
     }
 
     public string TypeDisplay { get; }
@@ -62,5 +65,4 @@ public class AdDetailsViewModel : BaseViewModel
         _adService.Restore(_adId);
         IsActive = true;
     }
-
 }

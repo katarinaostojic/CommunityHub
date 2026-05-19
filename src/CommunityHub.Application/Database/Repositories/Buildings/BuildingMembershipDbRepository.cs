@@ -1,6 +1,7 @@
-﻿using CommunityHub.Application.Database.Mappers.Buildings;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Readers.Buildings;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Buildings;
@@ -28,39 +29,55 @@ public class BuildingMembershipDbRepository : BaseDbRepository, IBuildingMembers
         AddParameter(command, "@userId", tenantId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<BuildingMembership> memberships = new List<BuildingMembership>();
-        while (reader.Read())
-            memberships.Add(BuildingMembershipMapper.MapWithBuilding(reader));
-
-        return memberships;
+        return BuildingMembershipReader.ReadMembershipsWithBuilding(reader);
     }
 
     public void Create(BuildingAccessRequest request)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
 
-        IDbCommand floorCmd = connection.CreateCommand();
-        floorCmd.CommandText = @"
+        int floorNumber = GetFloorNumber(connection, request);
+        CreateMembership(connection, request, floorNumber);
+    }
+
+    private int GetFloorNumber(IDbConnection connection, BuildingAccessRequest request)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
             SELECT f.floor_number FROM units u
             JOIN floors f ON u.floor_id = f.id
             WHERE f.building_id = @buildingId AND u.unit_number = @unitNumber
             LIMIT 1";
-        AddParameter(floorCmd, "@buildingId", request.Building.Id);
-        AddParameter(floorCmd, "@unitNumber", request.UnitNumber);
 
-        object? floorResult = floorCmd.ExecuteScalar();
-        int floorNumber = floorResult != null && floorResult != DBNull.Value
-            ? Convert.ToInt32(floorResult) : 0;
+        AddParameter(command, "@buildingId", request.Building.Id);
+        AddParameter(command, "@unitNumber", request.UnitNumber);
 
-        IDbCommand cmd = connection.CreateCommand();
-        cmd.CommandText = @"
+        object? result = command.ExecuteScalar();
+
+        if (result == null || result == DBNull.Value)
+        {
+            return 0;
+        }
+
+        return Convert.ToInt32(result);
+    }
+
+    private void CreateMembership(
+        IDbConnection connection,
+        BuildingAccessRequest request,
+        int floorNumber)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
             INSERT INTO building_memberships (building_id, user_id, unit_number, floor_number, approved_at)
             VALUES (@buildingId, @userId, @unitNumber, @floorNumber, @approvedAt)";
-        AddParameter(cmd, "@buildingId", request.Building.Id);
-        AddParameter(cmd, "@userId", request.Tenant.Id);
-        AddParameter(cmd, "@unitNumber", request.UnitNumber);
-        AddParameter(cmd, "@floorNumber", floorNumber);
-        AddParameter(cmd, "@approvedAt", DateTime.UtcNow);
-        cmd.ExecuteNonQuery();
+
+        AddParameter(command, "@buildingId", request.Building.Id);
+        AddParameter(command, "@userId", request.Tenant.Id);
+        AddParameter(command, "@unitNumber", request.UnitNumber);
+        AddParameter(command, "@floorNumber", floorNumber);
+        AddParameter(command, "@approvedAt", DateTime.UtcNow);
+
+        command.ExecuteNonQuery();
     }
 }

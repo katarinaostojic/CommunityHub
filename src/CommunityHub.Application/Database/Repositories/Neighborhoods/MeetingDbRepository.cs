@@ -1,9 +1,11 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Database.Repositories.Shared;
+using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
-public class MeetingDbRepository : BaseDbRepository
+public class MeetingDbRepository : BaseDbRepository, IMeetingRepository
 {
     public long Create(Meeting meeting)
     {

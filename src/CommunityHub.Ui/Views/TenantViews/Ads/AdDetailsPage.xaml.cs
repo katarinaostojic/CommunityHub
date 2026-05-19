@@ -1,11 +1,11 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.DTOs.TenantAds;
+using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -22,7 +22,9 @@ public partial class AdDetailsPage : Page
         _membership = membership;
 
         AdService adService = Injector.CreateInstance<AdService>();
-        _viewModel = new AdDetailsViewModel(ad, adService);
+        AdSlotBookingService slotBookingService = Injector.CreateInstance<AdSlotBookingService>();
+
+        _viewModel = new AdDetailsViewModel(ad, adService, slotBookingService);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -44,5 +46,6 @@ public partial class AdDetailsPage : Page
     private void GoBackButton_Click(object sender, RoutedEventArgs e) =>
         NavigationService.Navigate(new NoticeBoardPage(_user, _membership));
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
+    private void MenuButton_Click(object sender, RoutedEventArgs e) =>
+        AppMenu.Open();
 }

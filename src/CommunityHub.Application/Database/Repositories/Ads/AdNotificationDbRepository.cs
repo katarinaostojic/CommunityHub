@@ -1,8 +1,7 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Ads;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Readers.Ads;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Ads;
@@ -20,6 +19,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
         AddParameter(command, "@recipientId", recipientId);
         AddParameter(command, "@adId", adId);
         AddParameter(command, "@bookedByAdId", bookedByAdId);
+
         command.ExecuteNonQuery();
     }
 
@@ -55,27 +55,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
         AddParameter(command, "@userId", userId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<AdNotification> notifications = new();
-        while (reader.Read())
-        {
-            User adAuthor = UserMapper.Map(reader);
-            Ad ad = AdMapper.Map(reader, adAuthor);
-
-            User bookedByAuthor = UserMapper.MapWithAliases(reader,
-                "ub_id", "ub_username", "ub_password",
-                "ub_name", "ub_surname", "ub_birthday", "ub_role");
-            Ad bookedByAd = AdMapper.MapBookedByAd(reader, bookedByAuthor);
-
-            notifications.Add(new AdNotification(
-                id: Convert.ToInt64(reader["notif_id"]),
-                recipientId: Convert.ToInt64(reader["recipient_id"]),
-                ad: ad,
-                bookedByAd: bookedByAd,
-                createdAt: Convert.ToDateTime(reader["created_at"]),
-                isRead: Convert.ToBoolean(reader["is_read"])
-            ));
-        }
-        return notifications;
+        return AdNotificationReader.ReadNotifications(reader);
     }
 
     public void MarkAsRead(long notificationId)
@@ -88,6 +68,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             WHERE id = @notificationId";
 
         AddParameter(command, "@notificationId", notificationId);
+
         command.ExecuteNonQuery();
     }
 
@@ -101,6 +82,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             WHERE recipient_id = @userId";
 
         AddParameter(command, "@userId", userId);
+
         command.ExecuteNonQuery();
     }
 }

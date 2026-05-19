@@ -84,9 +84,9 @@
 
         <!-- Notifications -->
         <ItemsControl Grid.Row="2"
-                      ItemsSource="{Binding Notifications}"
+                      ItemsSource="{Binding Notifications.Items}"
                       Margin="16,10,16,0"
-                      Visibility="{Binding HasNotifications, Converter={StaticResource BoolToVis}}">
+                      Visibility="{Binding Notifications.HasItems, Converter={StaticResource BoolToVis}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Background="#EBF5FB"
@@ -182,19 +182,19 @@
                        Margin="0,0,8,0"/>
 
             <Button x:Name="FilterAllButton"
-                    Content="{Binding AllFilterText}"
+                    Content="{Binding Filters.AllFilterText}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterAllButton_Click"/>
 
             <Button x:Name="FilterOfferingButton"
-                    Content="{Binding OfferingFilterText}"
+                    Content="{Binding Filters.OfferingFilterText}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterOfferingButton_Click"/>
 
             <Button x:Name="FilterSeekingButton"
-                    Content="{Binding SeekingFilterText}"
+                    Content="{Binding Filters.SeekingFilterText}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,16,0"
                     Click="FilterSeekingButton_Click"/>
@@ -289,13 +289,13 @@
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center">
-                                        <Button Content="{Binding ViewBookingsDisplay}"
+                                        <Button Content="{Binding ViewDetailsDisplay}"
                                                 Style="{StaticResource GhostButton}"
                                                 Foreground="{StaticResource AccentBrush}"
-                                                Visibility="{Binding ViewBookingsVisible}"
+                                                Visibility="{Binding ViewDetailsVisible}"
                                                 Tag="{Binding}"
                                                 Margin="0,0,8,0"
-                                                Click="ViewBookingsButton_Click"/>
+                                                Click="ViewDetailsButton_Click"/>
 
                                         <Button Content="Archive"
                                                 Style="{StaticResource DangerButton}"

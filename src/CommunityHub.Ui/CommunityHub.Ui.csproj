@@ -26,4 +26,8 @@
 	  <Page Remove="Images\NewFolder1\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Page Include="App.xaml" />
+	</ItemGroup>
+
 </Project>

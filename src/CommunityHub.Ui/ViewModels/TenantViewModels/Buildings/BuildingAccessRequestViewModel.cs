@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.DTOs.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;

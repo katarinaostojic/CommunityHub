@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Database.Repositories;
+﻿using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
 
