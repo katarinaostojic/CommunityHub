@@ -22,16 +22,20 @@ public class MeetingService
 
     public void CheckAndFinalizeVoting(long meetingId)
     {
+        Meeting? meeting = _repository.GetById(meetingId);
+        if (meeting == null) return;
+
         var voteCounts = _repository.GetVoteCounts(meetingId);
 
         if (voteCounts.Count == 0)
+            meeting.Cancel();
+        else
         {
-            _repository.UpdateStatus(meetingId, MeetingStatus.Cancelled, null);
-            return;
+            DateOnly winningDate = voteCounts.OrderByDescending(v => v.Value).First().Key;
+            meeting.Schedule(winningDate);
         }
 
-        DateOnly winningDate = voteCounts.OrderByDescending(v => v.Value).First().Key;
-        _repository.UpdateStatus(meetingId, MeetingStatus.Scheduled, winningDate);
+        _repository.Update(meeting);
     }
 
     public void AddVote(long meetingId, long citizenId, DateOnly votedDate)
