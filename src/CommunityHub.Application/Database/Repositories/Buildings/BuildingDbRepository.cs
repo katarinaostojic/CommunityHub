@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Database.Readers.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using System.Data;
 
@@ -237,7 +238,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        return BuildingAccessRequestReader.ReadAccessRequests(reader);
+        return BuildingAccessRequestWithoutBuildingReader.ReadAccessRequests(reader);
     }
 
     private void AttachImages(List<Building> buildings)
@@ -247,8 +248,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
             return;
         }
 
-        Dictionary<long, List<Image>> imageMap =
-            _imageRepository.GetByEntities("building", buildings.Select(b => b.Id));
+        Dictionary<long, List<Image>> imageMap = _imageRepository.GetByEntities("building", buildings.Select(b => b.Id));
 
         foreach (Building building in buildings)
         {
