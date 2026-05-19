@@ -46,13 +46,6 @@ public class AdSlotBookingService
             .ToBookedAdSlotDtoList();
     }
 
-    public List<AdSlotDto> GetBookedSlots(long adId)
-    {
-        return _adSlotRepository
-            .GetBookedSlotsByAd(adId)
-            .ToAdSlotDtoList();
-    }
-
     public void BookSlots(IEnumerable<long> slotIds, long bookedByAdId, long ownerAdId)
     {
         foreach (long slotId in slotIds)

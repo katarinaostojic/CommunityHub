@@ -74,6 +74,20 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         return Convert.ToInt32(command.ExecuteScalar());
     }
 
+    private static string? GetTypeParameterValue(AdType? type)
+    {
+        return type.HasValue
+            ? AdMapper.ToDbType(type.Value)
+            : null;
+    }
+
+    private static string? GetCategoryParameterValue(AdCategory? category)
+    {
+        return category.HasValue
+            ? AdMapper.ToDbCategory(category.Value)
+            : null;
+    }
+
     public Ad? GetById(long adId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -147,20 +161,6 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@status", AdMapper.ToDbStatus(ad.Status));
 
         command.ExecuteNonQuery();
-    }
-
-    private static string? GetTypeParameterValue(AdType? type)
-    {
-        return type.HasValue
-            ? AdMapper.ToDbType(type.Value)
-            : null;
-    }
-
-    private static string? GetCategoryParameterValue(AdCategory? category)
-    {
-        return category.HasValue
-            ? AdMapper.ToDbCategory(category.Value)
-            : null;
     }
 
     private static DateTime ToUtcDateTime(DateOnly date)

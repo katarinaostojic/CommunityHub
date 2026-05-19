@@ -19,6 +19,4 @@ public class AdNotification
         CreatedAt = createdAt;
         IsRead = isRead;
     }
-
-    public void MarkAsRead() => IsRead = true;
 }

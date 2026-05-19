@@ -19,6 +19,21 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         }
     }
 
+    private void CreateSlot(IDbConnection connection, long adId, DateOnly date, TimeOnly start, TimeOnly end)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            INSERT INTO notice_board_time_slots (ad_id, date, start_time, end_time)
+            VALUES (@adId, @date, @start, @end)";
+
+        AddParameter(command, "@adId", adId);
+        AddParameter(command, "@date", ToUtcDateTime(date));
+        AddParameter(command, "@start", start.ToTimeSpan());
+        AddParameter(command, "@end", end.ToTimeSpan());
+
+        command.ExecuteNonQuery();
+    }
+
     public List<AdSlot> GetSlotsByAd(long adId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -130,21 +145,6 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
 
         using IDataReader reader = command.ExecuteReader();
         return AdSlotReader.ReadSingleUser(reader);
-    }
-
-    private void CreateSlot(IDbConnection connection, long adId, DateOnly date, TimeOnly start, TimeOnly end)
-    {
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            INSERT INTO notice_board_time_slots (ad_id, date, start_time, end_time)
-            VALUES (@adId, @date, @start, @end)";
-
-        AddParameter(command, "@adId", adId);
-        AddParameter(command, "@date", ToUtcDateTime(date));
-        AddParameter(command, "@start", start.ToTimeSpan());
-        AddParameter(command, "@end", end.ToTimeSpan());
-
-        command.ExecuteNonQuery();
     }
 
     private static DateTime ToUtcDateTime(DateOnly date)
