@@ -34,9 +34,16 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         List<CommonRoomRequest> requests = new List<CommonRoomRequest>();
         while (reader.Read())
         {
-            User tenant = UserMapper.MapWithAliases(reader,
-                "user_id", "tenant_username", "tenant_password",
-                "tenant_name", "tenant_surname", "tenant_birthday", "tenant_role");
+            User tenant = UserMapper.MapWithAliases(
+                reader,
+                new UserColumnAliases(
+                    "user_id",
+                    "tenant_username",
+                    "tenant_password",
+                    "tenant_name",
+                    "tenant_surname",
+                    "tenant_birthday",
+                    "tenant_role"));
             requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
         }
         return requests;
@@ -65,9 +72,16 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         using IDataReader reader = command.ExecuteReader();
         if (reader.Read())
         {
-            User tenant = UserMapper.MapWithAliases(reader,
-                "user_id", "tenant_username", "tenant_password",
-                "tenant_name", "tenant_surname", "tenant_birthday", "tenant_role");
+            User tenant = UserMapper.MapWithAliases(
+                reader,
+                new UserColumnAliases(
+                    "user_id",
+                    "tenant_username",
+                    "tenant_password",
+                    "tenant_name",
+                    "tenant_surname",
+                    "tenant_birthday",
+                    "tenant_role"));
             return CommonRoomRequestMapper.Map(reader, tenant);
         }
         return null;
@@ -133,9 +147,16 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
         List<CommonRoomRequest> requests = new List<CommonRoomRequest>();
         while (reader.Read())
         {
-            User tenant = UserMapper.MapWithAliases(reader,
-                "user_id", "tenant_username", "tenant_password",
-                "tenant_name", "tenant_surname", "tenant_birthday", "tenant_role");
+            User tenant = UserMapper.MapWithAliases(
+                reader,
+                new UserColumnAliases(
+                    "user_id",
+                    "tenant_username",
+                    "tenant_password",
+                    "tenant_name",
+                    "tenant_surname",
+                    "tenant_birthday",
+                    "tenant_role"));
             requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
         }
         return requests;
@@ -169,9 +190,16 @@ public class CommonRoomRequestDbRepository : BaseDbRepository, ICommonRoomReques
 
         while (reader.Read())
         {
-            User tenant = UserMapper.MapWithAliases(reader,
-                "user_id", "tenant_username", "tenant_password",
-                "tenant_name", "tenant_surname", "tenant_birthday", "tenant_role");
+            User tenant = UserMapper.MapWithAliases(
+                reader,
+                new UserColumnAliases(
+                    "user_id",
+                    "tenant_username",
+                    "tenant_password",
+                    "tenant_name",
+                    "tenant_surname",
+                    "tenant_birthday",
+                    "tenant_role"));
 
             requests.Add(CommonRoomRequestMapper.Map(reader, tenant));
         }

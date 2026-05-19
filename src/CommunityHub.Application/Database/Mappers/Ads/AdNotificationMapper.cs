@@ -27,12 +27,13 @@ public static class AdNotificationMapper
     {
         return UserMapper.MapWithAliases(
             reader,
-            "ub_id",
-            "ub_username",
-            "ub_password",
-            "ub_name",
-            "ub_surname",
-            "ub_birthday",
-            "ub_role");
+            new UserColumnAliases(
+                "ub_id",
+                "ub_username",
+                "ub_password",
+                "ub_name",
+                "ub_surname",
+                "ub_birthday",
+                "ub_role"));
     }
 }
