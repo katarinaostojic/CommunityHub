@@ -106,7 +106,7 @@ public partial class NoticeBoardPage : Page
     private void DismissNotificationButton_Click(object sender, RoutedEventArgs e)
     {
         long notificationId = (long)((Button)sender).Tag;
-        _viewModel.DismissNotification(notificationId);
+        _viewModel.Notifications.Dismiss(notificationId);
     }
 
     private void ViewSlotsFromNotificationButton_Click(object sender, RoutedEventArgs e)

@@ -1,8 +1,6 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Services.Ads;
-using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
@@ -10,57 +8,38 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 public class NoticeBoardViewModel : BaseViewModel
 {
     private readonly AdService _adService;
-    private readonly AdNotificationService _notificationService;
     private readonly long _currentUserId;
     private readonly long _buildingId;
 
     private ObservableCollection<AdViewModel> _filteredAds = new();
-    private ObservableCollection<AdNotificationViewModel> _notifications = new();
-
-    private AdType? _currentTypeFilter = null;
-    private AdCategory? _currentCategoryFilter = null;
-
     private string _resultsCountText = string.Empty;
-    private bool _hasNotifications;
 
-    private string _allFilterText = "All (0)";
-    private string _offeringFilterText = "Offering (0)";
-    private string _seekingFilterText = "Seeking (0)";
-
-    public NoticeBoardViewModel(AdService adService, AdNotificationService notificationService, BuildingMembershipDto membership, long currentUserId)
+    public NoticeBoardViewModel(
+        AdService adService,
+        AdNotificationService notificationService,
+        BuildingMembershipDto membership,
+        long currentUserId)
     {
         _adService = adService;
-        _notificationService = notificationService;
         _currentUserId = currentUserId;
         _buildingId = membership.BuildingId;
 
         BuildingSubtitle = membership.BuildingSubtitle;
-        CategoryOptions = BuildCategoryOptions();
+        Filters = new NoticeBoardFiltersViewModel(adService, _buildingId);
+        Notifications = new NoticeBoardNotificationsViewModel(notificationService, currentUserId);
 
         LoadAds();
-        LoadNotifications();
     }
 
     public string BuildingSubtitle { get; }
-
-    public List<string> CategoryOptions { get; }
+    public NoticeBoardFiltersViewModel Filters { get; }
+    public NoticeBoardNotificationsViewModel Notifications { get; }
+    public List<string> CategoryOptions => Filters.CategoryOptions;
 
     public ObservableCollection<AdViewModel> FilteredAds
     {
         get => _filteredAds;
         private set => SetProperty(ref _filteredAds, value);
-    }
-
-    public ObservableCollection<AdNotificationViewModel> Notifications
-    {
-        get => _notifications;
-        private set => SetProperty(ref _notifications, value);
-    }
-
-    public bool HasNotifications
-    {
-        get => _hasNotifications;
-        private set => SetProperty(ref _hasNotifications, value);
     }
 
     public string ResultsCountText
@@ -69,48 +48,27 @@ public class NoticeBoardViewModel : BaseViewModel
         private set => SetProperty(ref _resultsCountText, value);
     }
 
-    public string AllFilterText
-    {
-        get => _allFilterText;
-        private set => SetProperty(ref _allFilterText, value);
-    }
-
-    public string OfferingFilterText
-    {
-        get => _offeringFilterText;
-        private set => SetProperty(ref _offeringFilterText, value);
-    }
-
-    public string SeekingFilterText
-    {
-        get => _seekingFilterText;
-        private set => SetProperty(ref _seekingFilterText, value);
-    }
-
     public void FilterAll()
     {
-        _currentTypeFilter = null;
+        Filters.SelectAll();
         LoadAds();
     }
 
     public void FilterOffering()
     {
-        _currentTypeFilter = AdType.Offering;
+        Filters.SelectOffering();
         LoadAds();
     }
 
     public void FilterSeeking()
     {
-        _currentTypeFilter = AdType.Seeking;
+        Filters.SelectSeeking();
         LoadAds();
     }
 
     public void FilterByCategory(int selectedIndex)
     {
-        _currentCategoryFilter = selectedIndex == 0
-            ? null
-            : (AdCategory)(selectedIndex - 1);
-
+        Filters.SelectCategory(selectedIndex);
         LoadAds();
     }
 
@@ -136,22 +94,9 @@ public class NoticeBoardViewModel : BaseViewModel
         return _adService.GetCurrentUserMatchingAd(_buildingId, _currentUserId, theirAd);
     }
 
-    public void DismissNotification(long notificationId)
-    {
-        AdNotificationViewModel? notification = Notifications
-            .FirstOrDefault(n => n.Id == notificationId);
-
-        if (notification == null) return;
-
-        _notificationService.MarkNotificationAsRead(notificationId);
-
-        Notifications.Remove(notification);
-        HasNotifications = Notifications.Count > 0;
-    }
-
     private void LoadAds()
     {
-        UpdateFilterCounts();
+        Filters.LoadCounts();
         LoadFilteredAds();
     }
 
@@ -159,8 +104,8 @@ public class NoticeBoardViewModel : BaseViewModel
     {
         List<AdDto> ads = _adService.GetFilteredActiveByBuilding(
             _buildingId,
-            _currentTypeFilter,
-            _currentCategoryFilter);
+            Filters.TypeFilter,
+            Filters.CategoryFilter);
 
         List<AdViewModel> adViewModels = ads
             .Select(CreateAdViewModel)
@@ -179,48 +124,5 @@ public class NoticeBoardViewModel : BaseViewModel
     private void UpdateResultsCountText(int count)
     {
         ResultsCountText = $"Showing {count} active ad{(count != 1 ? "s" : "")}";
-    }
-
-    private void LoadNotifications()
-    {
-        List<AdNotificationViewModel> notifications = _notificationService
-            .GetUnreadNotifications(_currentUserId)
-            .Select(n => new AdNotificationViewModel(n))
-            .ToList();
-
-        Notifications = new ObservableCollection<AdNotificationViewModel>(notifications);
-        HasNotifications = notifications.Count > 0;
-    }
-
-    private void UpdateFilterCounts()
-    {
-        int allCount = _adService.CountFilteredActiveByBuilding(
-            _buildingId,
-            null,
-            _currentCategoryFilter);
-
-        int offeringCount = _adService.CountFilteredActiveByBuilding(
-            _buildingId,
-            AdType.Offering,
-            _currentCategoryFilter);
-
-        int seekingCount = _adService.CountFilteredActiveByBuilding(
-            _buildingId,
-            AdType.Seeking,
-            _currentCategoryFilter);
-
-        AllFilterText = $"All ({allCount})";
-        OfferingFilterText = $"Offering ({offeringCount})";
-        SeekingFilterText = $"Seeking ({seekingCount})";
-    }
-
-    private static List<string> BuildCategoryOptions()
-    {
-        List<string> options = new() { "All Categories" };
-
-        foreach (AdCategory category in Enum.GetValues<AdCategory>())
-            options.Add(category.ToDisplayString());
-
-        return options;
     }
 }

@@ -35,41 +35,67 @@ public class CommonRoomRequestDialogViewModel : BaseViewModel
     }
 
     public string WhatHappensNextText => RentalTypeDisplay == "1 day only"
-    ? "Your request will be sent to the building administrator. The administrator will select an available day within your requested date range."
-    : "Your request will be sent to the building administrator. If your requested dates are available, the request will be automatically approved. If not, the administrator may suggest alternative dates.";
+        ? "Your request will be sent to the building administrator. The administrator will select an available day within your requested date range."
+        : "Your request will be sent to the building administrator. If your requested dates are available, the request will be automatically approved. If not, the administrator may suggest alternative dates.";
 
     public bool Validate(DateTime? dateFrom, DateTime? dateTo)
     {
-        if (dateFrom == null || dateTo == null)
+        string? error = GetValidationError(dateFrom, dateTo);
+
+        if (error != null)
         {
-            HasDateError = true;
-            DateError = "Please select both start and end date.";
+            ShowDateError(error);
             return false;
         }
 
-        if (dateFrom.Value.Date < DateTime.Today)
-        {
-            HasDateError = true;
-            DateError = "Start date cannot be in the past.";
-            return false;
-        }
+        ClearDateError();
+        return true;
+    }
 
-        if (dateTo.Value.Date < DateTime.Today)
-        {
-            HasDateError = true;
-            DateError = "End date cannot be in the past.";
-            return false;
-        }
+    private static string? GetValidationError(DateTime? dateFrom, DateTime? dateTo)
+    {
+        if (DatesAreMissing(dateFrom, dateTo))
+            return "Please select both start and end date.";
 
-        if (dateTo.Value.Date < dateFrom.Value.Date)
-        {
-            HasDateError = true;
-            DateError = "End date must be after start date.";
-            return false;
-        }
+        DateTime startDate = dateFrom!.Value.Date;
+        DateTime endDate = dateTo!.Value.Date;
 
+        if (DateIsInPast(startDate))
+            return "Start date cannot be in the past.";
+
+        if (DateIsInPast(endDate))
+            return "End date cannot be in the past.";
+
+        if (EndDateIsBeforeStartDate(startDate, endDate))
+            return "End date must be after start date.";
+
+        return null;
+    }
+
+    private static bool DatesAreMissing(DateTime? dateFrom, DateTime? dateTo)
+    {
+        return dateFrom == null || dateTo == null;
+    }
+
+    private static bool DateIsInPast(DateTime date)
+    {
+        return date < DateTime.Today;
+    }
+
+    private static bool EndDateIsBeforeStartDate(DateTime startDate, DateTime endDate)
+    {
+        return endDate < startDate;
+    }
+
+    private void ShowDateError(string error)
+    {
+        HasDateError = true;
+        DateError = error;
+    }
+
+    private void ClearDateError()
+    {
         HasDateError = false;
         DateError = string.Empty;
-        return true;
     }
 }
