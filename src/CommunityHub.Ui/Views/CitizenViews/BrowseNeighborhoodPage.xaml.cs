@@ -70,7 +70,7 @@ public partial class BrowseNeighborhoodPage : Window
         Close();
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e) => NavigateToProfile();
+    private void ProfileButton_Click(object sender, RoutedEventArgs e) => CitizenNavigationHelper.NavigateToProfile(_user, this);
 
     private void FilterButton_Click(object sender, RoutedEventArgs e)
     {
@@ -115,11 +115,11 @@ public partial class BrowseNeighborhoodPage : Window
         switch (destination)
         {
             case "Neighborhoods": break;
-            case "MyRequests": NavigateToMyRequests(); break;
-            case "Events": NavigateToEvents(); break;
-            case "Citizens": NavigateToCitizens(); break;
-            case "Meetings": NavigateToMeetings(); break;
-            case "Profile": NavigateToProfile(); break;
+            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
+            case "Events": CitizenNavigationHelper.NavigateToEvents(_user, this); break;
+            case "Citizens": CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
+            case "Meetings": CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
+            case "Profile": CitizenNavigationHelper.NavigateToProfile(_user, this); break;
             case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
@@ -130,49 +130,5 @@ public partial class BrowseNeighborhoodPage : Window
         CitizenMenu.Visibility = Visibility.Collapsed;
         new LogInForm().Show();
         Close();
-    }
-
-    private void NavigateToMyRequests() { new MyRequestsPage(_user).Show(); Close(); }
-
-    private void NavigateToEvents()
-    {
-        long? nId = GetMembershipId();
-        if (nId == null) return;
-        new EventsPage(_user, nId.Value).Show();
-        Close();
-    }
-
-    private void NavigateToCitizens()
-    {
-        long? nId = GetMembershipId();
-        if (nId == null) return;
-        new NeighborhoodCitizensPage(_user, nId.Value).Show();
-        Close();
-    }
-
-    private void NavigateToMeetings()
-    {
-        long? nId = GetMembershipId();
-        if (nId == null) return;
-        new MeetingsPage(_user, nId.Value).Show();
-        Close();
-    }
-
-    private void NavigateToProfile()
-    {
-        long? nId = GetMembershipId();
-        if (nId == null) return;
-        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
-        string name = ns.GetNameById(nId.Value) ?? "";
-        new MyProfilePage(_user, nId.Value, name).Show();
-        Close();
-    }
-
-    private long? GetMembershipId()
-    {
-        NeighborhoodAccessRequestService s = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-        long? nId = s.GetMembershipNeighborhoodId(_user.Id);
-        if (nId == null) MessageBox.Show("You are not a member of any neighborhood.");
-        return nId;
     }
 }

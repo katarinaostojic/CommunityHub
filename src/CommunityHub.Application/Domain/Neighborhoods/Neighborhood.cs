@@ -31,11 +31,19 @@ public class Neighborhood
     public bool MatchesSearch(string search)
     {
         if (string.IsNullOrWhiteSpace(search)) return true;
-
         string lowered = search.ToLower().Trim();
         (string streetPart, int? number) = ParseSearchInput(lowered);
-
         return MatchesBasicFields(lowered) || MatchesStreet(lowered, streetPart, number);
+    }
+
+    public bool ContainsAddress(string fullAddress)
+    {
+        if (string.IsNullOrWhiteSpace(fullAddress) || !Streets.Any()) return false;
+        if (!AddressParser.TryParse(fullAddress, out string userStreet, out int userNumber)) return false;
+        return Streets.Any(s =>
+            AddressParser.Normalize(s.StreetName) == userStreet &&
+            userNumber >= s.StartNumber &&
+            userNumber <= s.EndNumber);
     }
 
     private bool MatchesBasicFields(string search)
@@ -61,57 +69,4 @@ public class Neighborhood
             return (string.Join(" ", parts.Take(parts.Length - 1)), parsedNumber);
         return (search, null);
     }
-
-    public bool ContainsAddress(string fullAddress)
-    {
-        if (string.IsNullOrWhiteSpace(fullAddress)) return false;
-        if (!Streets.Any()) return false;
-        if (!TryParseAddress(fullAddress, out string userStreet, out int userNumber)) return false;
-        return Streets.Any(s =>
-            Normalize(s.StreetName) == userStreet &&
-            userNumber >= s.StartNumber &&
-            userNumber <= s.EndNumber);
-    }
-
-    private bool TryParseAddress(string fullAddress, out string streetName, out int streetNumber)
-    {
-        streetName = string.Empty;
-        streetNumber = 0;
-        string normalized = Normalize(fullAddress);
-        int firstDigitIndex = FindFirstDigitIndex(normalized);
-        if (firstDigitIndex == -1) return false;
-        string streetPart = normalized[..firstDigitIndex].Trim().Trim(',', '.', '-', '/');
-        string numberPart = new string(normalized[firstDigitIndex..].TakeWhile(char.IsDigit).ToArray());
-        if (string.IsNullOrWhiteSpace(streetPart)) return false;
-        if (!int.TryParse(numberPart, out streetNumber)) return false;
-        streetName = streetPart;
-        return true;
-    }
-
-    private int FindFirstDigitIndex(string value)
-    {
-        for (int i = 0; i < value.Length; i++)
-            if (char.IsDigit(value[i]))
-                return i;
-        return -1;
-    }
-
-    private string Normalize(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value)) return string.Empty;
-        string result = value.Trim().ToLowerInvariant();
-        result = result.Replace("š", "s").Replace("đ", "d")
-                       .Replace("č", "c").Replace("ć", "c").Replace("ž", "z");
-        result = result.Replace("ulica", " ").Replace("ul.", " ").Replace("ul ", " ");
-        var sb = new System.Text.StringBuilder();
-        foreach (char c in result)
-            if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
-                sb.Append(c);
-        result = sb.ToString();
-        while (result.Contains("  "))
-            result = result.Replace("  ", " ");
-        return result.Trim();
-    }
-
-
 }
