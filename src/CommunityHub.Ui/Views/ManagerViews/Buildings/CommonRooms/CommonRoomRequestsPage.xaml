@@ -53,9 +53,7 @@
                                 <TextBlock Text="{Binding DateRangeDisplay}"
                                            FontSize="13" Foreground="#7F8C8D"
                                            Margin="0,4,0,0"/>
-                                <TextBlock Text="{Binding RentalTypeDisplay}"
-                                           FontSize="13" Foreground="#7F8C8D"
-                                           Margin="0,4,0,0"/>
+                                
 
                                 <!-- Status bedz -->
                                 <Border CornerRadius="6" Margin="0,8,0,12"

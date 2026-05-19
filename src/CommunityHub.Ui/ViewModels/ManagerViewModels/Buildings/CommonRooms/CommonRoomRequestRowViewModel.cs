@@ -17,6 +17,7 @@ public class CommonRoomRequestRowViewModel
     public DateTime? ApprovedDate => _dto.ApprovedDate;
     public DateTime? ProposedDateFrom => _dto.ProposedDateFrom;
     public DateTime? ProposedDateTo => _dto.ProposedDateTo;
+    public string DateRangeDisplay => $"{_dto.DateFrom:dd.MM.yyyy} - {_dto.DateTo:dd.MM.yyyy}";
 
     public string StatusDisplay => _dto.Status switch
     {
