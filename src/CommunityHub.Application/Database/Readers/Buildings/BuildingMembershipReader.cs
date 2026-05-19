@@ -17,4 +17,16 @@ public static class BuildingMembershipReader
 
         return memberships;
     }
+
+    public static List<BuildingMembership> ReadMembershipsWithBuilding(IDataReader reader)
+    {
+        List<BuildingMembership> memberships = new();
+
+        while (reader.Read())
+        {
+            memberships.Add(BuildingMembershipMapper.MapWithBuilding(reader));
+        }
+
+        return memberships;
+    }
 }
