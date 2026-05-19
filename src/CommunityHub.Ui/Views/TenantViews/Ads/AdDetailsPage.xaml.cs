@@ -22,7 +22,9 @@ public partial class AdDetailsPage : Page
         _membership = membership;
 
         AdService adService = Injector.CreateInstance<AdService>();
-        _viewModel = new AdDetailsViewModel(ad, adService);
+        AdSlotBookingService slotBookingService = Injector.CreateInstance<AdSlotBookingService>();
+
+        _viewModel = new AdDetailsViewModel(ad, adService, slotBookingService);
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
@@ -44,5 +46,6 @@ public partial class AdDetailsPage : Page
     private void GoBackButton_Click(object sender, RoutedEventArgs e) =>
         NavigationService.Navigate(new NoticeBoardPage(_user, _membership));
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
+    private void MenuButton_Click(object sender, RoutedEventArgs e) =>
+        AppMenu.Open();
 }

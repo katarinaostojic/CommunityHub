@@ -49,11 +49,31 @@ public static class Injector
                 new CountryDbRepository())
         },
         {
-            typeof(AdService),
-            new AdService(
+            typeof(AdSlotBookingService),
+            new AdSlotBookingService(
                 new AdDbRepository(),
                 new AdSlotDbRepository(),
                 new AdNotificationDbRepository())
+        },
+        {
+            typeof(AdNotificationService),
+            new AdNotificationService(
+                new AdNotificationDbRepository())
+        },
+        {
+            typeof(AdStatisticsService),
+            new AdStatisticsService(
+                new AdDbRepository(),
+                new AdSlotDbRepository())
+        },
+        {
+            typeof(AdService),
+            new AdService(
+                new AdDbRepository(),
+                new AdSlotBookingService(
+                    new AdDbRepository(),
+                    new AdSlotDbRepository(),
+                    new AdNotificationDbRepository()))
         },
         {
             typeof(CommonRoomService),

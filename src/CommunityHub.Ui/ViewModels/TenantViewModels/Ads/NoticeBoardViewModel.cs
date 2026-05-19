@@ -10,6 +10,7 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 public class NoticeBoardViewModel : BaseViewModel
 {
     private readonly AdService _adService;
+    private readonly AdNotificationService _notificationService;
     private readonly long _currentUserId;
     private readonly long _buildingId;
 
@@ -26,9 +27,10 @@ public class NoticeBoardViewModel : BaseViewModel
     private string _offeringFilterText = "Offering (0)";
     private string _seekingFilterText = "Seeking (0)";
 
-    public NoticeBoardViewModel(AdService adService, BuildingMembershipDto membership, long currentUserId)
+    public NoticeBoardViewModel(AdService adService, AdNotificationService notificationService, BuildingMembershipDto membership, long currentUserId)
     {
         _adService = adService;
+        _notificationService = notificationService;
         _currentUserId = currentUserId;
         _buildingId = membership.BuildingId;
 
@@ -141,7 +143,7 @@ public class NoticeBoardViewModel : BaseViewModel
 
         if (notification == null) return;
 
-        _adService.MarkNotificationAsRead(notificationId);
+        _notificationService.MarkNotificationAsRead(notificationId);
 
         Notifications.Remove(notification);
         HasNotifications = Notifications.Count > 0;
@@ -181,7 +183,7 @@ public class NoticeBoardViewModel : BaseViewModel
 
     private void LoadNotifications()
     {
-        List<AdNotificationViewModel> notifications = _adService
+        List<AdNotificationViewModel> notifications = _notificationService
             .GetUnreadNotifications(_currentUserId)
             .Select(n => new AdNotificationViewModel(n))
             .ToList();

@@ -6,7 +6,7 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class AdSlotsViewModel : BaseViewModel
 {
-    private readonly AdService _adService;
+    private readonly AdSlotBookingService _slotBookingService;
     private readonly long _adId;
     private readonly DateOnly _dateFrom;
     private readonly DateOnly _dateTo;
@@ -15,9 +15,13 @@ public class AdSlotsViewModel : BaseViewModel
     private ObservableCollection<FreeSlotDayGroupViewModel> _freeSlotDayGroups = new();
     private string _bookedSlotsTitleText = string.Empty;
 
-    public AdSlotsViewModel(AdService adService, long adId, DateOnly dateFrom, DateOnly dateTo)
+    public AdSlotsViewModel(
+        AdSlotBookingService slotBookingService,
+        long adId,
+        DateOnly dateFrom,
+        DateOnly dateTo)
     {
-        _adService = adService;
+        _slotBookingService = slotBookingService;
         _adId = adId;
         _dateFrom = dateFrom;
         _dateTo = dateTo;
@@ -49,7 +53,7 @@ public class AdSlotsViewModel : BaseViewModel
 
     private void LoadBookedSlots()
     {
-        List<BookedAdSlotDto> bookedWithAds = _adService.GetBookedSlotsWithAds(_adId);
+        List<BookedAdSlotDto> bookedWithAds = _slotBookingService.GetBookedSlotsWithAds(_adId);
 
         List<BookedSlotGroupViewModel> grouped = bookedWithAds
             .GroupBy(x => x.BookedByAd?.Id)
@@ -64,7 +68,7 @@ public class AdSlotsViewModel : BaseViewModel
 
     private void LoadFreeSlots()
     {
-        List<FreeSlotDayGroupViewModel> grouped = _adService
+        List<FreeSlotDayGroupViewModel> grouped = _slotBookingService
             .GetFreeSlots(_adId, _dateFrom, _dateTo)
             .GroupBy(s => s.Date)
             .OrderBy(g => g.Key)

@@ -38,7 +38,13 @@ public partial class NoticeBoardPage : Page
     private NoticeBoardViewModel CreateViewModel()
     {
         AdService adService = Injector.CreateInstance<AdService>();
-        return new NoticeBoardViewModel(adService, _membership, _user.Id);
+        AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
+
+        return new NoticeBoardViewModel(
+            adService,
+            notificationService,
+            _membership,
+            _user.Id);
     }
 
     private void InitializeHeader()
