@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Ads;
+﻿using CommunityHub.Application.Database.Readers.Ads;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
@@ -15,16 +14,7 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
 
         foreach ((DateOnly date, TimeOnly start, TimeOnly end) in slots)
         {
-            IDbCommand command = connection.CreateCommand();
-            command.CommandText = @"
-                INSERT INTO notice_board_time_slots (ad_id, date, start_time, end_time)
-                VALUES (@adId, @date, @start, @end)";
-
-            AddParameter(command, "@adId", adId);
-            AddParameter(command, "@date", ToUtcDateTime(date));
-            AddParameter(command, "@start", start.ToTimeSpan());
-            AddParameter(command, "@end", end.ToTimeSpan());
-            command.ExecuteNonQuery();
+            CreateSlot(connection, adId, date, start, end);
         }
     }
 
@@ -42,7 +32,7 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         AddParameter(command, "@adId", adId);
 
         using IDataReader reader = command.ExecuteReader();
-        return AdSlotMapper.ReadSlots(reader);
+        return AdSlotReader.ReadSlots(reader);
     }
 
     public List<AdSlot> GetFreeSlotsByAd(long adId, DateOnly overlapFrom, DateOnly overlapTo)
@@ -62,7 +52,7 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         AddParameter(command, "@overlapTo", ToUtcDateTime(overlapTo));
 
         using IDataReader reader = command.ExecuteReader();
-        return AdSlotMapper.ReadSlots(reader);
+        return AdSlotReader.ReadSlots(reader);
     }
 
     public void BookSlot(long slotId, long bookedByAdId)
@@ -75,6 +65,7 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
 
         AddParameter(command, "@slotId", slotId);
         AddParameter(command, "@bookedByAdId", bookedByAdId);
+
         command.ExecuteNonQuery();
     }
 
@@ -92,7 +83,7 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         AddParameter(command, "@adId", adId);
 
         using IDataReader reader = command.ExecuteReader();
-        return AdSlotMapper.ReadSlots(reader);
+        return AdSlotReader.ReadSlots(reader);
     }
 
     public List<(AdSlot slot, Ad? bookedByAd)> GetBookedSlotsWithAds(long adId)
@@ -115,7 +106,7 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         AddParameter(command, "@adId", adId);
 
         using IDataReader reader = command.ExecuteReader();
-        return AdSlotMapper.ReadBookedSlotsWithAds(reader);
+        return AdSlotReader.ReadBookedSlotsWithAds(reader);
     }
 
     public User? GetTopHelperByBuilding(long buildingId)
@@ -137,7 +128,22 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        return reader.Read() ? UserMapper.Map(reader) : null;
+        return AdSlotReader.ReadSingleUser(reader);
+    }
+
+    private void CreateSlot(IDbConnection connection, long adId, DateOnly date, TimeOnly start, TimeOnly end)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            INSERT INTO notice_board_time_slots (ad_id, date, start_time, end_time)
+            VALUES (@adId, @date, @start, @end)";
+
+        AddParameter(command, "@adId", adId);
+        AddParameter(command, "@date", ToUtcDateTime(date));
+        AddParameter(command, "@start", start.ToTimeSpan());
+        AddParameter(command, "@end", end.ToTimeSpan());
+
+        command.ExecuteNonQuery();
     }
 
     private static DateTime ToUtcDateTime(DateOnly date)
