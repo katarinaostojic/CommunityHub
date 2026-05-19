@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings.BuildingRepositoryInterfaces;
+using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.Buildings.CommonRooms;
 using System.Data;
 
