@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Database.Mappers.Buildings;
-using CommunityHub.Application.Database.Readers.Buildings;
+﻿using CommunityHub.Application.Database.Readers.Buildings;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
@@ -222,14 +221,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<BuildingMembership> memberships = new();
-
-        while (reader.Read())
-        {
-            memberships.Add(BuildingMembershipMapper.MapWithoutBuilding(reader));
-        }
-
-        return memberships;
+        return BuildingMembershipReader.ReadMemberships(reader);
     }
 
     private List<BuildingAccessRequest> GetAccessRequestsByBuilding(IDbConnection connection, long buildingId)
@@ -245,14 +237,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
-        List<BuildingAccessRequest> requests = new();
-
-        while (reader.Read())
-        {
-            requests.Add(BuildingAccessRequestMapper.MapWithoutBuilding(reader));
-        }
-
-        return requests;
+        return BuildingAccessRequestReader.ReadAccessRequests(reader);
     }
 
     private void AttachImages(List<Building> buildings)
