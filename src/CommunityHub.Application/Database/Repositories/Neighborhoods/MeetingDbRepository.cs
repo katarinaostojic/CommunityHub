@@ -127,7 +127,7 @@ public class MeetingDbRepository : BaseDbRepository
             Convert.ToInt64(reader["neighborhood_id"]),
             ParseTheme(reader["theme"].ToString()!),
             customThemeName,
-            TimeOnly.FromTimeSpan(TimeSpan.Parse(reader["meeting_time"].ToString()!)),
+            TimeOnly.Parse(reader["meeting_time"].ToString()!),
             (DateOnly)reader["date_range_start"],
             (DateOnly)reader["date_range_end"],
             ParseStatus(reader["status"].ToString()!),
