@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Mappings.Ads;

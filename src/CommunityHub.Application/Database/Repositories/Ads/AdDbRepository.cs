@@ -2,6 +2,7 @@
 using CommunityHub.Application.Database.Mappers.Ads;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Ads;
