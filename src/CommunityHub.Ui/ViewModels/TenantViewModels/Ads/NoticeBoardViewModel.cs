@@ -168,12 +168,23 @@ public class NoticeBoardViewModel : BaseViewModel
             _currentTypeFilter,
             _currentCategoryFilter);
 
-        List<AdViewModel> filtered = ads
-            .Select(ad => new AdViewModel(ad, _currentUserId, GetCurrentUserMatchingAd(ad)?.Id))
+        List<AdViewModel> adViewModels = ads
+            .Select(CreateAdViewModel)
             .ToList();
 
-        FilteredAds = new ObservableCollection<AdViewModel>(filtered);
-        ResultsCountText = $"Showing {filtered.Count} active ad{(filtered.Count != 1 ? "s" : "")}";
+        FilteredAds = new ObservableCollection<AdViewModel>(adViewModels);
+        UpdateResultsCountText(adViewModels.Count);
+    }
+
+    private AdViewModel CreateAdViewModel(AdDto ad)
+    {
+        long? matchingAdId = GetCurrentUserMatchingAd(ad)?.Id;
+        return new AdViewModel(ad, _currentUserId, matchingAdId);
+    }
+
+    private void UpdateResultsCountText(int count)
+    {
+        ResultsCountText = $"Showing {count} active ad{(count != 1 ? "s" : "")}";
     }
 
     private void LoadNotifications()
