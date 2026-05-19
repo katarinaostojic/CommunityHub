@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 
@@ -7,9 +8,9 @@ namespace CommunityHub.Application.Services;
 
 public class MeetingService
 {
-    private readonly MeetingDbRepository _repository;
+    private readonly IMeetingRepository _repository;
 
-    public MeetingService(MeetingDbRepository repository)
+    public MeetingService(IMeetingRepository repository)
     {
         _repository = repository;
     }
