@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
 public class MeetingDbRepository : BaseDbRepository
 {
@@ -10,15 +10,24 @@ public class MeetingDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            INSERT INTO meetings (neighborhood_id, theme, meeting_time, date_range_start, date_range_end, status)
-            VALUES (@neighborhoodId, @theme, @meetingTime, @dateRangeStart, @dateRangeEnd, 'in_preparation')
-            RETURNING id";
+        INSERT INTO meetings (neighborhood_id, theme, custom_theme_name, meeting_time, date_range_start, date_range_end, status)
+        VALUES (@neighborhoodId, @theme, @customThemeName, @meetingTime, @date_range_start, @date_range_end, 'in_preparation')
+        RETURNING id";
 
         AddParameter(command, "@neighborhoodId", meeting.NeighborhoodId);
-        AddParameter(command, "@theme", meeting.Theme == MeetingTheme.Welcome ? "welcome" : "motivation");
+        AddParameter(command, "@theme", meeting.Theme == MeetingTheme.Welcome ? "welcome" : meeting.Theme == MeetingTheme.Motivation ? "motivation" : "custom");
+        if (meeting.CustomThemeName != null)
+            AddParameter(command, "@customThemeName", meeting.CustomThemeName);
+        else
+        {
+            IDbDataParameter customThemeParam = command.CreateParameter();
+            customThemeParam.ParameterName = "@customThemeName";
+            customThemeParam.Value = DBNull.Value;
+            command.Parameters.Add(customThemeParam);
+        }
         AddParameter(command, "@meetingTime", meeting.MeetingTime.ToTimeSpan());
-        AddParameter(command, "@dateRangeStart", DateTime.SpecifyKind(meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
-        AddParameter(command, "@dateRangeEnd", DateTime.SpecifyKind(meeting.DateRangeEnd.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@date_range_start", DateTime.SpecifyKind(meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
+        AddParameter(command, "@date_range_end", DateTime.SpecifyKind(meeting.DateRangeEnd.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc));
 
         return Convert.ToInt64(command.ExecuteScalar());
     }
@@ -28,7 +37,7 @@ public class MeetingDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT m.id, m.neighborhood_id, m.theme, m.meeting_time,
+            SELECT m.id, m.neighborhood_id, m.theme, m.custom_theme_name, m.meeting_time,
                    m.date_range_start, m.date_range_end, m.status, m.scheduled_date
             FROM meetings m
             JOIN neighborhoods n ON m.neighborhood_id = n.id
@@ -49,16 +58,16 @@ public class MeetingDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            UPDATE meetings 
-            SET status = @status, scheduled_date = @scheduledDate
-            WHERE id = @id";
+        UPDATE meetings 
+        SET status = @status, scheduled_date = @scheduledDate
+        WHERE id = @id";
 
         AddParameter(command, "@id", meetingId);
         AddParameter(command, "@status", ParseStatusToString(status));
         IDbDataParameter scheduledDateParam = command.CreateParameter();
         scheduledDateParam.ParameterName = "@scheduledDate";
         scheduledDateParam.Value = scheduledDate.HasValue
-            ? (object)scheduledDate.Value.ToDateTime(TimeOnly.MinValue)
+            ? (object)DateTime.SpecifyKind(scheduledDate.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc)
             : DBNull.Value;
         scheduledDateParam.DbType = DbType.DateTime;
         command.Parameters.Add(scheduledDateParam);
@@ -94,14 +103,13 @@ public class MeetingDbRepository : BaseDbRepository
         AddParameter(command, "@meetingId", meetingId);
 
         using IDataReader reader = command.ExecuteReader();
-        var result = new Dictionary<DateOnly, int>();
+        var voteCounts = new Dictionary<DateOnly, int>();
         while (reader.Read())
         {
-            DateOnly date = DateOnly.FromDateTime(Convert.ToDateTime(reader["voted_date"]));
-            int count = Convert.ToInt32(reader["vote_count"]);
-            result[date] = count;
+            DateOnly date = (DateOnly)reader["voted_date"]; int voteCount = Convert.ToInt32(reader["vote_count"]);
+            voteCounts[date] = voteCount;
         }
-        return result;
+        return voteCounts;
     }
 
     private Meeting MapMeeting(IDataReader reader)
@@ -110,11 +118,16 @@ public class MeetingDbRepository : BaseDbRepository
             ? null
             : (DateOnly)reader["scheduled_date"];
 
+        string? customThemeName = reader.IsDBNull(reader.GetOrdinal("custom_theme_name"))
+            ? null
+            : reader["custom_theme_name"].ToString();
+
         return new Meeting(
             Convert.ToInt64(reader["id"]),
             Convert.ToInt64(reader["neighborhood_id"]),
             ParseTheme(reader["theme"].ToString()!),
-            (TimeOnly)reader["meeting_time"],
+            customThemeName,
+            TimeOnly.FromTimeSpan(TimeSpan.Parse(reader["meeting_time"].ToString()!)),
             (DateOnly)reader["date_range_start"],
             (DateOnly)reader["date_range_end"],
             ParseStatus(reader["status"].ToString()!),
@@ -126,6 +139,7 @@ public class MeetingDbRepository : BaseDbRepository
     {
         "welcome" => MeetingTheme.Welcome,
         "motivation" => MeetingTheme.Motivation,
+        "custom" => MeetingTheme.Custom,
         _ => throw new ArgumentException($"Unknown theme: {theme}")
     };
 
@@ -150,7 +164,7 @@ public class MeetingDbRepository : BaseDbRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         using IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        SELECT m.id, m.neighborhood_id, m.theme, m.meeting_time,
+        SELECT m.id, m.neighborhood_id, m.theme, m.custom_theme_name, m.meeting_time,
                m.date_range_start, m.date_range_end, m.status, m.scheduled_date
         FROM meetings m
         WHERE m.neighborhood_id = @neighborhoodId

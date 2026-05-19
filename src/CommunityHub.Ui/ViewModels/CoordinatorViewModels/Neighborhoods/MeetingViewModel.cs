@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
 
 namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 
@@ -11,10 +11,16 @@ public class MeetingViewModel
         _meeting = meeting;
     }
 
-    public string TopicDisplay => _meeting.Theme == MeetingTheme.Welcome
-        ? "Topic: Welcome Meeting"
-        : "Topic: Community Motivation";
+    public long MeetingId => _meeting.Id;
+    public bool IsInPreparation => _meeting.Status == MeetingStatus.InPreparation;
 
+    public string TopicDisplay => _meeting.Theme switch
+    {
+        MeetingTheme.Welcome => "Topic: Welcome Meeting",
+        MeetingTheme.Motivation => "Topic: Community Motivation",
+        MeetingTheme.Custom => $"Topic: {_meeting.CustomThemeName}",
+        _ => "Topic: Unknown"
+    };
     public string DateDisplay => _meeting.Status == MeetingStatus.Scheduled && _meeting.ScheduledDate.HasValue
         ? $"Date: {_meeting.ScheduledDate.Value:dd.MM.yyyy}."
         : $"Date Range: {_meeting.DateRangeStart:dd.MM.yyyy} - {_meeting.DateRangeEnd:dd.MM.yyyy}";

@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Neighborhoods;
 using System.Collections.ObjectModel;
@@ -98,6 +99,12 @@ public class MeetingsViewModel : BaseViewModel
         LoadMeetings();
     }
 
+    public void FinalizeVoting(long meetingId)
+    {
+        _meetingService.CheckAndFinalizeVoting(meetingId);
+        LoadMeetings();
+    }
+
     private void LoadStatistics()
     {
         if (_neighborhoodId == -1)
@@ -106,17 +113,17 @@ public class MeetingsViewModel : BaseViewModel
             return;
         }
 
-        var stats = _statisticsService.GetTrustStatistics(_neighborhoodId);
-        NewCount = stats.GetValueOrDefault(TrustLevel.New, 0);
-        InactiveCount = stats.GetValueOrDefault(TrustLevel.Inactive, 0);
-        ActiveCount = stats.GetValueOrDefault(TrustLevel.Active, 0);
-        DistinguishedCount = stats.GetValueOrDefault(TrustLevel.Distinguished, 0);
-        TrustedCount = stats.GetValueOrDefault(TrustLevel.Trusted, 0);
+        var trustStatistics = _statisticsService.GetTrustStatistics(_neighborhoodId);
+        NewCount = trustStatistics.GetValueOrDefault(TrustLevel.New, 0);
+        InactiveCount = trustStatistics.GetValueOrDefault(TrustLevel.Inactive, 0);
+        ActiveCount = trustStatistics.GetValueOrDefault(TrustLevel.Active, 0);
+        DistinguishedCount = trustStatistics.GetValueOrDefault(TrustLevel.Distinguished, 0);
+        TrustedCount = trustStatistics.GetValueOrDefault(TrustLevel.Trusted, 0);
 
-        var suggestion = _statisticsService.SuggestMeetingTheme(_neighborhoodId);
-        SuggestionText = suggestion == MeetingTheme.Welcome
+        var meetingThemeSuggestion = _statisticsService.SuggestMeetingTheme(_neighborhoodId);
+        SuggestionText = meetingThemeSuggestion == MeetingTheme.Welcome
             ? "Suggestion: Organize a welcome meeting"
-            : suggestion == MeetingTheme.Motivation
+            : meetingThemeSuggestion == MeetingTheme.Motivation
                 ? "Suggestion: Organize a motivation meeting"
                 : "No suggestion at this time.";
     }
