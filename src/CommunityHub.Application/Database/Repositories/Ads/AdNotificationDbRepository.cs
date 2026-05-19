@@ -1,6 +1,4 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Mappers.Ads;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Mappers.Ads;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.Ads.AdRepositoryInterfaces;
 using System.Data;
@@ -53,29 +51,8 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             ORDER BY n.created_at DESC";
 
         AddParameter(command, "@userId", userId);
-
         using IDataReader reader = command.ExecuteReader();
-        List<AdNotification> notifications = new();
-        while (reader.Read())
-        {
-            User adAuthor = UserMapper.Map(reader);
-            Ad ad = AdMapper.Map(reader, adAuthor);
-
-            User bookedByAuthor = UserMapper.MapWithAliases(reader,
-                "ub_id", "ub_username", "ub_password",
-                "ub_name", "ub_surname", "ub_birthday", "ub_role");
-            Ad bookedByAd = AdMapper.MapBookedByAd(reader, bookedByAuthor);
-
-            notifications.Add(new AdNotification(
-                id: Convert.ToInt64(reader["notif_id"]),
-                recipientId: Convert.ToInt64(reader["recipient_id"]),
-                ad: ad,
-                bookedByAd: bookedByAd,
-                createdAt: Convert.ToDateTime(reader["created_at"]),
-                isRead: Convert.ToBoolean(reader["is_read"])
-            ));
-        }
-        return notifications;
+        return ReadNotifications(reader);
     }
 
     public void MarkAsRead(long notificationId)
@@ -102,5 +79,15 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
 
         AddParameter(command, "@userId", userId);
         command.ExecuteNonQuery();
+    }
+
+     private static List<AdNotification> ReadNotifications(IDataReader reader)
+    {
+        List<AdNotification> notifications = new();
+
+        while (reader.Read())
+            notifications.Add(AdNotificationMapper.Map(reader));
+
+        return notifications;
     }
 }
