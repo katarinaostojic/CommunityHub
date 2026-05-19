@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Shared;
 
 public abstract class BaseDbRepository
 {

@@ -16,10 +16,18 @@ public class CommonRoomRequestDto
     public DateTime? ProposedDateTo { get; init; }
     public RentalType RentalType { get; init; }
 
-    public CommonRoomRequestDto(long id, long commonRoomId, string commonRoomName, string tenantFullName,
-        DateTime dateFrom, DateTime dateTo, CommonRoomRequestStatus status,
-        RentalType rentalType, DateTime? approvedDate = null,
-        DateTime? proposedDateFrom = null, DateTime? proposedDateTo = null)
+    public CommonRoomRequestDto(
+        long id,
+        long commonRoomId,
+        string commonRoomName,
+        string tenantFullName,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CommonRoomRequestStatus status,
+        RentalType rentalType,
+        DateTime? approvedDate = null,
+        DateTime? proposedDateFrom = null,
+        DateTime? proposedDateTo = null)
     {
         Id = id;
         CommonRoomId = commonRoomId;
@@ -33,7 +41,4 @@ public class CommonRoomRequestDto
         ProposedDateFrom = proposedDateFrom;
         ProposedDateTo = proposedDateTo;
     }
-
-    public string DateRangeDisplay => $"{DateFrom:dd.MM.yyyy} - {DateTo:dd.MM.yyyy}";
-    public string RentalTypeDisplay => RentalType == RentalType.PerDay ? "Per day" : "Multi day";
 }

@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Shared;
+
+namespace CommunityHub.Application.Domain.Neighborhoods;
 
 public class Neighborhood
 {

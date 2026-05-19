@@ -1,8 +1,8 @@
-using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Database.Mappers.Users;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Shared;
 
 public class UserDbRepository
 {

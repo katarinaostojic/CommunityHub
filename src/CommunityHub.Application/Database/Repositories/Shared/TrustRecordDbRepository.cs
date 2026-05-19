@@ -3,7 +3,7 @@ using System.Data;
 
 using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Shared;
 
 
 public class TrustRecordDbRepository : BaseDbRepository, ITrustRecordRepository

@@ -1,7 +1,8 @@
 ﻿using System.Data;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
+using CommunityHub.Application.Domain.Shared;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Shared;
 
 public class CityDbRepository : BaseDbRepository, ICityRepository
 {

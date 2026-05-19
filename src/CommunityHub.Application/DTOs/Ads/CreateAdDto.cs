@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.Shared;
 
-namespace CommunityHub.Application.DTOs.TenantAds;
+namespace CommunityHub.Application.DTOs.Ads;
 
 public class CreateAdDto
 {

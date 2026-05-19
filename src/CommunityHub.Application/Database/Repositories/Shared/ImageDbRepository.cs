@@ -1,7 +1,8 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
-namespace CommunityHub.Application.Database.Repositories;
+namespace CommunityHub.Application.Database.Repositories.Shared;
 
 public class ImageDbRepository : BaseDbRepository, IImageRepository
 {

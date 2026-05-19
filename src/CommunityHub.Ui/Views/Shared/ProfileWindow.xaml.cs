@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
-using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Database.Repositories.Shared;
+using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Views;
 

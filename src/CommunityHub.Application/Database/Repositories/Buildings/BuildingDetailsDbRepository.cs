@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Database.Readers.Buildings;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Buildings;

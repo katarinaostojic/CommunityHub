@@ -46,27 +46,36 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
     public string ApprovedButtonLabel => $"Approved ({_approvedCount})";
     public string RejectedButtonLabel => $"Rejected ({_rejectedCount})";
 
-    public void FilterAll() { _currentFilter = null; LoadRequests(); }
-    public void FilterPending() { _currentFilter = CommonRoomRequestStatus.Pending; LoadRequests(); }
-    public void FilterDateChange() { _currentFilter = CommonRoomRequestStatus.PendingDateChange; LoadRequests(); }
-    public void FilterApproved() { _currentFilter = CommonRoomRequestStatus.Approved; LoadRequests(); }
-    public void FilterRejected() { _currentFilter = CommonRoomRequestStatus.Rejected; LoadRequests(); }
+    public void FilterAll() => ApplyFilter(null);
+
+    public void FilterPending() =>
+        ApplyFilter(CommonRoomRequestStatus.Pending);
+
+    public void FilterDateChange() =>
+        ApplyFilter(CommonRoomRequestStatus.PendingDateChange);
+
+    public void FilterApproved() =>
+        ApplyFilter(CommonRoomRequestStatus.Approved);
+
+    public void FilterRejected() =>
+        ApplyFilter(CommonRoomRequestStatus.Rejected);
+
+    private void ApplyFilter(CommonRoomRequestStatus? status)
+    {
+        _currentFilter = status;
+        LoadRequests();
+    }
 
     public void CancelRequest(long requestId)
     {
-        var request = _requestService.GetDtoById(requestId);
-        if (request == null) return;
-
-        _requestService.CancelRequest(request);
+        _requestService.CancelRequest(requestId);
         LoadRequests();
         UpdateCounts();
     }
 
     public void AcceptDateChange(long requestId)
     {
-        var request = _requestService.GetDtoById(requestId);
-        if (request == null) return;
-        _requestService.AcceptProposedDateChange(request);
+        _requestService.AcceptProposedDateChange(requestId);
         LoadRequests();
         UpdateCounts();
     }
