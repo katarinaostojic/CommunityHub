@@ -5,7 +5,7 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 
 public class NewAdViewModel : BaseViewModel
 {

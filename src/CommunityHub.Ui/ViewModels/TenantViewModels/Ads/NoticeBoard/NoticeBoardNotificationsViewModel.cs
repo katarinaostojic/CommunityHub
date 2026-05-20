@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Services.Ads;
 using System.Collections.ObjectModel;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class NoticeBoardNotificationsViewModel : BaseViewModel
 {

@@ -2,7 +2,7 @@
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class NoticeBoardFiltersViewModel : BaseViewModel
 {
