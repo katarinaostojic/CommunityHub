@@ -59,11 +59,6 @@ public class CommonRoomRequestService
         _approvalService.ProposeAlternative(requestId, alternativeIndex);
     }
 
-    public List<CommonRoomRequestDto> GetByTenant(long tenantId)
-    {
-        return _requestRepository.GetByTenant(tenantId).ToDtoList();
-    }
-
     public List<CommonRoomRequestDto> GetByTenantAndBuilding(long tenantId, long buildingId)
     {
         return _requestRepository.GetByTenantAndBuilding(tenantId, buildingId).ToDtoList();
@@ -103,6 +98,12 @@ public class CommonRoomRequestService
         _requestRepository.Delete(request.Id);
     }
 
+    private static bool CanCancel(CommonRoomRequestStatus status)
+    {
+        return status == CommonRoomRequestStatus.Pending ||
+               status == CommonRoomRequestStatus.PendingDateChange;
+    }
+
     public void AcceptProposedDateChange(long requestId)
     {
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
@@ -120,6 +121,14 @@ public class CommonRoomRequestService
         _approvalService.TryAutoApproveMultiDay(request);
     }
 
+    private static bool CanAcceptProposedDateChange(CommonRoomRequest? request)
+    {
+        return request != null &&
+               request.Status == CommonRoomRequestStatus.PendingDateChange &&
+               request.ProposedDateFrom != null &&
+               request.ProposedDateTo != null;
+    }
+
     private static void ValidateRequestedDateRange(DateTime dateFrom, DateTime dateTo)
     {
         if (dateFrom.Date < DateTime.Today)
@@ -132,17 +141,4 @@ public class CommonRoomRequestService
             throw new InvalidOperationException("End date must be after start date.");
     }
 
-    private static bool CanCancel(CommonRoomRequestStatus status)
-    {
-        return status == CommonRoomRequestStatus.Pending ||
-               status == CommonRoomRequestStatus.PendingDateChange;
-    }
-
-    private static bool CanAcceptProposedDateChange(CommonRoomRequest? request)
-    {
-        return request != null &&
-               request.Status == CommonRoomRequestStatus.PendingDateChange &&
-               request.ProposedDateFrom != null &&
-               request.ProposedDateTo != null;
-    }
 }

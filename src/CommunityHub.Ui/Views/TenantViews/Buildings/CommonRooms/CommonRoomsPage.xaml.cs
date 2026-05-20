@@ -18,8 +18,6 @@ public partial class CommonRoomsPage : Page
     private readonly string _buildingInfo;
     private readonly CommonRoomsViewModel _viewModel;
 
-    private CommonRoomCardViewModel? _selectedRoom;
-
     public CommonRoomsPage(User user, long buildingId, string buildingInfo)
     {
         InitializeComponent();

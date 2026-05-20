@@ -39,21 +39,6 @@ public class CommonRoomService
         _repository.Create(name, description, floorNumber, rentalTypeString, buildingId);
     }
 
-    public CommonRoomDto? GetCalendar(long roomId)
-    {
-        CommonRoom? room = _repository.GetById(roomId);
-        if (room == null) return null;
-
-        List<DateTime> occupiedDates = _repository.GetOccupiedDates(roomId);
-        room.SetOccupiedDates(occupiedDates);
-        return room.ToDto();
-    }
-
-    public void BookDate(long commonRoomId, DateTime date)
-    {
-        _repository.BookDate(commonRoomId, date);
-    }
-
     public List<DateTime> GetOccupiedDates(long commonRoomId)
     {
         return _repository.GetOccupiedDates(commonRoomId);
