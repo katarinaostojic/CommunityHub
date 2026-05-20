@@ -3,7 +3,7 @@ using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 using System.Windows;
 using System.Windows.Controls;
 

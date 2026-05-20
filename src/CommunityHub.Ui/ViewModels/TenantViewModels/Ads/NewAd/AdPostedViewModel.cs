@@ -5,7 +5,7 @@ using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 
 public class AdPostedViewModel : BaseViewModel
 {

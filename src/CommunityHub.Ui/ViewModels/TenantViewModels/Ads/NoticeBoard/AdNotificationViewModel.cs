@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Ui.Extensions;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class AdNotificationViewModel : BaseViewModel
 {

@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
 
 public class SlotChipViewModel : BaseViewModel
 {

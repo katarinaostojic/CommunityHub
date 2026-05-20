@@ -2,7 +2,7 @@
 using CommunityHub.Ui.Extensions;
 using System.Windows;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class AdViewModel : BaseViewModel
 {
@@ -28,7 +28,7 @@ public class AdViewModel : BaseViewModel
 
     public Visibility ArchiveButtonVisible => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
     public Visibility ViewSlotsVisible => (!IsOwnAd && MyMatchingAdId != null) ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility ViewDetailssVisible => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility ViewDetailsVisible => IsOwnAd ? Visibility.Visible : Visibility.Collapsed;
 
     public string ViewDetailsDisplay => "→ View details";
 }

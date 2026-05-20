@@ -3,10 +3,10 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
