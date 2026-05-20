@@ -45,8 +45,6 @@ public class Ad
         Slots = new List<AdSlot>();
     }
 
-    public void AddSlot(AdSlot slot) => Slots.Add(slot);
-
     public void Archive() => Status = AdStatus.Archived;
 
     public void Restore() => Status = AdStatus.Active;

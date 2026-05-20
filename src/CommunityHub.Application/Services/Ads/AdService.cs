@@ -18,12 +18,6 @@ public class AdService
         _slotBookingService = slotBookingService;
     }
 
-    public List<AdDto> GetActiveByBuilding(long buildingId)
-    {
-        RefreshExpiredAds(buildingId);
-        return _adRepository.GetActiveByBuilding(buildingId).ToAdDtoList();
-    }
-
     public List<AdDto> GetFilteredActiveByBuilding(
         long buildingId,
         AdType? type,
