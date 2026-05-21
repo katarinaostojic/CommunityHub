@@ -2,6 +2,7 @@
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
+using static CommunityHub.Application.Domain.Neighborhoods.ForumComment;
 using static CommunityHub.Application.DTOs.Neighborhoods.NeighborhoodAccessRequestDto;
 
 namespace CommunityHub.Application.Services.Neighborhoods;
@@ -59,11 +60,20 @@ public class ForumService
     {
         ReactionType? existing = _repository.GetReaction(commentId, coordinatorId);
 
-        if (existing == null)
-            _repository.AddReaction(commentId, coordinatorId, reaction);
-        else if (existing == reaction)
-            _repository.RemoveReaction(commentId, coordinatorId);
-        else
-            _repository.UpdateReaction(commentId, coordinatorId, reaction);
+        ForumComment comment = new ForumComment(commentId, 0, coordinatorId, "", "", "", "", DateTime.UtcNow, 0, 0, existing);
+        ReactionAction action = comment.React(reaction);
+
+        switch (action)
+        {
+            case ReactionAction.Add:
+                _repository.AddReaction(commentId, coordinatorId, reaction);
+                break;
+            case ReactionAction.Remove:
+                _repository.RemoveReaction(commentId, coordinatorId);
+                break;
+            case ReactionAction.Update:
+                _repository.UpdateReaction(commentId, coordinatorId, reaction);
+                break;
+        }
     }
 }

@@ -30,4 +30,28 @@ public class ForumComment
         DislikeCount = dislikeCount;
         CurrentUserReaction = currentUserReaction;
     }
+    public ReactionAction React(ReactionType reaction)
+    {
+        if (CurrentUserReaction == null)
+        {
+            CurrentUserReaction = reaction;
+            return ReactionAction.Add;
+        }
+        else if (CurrentUserReaction == reaction)
+        {
+            CurrentUserReaction = null;
+            return ReactionAction.Remove;
+        }
+        else
+        {
+            CurrentUserReaction = reaction;
+            return ReactionAction.Update;
+        }
+    }
+    public enum ReactionAction
+    {
+        Add,
+        Remove,
+        Update
+    }
 }

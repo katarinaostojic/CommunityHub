@@ -114,11 +114,11 @@ public class MeetingsViewModel : BaseViewModel
         }
 
         var trustStatistics = _statisticsService.GetTrustStatistics(_neighborhoodId);
-        NewCount = trustStatistics.GetValueOrDefault(TrustLevel.New, 0);
-        InactiveCount = trustStatistics.GetValueOrDefault(TrustLevel.Inactive, 0);
-        ActiveCount = trustStatistics.GetValueOrDefault(TrustLevel.Active, 0);
-        DistinguishedCount = trustStatistics.GetValueOrDefault(TrustLevel.Distinguished, 0);
-        TrustedCount = trustStatistics.GetValueOrDefault(TrustLevel.Trusted, 0);
+        NewCount = trustStatistics.NewCount;
+        InactiveCount = trustStatistics.InactiveCount;
+        ActiveCount = trustStatistics.ActiveCount;
+        DistinguishedCount = trustStatistics.DistinguishedCount;
+        TrustedCount = trustStatistics.TrustedCount;
 
         var meetingThemeSuggestion = _statisticsService.SuggestMeetingTheme(_neighborhoodId);
         SuggestionText = meetingThemeSuggestion == MeetingTheme.Welcome

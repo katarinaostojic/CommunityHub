@@ -65,4 +65,19 @@ public class Meeting
     {
         Status = MeetingStatus.Cancelled;
     }
+    public void FinalizeVoting(Dictionary<DateOnly, int> voteCounts)
+    {
+        if (voteCounts.Count == 0)
+        {
+            Cancel();
+            return;
+        }
+
+        DateOnly winningDate = voteCounts
+            .OrderByDescending(v => v.Value)
+            .ThenBy(v => v.Key)
+            .First().Key;
+
+        Schedule(winningDate);
+    }
 }

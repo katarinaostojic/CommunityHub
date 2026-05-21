@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Database.Repositories;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Neighborhoods;
 
 namespace CommunityHub.Application.Services;
@@ -13,24 +13,15 @@ public class StatisticsService
         _repository = repository;
     }
 
-    public Dictionary<TrustLevel, int> GetTrustStatistics(long neighborhoodId)
+    public CitizenTrustStatistics GetTrustStatistics(long neighborhoodId)
     {
-        return _repository.GetTrustLevelCounts(neighborhoodId);
+        var counts = _repository.GetTrustLevelCounts(neighborhoodId);
+        return new CitizenTrustStatistics(counts);
     }
 
     public MeetingTheme? SuggestMeetingTheme(long neighborhoodId)
     {
-        var stats = _repository.GetTrustLevelCounts(neighborhoodId);
-
-        int newCount = stats.GetValueOrDefault(TrustLevel.New, 0);
-        int inactiveCount = stats.GetValueOrDefault(TrustLevel.Inactive, 0);
-
-        if (newCount == 0 && inactiveCount == 0)
-            return null;
-
-        if (newCount >= inactiveCount)
-            return MeetingTheme.Welcome;
-
-        return MeetingTheme.Motivation;
+        var statistics = GetTrustStatistics(neighborhoodId);
+        return statistics.SuggestTheme();
     }
 }

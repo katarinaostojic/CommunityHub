@@ -27,16 +27,8 @@ public class MeetingService
         if (meeting == null) return;
 
         var voteCounts = _repository.GetVoteCounts(meetingId);
-
-        if (voteCounts.Count == 0)
-            meeting.Cancel();
-        else
-        {
-            DateOnly winningDate = voteCounts.OrderByDescending(v => v.Value).First().Key;
-            meeting.Schedule(winningDate);
-        }
-
-        _repository.Update(meeting);
+        meeting.FinalizeVoting(voteCounts); // domain odlučuje
+        _repository.Update(meeting);        // repository čuva
     }
 
     public void AddVote(long meetingId, long citizenId, DateOnly votedDate)
