@@ -1,7 +1,8 @@
 ﻿using CommunityHub.Application.Database.Readers.Ads;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
+using CommunityHub.Application.Domain.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Ads;
@@ -16,6 +17,21 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
         {
             CreateSlot(connection, adId, date, start, end);
         }
+    }
+
+    private void CreateSlot(IDbConnection connection, long adId, DateOnly date, TimeOnly start, TimeOnly end)
+    {
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            INSERT INTO notice_board_time_slots (ad_id, date, start_time, end_time)
+            VALUES (@adId, @date, @start, @end)";
+
+        AddParameter(command, "@adId", adId);
+        AddParameter(command, "@date", ToUtcDateTime(date));
+        AddParameter(command, "@start", start.ToTimeSpan());
+        AddParameter(command, "@end", end.ToTimeSpan());
+
+        command.ExecuteNonQuery();
     }
 
     public List<AdSlot> GetSlotsByAd(long adId)
@@ -129,21 +145,6 @@ public class AdSlotDbRepository : BaseDbRepository, IAdSlotRepository
 
         using IDataReader reader = command.ExecuteReader();
         return AdSlotReader.ReadSingleUser(reader);
-    }
-
-    private void CreateSlot(IDbConnection connection, long adId, DateOnly date, TimeOnly start, TimeOnly end)
-    {
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            INSERT INTO notice_board_time_slots (ad_id, date, start_time, end_time)
-            VALUES (@adId, @date, @start, @end)";
-
-        AddParameter(command, "@adId", adId);
-        AddParameter(command, "@date", ToUtcDateTime(date));
-        AddParameter(command, "@start", start.ToTimeSpan());
-        AddParameter(command, "@end", end.ToTimeSpan());
-
-        command.ExecuteNonQuery();
     }
 
     private static DateTime ToUtcDateTime(DateOnly date)

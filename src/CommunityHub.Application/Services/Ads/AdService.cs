@@ -1,8 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.DTOs.TenantAds;
 using CommunityHub.Application.Mappings.Ads;
 
 namespace CommunityHub.Application.Services.Ads;
@@ -18,12 +16,6 @@ public class AdService
     {
         _adRepository = adRepository;
         _slotBookingService = slotBookingService;
-    }
-
-    public List<AdDto> GetActiveByBuilding(long buildingId)
-    {
-        RefreshExpiredAds(buildingId);
-        return _adRepository.GetActiveByBuilding(buildingId).ToAdDtoList();
     }
 
     public List<AdDto> GetFilteredActiveByBuilding(

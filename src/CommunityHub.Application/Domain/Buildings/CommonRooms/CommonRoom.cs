@@ -43,6 +43,4 @@ public class CommonRoom
     {
         return !_occupiedDates.Any(d => d.Date == date.Date);
     }
-
-    public List<DateTime> GetOccupiedDates() => _occupiedDates;
 }

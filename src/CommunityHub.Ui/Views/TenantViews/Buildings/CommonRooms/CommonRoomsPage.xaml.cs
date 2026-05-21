@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Application.Services.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
@@ -17,8 +17,6 @@ public partial class CommonRoomsPage : Page
     private readonly long _buildingId;
     private readonly string _buildingInfo;
     private readonly CommonRoomsViewModel _viewModel;
-
-    private CommonRoomCardViewModel? _selectedRoom;
 
     public CommonRoomsPage(User user, long buildingId, string buildingInfo)
     {
@@ -60,6 +58,7 @@ public partial class CommonRoomsPage : Page
     private void MyRequestsTab_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 
+    //banner button
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 

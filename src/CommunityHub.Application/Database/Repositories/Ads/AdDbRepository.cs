@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Database.Mappers.Ads;
 using CommunityHub.Application.Database.Readers.Ads;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using System.Data;
@@ -71,6 +72,20 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@category", GetCategoryParameterValue(category));
 
         return Convert.ToInt32(command.ExecuteScalar());
+    }
+
+    private static string? GetTypeParameterValue(AdType? type)
+    {
+        return type.HasValue
+            ? AdMapper.ToDbType(type.Value)
+            : null;
+    }
+
+    private static string? GetCategoryParameterValue(AdCategory? category)
+    {
+        return category.HasValue
+            ? AdMapper.ToDbCategory(category.Value)
+            : null;
     }
 
     public Ad? GetById(long adId)
@@ -146,20 +161,6 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         AddParameter(command, "@status", AdMapper.ToDbStatus(ad.Status));
 
         command.ExecuteNonQuery();
-    }
-
-    private static string? GetTypeParameterValue(AdType? type)
-    {
-        return type.HasValue
-            ? AdMapper.ToDbType(type.Value)
-            : null;
-    }
-
-    private static string? GetCategoryParameterValue(AdCategory? category)
-    {
-        return category.HasValue
-            ? AdMapper.ToDbCategory(category.Value)
-            : null;
     }
 
     private static DateTime ToUtcDateTime(DateOnly date)

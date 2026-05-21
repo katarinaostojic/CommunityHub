@@ -24,9 +24,4 @@ public class AdNotificationService
     {
         _notificationRepository.MarkAsRead(notificationId);
     }
-
-    public void MarkAllNotificationsAsRead(long userId)
-    {
-        _notificationRepository.MarkAllAsRead(userId);
-    }
 }

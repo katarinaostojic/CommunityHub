@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Services.Ads;
 using System.Collections.ObjectModel;

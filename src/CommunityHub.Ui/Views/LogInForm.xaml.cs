@@ -1,9 +1,9 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CommunityHub.Ui.Views;
 
+using CommunityHub.Application.Database.Repositories.Shared;
+using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Ui.Views.CitizenViews;
 using CommunityHub.Ui.Views.ManagerViews;
 using CommunityHub.Ui.Views.TenantViews;

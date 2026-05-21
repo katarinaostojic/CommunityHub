@@ -14,8 +14,14 @@ public class CommonRoomRequestRowViewModel : BaseViewModel
 
     public long Id => _request.Id;
     public string CommonRoomName => _request.CommonRoomName;
-    public string DateRange => _request.DateRangeDisplay;
-    public string RentalType => _request.RentalTypeDisplay;
+
+    public string DateRange =>
+        $"{_request.DateFrom:dd.MM.yyyy} - {_request.DateTo:dd.MM.yyyy}";
+
+    public string RentalTypeDisplay => _request.RentalType == RentalType.PerDay
+        ? "Per day"
+        : "Multi day";
+
     public CommonRoomRequestStatus Status => _request.Status;
 
     public string StatusDisplay => _request.Status switch

@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Application.Domain.Neighborhoods;
 
@@ -55,20 +55,18 @@ public class Event
     public void CheckAndCancel(DateTime now)
     {
         if (Status != EventStatus.Preparation) return;
-        if (IsDeadlinePassed(now) && !IsReadyToSchedule)
+        if (EventStatusChecker.IsDeadlinePassed(GetEventDateTime(), now) && !IsReadyToSchedule)
             Cancel();
     }
 
     public void CheckAndFinish(DateTime now)
     {
         if (Status != EventStatus.Scheduled) return;
-        if (IsEventOver(now))
+        if (EventStatusChecker.IsEventOver(GetEventDateTime(), DurationMinutes, now))
             Finish();
     }
 
     private bool HasMinVolunteers() => VolunteerCount >= MinVolunteers;
     private bool AllItemsTaken() => Items.Any() && Items.All(i => i.IsTaken);
-    private bool IsDeadlinePassed(DateTime now) => now >= GetEventDateTime().AddHours(-12);
-    private bool IsEventOver(DateTime now) => now >= GetEventDateTime().Add(TimeSpan.FromMinutes(DurationMinutes));
     private DateTime GetEventDateTime() => EventDate.ToDateTime(StartTime);
 }

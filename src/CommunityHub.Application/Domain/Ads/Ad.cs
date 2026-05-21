@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Shared;
+
+namespace CommunityHub.Application.Domain.Ads;
 
 public class Ad
 {
@@ -42,8 +44,6 @@ public class Ad
         Status = AdStatus.Active;
         Slots = new List<AdSlot>();
     }
-
-    public void AddSlot(AdSlot slot) => Slots.Add(slot);
 
     public void Archive() => Status = AdStatus.Archived;
 

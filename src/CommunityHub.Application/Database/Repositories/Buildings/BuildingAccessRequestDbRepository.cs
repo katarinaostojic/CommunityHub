@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Database.Mappers;
 using CommunityHub.Application.Database.Readers.Buildings;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;

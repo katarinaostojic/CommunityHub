@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Database.Mappers;
+using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
@@ -198,25 +199,28 @@ public class EventDbRepository : BaseDbRepository, IEventRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT er.id, er.event_id, er.citizen_id, er.registered_at, er.attended,
-                   u.username, u.password, u.name AS citizen_name,
-                   u.surname AS citizen_surname, u.birthday, u.role, u.address
-            FROM event_registrations er
-            JOIN users u ON er.citizen_id = u.id
-            WHERE er.event_id = @eventId";
+        SELECT er.id, er.event_id, er.citizen_id, er.registered_at, er.attended,
+               u.username, u.password, u.name AS citizen_name,
+               u.surname AS citizen_surname, u.birthday, u.role, u.address
+        FROM event_registrations er
+        JOIN users u ON er.citizen_id = u.id
+        WHERE er.event_id = @eventId";
 
         AddParameter(command, "@eventId", ev.Id);
 
         using IDataReader reader = command.ExecuteReader();
         while (reader.Read())
-        {
-            ev.AddRegistration(new EventRegistration(
-                Convert.ToInt64(reader["id"]),
-                Convert.ToInt64(reader["event_id"]),
-                EventMapper.MapCitizen(reader),
-                Convert.ToDateTime(reader["registered_at"]),
-                reader.IsDBNull(reader.GetOrdinal("attended")) ? null : Convert.ToBoolean(reader["attended"])
-            ));
-        }
+            ev.AddRegistration(MapRegistration(reader));
+    }
+
+    private EventRegistration MapRegistration(IDataReader reader)
+    {
+        return new EventRegistration(
+            Convert.ToInt64(reader["id"]),
+            Convert.ToInt64(reader["event_id"]),
+            EventMapper.MapCitizen(reader),
+            Convert.ToDateTime(reader["registered_at"]),
+            reader.IsDBNull(reader.GetOrdinal("attended")) ? null : Convert.ToBoolean(reader["attended"])
+        );
     }
 }

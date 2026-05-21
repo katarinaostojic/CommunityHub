@@ -1,6 +1,7 @@
 ﻿namespace CommunityHub.Application.Services.Shared;
 
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
+using CommunityHub.Application.Domain.Shared;
 
 public class CityService
 {
