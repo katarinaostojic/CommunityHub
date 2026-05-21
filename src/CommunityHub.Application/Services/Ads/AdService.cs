@@ -9,13 +9,16 @@ public class AdService
 {
     private readonly IAdRepository _adRepository;
     private readonly AdSlotBookingService _slotBookingService;
+    private readonly AdExpirationService _expirationService;
 
     public AdService(
         IAdRepository adRepository,
-        AdSlotBookingService slotBookingService)
+        AdSlotBookingService slotBookingService,
+        AdExpirationService expirationService)
     {
         _adRepository = adRepository;
         _slotBookingService = slotBookingService;
+        _expirationService = expirationService;
     }
 
     public List<AdDto> GetFilteredActiveByBuilding(
@@ -23,7 +26,7 @@ public class AdService
         AdType? type,
         AdCategory? category)
     {
-        RefreshExpiredAds(buildingId);
+        _expirationService.RefreshExpiredAds(buildingId);
 
         return _adRepository
             .GetFilteredActiveByBuilding(buildingId, type, category)
@@ -35,15 +38,13 @@ public class AdService
         AdType? type,
         AdCategory? category)
     {
-        RefreshExpiredAds(buildingId);
+        _expirationService.RefreshExpiredAds(buildingId);
         return _adRepository.CountFilteredActiveByBuilding(buildingId, type, category);
     }
 
     public AdDto? GetCurrentUserMatchingAd(long buildingId, long currentUserId, AdDto theirAd)
     {
-        AdType seekingType = theirAd.Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
-
-        return GetFilteredActiveByBuilding(buildingId, seekingType, theirAd.Category)
+        return GetFilteredActiveByBuilding(buildingId, theirAd.OppositeType, theirAd.Category)
             .FirstOrDefault(ad =>
                 ad.AuthorId == currentUserId
                 && ad.OverlapsWith(theirAd.DateFrom, theirAd.DateTo));
@@ -94,27 +95,11 @@ public class AdService
 
     private List<Ad> FindMatchingAds(Ad newAd)
     {
-        RefreshExpiredAds(newAd.BuildingId);
+        _expirationService.RefreshExpiredAds(newAd.BuildingId);
 
         return _adRepository
             .GetFilteredActiveByBuilding(newAd.BuildingId, newAd.OppositeType, newAd.Category)
             .Where(ad => ad.IsEligibleMatchFor(newAd))
             .ToList();
-    }
-
-    private void RefreshExpiredAds(long buildingId)
-    {
-        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-
-        List<Ad> expiredAds = _adRepository
-            .GetActiveByBuilding(buildingId)
-            .Where(ad => ad.IsExpired(today))
-            .ToList();
-
-        foreach (Ad ad in expiredAds)
-        {
-            ad.Archive();
-            _adRepository.Update(ad);
-        }
     }
 }

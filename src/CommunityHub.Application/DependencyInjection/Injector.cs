@@ -31,6 +31,9 @@ public static class Injector
     private static readonly CommonRoomDbRepository _commonRoomRepository = new();
     private static readonly CommonRoomRequestDbRepository _commonRoomRequestRepository = new();
 
+    private static readonly AdExpirationService _adExpirationService = new(
+        _adRepository);
+
     private static readonly AdSlotBookingService _adSlotBookingService = new(
         _adRepository,
         _adSlotRepository,
@@ -75,6 +78,10 @@ public static class Injector
                 new CountryDbRepository())
         },
         {
+            typeof(AdExpirationService),
+            _adExpirationService
+        },
+        {
             typeof(AdSlotBookingService),
             _adSlotBookingService
         },
@@ -87,13 +94,15 @@ public static class Injector
             typeof(AdStatisticsService),
             new AdStatisticsService(
                 _adRepository,
-                _adSlotRepository)
+                _adSlotRepository,
+                _adExpirationService)
         },
         {
             typeof(AdService),
             new AdService(
                 _adRepository,
-                _adSlotBookingService)
+                _adSlotBookingService,
+                _adExpirationService)
         },
         {
             typeof(CommonRoomService),
