@@ -29,6 +29,10 @@ public class CommonRoom
         _occupiedDates = new List<DateTime>();
     }
 
+    public bool IsMultiDayRental => RentalType == RentalType.MultiDay;
+
+    public bool IsPerDayRental => RentalType == RentalType.PerDay;
+
     public void SetOccupiedDates(List<DateTime> dates)
     {
         _occupiedDates = dates;

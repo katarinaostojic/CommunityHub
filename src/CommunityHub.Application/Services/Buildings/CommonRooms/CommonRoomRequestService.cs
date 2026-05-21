@@ -76,7 +76,7 @@ public class CommonRoomRequestService
         if (request == null)
             return;
 
-        if (request.CommonRoom.RentalType == RentalType.PerDay)
+        if (request.CommonRoom.IsPerDayRental)
         {
             _approvalService.GetFreeDaysInRange(request.Id);
             return;

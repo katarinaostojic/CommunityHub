@@ -7,9 +7,8 @@ public static class CommonRoomMapper
 {
     public static CommonRoom Map(IDataReader reader)
     {
-        RentalType rentalType = reader["rental_type"].ToString() == "per_day"
-            ? RentalType.PerDay
-            : RentalType.MultiDay;
+        RentalType rentalType = RentalTypeMapper.FromDatabaseValue(
+            reader["rental_type"].ToString()!);
 
         return new CommonRoom(
             Convert.ToInt64(reader["id"]),

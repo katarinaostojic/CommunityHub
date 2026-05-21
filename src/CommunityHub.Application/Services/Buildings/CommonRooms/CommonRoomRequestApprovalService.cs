@@ -25,16 +25,12 @@ public class CommonRoomRequestApprovalService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
         if (request == null)
-        {
             return new List<DateTime>();
-        }
 
         List<DateTime> freeDays = _availabilityService.GetFreeDays(request);
 
         if (freeDays.Count == 0)
-        {
             RejectAndSave(request);
-        }
 
         return freeDays;
     }
@@ -44,9 +40,7 @@ public class CommonRoomRequestApprovalService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
         if (request == null)
-        {
             return new List<(DateTime, DateTime)>();
-        }
 
         return _availabilityService.FindAlternativeRanges(request);
     }
@@ -56,9 +50,7 @@ public class CommonRoomRequestApprovalService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
         if (request == null)
-        {
             return;
-        }
 
         ApproveSingleDate(request, selectedDate);
     }
@@ -68,9 +60,7 @@ public class CommonRoomRequestApprovalService
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
         if (request == null)
-        {
             return;
-        }
 
         List<(DateTime, DateTime)> alternatives = _availabilityService.FindAlternativeRanges(request);
         ApplyAlternative(request, alternatives[alternativeIndex]);
@@ -79,9 +69,7 @@ public class CommonRoomRequestApprovalService
     public void TryAutoApproveMultiDay(CommonRoomRequest request)
     {
         if (!CanAutoApprove(request))
-        {
             return;
-        }
 
         ApproveAndBookRange(request);
     }
@@ -110,7 +98,7 @@ public class CommonRoomRequestApprovalService
 
     private bool CanAutoApprove(CommonRoomRequest request)
     {
-        return request.CommonRoom.RentalType == RentalType.MultiDay &&
+        return request.CommonRoom.IsMultiDayRental &&
                _availabilityService.IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom);
     }
 
@@ -118,16 +106,13 @@ public class CommonRoomRequestApprovalService
     {
         request.AutoApprove();
         _requestRepository.Update(request);
-
         BookRange(request);
     }
 
     private void BookRange(CommonRoomRequest request)
     {
         for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
-        {
             _commonRoomRepository.BookDate(request.CommonRoom.Id, date);
-        }
     }
 
     private void RejectAndSave(CommonRoomRequest request)

@@ -44,7 +44,7 @@ public partial class CommonRoomsPage : Page
             _buildingInfo,
             room.Name,
             room.FloorDisplay,
-            room.RentalTypeDisplay);
+            room.RentalType);
 
         CommonRoomRequestDialog dialog = new CommonRoomRequestDialog(dialogViewModel);
         dialog.Owner = Window.GetWindow(this);
@@ -58,7 +58,6 @@ public partial class CommonRoomsPage : Page
     private void MyRequestsTab_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 
-    //banner button
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 

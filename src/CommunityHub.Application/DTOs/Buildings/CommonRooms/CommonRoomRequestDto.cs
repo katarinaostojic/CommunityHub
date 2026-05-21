@@ -41,4 +41,13 @@ public class CommonRoomRequestDto
         ProposedDateFrom = proposedDateFrom;
         ProposedDateTo = proposedDateTo;
     }
+
+    public bool CanBeCancelled
+        => Status == CommonRoomRequestStatus.Pending ||
+           Status == CommonRoomRequestStatus.PendingDateChange;
+
+    public bool CanAcceptProposedDateChange
+        => Status == CommonRoomRequestStatus.PendingDateChange &&
+           ProposedDateFrom != null &&
+           ProposedDateTo != null;
 }
