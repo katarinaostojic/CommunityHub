@@ -2,8 +2,8 @@
 using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Ui.Converters;
 

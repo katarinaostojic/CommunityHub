@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
 
 namespace CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 

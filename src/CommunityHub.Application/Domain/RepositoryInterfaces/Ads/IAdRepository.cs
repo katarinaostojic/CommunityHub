@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
 
 namespace CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 

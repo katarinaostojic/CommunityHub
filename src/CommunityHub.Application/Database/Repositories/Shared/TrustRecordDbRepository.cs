@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain;
-using System.Data;
+﻿using System.Data;
 
 using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+using CommunityHub.Application.Domain.Entities;
 
 namespace CommunityHub.Application.Database.Repositories.Shared;
 

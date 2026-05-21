@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;

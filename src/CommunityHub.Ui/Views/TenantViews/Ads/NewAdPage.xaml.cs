@@ -3,8 +3,8 @@ using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Ads;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

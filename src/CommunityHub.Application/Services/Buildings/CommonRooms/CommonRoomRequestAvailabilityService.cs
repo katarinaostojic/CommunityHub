@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings;
+using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.Services.Buildings.CommonRooms;

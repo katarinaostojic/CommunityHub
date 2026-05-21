@@ -1,7 +1,7 @@
 ﻿namespace CommunityHub.Application.Services.Shared;
 
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
-using CommunityHub.Application.Domain.Shared;
 
 public class CountryService
 {

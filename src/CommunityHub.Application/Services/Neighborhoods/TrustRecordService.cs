@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Domain;
+using CommunityHub.Application.Domain.Entities;
 using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;

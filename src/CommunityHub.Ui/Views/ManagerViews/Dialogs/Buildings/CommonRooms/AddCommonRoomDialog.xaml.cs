@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using System.Windows;

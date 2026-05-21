@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.DTOs.Ads;
 
 namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Ads;

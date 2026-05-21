@@ -1,7 +1,7 @@
 ﻿namespace CommunityHub.Application.DTOs.Neighborhoods;
 
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
 
 public class NeighborhoodDto
 {

@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.Services;
 using System.Windows.Controls;
 
