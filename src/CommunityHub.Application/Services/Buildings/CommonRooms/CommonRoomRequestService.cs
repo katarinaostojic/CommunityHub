@@ -66,7 +66,9 @@ public class CommonRoomRequestService
 
     public void CreateRequest(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
     {
-        ValidateRequestedDateRange(dateFrom, dateTo);
+        string? validationError = CommonRoomRequest.ValidateDateRange(dateFrom, dateTo);
+        if (validationError != null)
+            throw new InvalidOperationException(validationError);
 
         long requestId = _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
@@ -90,55 +92,29 @@ public class CommonRoomRequestService
         if (request == null)
             return;
 
-        if (!CanCancel(request.Status))
-        {
+        if (!request.CanBeCancelled)
             throw new InvalidOperationException("Only pending requests can be cancelled.");
-        }
 
         _requestRepository.Delete(request.Id);
-    }
-
-    private static bool CanCancel(CommonRoomRequestStatus status)
-    {
-        return status == CommonRoomRequestStatus.Pending ||
-               status == CommonRoomRequestStatus.PendingDateChange;
     }
 
     public void AcceptProposedDateChange(long requestId)
     {
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
-        if (!CanAcceptProposedDateChange(request))
+        if (request == null || !request.CanAcceptProposedDateChange)
             return;
 
-        ValidateRequestedDateRange(
-            request!.ProposedDateFrom!.Value,
+        string? validationError = CommonRoomRequest.ValidateDateRange(
+            request.ProposedDateFrom!.Value,
             request.ProposedDateTo!.Value);
+
+        if (validationError != null)
+            throw new InvalidOperationException(validationError);
 
         request.AcceptProposedDates();
         _requestRepository.Update(request);
 
         _approvalService.TryAutoApproveMultiDay(request);
     }
-
-    private static bool CanAcceptProposedDateChange(CommonRoomRequest? request)
-    {
-        return request != null &&
-               request.Status == CommonRoomRequestStatus.PendingDateChange &&
-               request.ProposedDateFrom != null &&
-               request.ProposedDateTo != null;
-    }
-
-    private static void ValidateRequestedDateRange(DateTime dateFrom, DateTime dateTo)
-    {
-        if (dateFrom.Date < DateTime.Today)
-            throw new InvalidOperationException("Start date cannot be in the past.");
-
-        if (dateTo.Date < DateTime.Today)
-            throw new InvalidOperationException("End date cannot be in the past.");
-
-        if (dateTo.Date < dateFrom.Date)
-            throw new InvalidOperationException("End date must be after start date.");
-    }
-
 }

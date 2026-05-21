@@ -38,6 +38,17 @@ public class CommonRoomRequest
         ProposedDateTo = proposedDateTo;
     }
 
+    public bool CanBeCancelled
+        => Status == CommonRoomRequestStatus.Pending ||
+           Status == CommonRoomRequestStatus.PendingDateChange;
+
+    public bool CanAcceptProposedDateChange
+        => Status == CommonRoomRequestStatus.PendingDateChange &&
+           ProposedDateFrom != null &&
+           ProposedDateTo != null;
+
+    public int RequestedDays => (int)(DateTo - DateFrom).TotalDays + 1;
+
     public void AutoApprove()
     {
         Status = CommonRoomRequestStatus.Approved;
@@ -69,5 +80,19 @@ public class CommonRoomRequest
         ProposedDateFrom = null;
         ProposedDateTo = null;
         Status = CommonRoomRequestStatus.Pending;
+    }
+
+    public static string? ValidateDateRange(DateTime dateFrom, DateTime dateTo)
+    {
+        if (dateFrom.Date < DateTime.Today)
+            return "Start date cannot be in the past.";
+
+        if (dateTo.Date < DateTime.Today)
+            return "End date cannot be in the past.";
+
+        if (dateTo.Date < dateFrom.Date)
+            return "End date must be after start date.";
+
+        return null;
     }
 }
