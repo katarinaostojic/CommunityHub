@@ -28,8 +28,7 @@ public class BookSlotsViewModel : BaseViewModel
         CategoryDisplay = theirAd.Category.ToDisplayString();
         DateRangeDisplay = $"{theirAd.DateFrom:dd.MM.yyyy} – {theirAd.DateTo:dd.MM.yyyy}";
 
-        DateOnly slotFrom = theirAd.DateFrom > myAd.DateFrom ? theirAd.DateFrom : myAd.DateFrom;
-        DateOnly slotTo = theirAd.DateTo < myAd.DateTo ? theirAd.DateTo : myAd.DateTo;
+        (DateOnly slotFrom, DateOnly slotTo) = theirAd.GetOverlapWith(myAd);
         OverlapRangeDisplay = $"Showing slots within your overlap: {slotFrom:dd.MM.} – {slotTo:dd.MM.} only";
 
         List<AdSlotDto> freeSlots = _slotBookingService.GetFreeSlots(theirAd.Id, slotFrom, slotTo);
