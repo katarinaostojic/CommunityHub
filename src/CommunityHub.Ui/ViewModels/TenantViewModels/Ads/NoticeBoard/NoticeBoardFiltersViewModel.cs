@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Extensions;
 

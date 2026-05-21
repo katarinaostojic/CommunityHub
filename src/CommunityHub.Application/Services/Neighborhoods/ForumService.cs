@@ -1,8 +1,8 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
-using static CommunityHub.Application.Domain.Neighborhoods.ForumComment;
+using static CommunityHub.Application.Domain.Entities.Neighborhoods.ForumComment;
 using static CommunityHub.Application.DTOs.Neighborhoods.NeighborhoodAccessRequestDto;
 
 namespace CommunityHub.Application.Services.Neighborhoods;

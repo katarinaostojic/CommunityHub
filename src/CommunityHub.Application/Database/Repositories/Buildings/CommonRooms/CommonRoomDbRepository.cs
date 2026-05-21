@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Database.Readers.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using System.Data;
 

@@ -25,8 +25,7 @@ public class MatchingAdViewModel : BaseViewModel
     {
         get
         {
-            DateOnly overlapFrom = _ad.DateFrom > _myAd.DateFrom ? _ad.DateFrom : _myAd.DateFrom;
-            DateOnly overlapTo = _ad.DateTo < _myAd.DateTo ? _ad.DateTo : _myAd.DateTo;
+            (DateOnly overlapFrom, DateOnly overlapTo) = _ad.GetOverlapWith(_myAd);
             return $"Overlap: {overlapFrom:dd.MM.} – {overlapTo:dd.MM.}";
         }
     }

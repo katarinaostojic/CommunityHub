@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
 
 namespace CommunityHub.Application.DTOs.Ads;
 
@@ -44,8 +44,15 @@ public class AdDto
 
     public bool IsActive => Status == AdStatus.Active;
 
+    public AdType OppositeType => Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
+
     public bool OverlapsWith(DateOnly otherFrom, DateOnly otherTo)
+        => DateFrom <= otherTo && DateTo >= otherFrom;
+
+    public (DateOnly From, DateOnly To) GetOverlapWith(AdDto other)
     {
-        return DateFrom <= otherTo && DateTo >= otherFrom;
+        DateOnly from = DateFrom > other.DateFrom ? DateFrom : other.DateFrom;
+        DateOnly to = DateTo < other.DateTo ? DateTo : other.DateTo;
+        return (from, to);
     }
 }

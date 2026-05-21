@@ -5,7 +5,7 @@ using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using CommunityHub.Ui.Views;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 

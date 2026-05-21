@@ -1,7 +1,6 @@
 using System.Windows;
 using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain.Shared;
-
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views;
 

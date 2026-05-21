@@ -1,5 +1,6 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
+using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 
@@ -18,9 +19,7 @@ public class CommonRoomRequestRowViewModel : BaseViewModel
     public string DateRange =>
         $"{_request.DateFrom:dd.MM.yyyy} - {_request.DateTo:dd.MM.yyyy}";
 
-    public string RentalTypeDisplay => _request.RentalType == RentalType.PerDay
-        ? "Per day"
-        : "Multi day";
+    public string RentalTypeDisplay => _request.RentalType.ToDisplayString();
 
     public CommonRoomRequestStatus Status => _request.Status;
 
@@ -41,10 +40,9 @@ public class CommonRoomRequestRowViewModel : BaseViewModel
         ? $"Proposed: {_request.ProposedDateFrom.Value:dd.MM.yyyy} - {_request.ProposedDateTo.Value:dd.MM.yyyy}"
         : string.Empty;
 
-    public bool CanCancel => _request.Status == CommonRoomRequestStatus.Pending
-                          || _request.Status == CommonRoomRequestStatus.PendingDateChange;
+    public bool CanCancel => _request.CanBeCancelled;
 
-    public bool CanAcceptDateChange => _request.Status == CommonRoomRequestStatus.PendingDateChange;
+    public bool CanAcceptDateChange => _request.CanAcceptProposedDateChange;
 
     public bool ApprovedDateVisible => _request.ApprovedDate.HasValue;
 

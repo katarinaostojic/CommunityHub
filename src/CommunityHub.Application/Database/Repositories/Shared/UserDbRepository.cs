@@ -1,5 +1,5 @@
 using CommunityHub.Application.Database.Mappers.Users;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Shared;

@@ -1,7 +1,6 @@
-﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
-using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Mappings.Ads;
 
@@ -11,18 +10,21 @@ public class AdStatisticsService
 {
     private readonly IAdRepository _adRepository;
     private readonly IAdSlotRepository _adSlotRepository;
+    private readonly AdExpirationService _expirationService;
 
     public AdStatisticsService(
         IAdRepository adRepository,
-        IAdSlotRepository adSlotRepository)
+        IAdSlotRepository adSlotRepository,
+        AdExpirationService expirationService)
     {
         _adRepository = adRepository;
         _adSlotRepository = adSlotRepository;
+        _expirationService = expirationService;
     }
 
     public List<AdDto> GetAllByBuilding(long buildingId)
     {
-        RefreshExpiredAds(buildingId);
+        _expirationService.RefreshExpiredAds(buildingId);
         return _adRepository.GetAllByBuilding(buildingId).ToAdDtoList();
     }
 
@@ -63,21 +65,5 @@ public class AdStatisticsService
     public User? GetTopHelper(long buildingId)
     {
         return _adSlotRepository.GetTopHelperByBuilding(buildingId);
-    }
-
-    private void RefreshExpiredAds(long buildingId)
-    {
-        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-
-        List<Ad> expiredAds = _adRepository
-            .GetActiveByBuilding(buildingId)
-            .Where(ad => ad.IsExpired(today))
-            .ToList();
-
-        foreach (Ad ad in expiredAds)
-        {
-            ad.Archive();
-            _adRepository.Update(ad);
-        }
     }
 }

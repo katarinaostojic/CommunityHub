@@ -1,5 +1,6 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
+using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 
@@ -17,7 +18,8 @@ public class CommonRoomCardViewModel : BaseViewModel
     public string Name => _room.Name;
     public string Description => _room.Description;
     public string FloorDisplay => $"Floor {_room.FloorNumber}";
-    public string RentalTypeDisplay => _room.RentalType == RentalType.PerDay ? "1 day only" : "Multiple days";
+    public RentalType RentalType => _room.RentalType;
+    public string RentalTypeDisplay => _room.RentalType.ToDisplayString();
     public int MyRequestsCount { get; }
     public string MyRequestsLabel => $"My requests ({MyRequestsCount})";
 }

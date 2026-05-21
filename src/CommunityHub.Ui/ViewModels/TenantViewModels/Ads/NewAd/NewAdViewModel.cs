@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Ads;

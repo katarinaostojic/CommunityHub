@@ -3,7 +3,7 @@
 namespace CommunityHub.Ui.Views;
 
 using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Ui.Views.CitizenViews;
 using CommunityHub.Ui.Views.ManagerViews;
 using CommunityHub.Ui.Views.TenantViews;

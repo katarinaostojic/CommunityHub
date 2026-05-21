@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.DTOs.Buildings.CommonRooms;
 
@@ -41,4 +41,13 @@ public class CommonRoomRequestDto
         ProposedDateFrom = proposedDateFrom;
         ProposedDateTo = proposedDateTo;
     }
+
+    public bool CanBeCancelled
+        => Status == CommonRoomRequestStatus.Pending ||
+           Status == CommonRoomRequestStatus.PendingDateChange;
+
+    public bool CanAcceptProposedDateChange
+        => Status == CommonRoomRequestStatus.PendingDateChange &&
+           ProposedDateFrom != null &&
+           ProposedDateTo != null;
 }

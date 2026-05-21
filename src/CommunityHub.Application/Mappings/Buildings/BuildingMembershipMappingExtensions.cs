@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Entities.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
 
 namespace CommunityHub.Application.Mappings.Buildings;

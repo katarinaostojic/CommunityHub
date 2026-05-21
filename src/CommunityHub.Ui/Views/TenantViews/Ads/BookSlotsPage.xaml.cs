@@ -5,8 +5,8 @@ using CommunityHub.Application.Services.Ads;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

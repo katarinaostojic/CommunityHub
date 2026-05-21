@@ -1,5 +1,5 @@
 using System.Data;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Application.Database.Repositories.Shared;
 

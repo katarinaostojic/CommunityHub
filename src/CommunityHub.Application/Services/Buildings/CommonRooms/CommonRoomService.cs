@@ -1,5 +1,6 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Entities.Buildings;
+using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
@@ -35,8 +36,8 @@ public class CommonRoomService
         if (!commonRoom.IsFloorValid(building.NumberOfFloors))
             throw new Exception("Floor does not exist in this building.");
 
-        string rentalTypeString = rentalType == RentalType.PerDay ? "per_day" : "multi_day";
-        _repository.Create(name, description, floorNumber, rentalTypeString, buildingId);
+        _repository.Create(name, description, floorNumber,
+            RentalTypeMapper.ToDatabaseValue(rentalType), buildingId);
     }
 
     public List<DateTime> GetOccupiedDates(long commonRoomId)

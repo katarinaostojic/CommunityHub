@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Database.Mappers.Users;
-using CommunityHub.Application.Domain.Buildings;
+using CommunityHub.Application.Domain.Entities.Buildings;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Buildings;

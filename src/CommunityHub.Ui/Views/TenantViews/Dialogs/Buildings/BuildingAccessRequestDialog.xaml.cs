@@ -3,7 +3,7 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

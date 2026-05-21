@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Mappings.Ads;
@@ -10,9 +10,6 @@ public class AdSlotBookingService
     private readonly IAdRepository _adRepository;
     private readonly IAdSlotRepository _adSlotRepository;
     private readonly IAdNotificationRepository _notificationRepository;
-
-    private static readonly TimeOnly SlotStart = new TimeOnly(16, 0);
-    private const int SlotsPerDay = 4;
 
     public AdSlotBookingService(
         IAdRepository adRepository,
@@ -26,7 +23,7 @@ public class AdSlotBookingService
 
     public void CreateSlotsForAd(long adId, DateOnly dateFrom, DateOnly dateTo)
     {
-        _adSlotRepository.CreateSlots(adId, GenerateSlots(dateFrom, dateTo));
+        _adSlotRepository.CreateSlots(adId, AdSlot.GenerateForDateRange(dateFrom, dateTo));
     }
 
     public List<AdSlotDto> GetFreeSlots(
@@ -55,27 +52,5 @@ public class AdSlotBookingService
         if (ownerAd == null) return;
 
         _notificationRepository.Create(ownerAd.Author.Id, ownerAdId, bookedByAdId);
-    }
-
-    private List<(DateOnly, TimeOnly, TimeOnly)> GenerateSlots(DateOnly dateFrom, DateOnly dateTo)
-    {
-        List<(DateOnly, TimeOnly, TimeOnly)> slots = new();
-
-        for (DateOnly date = dateFrom; date <= dateTo; date = date.AddDays(1))
-            AddDailySlots(slots, date);
-
-        return slots;
-    }
-
-    private static void AddDailySlots(
-        List<(DateOnly, TimeOnly, TimeOnly)> slots,
-        DateOnly date)
-    {
-        for (int i = 0; i < SlotsPerDay; i++)
-        {
-            TimeOnly startTime = SlotStart.AddHours(i);
-            TimeOnly endTime = SlotStart.AddHours(i + 1);
-            slots.Add((date, startTime, endTime));
-        }
     }
 }

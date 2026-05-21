@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;

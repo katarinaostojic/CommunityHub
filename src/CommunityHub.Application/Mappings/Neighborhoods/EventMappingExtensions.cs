@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 
 namespace CommunityHub.Application.Mappings.Neighborhoods;
