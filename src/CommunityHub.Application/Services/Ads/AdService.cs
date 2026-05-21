@@ -41,9 +41,9 @@ public class AdService
 
     public AdDto? GetCurrentUserMatchingAd(long buildingId, long currentUserId, AdDto theirAd)
     {
-        AdType myType = GetOppositeType(theirAd.Type);
+        AdType seekingType = theirAd.Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
 
-        return GetFilteredActiveByBuilding(buildingId, myType, theirAd.Category)
+        return GetFilteredActiveByBuilding(buildingId, seekingType, theirAd.Category)
             .FirstOrDefault(ad =>
                 ad.AuthorId == currentUserId
                 && ad.OverlapsWith(theirAd.DateFrom, theirAd.DateTo));
@@ -96,25 +96,10 @@ public class AdService
     {
         RefreshExpiredAds(newAd.BuildingId);
 
-        AdType oppositeType = GetOppositeType(newAd.Type);
-
         return _adRepository
-            .GetFilteredActiveByBuilding(newAd.BuildingId, oppositeType, newAd.Category)
-            .Where(ad => IsEligibleMatch(ad, newAd))
+            .GetFilteredActiveByBuilding(newAd.BuildingId, newAd.OppositeType, newAd.Category)
+            .Where(ad => ad.IsEligibleMatchFor(newAd))
             .ToList();
-    }
-
-    private static AdType GetOppositeType(AdType type)
-    {
-        return type == AdType.Offering
-            ? AdType.Seeking
-            : AdType.Offering;
-    }
-
-    private static bool IsEligibleMatch(Ad ad, Ad newAd)
-    {
-        return ad.Author.Id != newAd.Author.Id
-            && ad.OverlapsWith(newAd.DateFrom, newAd.DateTo);
     }
 
     private void RefreshExpiredAds(long buildingId)

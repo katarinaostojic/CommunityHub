@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Buildings;
+﻿using CommunityHub.Application.Domain.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.Shared;
 using CommunityHub.Application.DTOs.Buildings;

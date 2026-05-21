@@ -51,13 +51,15 @@ public class Ad
 
     public bool IsActive => Status == AdStatus.Active;
 
-    public bool IsExpired(DateOnly today)
-    {
-        return IsActive && DateTo < today;
-    }
+    public bool IsExpired(DateOnly today) => IsActive && DateTo < today;
 
     public bool OverlapsWith(DateOnly otherFrom, DateOnly otherTo)
         => DateFrom <= otherTo && DateTo >= otherFrom;
+
+    public AdType OppositeType => Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
+
+    public bool IsEligibleMatchFor(Ad other)
+        => Author.Id != other.Author.Id && OverlapsWith(other.DateFrom, other.DateTo);
 
     public static string? ValidateDateRange(DateOnly dateFrom, DateOnly dateTo)
     {

@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Neighborhoods;
 using CommunityHub.Application.Domain.Shared;
 
 public class NeighborhoodAccessRequest
