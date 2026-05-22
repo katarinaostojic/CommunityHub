@@ -10,7 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,7 +21,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -32,36 +34,49 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="☰  Menu"
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
 
-                <TextBlock Grid.Column="4" x:Name="UserNameTextBlock"
+                <TextBlock Grid.Column="4"
+                           x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"
+                           Foreground="White"
+                           FontSize="15"
                            Margin="0,0,8,0"/>
 
-                <TextBlock Grid.Column="5" Text="👤"
+                <TextBlock Grid.Column="5"
+                           Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="17"/>
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Success banner -->
-        <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="{StaticResource SuccessBrush}" Padding="12,8"
+        <Border x:Name="SuccessBanner"
+                Grid.Row="1"
+                Background="{StaticResource SuccessBrush}"
+                BorderBrush="{StaticResource SuccessTextBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12,8"
+                Margin="16,10,16,0"
                 Visibility="Collapsed">
             <TextBlock x:Name="SuccessTextBlock"
-                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
+                       Foreground="{StaticResource SuccessTextBrush}"
+                       FontSize="13"/>
         </Border>
 
-        <!-- Title i sort -->
-        <Grid Grid.Row="2" Margin="16,12,16,8">
+        <!-- Title and sort -->
+        <Grid Grid.Row="2"
+              Margin="16,12,16,8">
             <TextBlock Text="My Requests"
                        Style="{StaticResource PageTitle}"
-                       TextDecorations="Underline"
                        VerticalAlignment="Center"/>
+
             <Button x:Name="SortButton"
                     Content="{Binding SortButtonLabel}"
                     Style="{StaticResource OutlineButton}"
@@ -69,25 +84,35 @@
                     Click="SortButton_Click"/>
         </Grid>
 
-        <!-- Filteri po statusu -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="16,0,16,8">
-            <TextBlock Text="Filters:" FontSize="13" FontWeight="SemiBold"
-                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+        <!-- Filters -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    Margin="16,0,16,8">
+            <TextBlock Text="Filters:"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource TextPrimaryBrush}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"/>
+
             <Button x:Name="FilterAllButton"
                     Content="{Binding AllButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterAllButton_Click"/>
+
             <Button x:Name="FilterPendingButton"
                     Content="{Binding PendingButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterPendingButton_Click"/>
+
             <Button x:Name="FilterApprovedButton"
                     Content="{Binding ApprovedButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterApprovedButton_Click"/>
+
             <Button x:Name="FilterRejectedButton"
                     Content="{Binding RejectedButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
@@ -100,8 +125,10 @@
                    Style="{StaticResource SecondaryText}"
                    Margin="16,0,16,8"/>
 
-        <!-- Lista zahteva -->
-        <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
+        <!-- Request list -->
+        <ScrollViewer Grid.Row="5"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,16">
             <ItemsControl ItemsSource="{Binding Requests}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -111,64 +138,129 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Left main info -->
+                                <StackPanel Grid.Row="0"
+                                            Grid.Column="0"
+                                            Margin="0,0,20,0">
+                                    <TextBlock FontSize="15"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               Text="{Binding BuildingAddress}"/>
+
+                                    <TextBlock FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource PrimaryBrush}"
+                                               Margin="0,8,0,0"
+                                               Text="{Binding BuildingNeighborhood}"/>
+
+                                    <TextBlock Style="{StaticResource SecondaryText}"
+                                               Margin="0,2,0,0"
+                                               Text="{Binding BuildingLocation}"/>
+                                </StackPanel>
+
                                 <!-- Status badge -->
-                                <Border Grid.Row="0" HorizontalAlignment="Right"
-                                        Style="{StaticResource StatusBadge}">
-                                    <TextBlock Text="{Binding StatusDisplay}" FontSize="13"/>
+                                <Border Grid.Row="0"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Background="{StaticResource PrimarySoftBrush}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="10"
+                                        Padding="12,7">
+                                    <TextBlock Text="{Binding StatusDisplay}"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
                                 </Border>
 
-                                <!-- Adresa -->
-                                <TextBlock Grid.Row="0" FontSize="15" FontWeight="Bold"
-                                           Text="{Binding BuildingAddress}"/>
-
-                                <!-- Naselje -->
-                                <TextBlock Grid.Row="1" FontSize="13" Margin="0,2,0,0"
-                                           Text="{Binding BuildingNeighborhood}"/>
-
-                                <!-- Grad, Drzava -->
-                                <TextBlock Grid.Row="2" Style="{StaticResource SecondaryText}"
-                                           Margin="0,2,0,8"
-                                           Text="{Binding BuildingLocation}"/>
-
-                                <!-- Unit i datum -->
-                                <Grid Grid.Row="3" Margin="0,0,0,8">
+                                <!-- Unit, date and action in the same row -->
+                                <Grid Grid.Row="1"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Margin="0,16,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="30"/>
                                         <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Unit:" Style="{StaticResource SecondaryText}"/>
-                                        <TextBlock Text="{Binding UnitNumber}" FontSize="13"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <TextBlock Text="Submission Date:" Style="{StaticResource SecondaryText}"/>
-                                        <TextBlock Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy}" FontSize="13"/>
-                                    </StackPanel>
-                                </Grid>
 
-                                <!-- Rejection reason -->
-                                <TextBlock Grid.Row="4"
-                                           Text="{Binding RejectionReasonDisplay}"
-                                           Style="{StaticResource SecondaryText}"
-                                           FontStyle="Italic"
-                                           Margin="0,0,0,6"
-                                           Visibility="{Binding RejectionReasonVisible, Converter={StaticResource BoolToVis}}"/>
+                                    <Border Grid.Column="0"
+                                            Background="{StaticResource SurfaceSoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="14,9"
+                                            MinWidth="68">
+                                        <StackPanel>
+                                            <TextBlock Text="Unit"
+                                                       Style="{StaticResource SecondaryText}"
+                                                       FontSize="12"/>
 
-                                <!-- Akcije -->
-                                <Grid Grid.Row="5">
-                                    <Button Content="Cancel request"
+                                            <TextBlock Text="{Binding UnitNumber}"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="2"
+                                            Background="{StaticResource SurfaceSoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="14,9"
+                                            MinWidth="150">
+                                        <StackPanel>
+                                            <TextBlock Text="Submission date"
+                                                       Style="{StaticResource SecondaryText}"
+                                                       FontSize="12"/>
+
+                                            <TextBlock Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy}"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Button Grid.Column="4"
+                                            Content="Cancel request"
                                             Style="{StaticResource DangerButton}"
                                             HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            MinWidth="150"
+                                            Height="44"
                                             Tag="{Binding}"
                                             Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
                                             Click="CancelRequestButton_Click"/>
                                 </Grid>
+
+                                <!-- Rejection reason -->
+                                <Border Grid.Row="2"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Background="{StaticResource AccentSoftBrush}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="10,7"
+                                        Margin="0,12,0,0"
+                                        Visibility="{Binding RejectionReasonVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="{Binding RejectionReasonDisplay}"
+                                               Foreground="{StaticResource SecondaryBrush}"
+                                               FontStyle="Italic"
+                                               FontSize="13"
+                                               TextWrapping="Wrap"/>
+                                </Border>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -176,6 +268,8 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="6"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>

@@ -1,9 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +22,7 @@ public partial class MyCommonRoomRequestsPage : Page
         _buildingId = buildingId;
         _buildingInfo = buildingInfo;
 
-        CommonRoomRequestService requestService = Injector.CreateInstance<CommonRoomRequestService>();
+        ICommonRoomRequestService requestService = Injector.CreateInstance<ICommonRoomRequestService>();
         _viewModel = new MyCommonRoomRequestsViewModel(requestService, user.Id, buildingId);
         DataContext = _viewModel;
 

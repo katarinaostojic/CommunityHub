@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 
@@ -7,7 +7,7 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
 
 public class BookSlotsViewModel : BaseViewModel
 {
-    private readonly AdSlotBookingService _slotBookingService;
+    private readonly IAdSlotBookingService _slotBookingService;
     private readonly AdDto _theirAd;
     private readonly AdDto _myAd;
     private string _selectedCountText = string.Empty;
@@ -15,7 +15,7 @@ public class BookSlotsViewModel : BaseViewModel
     private bool _hasNoSlots;
 
     public BookSlotsViewModel(
-        AdSlotBookingService slotBookingService,
+        IAdSlotBookingService slotBookingService,
         AdDto theirAd,
         AdDto myAd)
     {

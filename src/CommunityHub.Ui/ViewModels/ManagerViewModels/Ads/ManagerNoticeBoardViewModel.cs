@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Application.DependencyInjection;
 using System.Collections.ObjectModel;
+using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Ads;
 

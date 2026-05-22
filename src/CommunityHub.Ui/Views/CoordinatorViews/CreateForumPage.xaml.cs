@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 

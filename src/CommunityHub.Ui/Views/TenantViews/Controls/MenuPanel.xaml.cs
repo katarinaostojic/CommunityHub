@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;
@@ -19,13 +19,13 @@ public partial class MenuPanel : UserControl
 {
     private User _user;
     private readonly MenuPanelViewModel _viewModel;
-    private readonly BuildingService _buildingService;
+    private readonly IBuildingService _buildingService;
 
     public MenuPanel()
     {
         InitializeComponent();
-        BuildingMembershipService membershipService = Injector.CreateInstance<BuildingMembershipService>();
-        _buildingService = Injector.CreateInstance<BuildingService>();
+        IBuildingMembershipService membershipService = Injector.CreateInstance<IBuildingMembershipService>();
+        _buildingService = Injector.CreateInstance<IBuildingService>();
         _viewModel = new MenuPanelViewModel(membershipService);
     }
 

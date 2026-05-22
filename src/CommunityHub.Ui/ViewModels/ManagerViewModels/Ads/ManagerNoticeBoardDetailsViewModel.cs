@@ -2,7 +2,7 @@
 using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Ads;

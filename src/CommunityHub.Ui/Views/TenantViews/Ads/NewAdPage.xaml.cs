@@ -1,10 +1,10 @@
-﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Services.Ads;
+﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
-using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -17,24 +17,22 @@ public partial class NewAdPage : Page
     public NewAdPage(User user, BuildingMembershipDto membership)
     {
         InitializeComponent();
+
         _user = user;
         _membership = membership;
 
-        AdService adService = Injector.CreateInstance<AdService>();
+        IAdService adService = Injector.CreateInstance<IAdService>();
         _viewModel = new NewAdViewModel(adService, membership, user);
+
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
+        AppMenu.Initialize(_user);
+
         DateFromPicker.DisplayDateStart = DateTime.Today;
         DateToPicker.DisplayDateStart = DateTime.Today;
-        AppMenu.Initialize(_user);
-        InitializeCategoryComboBox();
-    }
 
-    private void InitializeCategoryComboBox()
-    {
-        foreach (string option in _viewModel.CategoryOptions)
-            CategoryComboBox.Items.Add(option);
+        CategoryComboBox.ItemsSource = _viewModel.CategoryOptions;
         CategoryComboBox.SelectedIndex = 0;
     }
 
@@ -69,13 +67,19 @@ public partial class NewAdPage : Page
             DateToPicker.SelectedDate,
             CategoryComboBox.SelectedIndex);
 
-        if (result == null) return;
+        if (result == null)
+            return;
 
-        NavigationService.Navigate(new AdPostedPage(_user, _membership, result.Value.newAd, result.Value.matchingAds));
+        NavigationService.Navigate(new AdPostedPage(
+            _user,
+            _membership,
+            result.Value.newAd,
+            result.Value.matchingAds));
     }
 
     private void GoBackButton_Click(object sender, RoutedEventArgs e) =>
         NavigationService.Navigate(new NoticeBoardPage(_user, _membership));
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
+    private void MenuButton_Click(object sender, RoutedEventArgs e) =>
+        AppMenu.Open();
 }

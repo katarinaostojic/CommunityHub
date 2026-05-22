@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 using System.Windows.Controls;

@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
 using System;

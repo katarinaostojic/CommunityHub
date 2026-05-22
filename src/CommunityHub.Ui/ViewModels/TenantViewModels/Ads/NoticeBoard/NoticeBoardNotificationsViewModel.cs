@@ -1,18 +1,18 @@
-﻿using CommunityHub.Application.Services.Ads;
+﻿using CommunityHub.Application.Services.Interfaces.Ads;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class NoticeBoardNotificationsViewModel : BaseViewModel
 {
-    private readonly AdNotificationService _notificationService;
+    private readonly IAdNotificationService _notificationService;
     private readonly long _currentUserId;
 
     private ObservableCollection<AdNotificationViewModel> _items = new();
     private bool _hasItems;
 
     public NoticeBoardNotificationsViewModel(
-        AdNotificationService notificationService,
+        IAdNotificationService notificationService,
         long currentUserId)
     {
         _notificationService = notificationService;

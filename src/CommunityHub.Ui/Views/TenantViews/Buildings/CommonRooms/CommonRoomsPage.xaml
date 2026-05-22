@@ -11,7 +11,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,7 +21,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -29,47 +31,67 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="☰  Menu"
+
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
-                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
+
+                <TextBlock Grid.Column="2"
+                           x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"
+                           Foreground="White"
+                           FontSize="15"
                            Margin="0,0,8,0"/>
-                <TextBlock Grid.Column="3" Text="👤"
+
+                <TextBlock Grid.Column="3"
+                           Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="17"/>
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Success banner -->
-        <Border x:Name="SuccessBanner" Grid.Row="1"
-        Background="{StaticResource SuccessBrush}" Padding="12,8"
-        Visibility="Collapsed">
+        <Border x:Name="SuccessBanner"
+                Grid.Row="1"
+                Background="{StaticResource SuccessBrush}"
+                BorderBrush="{StaticResource SuccessTextBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12,8"
+                Margin="16,10,16,0"
+                Visibility="Collapsed">
             <Grid>
                 <TextBlock x:Name="SuccessTextBlock"
-                   Foreground="{StaticResource SuccessTextBrush}" FontSize="13"
-                   VerticalAlignment="Center"/>
-                <Button x:Name="ViewRequestsButton" Content="View Requests →"
-                HorizontalAlignment="Right"
-                Style="{StaticResource GhostButton}"
-                Foreground="{StaticResource SuccessTextBrush}"
-                FontWeight="Bold"
-                Click="ViewRequestsButton_Click"/>
+                           Foreground="{StaticResource SuccessTextBrush}"
+                           FontSize="13"
+                           VerticalAlignment="Center"/>
+
+                <Button x:Name="ViewRequestsButton"
+                        Content="View Requests →"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource GhostButton}"
+                        Foreground="{StaticResource SuccessTextBrush}"
+                        FontWeight="Bold"
+                        Click="ViewRequestsButton_Click"/>
             </Grid>
         </Border>
 
         <!-- Building info + Tabs -->
-        <StackPanel Grid.Row="2" Margin="16,16,16,0">
-            <TextBlock Grid.Row="0" x:Name="BuildingInfoTextBlock"
+        <StackPanel Grid.Row="2"
+                    Margin="16,16,16,0">
+            <TextBlock x:Name="BuildingInfoTextBlock"
                        Style="{StaticResource SecondaryText}"
                        Margin="0,0,0,12"
                        FontSize="16"/>
+
             <StackPanel Orientation="Horizontal">
                 <Button Content="Common Rooms"
                         Style="{StaticResource PrimaryButton}"
                         Margin="0,0,8,0"/>
+
                 <Button Content="My Requests"
                         Style="{StaticResource OutlineButton}"
                         Click="MyRequestsTab_Click"/>
@@ -83,7 +105,9 @@
                    Margin="16,12,16,8"/>
 
         <!-- Lista prostorija -->
-        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
+        <ScrollViewer Grid.Row="4"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,16">
             <ItemsControl ItemsSource="{Binding Rooms}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -93,34 +117,82 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
                                 <!-- Naziv -->
-                                <TextBlock Grid.Row="0" Text="{Binding Name}"
-                                           FontSize="15" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding Name}"
+                                           FontSize="15"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                                 <!-- Opis -->
-                                <TextBlock Grid.Row="1" Text="{Binding Description}"
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding Description}"
                                            Style="{StaticResource SecondaryText}"
-                                           Margin="0,4,0,8"
+                                           Margin="0,4,0,0"
                                            TextWrapping="Wrap"/>
 
-                                <!-- Floor i rental type -->
-                                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
-                                    <Border Style="{StaticResource StatusBadge}">
-                                        <TextBlock Text="{Binding FloorDisplay}" FontSize="12"/>
-                                    </Border>
-                                    <Border Style="{StaticResource StatusBadge}" Margin="8,0,0,0">
-                                        <TextBlock Text="{Binding RentalTypeDisplay}" FontSize="12"/>
-                                    </Border>
-                                </StackPanel>
+                                <!-- Bottom row: tags levo, request desno -->
+                                <Grid Grid.Row="2"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <!-- Akcije -->
-                                <Grid Grid.Row="3">
-                                    <Button Content="Request"
+                                    <!-- Floor i rental type -->
+                                    <StackPanel Grid.Column="0"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,16,0">
+                                        <Border Background="{StaticResource PrimarySoftBrush}"
+                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="8"
+                                                Padding="12,6"
+                                                MinWidth="84">
+                                            <TextBlock Text="{Binding FloorDisplay}"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource PrimaryBrush}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+
+                                        <Border Background="{StaticResource SurfaceSoftBrush}"
+                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="8"
+                                                Padding="12,6"
+                                                MinWidth="90"
+                                                Margin="8,0,0,0">
+                                            <TextBlock Text="{Binding RentalTypeDisplay}"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Akcija -->
+                                    <Button Grid.Column="1"
+                                            Content="Request"
                                             Style="{StaticResource PrimaryButton}"
                                             HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            MinWidth="120"
+                                            Height="44"
                                             Tag="{Binding}"
                                             Click="RequestButton_Click"/>
                                 </Grid>
@@ -130,6 +202,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="5" x:Name="AppMenu"/>
+
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="5"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>

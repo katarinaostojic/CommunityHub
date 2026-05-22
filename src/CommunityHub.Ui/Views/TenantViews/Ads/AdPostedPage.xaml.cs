@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.Helpers;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Interfaces.Ads;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -22,7 +22,7 @@ public partial class AdPostedPage : Page
         _user = user;
         _membership = membership;
 
-        AdService adService = Injector.CreateInstance<AdService>();
+        IAdService adService = Injector.CreateInstance<IAdService>();
         _viewModel = new AdPostedViewModel(postedAd, matchingAds, membership, adService);
         DataContext = _viewModel;
 

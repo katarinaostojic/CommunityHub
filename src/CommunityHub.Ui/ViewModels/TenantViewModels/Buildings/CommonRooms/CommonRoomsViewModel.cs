@@ -1,13 +1,13 @@
 ﻿using CommunityHub.Application.DTOs.Buildings.CommonRooms;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 
 public class CommonRoomsViewModel : BaseViewModel
 {
-    private readonly CommonRoomService _commonRoomService;
-    private readonly CommonRoomRequestService _requestService;
+    private readonly ICommonRoomService _commonRoomService;
+    private readonly ICommonRoomRequestService _requestService;
     private readonly long _tenantId;
     private readonly long _buildingId;
 
@@ -15,8 +15,8 @@ public class CommonRoomsViewModel : BaseViewModel
     private string _roomCountText = string.Empty;
 
     public CommonRoomsViewModel(
-        CommonRoomService commonRoomService,
-        CommonRoomRequestService requestService,
+        ICommonRoomService commonRoomService,
+        ICommonRoomRequestService requestService,
         long tenantId,
         long buildingId)
     {
