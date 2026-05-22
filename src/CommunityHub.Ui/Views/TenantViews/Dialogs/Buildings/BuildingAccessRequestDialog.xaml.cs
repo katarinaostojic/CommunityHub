@@ -1,7 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
@@ -16,7 +15,7 @@ public partial class BuildingAccessRequestDialog : Window
     {
         InitializeComponent();
 
-        BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
+        IBuildingAccessRequestService requestService = Injector.CreateInstance<IBuildingAccessRequestService>();
         IBuildingService buildingService = Injector.CreateInstance<IBuildingService>();
 
         _viewModel = new BuildingAccessRequestDialogViewModel(

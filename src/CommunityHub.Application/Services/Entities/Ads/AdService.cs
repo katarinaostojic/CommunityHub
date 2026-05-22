@@ -9,12 +9,12 @@ namespace CommunityHub.Application.Services.Entities.Ads;
 public class AdService : IAdService
 {
     private readonly IAdRepository _adRepository;
-    private readonly AdSlotBookingService _slotBookingService;
+    private readonly IAdSlotBookingService _slotBookingService;
     private readonly AdExpirationService _expirationService;
 
     public AdService(
         IAdRepository adRepository,
-        AdSlotBookingService slotBookingService,
+        IAdSlotBookingService slotBookingService,
         AdExpirationService expirationService)
     {
         _adRepository = adRepository;

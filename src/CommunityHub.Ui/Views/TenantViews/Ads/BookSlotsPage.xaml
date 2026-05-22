@@ -10,7 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,7 +21,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -29,24 +31,36 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="☰  Menu"
+
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
-                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center" Foreground="White"
-                           FontSize="15" Margin="0,0,8,0"/>
-                <TextBlock Grid.Column="3" Text="👤"
-                           VerticalAlignment="Center" Foreground="White" FontSize="17"/>
+
+                <TextBlock Grid.Column="2"
+                           x:Name="UserNameTextBlock"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="15"
+                           Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="3"
+                           Text="👤"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Title + go back -->
-        <Grid Grid.Row="1" Margin="16,12,16,8">
+        <Grid Grid.Row="1"
+              Margin="16,12,16,8">
             <Button Content="← Go back"
                     Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Left"
                     Click="GoBackButton_Click"/>
+
             <TextBlock Text="Book Slots"
                        Style="{StaticResource PageTitle}"
                        HorizontalAlignment="Right"
@@ -54,22 +68,32 @@
         </Grid>
 
         <!-- Success banner -->
-        <Border Grid.Row="2" x:Name="SuccessBanner"
+        <Border Grid.Row="2"
+                x:Name="SuccessBanner"
                 Visibility="Collapsed"
-                Background="#DFF0D8" BorderBrush="#3C763D"
-                BorderThickness="1" CornerRadius="6"
-                Padding="12,10" Margin="16,0,16,4">
+                Background="{StaticResource SuccessBrush}"
+                BorderBrush="{StaticResource SuccessTextBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12,10"
+                Margin="16,0,16,4">
             <TextBlock x:Name="SuccessTextBlock"
-                       Foreground="#3C763D" FontSize="13"
+                       Foreground="{StaticResource SuccessTextBrush}"
+                       FontSize="13"
                        Text="✔ Slots booked successfully!"/>
         </Border>
 
         <!-- Their ad summary + overlap info -->
-        <StackPanel Grid.Row="3" Margin="16,0,16,12">
+        <StackPanel Grid.Row="3"
+                    Margin="16,0,16,12">
 
             <!-- Ad info row: TENANT | TYPE | CATEGORY | THEIR RANGE -->
-            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                    CornerRadius="6" Padding="16,12" Margin="0,0,0,8">
+            <Border Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="16,12"
+                    Margin="0,0,0,8">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -85,109 +109,188 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="TENANT" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="1" Text="{Binding AuthorName}"
-                               FontSize="13" FontWeight="SemiBold"
-                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                    <TextBlock Grid.Column="0"
+                               Text="TENANT"
+                               Style="{StaticResource SectionTitle}"
+                               VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Column="3" Text="TYPE" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
-                    <Border Grid.Column="4" Style="{StaticResource StatusBadge}"
-                            VerticalAlignment="Center" Margin="8,0,0,0">
-                        <TextBlock Text="{Binding TypeDisplay}" FontSize="13" FontWeight="SemiBold"/>
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding AuthorName}"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0"/>
+
+                    <TextBlock Grid.Column="3"
+                               Text="TYPE"
+                               Style="{StaticResource SectionTitle}"
+                               VerticalAlignment="Center"/>
+
+                    <Border Grid.Column="4"
+                            Background="{StaticResource PrimarySoftBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="9,4"
+                            VerticalAlignment="Center"
+                            Margin="8,0,0,0">
+                        <TextBlock Text="{Binding TypeDisplay}"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"/>
                     </Border>
 
-                    <TextBlock Grid.Column="6" Text="CATEGORY" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="7" Text="{Binding CategoryDisplay}"
-                               FontSize="13" FontWeight="SemiBold"
-                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                    <TextBlock Grid.Column="6"
+                               Text="CATEGORY"
+                               Style="{StaticResource SectionTitle}"
+                               VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Column="9" Text="THEIR RANGE" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="10" Text="{Binding DateRangeDisplay}"
-                               FontSize="13" FontWeight="SemiBold"
-                               VerticalAlignment="Center" Margin="8,0,0,0"/>
+                    <Border Grid.Column="7"
+                            Background="{StaticResource PrimarySoftBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="9,4"
+                            VerticalAlignment="Center"
+                            Margin="8,0,0,0">
+                        <TextBlock Text="{Binding CategoryDisplay}"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"/>
+                    </Border>
+
+                    <TextBlock Grid.Column="9"
+                               Text="THEIR RANGE"
+                               Style="{StaticResource SectionTitle}"
+                               VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="10"
+                               Text="{Binding DateRangeDisplay}"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- Overlap info -->
-            <TextBlock Text="{Binding OverlapRangeDisplay}"
-                       Style="{StaticResource SecondaryText}"
-                       Visibility="Visible"
-                       FontSize="13" Margin="4,0,0,0"/>
+            <Border Background="{StaticResource PrimarySoftBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="10,8"
+                    Margin="0,0,0,0">
+                <TextBlock Text="{Binding OverlapRangeDisplay}"
+                           Foreground="{StaticResource PrimaryBrush}"
+                           FontWeight="SemiBold"
+                           FontSize="13"
+                           TextWrapping="Wrap"/>
+            </Border>
 
             <!-- No slots warning -->
             <Border Visibility="{Binding HasNoSlots, Converter={StaticResource BoolToVis}}"
                     Background="{StaticResource WarningBrush}"
                     BorderBrush="{StaticResource WarningTextBrush}"
-                    BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,8,0,0">
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,10"
+                    Margin="0,8,0,0">
                 <TextBlock Foreground="{StaticResource WarningTextBrush}"
-                           FontSize="13" TextWrapping="Wrap"
+                           FontSize="13"
+                           TextWrapping="Wrap"
                            Text="⚠ No free slots available in the overlapping date range."/>
             </Border>
         </StackPanel>
 
         <!-- Slot groups -->
-        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="16,0,16,8">
-            <ItemsControl ItemsSource="{Binding FreeSlotDayGroups}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="0,0,0,12">
+        <ScrollViewer Grid.Row="4"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,8">
+            <Border Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="16,12">
+                <ItemsControl ItemsSource="{Binding FreeSlotDayGroups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,0,0,14">
 
-                            <!-- Day label e.g. TUESDAY, 01.04. -->
-                            <TextBlock Text="{Binding DateDisplay}"
-                                       FontSize="12" FontWeight="SemiBold"
-                                       Style="{StaticResource SectionTitle}"
-                                       Margin="0,0,0,6"/>
+                                <!-- Day label -->
+                                <TextBlock Text="{Binding DateDisplay}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Style="{StaticResource SectionTitle}"
+                                           Margin="0,0,0,8"/>
 
-                            <!-- Slot chips -->
-                            <ItemsControl ItemsSource="{Binding Slots}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border CornerRadius="20" Padding="12,6" Margin="0,0,8,4"
-                                                Cursor="Hand"
-                                                MouseLeftButtonDown="SlotChip_Click">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="BorderThickness" Value="1"/>
-                                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                            <Setter Property="Background" Value="#4A90D9"/>
-                                                            <Setter Property="BorderBrush" Value="#4A90D9"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <TextBlock Text="{Binding Display}" FontSize="12"
-                                                       Foreground="Black">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Foreground" Value="Black"/>
+                                <!-- Slot chips -->
+                                <ItemsControl ItemsSource="{Binding Slots}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="20"
+                                                    Padding="12,6"
+                                                    Margin="0,0,8,6"
+                                                    Cursor="Hand"
+                                                    MouseLeftButtonDown="SlotChip_Click">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="BorderThickness" Value="1"/>
+                                                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                                                        <Setter Property="Background" Value="{StaticResource SurfaceSoftBrush}"/>
+
                                                         <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                                                                <Setter Property="Background" Value="{StaticResource PrimarySoftBrush}"/>
+                                                            </Trigger>
+
                                                             <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                                <Setter Property="Foreground" Value="White"/>
+                                                                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                                </Border.Style>
+
+                                                <TextBlock Text="{Binding Display}"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                    <Setter Property="Foreground" Value="White"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
         </ScrollViewer>
 
         <!-- Bottom bar: X slots selected | Cancel | Confirm -->
-        <Border Grid.Row="5" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"
+        <Border Grid.Row="5"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,1,0,0"
                 Padding="16,12">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -199,7 +302,8 @@
                 <TextBlock Grid.Column="0"
                            Text="{Binding SelectedCountText}"
                            VerticalAlignment="Center"
-                           FontSize="14" Style="{StaticResource SecondaryText}"/>
+                           FontSize="14"
+                           Style="{StaticResource SecondaryText}"/>
 
                 <Button Grid.Column="1"
                         Content="Cancel"
@@ -215,6 +319,8 @@
             </Grid>
         </Border>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="6"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>

@@ -10,7 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -89,10 +89,10 @@
                       Visibility="{Binding Notifications.HasItems, Converter={StaticResource BoolToVis}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="#EBF5FB"
-                            BorderBrush="#3498DB"
+                    <Border Background="{StaticResource PrimarySoftBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="6"
+                            CornerRadius="8"
                             Padding="12,10"
                             Margin="0,0,0,6">
                         <Grid>
@@ -105,18 +105,18 @@
                                 <TextBlock Text="{Binding Title}"
                                            FontWeight="SemiBold"
                                            FontSize="13"
-                                           Foreground="#1A5276"/>
+                                           Foreground="{StaticResource PrimaryBrush}"/>
 
                                 <TextBlock Text="{Binding Body}"
                                            FontSize="12"
-                                           Foreground="#2E86C1"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
                                            FontStyle="Italic"
                                            TextWrapping="Wrap"
                                            Margin="0,2,0,0"/>
 
                                 <TextBlock Text="{Binding TimeDisplay}"
                                            FontSize="11"
-                                           Foreground="#5DADE2"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
                                            Margin="0,4,0,0"/>
                             </StackPanel>
 
@@ -130,6 +130,7 @@
                                         Content="✕"
                                         Tag="{Binding Id}"
                                         Style="{StaticResource GhostButton}"
+                                        Foreground="{StaticResource PrimaryBrush}"
                                         VerticalAlignment="Top"
                                         Click="DismissNotificationButton_Click"/>
 
@@ -138,7 +139,8 @@
                                         Style="{StaticResource GhostButton}"
                                         VerticalAlignment="Bottom"
                                         HorizontalAlignment="Right"
-                                        Foreground="#2E86C1"
+                                        Foreground="{StaticResource PrimaryBrush}"
+                                        FontWeight="SemiBold"
                                         Click="ViewSlotsFromNotificationButton_Click"/>
                             </Grid>
                         </Grid>
@@ -178,6 +180,7 @@
             <TextBlock Text="Type:"
                        FontSize="13"
                        FontWeight="SemiBold"
+                       Foreground="{StaticResource TextPrimaryBrush}"
                        VerticalAlignment="Center"
                        Margin="0,0,8,0"/>
 
@@ -205,6 +208,7 @@
             <TextBlock Text="Category:"
                        FontSize="13"
                        FontWeight="SemiBold"
+                       Foreground="{StaticResource TextPrimaryBrush}"
                        VerticalAlignment="Center"
                        Margin="0,0,8,0"/>
 
@@ -239,26 +243,36 @@
                                     <TextBlock Text="{Binding AuthorName}"
                                                FontSize="15"
                                                FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
                                                VerticalAlignment="Center"/>
 
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Center">
                                         <Border Visibility="{Binding ArchiveButtonVisible}"
-                                                Background="{StaticResource BackgroundLightBrush}"
-                                                CornerRadius="4"
+                                                Background="{StaticResource SurfaceSoftBrush}"
+                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
                                                 Padding="8,3"
                                                 Margin="0,0,6,0"
                                                 VerticalAlignment="Center">
                                             <TextBlock Text="your ad"
                                                        FontSize="11"
-                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                                       FontWeight="SemiBold"/>
                                         </Border>
 
-                                        <Border Style="{StaticResource StatusBadge}"
+                                        <Border Background="{StaticResource PrimarySoftBrush}"
+                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="8"
+                                                Padding="9,4"
                                                 VerticalAlignment="Center">
                                             <TextBlock Text="{Binding TypeDisplay}"
-                                                       FontSize="13"/>
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
@@ -274,14 +288,17 @@
                                 <Grid Grid.Row="2">
                                     <StackPanel Orientation="Horizontal"
                                                 VerticalAlignment="Center">
-                                        <Border Background="#EEF2FF"
-                                                CornerRadius="4"
+                                        <Border Background="{StaticResource PrimarySoftBrush}"
+                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
                                                 Padding="8,3"
                                                 Margin="0,0,8,0"
                                                 VerticalAlignment="Center">
                                             <TextBlock Text="{Binding CategoryDisplay}"
                                                        FontSize="12"
-                                                       Foreground="#4338CA"/>
+                                                       Foreground="{StaticResource PrimaryBrush}"
+                                                       FontWeight="SemiBold"/>
                                         </Border>
 
                                         <TextBlock Text="{Binding DateRangeDisplay}"
@@ -294,7 +311,8 @@
                                                 VerticalAlignment="Center">
                                         <Button Content="{Binding ViewDetailsDisplay}"
                                                 Style="{StaticResource GhostButton}"
-                                                Foreground="{StaticResource AccentBrush}"
+                                                Foreground="{StaticResource PrimaryBrush}"
+                                                FontWeight="SemiBold"
                                                 Visibility="{Binding ViewDetailsVisible}"
                                                 Tag="{Binding}"
                                                 Margin="0,0,8,0"

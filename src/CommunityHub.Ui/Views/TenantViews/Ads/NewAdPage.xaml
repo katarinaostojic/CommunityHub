@@ -10,7 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -19,7 +19,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -28,28 +30,35 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="☰  Menu"
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
 
-                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
+                <TextBlock Grid.Column="2"
+                           x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"
+                           Foreground="White"
+                           FontSize="15"
                            Margin="0,0,8,0"/>
 
-                <TextBlock Grid.Column="3" Text="👤"
+                <TextBlock Grid.Column="3"
+                           Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="17"/>
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Title row -->
-        <Grid Grid.Row="1" Margin="16,12,16,8">
+        <Grid Grid.Row="1"
+              Margin="16,12,16,8">
             <Button Content="← Go back"
                     Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Left"
                     Click="GoBackButton_Click"/>
+
             <TextBlock Text="New Advertisement"
                        Style="{StaticResource PageTitle}"
                        HorizontalAlignment="Right"
@@ -57,112 +66,182 @@
         </Grid>
 
         <!-- Form -->
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="16,0,16,0">
-            <StackPanel>
+        <ScrollViewer Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,0">
+            <Border Style="{StaticResource CardBorder}"
+                    Margin="0,10,0,8"
+                    Padding="20">
+                <StackPanel>
 
-                <!-- Building -->
-                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="6" Padding="16,12" Margin="0,10,0,20">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Building:" FontSize="16" FontWeight="SemiBold"
-                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="{Binding BuildingSubtitle}" FontSize="16"
-                                   VerticalAlignment="Center"/>
+                    <!-- Building -->
+                    <Border Background="{StaticResource PrimarySoftBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="14,10"
+                            Margin="0,0,0,20">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Building:"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+
+                            <TextBlock Text="{Binding BuildingSubtitle}"
+                                       FontSize="15"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Offering / Seeking toggle -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,0,0,20">
+                        <Button x:Name="OfferingButton"
+                                Content="↑ Offering help"
+                                Style="{StaticResource FilterChipButtonActive}"
+                                Margin="0,0,12,0"
+                                Padding="20,10"
+                                Click="OfferingButton_Click"
+                                FontSize="15"/>
+
+                        <Button x:Name="SeekingButton"
+                                Content="↓ Seeking help"
+                                Style="{StaticResource FilterChipButton}"
+                                Padding="20,10"
+                                Click="SeekingButton_Click"
+                                FontSize="15"/>
                     </StackPanel>
-                </Border>
 
-                <!-- Offering / Seeking toggle -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <Button x:Name="OfferingButton" Content="↑ Offering help"
-                            Style="{StaticResource FilterChipButtonActive}"
-                            Margin="0,0,20,0"
-                            Padding="20,10,20,10"
-                            Click="OfferingButton_Click"
-                            FontSize="15"/>
-                    <Button x:Name="SeekingButton" Content="↓ Seeking help"
-                            Style="{StaticResource FilterChipButton}"
-                            Padding="20,10,20,10"
-                            Click="SeekingButton_Click"
-                            FontSize="15"/>
+                    <!-- Description -->
+                    <TextBlock Text="DESCRIPTION *"
+                               Style="{StaticResource SectionTitle}"
+                               Margin="0,0,0,8"/>
+
+                    <TextBox x:Name="DescriptionTextBox"
+                             Padding="10,8"
+                             FontSize="13"
+                             Height="95"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             Background="{StaticResource SurfaceBrush}"
+                             Foreground="{StaticResource TextPrimaryBrush}"
+                             BorderBrush="{StaticResource BorderBrush}"
+                             BorderThickness="1"
+                             Margin="0,0,0,4"/>
+
+                    <TextBlock Text="{Binding DescriptionError}"
+                               Foreground="{StaticResource DangerBrush}"
+                               FontSize="13"
+                               Margin="0,0,0,12"
+                               Visibility="{Binding HasDescriptionError, Converter={StaticResource BoolToVis}}"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Category -->
+                    <TextBlock Text="CATEGORY *"
+                               Style="{StaticResource SectionTitle}"
+                               Margin="0,0,0,8"/>
+
+                    <ComboBox x:Name="CategoryComboBox"
+                              Width="475"
+                              HorizontalAlignment="Left"
+                              Margin="0,0,0,20"
+                              FontSize="16"/>
+
+                    <!-- Date range -->
+                    <TextBlock Text="DATE RANGE *"
+                               Style="{StaticResource SectionTitle}"
+                               Margin="0,0,0,8"/>
+
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <DatePicker Grid.Column="0"
+                                    x:Name="DateFromPicker"
+                                    FontSize="16"
+                                    Padding="10,5,5,5"
+                                    Background="{StaticResource SurfaceBrush}"
+                                    Foreground="{StaticResource TextPrimaryBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Text=" – "
+                                   FontSize="13"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   VerticalAlignment="Center"
+                                   Margin="8,0"/>
+
+                        <DatePicker Grid.Column="2"
+                                    x:Name="DateToPicker"
+                                    FontSize="16"
+                                    Padding="10,5,5,5"
+                                    Background="{StaticResource SurfaceBrush}"
+                                    Foreground="{StaticResource TextPrimaryBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}"/>
+                    </Grid>
+
+                    <TextBlock Text="{Binding DateError}"
+                               Foreground="{StaticResource DangerBrush}"
+                               FontSize="13"
+                               Visibility="{Binding HasDateError, Converter={StaticResource BoolToVis}}"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Slot info -->
+                    <Border Background="{StaticResource PrimarySoftBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="14,11"
+                            Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="How time slots work"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"/>
+
+                            <TextBlock Style="{StaticResource SecondaryText}"
+                                       TextWrapping="Wrap"
+                                       FontSize="14"
+                                       Padding="0,4,0,0"
+                                       Text="For each day in the selected date range, the system will automatically create hourly time slots from 16:00 to 20:00. Other tenants will be able to book these slots."/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-
-                <!-- Description -->
-                <TextBlock Text="DESCRIPTION *" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-                <TextBox x:Name="DescriptionTextBox"
-                         Padding="10,8" FontSize="13"
-                         Height="95"
-                         TextWrapping="Wrap"
-                         AcceptsReturn="True"
-                         VerticalScrollBarVisibility="Auto"
-                         Margin="0,0,0,4"/>
-                <TextBlock Text="{Binding DescriptionError}"
-                           Foreground="{StaticResource DangerBrush}"
-                           FontSize="13" Margin="0,0,0,12"
-                           Visibility="{Binding HasDescriptionError, Converter={StaticResource BoolToVis}}"
-                           TextWrapping="Wrap"/>
-
-                <!-- Category -->
-                <TextBlock Text="CATEGORY *" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-                <ComboBox x:Name="CategoryComboBox"
-                          Width="475"
-                          HorizontalAlignment="Left"
-                          Margin="0,0,0,20"
-                          FontSize="16"/>
-
-                <!-- Date range -->
-                <TextBlock Text="DATE RANGE *" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-                <Grid Margin="0,0,0,4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0" x:Name="DateFromPicker" FontSize="16"
-                                Padding="10,5,5,5"/>
-                    <TextBlock Grid.Column="1" Text=" – " FontSize="13"
-                               VerticalAlignment="Center" Margin="8,0"/>
-                    <DatePicker Grid.Column="2" x:Name="DateToPicker" FontSize="16"
-                                Padding="10,5,5,5"/>
-                </Grid>
-                <TextBlock Text="{Binding DateError}"
-                           Foreground="{StaticResource DangerBrush}"
-                           FontSize="13"
-                           Visibility="{Binding HasDateError, Converter={StaticResource BoolToVis}}"
-                           TextWrapping="Wrap"/>
-
-                <!-- Slot info -->
-                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="6" Padding="12,10" Margin="0,20,0,16">
-                    <StackPanel>
-                        <TextBlock Text="How time slots work"
-                                   FontSize="15" FontWeight="SemiBold"/>
-                        <TextBlock Style="{StaticResource SecondaryText}"
-                                   TextWrapping="Wrap" FontSize="13"
-                                   Padding="0,4,0,0"
-                                   Text="For each day in the selected date range, the system will automatically create hourly time slots from 16:00 to 20:00. Other tenants will be able to book these slots."/>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
+            </Border>
         </ScrollViewer>
 
         <!-- Actions -->
-        <Grid Grid.Row="3" Margin="16,8,16,16">
+        <Grid Grid.Row="3"
+              Margin="16,8,16,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Cancel  ✕"
+
+            <Button Grid.Column="0"
+                    Content="Cancel  ✕"
                     Style="{StaticResource OutlineButtonLarge}"
                     HorizontalAlignment="Stretch"
                     Margin="0,0,8,0"
                     Click="GoBackButton_Click"/>
-            <Button Grid.Column="1" Content="Post Ad  →"
+
+            <Button Grid.Column="1"
+                    Content="Post Ad  →"
                     Style="{StaticResource PrimaryButtonLarge}"
                     HorizontalAlignment="Stretch"
                     Margin="8,0,0,0"
                     Click="PostAdButton_Click"/>
         </Grid>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="4" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="4"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>
