@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -20,7 +20,7 @@ public partial class NewAdPage : Page
         _user = user;
         _membership = membership;
 
-        AdService adService = Injector.CreateInstance<AdService>();
+        IAdService adService = Injector.CreateInstance<IAdService>();
         _viewModel = new NewAdViewModel(adService, membership, user);
         DataContext = _viewModel;
 

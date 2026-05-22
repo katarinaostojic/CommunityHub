@@ -1,13 +1,13 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class NoticeBoardViewModel : BaseViewModel
 {
-    private readonly AdService _adService;
+    private readonly IAdService _adService;
     private readonly long _currentUserId;
     private readonly long _buildingId;
 
@@ -15,8 +15,8 @@ public class NoticeBoardViewModel : BaseViewModel
     private string _resultsCountText = string.Empty;
 
     public NoticeBoardViewModel(
-        AdService adService,
-        AdNotificationService notificationService,
+        IAdService adService,
+        IAdNotificationService notificationService,
         BuildingMembershipDto membership,
         long currentUserId)
     {

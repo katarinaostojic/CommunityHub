@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Ui.Extensions;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
 using System.Windows;
@@ -8,14 +8,14 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 
 public class AdDetailsViewModel : BaseViewModel
 {
-    private readonly AdService _adService;
+    private readonly IAdService _adService;
     private readonly long _adId;
     private bool _isActive;
 
     public AdDetailsViewModel(
         AdDto ad,
-        AdService adService,
-        AdSlotBookingService slotBookingService)
+        IAdService adService,
+        IAdSlotBookingService slotBookingService)
     {
         _adService = adService;
         _adId = ad.Id;

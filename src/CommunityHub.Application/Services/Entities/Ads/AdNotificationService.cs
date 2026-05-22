@@ -1,10 +1,11 @@
 ﻿using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Mappings.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 
 namespace CommunityHub.Application.Services.Entities.Ads;
 
-public class AdNotificationService
+public class AdNotificationService : IAdNotificationService
 {
     private readonly IAdNotificationRepository _notificationRepository;
 

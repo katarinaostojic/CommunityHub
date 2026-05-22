@@ -8,9 +8,9 @@ using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Shared;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
-
 
 namespace CommunityHub.Application.DependencyInjection;
 
@@ -53,6 +53,14 @@ public static class Injector
         _adRepository,
         _adSlotRepository,
         _adNotificationRepository);
+
+    private static readonly AdNotificationService _adNotificationService = new(
+        _adNotificationRepository);
+
+    private static readonly AdService _adService = new(
+        _adRepository,
+        _adSlotBookingService,
+        _adExpirationService);
 
     private static readonly CommonRoomService _commonRoomService = new(
         _commonRoomRepository,
@@ -116,13 +124,20 @@ public static class Injector
             _adExpirationService
         },
         {
+            typeof(IAdSlotBookingService),
+            _adSlotBookingService
+        },
+        {
             typeof(AdSlotBookingService),
             _adSlotBookingService
         },
         {
+            typeof(IAdNotificationService),
+            _adNotificationService
+        },
+        {
             typeof(AdNotificationService),
-            new AdNotificationService(
-                _adNotificationRepository)
+            _adNotificationService
         },
         {
             typeof(AdStatisticsService),
@@ -132,11 +147,12 @@ public static class Injector
                 _adExpirationService)
         },
         {
+            typeof(IAdService),
+            _adService
+        },
+        {
             typeof(AdService),
-            new AdService(
-                _adRepository,
-                _adSlotBookingService,
-                _adExpirationService)
+            _adService
         },
         {
             typeof(ICommonRoomService),

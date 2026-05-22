@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 using System.Windows;
@@ -24,8 +24,8 @@ public partial class NoticeBoardPage : Page
         _user = user;
         _membership = membership;
 
-        AdService adService = Injector.CreateInstance<AdService>();
-        AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
+        IAdService adService = Injector.CreateInstance<IAdService>();
+        IAdNotificationService notificationService = Injector.CreateInstance<IAdNotificationService>();
 
         _viewModel = new NoticeBoardViewModel(
             adService,
