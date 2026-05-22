@@ -1,11 +1,11 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Ads;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

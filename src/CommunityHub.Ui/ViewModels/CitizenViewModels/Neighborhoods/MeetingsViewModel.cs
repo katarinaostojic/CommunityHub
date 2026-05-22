@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services;
 using System.Collections.ObjectModel;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 

@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.Services.Buildings.CommonRooms;
+namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
 public class CommonRoomRequestCommandService
 {

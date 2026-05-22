@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Extensions;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
 using System.Windows;

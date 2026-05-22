@@ -5,12 +5,11 @@ using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services;
-using CommunityHub.Application.Services.Ads;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
-using CommunityHub.Application.Services.Neighborhoods;
-using CommunityHub.Application.Services.Shared;
+using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Shared;
 
 namespace CommunityHub.Application.DependencyInjection;
 

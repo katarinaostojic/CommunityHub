@@ -4,7 +4,7 @@ using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Mappings.Ads;
 
-namespace CommunityHub.Application.Services.Ads;
+namespace CommunityHub.Application.Services.Entities.Ads;
 
 public class AdStatisticsService
 {

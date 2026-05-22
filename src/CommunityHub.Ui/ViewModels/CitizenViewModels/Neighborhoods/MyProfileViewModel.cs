@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 

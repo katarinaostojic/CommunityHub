@@ -1,6 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using CommunityHub.Ui.Views;
@@ -9,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 

@@ -7,7 +7,7 @@ using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 using CommunityHub.Application.Mappings.Buildings;
 using CommunityHub.Application.Mappings.Buildings.CommonRooms;
 
-namespace CommunityHub.Application.Services.Buildings.CommonRooms;
+namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
 public class CommonRoomService
 {

@@ -2,7 +2,7 @@
 using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Mappings.Neighborhoods;
 
-namespace CommunityHub.Application.Services.Neighborhoods;
+namespace CommunityHub.Application.Services.Entities.Neighborhoods;
 
 public class NeighborhoodMembershipService
 {

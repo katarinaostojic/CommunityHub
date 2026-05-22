@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 using System.Windows;

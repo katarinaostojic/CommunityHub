@@ -5,7 +5,7 @@ using CommunityHub.Application.Mappings.Neighborhoods;
 using static CommunityHub.Application.Domain.Entities.Neighborhoods.ForumComment;
 using static CommunityHub.Application.DTOs.Neighborhoods.NeighborhoodAccessRequestDto;
 
-namespace CommunityHub.Application.Services.Neighborhoods;
+namespace CommunityHub.Application.Services.Entities.Neighborhoods;
 
 public class ForumService
 {

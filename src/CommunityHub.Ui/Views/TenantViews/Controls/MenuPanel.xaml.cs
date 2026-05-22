@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.TenantViews;

@@ -1,4 +1,4 @@
-﻿namespace CommunityHub.Application.Services.Shared;
+﻿namespace CommunityHub.Application.Services.Entities.Shared;
 
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;

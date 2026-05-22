@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 

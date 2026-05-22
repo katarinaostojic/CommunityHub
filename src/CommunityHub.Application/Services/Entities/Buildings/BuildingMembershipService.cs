@@ -3,7 +3,7 @@ using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
 
-namespace CommunityHub.Application.Services.Buildings;
+namespace CommunityHub.Application.Services.Entities.Buildings;
 
 public class BuildingMembershipService
 {

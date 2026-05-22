@@ -2,7 +2,7 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;

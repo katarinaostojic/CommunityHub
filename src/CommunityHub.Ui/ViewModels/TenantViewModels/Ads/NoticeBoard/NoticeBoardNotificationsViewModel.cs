@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Services.Ads;
+﻿using CommunityHub.Application.Services.Entities.Ads;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;

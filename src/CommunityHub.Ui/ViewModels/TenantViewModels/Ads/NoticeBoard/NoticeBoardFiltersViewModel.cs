@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Ads;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;

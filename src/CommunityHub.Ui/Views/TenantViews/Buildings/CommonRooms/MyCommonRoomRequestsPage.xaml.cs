@@ -1,9 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 using System.Windows;
 using System.Windows.Controls;

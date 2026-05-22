@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;

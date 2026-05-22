@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;

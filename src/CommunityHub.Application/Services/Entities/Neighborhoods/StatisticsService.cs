@@ -2,7 +2,7 @@
 using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Entities.Neighborhoods;
 
-namespace CommunityHub.Application.Services;
+namespace CommunityHub.Application.Services.Entities.Neighborhoods;
 
 public class StatisticsService
 {
