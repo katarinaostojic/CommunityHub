@@ -138,52 +138,59 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Left main info -->
+                                <StackPanel Grid.Row="0"
+                                            Grid.Column="0"
+                                            Margin="0,0,20,0">
+                                    <TextBlock FontSize="15"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               Text="{Binding BuildingAddress}"/>
+
+                                    <TextBlock FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource PrimaryBrush}"
+                                               Margin="0,8,0,0"
+                                               Text="{Binding BuildingNeighborhood}"/>
+
+                                    <TextBlock Style="{StaticResource SecondaryText}"
+                                               Margin="0,2,0,0"
+                                               Text="{Binding BuildingLocation}"/>
+                                </StackPanel>
 
                                 <!-- Status badge -->
                                 <Border Grid.Row="0"
+                                        Grid.Column="1"
                                         HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
                                         Background="{StaticResource PrimarySoftBrush}"
                                         BorderBrush="{StaticResource BorderBrush}"
                                         BorderThickness="1"
-                                        CornerRadius="8"
-                                        Padding="9,4">
+                                        CornerRadius="10"
+                                        Padding="12,7">
                                     <TextBlock Text="{Binding StatusDisplay}"
                                                FontSize="12"
                                                FontWeight="SemiBold"
                                                Foreground="{StaticResource PrimaryBrush}"/>
                                 </Border>
 
-                                <!-- Address -->
-                                <TextBlock Grid.Row="0"
-                                           FontSize="15"
-                                           FontWeight="Bold"
-                                           Foreground="{StaticResource TextPrimaryBrush}"
-                                           Text="{Binding BuildingAddress}"/>
-
-                                <!-- Neighborhood -->
-                                <TextBlock Grid.Row="1"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="{StaticResource PrimaryBrush}"
-                                           Margin="0,2,0,0"
-                                           Text="{Binding BuildingNeighborhood}"/>
-
-                                <!-- City, Country -->
-                                <TextBlock Grid.Row="2"
-                                           Style="{StaticResource SecondaryText}"
-                                           Margin="0,2,0,8"
-                                           Text="{Binding BuildingLocation}"/>
-
-                                <!-- Unit and date -->
-                                <Grid Grid.Row="3"
-                                      Margin="0,0,0,8">
+                                <!-- Unit, date and action in the same row -->
+                                <Grid Grid.Row="1"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Margin="0,16,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
@@ -192,7 +199,8 @@
                                             BorderBrush="{StaticResource BorderBrush}"
                                             BorderThickness="1"
                                             CornerRadius="8"
-                                            Padding="10,7">
+                                            Padding="14,9"
+                                            MinWidth="68">
                                         <StackPanel>
                                             <TextBlock Text="Unit"
                                                        Style="{StaticResource SecondaryText}"
@@ -210,7 +218,8 @@
                                             BorderBrush="{StaticResource BorderBrush}"
                                             BorderThickness="1"
                                             CornerRadius="8"
-                                            Padding="10,7">
+                                            Padding="14,9"
+                                            MinWidth="150">
                                         <StackPanel>
                                             <TextBlock Text="Submission date"
                                                        Style="{StaticResource SecondaryText}"
@@ -222,16 +231,29 @@
                                                        Foreground="{StaticResource TextPrimaryBrush}"/>
                                         </StackPanel>
                                     </Border>
+
+                                    <Button Grid.Column="4"
+                                            Content="Cancel request"
+                                            Style="{StaticResource DangerButton}"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            MinWidth="150"
+                                            Height="44"
+                                            Tag="{Binding}"
+                                            Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
+                                            Click="CancelRequestButton_Click"/>
                                 </Grid>
 
                                 <!-- Rejection reason -->
-                                <Border Grid.Row="4"
+                                <Border Grid.Row="2"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
                                         Background="{StaticResource AccentSoftBrush}"
                                         BorderBrush="{StaticResource BorderBrush}"
                                         BorderThickness="1"
                                         CornerRadius="8"
                                         Padding="10,7"
-                                        Margin="0,0,0,8"
+                                        Margin="0,12,0,0"
                                         Visibility="{Binding RejectionReasonVisible, Converter={StaticResource BoolToVis}}">
                                     <TextBlock Text="{Binding RejectionReasonDisplay}"
                                                Foreground="{StaticResource SecondaryBrush}"
@@ -239,16 +261,6 @@
                                                FontSize="13"
                                                TextWrapping="Wrap"/>
                                 </Border>
-
-                                <!-- Actions -->
-                                <Grid Grid.Row="5">
-                                    <Button Content="Cancel request"
-                                            Style="{StaticResource DangerButton}"
-                                            HorizontalAlignment="Right"
-                                            Tag="{Binding}"
-                                            Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
-                                            Click="CancelRequestButton_Click"/>
-                                </Grid>
                             </Grid>
                         </Border>
                     </DataTemplate>

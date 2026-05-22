@@ -243,11 +243,12 @@
                        FontSize="13"
                        FontWeight="SemiBold"
                        Foreground="{StaticResource TextPrimaryBrush}"
-                       VerticalAlignment="Center"
-                       Margin="0,0,8,0"/>
+                       VerticalAlignment="Center"/>
 
             <ComboBox x:Name="CategoryComboBox"
-                      Width="160"
+                      Width="180"
+                      Padding="20,8"
+                      Style="{StaticResource TenantComboBox}"
                       SelectionChanged="CategoryComboBox_SelectionChanged"/>
         </StackPanel>
 

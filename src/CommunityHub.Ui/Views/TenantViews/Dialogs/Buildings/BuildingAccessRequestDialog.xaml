@@ -72,13 +72,9 @@
             <ComboBox ItemsSource="{Binding SortedUnitNumbers}"
                       Text="{Binding UnitNumber, UpdateSourceTrigger=PropertyChanged}"
                       IsEditable="True"
-                      FontSize="13"
-                      Padding="8,5"
-                      Background="{StaticResource SurfaceBrush}"
-                      Foreground="{StaticResource TextPrimaryBrush}"
-                      BorderBrush="{StaticResource BorderBrush}"
-                      BorderThickness="1"
-                      Margin="0,0,0,10"/>
+                      HorizontalAlignment="Stretch"
+                      Style="{StaticResource TenantEditableFormComboBox}"
+                      Margin="0,0,0,12"/>
 
             <!-- Warning -->
             <Border Background="{StaticResource AccentSoftBrush}"

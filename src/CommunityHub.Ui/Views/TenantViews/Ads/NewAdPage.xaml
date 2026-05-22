@@ -142,14 +142,15 @@
 
                     <!-- Category -->
                     <TextBlock Text="CATEGORY *"
-                               Style="{StaticResource SectionTitle}"
-                               Margin="0,0,0,8"/>
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           Margin="0,0,0,8"/>
 
-                    <ComboBox x:Name="CategoryComboBox"
-                              Width="475"
-                              HorizontalAlignment="Left"
-                              Margin="0,0,0,20"
-                              FontSize="16"/>
+                                    <ComboBox x:Name="CategoryComboBox"
+                          HorizontalAlignment="Stretch"
+                          Style="{StaticResource TenantFormComboBox}"
+                          Margin="0,0,0,20"/>
 
                     <!-- Date range -->
                     <TextBlock Text="DATE RANGE *"
