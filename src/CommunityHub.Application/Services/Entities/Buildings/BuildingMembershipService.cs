@@ -1,11 +1,11 @@
-﻿using CommunityHub.Application.Domain.Entities.Buildings;
-using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
+﻿using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 
 namespace CommunityHub.Application.Services.Entities.Buildings;
 
-public class BuildingMembershipService
+public class BuildingMembershipService : IBuildingMembershipService
 {
     private readonly IBuildingMembershipRepository _repository;
 

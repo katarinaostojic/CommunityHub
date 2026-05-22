@@ -6,7 +6,7 @@ using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -20,7 +20,7 @@ public partial class BuildingDetailsPage : Page
         InitializeComponent();
         _user = user;
 
-        BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
+        IBuildingAccessRequestService requestService = Injector.CreateInstance<IBuildingAccessRequestService>();
 
         _viewModel = new BuildingDetailsViewModel(buildingDto, requestService);
         DataContext = _viewModel;

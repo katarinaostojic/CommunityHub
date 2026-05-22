@@ -1,5 +1,4 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;

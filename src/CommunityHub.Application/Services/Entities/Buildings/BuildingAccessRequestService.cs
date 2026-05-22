@@ -3,10 +3,11 @@ using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 
 namespace CommunityHub.Application.Services.Entities.Buildings;
 
-public class BuildingAccessRequestService
+public class BuildingAccessRequestService : IBuildingAccessRequestService
 {
     private readonly IBuildingAccessRequestRepository _repository;
     private readonly IBuildingMembershipRepository _membershipRepository;
@@ -85,7 +86,7 @@ public class BuildingAccessRequestService
         return _repository.GetById(requestId);
     }
 
-    private void ValidateAccessRequest(Building building, long tenantId, string unitNumber)
+    private static void ValidateAccessRequest(Building building, long tenantId, string unitNumber)
     {
         if (string.IsNullOrWhiteSpace(unitNumber))
             throw new InvalidOperationException("Apartment number is required.");

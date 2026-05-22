@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
+    <Folder Include="Services\Interfaces\Ads\" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
 public class MyBuildingRequestsViewModel : BaseViewModel
 {
-    private readonly BuildingAccessRequestService _requestService;
+    private readonly IBuildingAccessRequestService _requestService;
     private readonly long _tenantId;
 
     private ObservableCollection<BuildingAccessRequestViewModel> _requests = new();
@@ -19,7 +19,7 @@ public class MyBuildingRequestsViewModel : BaseViewModel
     private int _approvedCount;
     private int _rejectedCount;
 
-    public MyBuildingRequestsViewModel(BuildingAccessRequestService requestService, long tenantId)
+    public MyBuildingRequestsViewModel(IBuildingAccessRequestService requestService, long tenantId)
     {
         _requestService = requestService;
         _tenantId = tenantId;

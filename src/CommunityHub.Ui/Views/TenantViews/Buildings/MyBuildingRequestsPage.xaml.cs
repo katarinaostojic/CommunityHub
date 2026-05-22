@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services;
-using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
@@ -19,7 +19,7 @@ public partial class MyBuildingRequestsPage : Page
         InitializeComponent();
         _user = user;
 
-        BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
+        IBuildingAccessRequestService requestService = Injector.CreateInstance<IBuildingAccessRequestService>();
         _viewModel = new MyBuildingRequestsViewModel(requestService, user.Id);
         DataContext = _viewModel;
 

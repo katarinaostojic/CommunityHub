@@ -3,10 +3,11 @@ using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 
 namespace CommunityHub.Application.Services.Entities.Buildings;
 
-public class BuildingService
+public class BuildingService : IBuildingService
 {
     private readonly IBuildingRepository _repository;
     private readonly IImageRepository _imageRepository;
@@ -32,7 +33,13 @@ public class BuildingService
         return _repository.GetAllByManager(managerId).ToDtoList();
     }
 
-    public long CreateBuilding(string street, string streetNumber, string neighborhood, long cityId, int numberOfFloors, long managerId)
+    public long CreateBuilding(
+        string street,
+        string streetNumber,
+        string neighborhood,
+        long cityId,
+        int numberOfFloors,
+        long managerId)
     {
         return _repository.CreateBuilding(street, streetNumber, neighborhood, cityId, numberOfFloors, managerId);
     }

@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
@@ -21,7 +21,7 @@ public partial class BrowseBuildingsPage : Page
 
         _user = user;
 
-        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
+        IBuildingService buildingService = Injector.CreateInstance<IBuildingService>();
         _viewModel = new BrowseBuildingsViewModel(buildingService);
 
         _filterPanel = new FilterPanelAnimationHelper(Overlay, FilterPanelTranslate);

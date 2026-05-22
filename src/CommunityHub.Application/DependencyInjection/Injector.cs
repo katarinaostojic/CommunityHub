@@ -1,15 +1,16 @@
-﻿using CommunityHub.Application.Database.Repositories;
-using CommunityHub.Application.Database.Repositories.Ads;
+﻿using CommunityHub.Application.Database.Repositories.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings;
 using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Shared;
+using CommunityHub.Application.Services.Interfaces.Buildings;
+using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
+
 
 namespace CommunityHub.Application.DependencyInjection;
 
@@ -23,12 +24,27 @@ public static class Injector
     private static readonly BuildingDbRepository _buildingRepository = new(
         _buildingDetailsRepository);
 
+    private static readonly BuildingAccessRequestDbRepository _buildingAccessRequestRepository = new();
+    private static readonly BuildingMembershipDbRepository _buildingMembershipRepository = new();
+
     private static readonly AdDbRepository _adRepository = new();
     private static readonly AdSlotDbRepository _adSlotRepository = new();
     private static readonly AdNotificationDbRepository _adNotificationRepository = new();
 
     private static readonly CommonRoomDbRepository _commonRoomRepository = new();
     private static readonly CommonRoomRequestDbRepository _commonRoomRequestRepository = new();
+
+    private static readonly BuildingService _buildingService = new(
+        _buildingRepository,
+        _imageRepository);
+
+    private static readonly BuildingAccessRequestService _buildingAccessRequestService = new(
+        _buildingAccessRequestRepository,
+        _buildingMembershipRepository,
+        _buildingRepository);
+
+    private static readonly BuildingMembershipService _buildingMembershipService = new(
+        _buildingMembershipRepository);
 
     private static readonly AdExpirationService _adExpirationService = new(
         _adRepository);
@@ -37,6 +53,10 @@ public static class Injector
         _adRepository,
         _adSlotRepository,
         _adNotificationRepository);
+
+    private static readonly CommonRoomService _commonRoomService = new(
+        _commonRoomRepository,
+        _buildingRepository);
 
     private static readonly CommonRoomRequestAvailabilityService _commonRoomRequestAvailabilityService = new(
         _commonRoomRepository);
@@ -47,28 +67,39 @@ public static class Injector
         _commonRoomRequestAvailabilityService);
 
     private static readonly CommonRoomRequestCommandService _commonRoomRequestCommandService = new(
-    _commonRoomRequestRepository,
-    _commonRoomRequestApprovalService);
+        _commonRoomRequestRepository,
+        _commonRoomRequestApprovalService);
+
+    private static readonly CommonRoomRequestService _commonRoomRequestService = new(
+        _commonRoomRequestRepository,
+        _commonRoomRequestApprovalService,
+        _commonRoomRequestCommandService);
 
     private static readonly Dictionary<Type, object> _implementations = new()
     {
         {
+            typeof(IBuildingService),
+            _buildingService
+        },
+        {
             typeof(BuildingService),
-            new BuildingService(
-                _buildingRepository,
-                _imageRepository)
+            _buildingService
+        },
+        {
+            typeof(IBuildingAccessRequestService),
+            _buildingAccessRequestService
         },
         {
             typeof(BuildingAccessRequestService),
-            new BuildingAccessRequestService(
-                new BuildingAccessRequestDbRepository(),
-                new BuildingMembershipDbRepository(),
-                _buildingRepository)
+            _buildingAccessRequestService
+        },
+        {
+            typeof(IBuildingMembershipService),
+            _buildingMembershipService
         },
         {
             typeof(BuildingMembershipService),
-            new BuildingMembershipService(
-                new BuildingMembershipDbRepository())
+            _buildingMembershipService
         },
         {
             typeof(CityService),
@@ -108,10 +139,20 @@ public static class Injector
                 _adExpirationService)
         },
         {
+            typeof(ICommonRoomService),
+            _commonRoomService
+        },
+        {
             typeof(CommonRoomService),
-            new CommonRoomService(
-                _commonRoomRepository,
-                _buildingRepository)
+            _commonRoomService
+        },
+        {
+            typeof(ICommonRoomRequestService),
+            _commonRoomRequestService
+        },
+        {
+            typeof(CommonRoomRequestService),
+            _commonRoomRequestService
         },
         {
             typeof(CommonRoomRequestAvailabilityService),
@@ -124,13 +165,6 @@ public static class Injector
         {
             typeof(CommonRoomRequestCommandService),
             _commonRoomRequestCommandService
-        },
-        {
-            typeof(CommonRoomRequestService),
-            new CommonRoomRequestService(
-                _commonRoomRequestRepository,
-                _commonRoomRequestApprovalService,
-                _commonRoomRequestCommandService)
         },
         {
             typeof(NeighborhoodService),

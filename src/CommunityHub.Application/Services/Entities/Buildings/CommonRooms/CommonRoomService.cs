@@ -4,12 +4,12 @@ using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
-using CommunityHub.Application.Mappings.Buildings;
 using CommunityHub.Application.Mappings.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
-public class CommonRoomService
+public class CommonRoomService : ICommonRoomService
 {
     private readonly ICommonRoomRepository _repository;
     private readonly IBuildingRepository _buildingRepository;
@@ -25,19 +25,29 @@ public class CommonRoomService
         return _repository.GetByBuilding(buildingId).ToDtoList();
     }
 
-    public void Create(string name, string description, int floorNumber,
-                       RentalType rentalType, long buildingId)
+    public void Create(
+        string name,
+        string description,
+        int floorNumber,
+        RentalType rentalType,
+        long buildingId)
     {
         Building? building = _buildingRepository.GetById(buildingId);
+
         if (building == null)
             throw new Exception("Building not found.");
 
         CommonRoom commonRoom = new CommonRoom(0, name, description, floorNumber, rentalType, buildingId);
+
         if (!commonRoom.IsFloorValid(building.NumberOfFloors))
             throw new Exception("Floor does not exist in this building.");
 
-        _repository.Create(name, description, floorNumber,
-            RentalTypeMapper.ToDatabaseValue(rentalType), buildingId);
+        _repository.Create(
+            name,
+            description,
+            floorNumber,
+            RentalTypeMapper.ToDatabaseValue(rentalType),
+            buildingId);
     }
 
     public List<DateTime> GetOccupiedDates(long commonRoomId)
