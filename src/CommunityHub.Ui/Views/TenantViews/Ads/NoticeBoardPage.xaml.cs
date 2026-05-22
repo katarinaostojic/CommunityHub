@@ -2,8 +2,10 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Reports;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
+using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -26,10 +28,14 @@ public partial class NoticeBoardPage : Page
 
         IAdService adService = Injector.CreateInstance<IAdService>();
         IAdNotificationService notificationService = Injector.CreateInstance<IAdNotificationService>();
+        AdsReportService reportService = Injector.CreateInstance<AdsReportService>();
+        AdsPdfExporter pdfExporter = Injector.CreateInstance<AdsPdfExporter>();
 
         _viewModel = new NoticeBoardViewModel(
             adService,
             notificationService,
+            reportService,
+            pdfExporter,
             _membership,
             _user.Id);
 
@@ -129,7 +135,45 @@ public partial class NoticeBoardPage : Page
 
     private void ExportPdfButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: export PDF
+        ExportReportDialog dialog = new ExportReportDialog
+        {
+            Owner = Window.GetWindow(this)
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        string? filePath = SelectPdfFilePath(dialog.DateFrom, dialog.DateTo);
+
+        if (filePath == null)
+            return;
+
+        _viewModel.ExportReport(filePath, dialog.DateFrom, dialog.DateTo);
+
+        NotificationBanner.ShowSuccess(
+            ExportSuccessBanner,
+            ExportSuccessTextBlock,
+            "✔ PDF exported successfully.");
+
+        PdfViewer.Open(filePath);
+    }
+
+    private static string? SelectPdfFilePath(DateOnly dateFrom, DateOnly dateTo)
+    {
+        SaveFileDialog dialog = new SaveFileDialog
+        {
+            Filter = "PDF files (*.pdf)|*.pdf",
+            FileName = $"tenant-ads-report-{dateFrom:yyyy-MM-dd}-{dateTo:yyyy-MM-dd}.pdf"
+        };
+
+        return dialog.ShowDialog() == true
+            ? dialog.FileName
+            : null;
+    }
+
+    private void DismissExportSuccessButton_Click(object sender, RoutedEventArgs e)
+    {
+        ExportSuccessBanner.Visibility = Visibility.Collapsed;
     }
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) =>

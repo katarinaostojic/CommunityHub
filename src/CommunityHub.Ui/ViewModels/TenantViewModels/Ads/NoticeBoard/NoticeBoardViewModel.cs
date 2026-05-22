@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.DTOs.Reports;
 using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Reports;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
@@ -8,6 +10,8 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 public class NoticeBoardViewModel : BaseViewModel
 {
     private readonly IAdService _adService;
+    private readonly AdsReportService _reportService;
+    private readonly AdsPdfExporter _pdfExporter;
     private readonly long _currentUserId;
     private readonly long _buildingId;
 
@@ -17,10 +21,14 @@ public class NoticeBoardViewModel : BaseViewModel
     public NoticeBoardViewModel(
         IAdService adService,
         IAdNotificationService notificationService,
+        AdsReportService reportService,
+        AdsPdfExporter pdfExporter,
         BuildingMembershipDto membership,
         long currentUserId)
     {
         _adService = adService;
+        _reportService = reportService;
+        _pdfExporter = pdfExporter;
         _currentUserId = currentUserId;
         _buildingId = membership.BuildingId;
 
@@ -92,6 +100,17 @@ public class NoticeBoardViewModel : BaseViewModel
     public AdDto? GetCurrentUserMatchingAd(AdDto theirAd)
     {
         return _adService.GetCurrentUserMatchingAd(_buildingId, _currentUserId, theirAd);
+    }
+
+    public void ExportReport(string filePath, DateOnly dateFrom, DateOnly dateTo)
+    {
+        AdsReportDto report = _reportService.Create(
+            _buildingId,
+            BuildingSubtitle,
+            dateFrom,
+            dateTo);
+
+        _pdfExporter.Export(filePath, report);
     }
 
     private void LoadAds()

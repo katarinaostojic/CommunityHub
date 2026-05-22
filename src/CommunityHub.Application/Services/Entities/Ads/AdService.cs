@@ -56,6 +56,22 @@ public class AdService : IAdService
         return _adRepository.GetById(adId)?.ToAdDto();
     }
 
+    public List<AdDto> GetReportAds(
+        long buildingId,
+        DateOnly dateFrom,
+        DateOnly dateTo)
+    {
+        _expirationService.RefreshExpiredAds(buildingId);
+
+        return _adRepository
+            .GetAllByBuilding(buildingId)
+            .Where(ad => ad.DateFrom <= dateTo && ad.DateTo >= dateFrom)
+            .OrderBy(ad => ad.DateFrom)
+            .ThenBy(ad => ad.DateTo)
+            .ThenBy(ad => ad.Type)
+            .ToAdDtoList();
+    }
+
     public (AdDto newAd, List<AdDto> matchingAds) Create(CreateAdDto request)
     {
         Ad ad = new Ad(

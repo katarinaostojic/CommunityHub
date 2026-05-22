@@ -11,6 +11,7 @@ using CommunityHub.Application.Services.Entities.Shared;
 using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Reports;
 
 namespace CommunityHub.Application.DependencyInjection;
 
@@ -61,6 +62,11 @@ public static class Injector
         _adRepository,
         _adSlotBookingService,
         _adExpirationService);
+
+    private static readonly AdsReportService _tenantAdsReportService = new(
+        _adService);
+
+    private static readonly AdsPdfExporter _tenantAdsPdfExporter = new();
 
     private static readonly CommonRoomService _commonRoomService = new(
         _commonRoomRepository,
@@ -153,6 +159,14 @@ public static class Injector
         {
             typeof(AdService),
             _adService
+        },
+        {
+            typeof(AdsReportService),
+            _tenantAdsReportService
+        },
+        {
+            typeof(AdsPdfExporter),
+            _tenantAdsPdfExporter
         },
         {
             typeof(ICommonRoomService),

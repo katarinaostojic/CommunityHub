@@ -19,6 +19,11 @@ public interface IAdService
 
     AdDto? GetById(long adId);
 
+    List<AdDto> GetReportAds(
+        long buildingId,
+        DateOnly dateFrom,
+        DateOnly dateTo);
+
     (AdDto newAd, List<AdDto> matchingAds) Create(CreateAdDto request);
 
     void Archive(long adId);

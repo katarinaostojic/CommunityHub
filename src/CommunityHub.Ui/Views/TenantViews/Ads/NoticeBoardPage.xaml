@@ -151,25 +151,59 @@
 
         <!-- Title row -->
         <Grid Grid.Row="3" Margin="16,12,16,8">
-            <StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
                 <TextBlock Text="Notice Board"
-                           Style="{StaticResource PageTitle}"/>
+                   Style="{StaticResource PageTitle}"/>
 
                 <TextBlock Text="{Binding BuildingSubtitle}"
-                           Style="{StaticResource SecondaryText}"
-                           Margin="0,2,0,0"/>
+                   Style="{StaticResource SecondaryText}"
+                   Margin="0,2,0,0"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right">
+            <Border x:Name="ExportSuccessBanner"
+            Grid.Column="1"
+            Background="{StaticResource SuccessBrush}"
+            BorderBrush="{StaticResource SuccessTextBrush}"
+            BorderThickness="1"
+            Padding="10,6"
+            Margin="16,0,16,0"
+            VerticalAlignment="Center"
+            Visibility="Collapsed">
+                <Grid>
+                    <TextBlock x:Name="ExportSuccessTextBlock"
+                       Foreground="{StaticResource SuccessTextBrush}"
+                       FontSize="13"
+                       VerticalAlignment="Center"
+                       Margin="0,0,28,0"/>
+
+                    <Button Content="✕"
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource GhostButton}"
+                    Foreground="{StaticResource SuccessTextBrush}"
+                    Click="DismissExportSuccessButton_Click"/>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Column="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
                 <Button Content="Export PDF"
-                        Style="{StaticResource OutlineButton}"
-                        Margin="0,0,8,0"
-                        Click="ExportPdfButton_Click"/>
+                Style="{StaticResource OutlineButton}"
+                Margin="0,0,8,0"
+                Click="ExportPdfButton_Click"/>
 
                 <Button Content="+ New Ad"
-                        Style="{StaticResource PrimaryButton}"
-                        Click="NewAdButton_Click"/>
+                Style="{StaticResource PrimaryButton}"
+                Click="NewAdButton_Click"/>
             </StackPanel>
         </Grid>
 
