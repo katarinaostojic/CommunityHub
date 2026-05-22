@@ -186,13 +186,15 @@
             <Button Content="&lt;" Style="{StaticResource OutlineButton}"
                     Margin="0,0,4,0"
                     IsEnabled="{Binding HasPreviousPage}"
-                    Click="PrevPageButton_Click"/>
+                    Click="PageButton_Click"
+                    Tag="Previous"/>
             <TextBlock Text="{Binding PageLabelText}"
                        VerticalAlignment="Center" Margin="8,0" FontSize="13"/>
             <Button Content="&gt;" Style="{StaticResource OutlineButton}"
                     Margin="4,0,0,0"
                     IsEnabled="{Binding HasNextPage}"
-                    Click="NextPageButton_Click"/>
+                    Click="PageButton_Click"
+                    Tag="Next"/>
         </StackPanel>
 
         <!-- Overlay -->
@@ -251,7 +253,7 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Content="Reset Filters"
                             Style="{StaticResource OutlineButton}"
-                            Click="ResetFiltersButton_Click"/>
+                            Click="ResetButton_Click"/>
                     <Button Grid.Column="2" Content="Apply Filters"
                             Style="{StaticResource PrimaryButton}"
                             Click="ApplyFiltersButton_Click"/>
