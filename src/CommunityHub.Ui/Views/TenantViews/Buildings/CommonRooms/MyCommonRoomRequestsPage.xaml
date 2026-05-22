@@ -10,7 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,7 +21,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -29,68 +31,92 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="☰  Menu"
+
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
-                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
+
+                <TextBlock Grid.Column="2"
+                           x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"
+                           Foreground="White"
+                           FontSize="15"
                            Margin="0,0,8,0"/>
-                <TextBlock Grid.Column="3" Text="👤"
+
+                <TextBlock Grid.Column="3"
+                           Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="17"/>
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Success banner -->
-        <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="{StaticResource SuccessBrush}" Padding="12,8"
+        <Border x:Name="SuccessBanner"
+                Grid.Row="1"
+                Background="{StaticResource SuccessBrush}"
+                BorderBrush="{StaticResource SuccessTextBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12,8"
+                Margin="16,10,16,0"
                 Visibility="Collapsed">
             <TextBlock x:Name="SuccessTextBlock"
-                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
+                       Foreground="{StaticResource SuccessTextBrush}"
+                       FontSize="13"/>
         </Border>
 
         <!-- Tabs + building info -->
-        <Grid Grid.Row="2" Margin="16,12,16,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <StackPanel Grid.Row="2" Margin="16,16,16,0">
             <TextBlock Grid.Row="0" x:Name="BuildingInfoTextBlock"
-                       Style="{StaticResource SecondaryText}"
-                       Margin="0,0,0,12"
-                       FontSize="16"/>
-            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Button Content="Common Rooms"
-                        Style="{StaticResource OutlineButton}"
-                        Margin="0,0,8,0"
-                        Click="CommonRoomsTab_Click"/>
-                <Button Content="My Requests"
-                        Style="{StaticResource PrimaryButton}"/>
-            </StackPanel>
-        </Grid>
+               Style="{StaticResource SecondaryText}"
+               Margin="0,0,0,12"
+               FontSize="16"/>
 
-        <!-- Filteri -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="16,12,16,0">
-            <TextBlock Text="Filters:" FontSize="13" FontWeight="SemiBold"
-                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Common Rooms"
+                Style="{StaticResource OutlineButton}"
+                Margin="0,0,8,0"
+                Click="CommonRoomsTab_Click"/>
+
+                <Button Content="My Requests"
+                Style="{StaticResource PrimaryButton}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Filters -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    Margin="16,12,16,0">
+            <TextBlock Text="Filters:"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource TextPrimaryBrush}"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"/>
+
             <Button Content="{Binding AllButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterAllButton_Click"/>
+
             <Button Content="{Binding PendingButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterPendingButton_Click"/>
+
             <Button Content="{Binding DateChangeButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterDateChangeButton_Click"/>
+
             <Button Content="{Binding ApprovedButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
                     Click="FilterApprovedButton_Click"/>
+
             <Button Content="{Binding RejectedButtonLabel}"
                     Style="{StaticResource FilterChipButton}"
                     Click="FilterRejectedButton_Click"/>
@@ -102,8 +128,10 @@
                    Style="{StaticResource SecondaryText}"
                    Margin="16,8,16,8"/>
 
-        <!-- Lista zahteva -->
-        <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
+        <!-- Request list -->
+        <ScrollViewer Grid.Row="5"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,16">
             <ItemsControl ItemsSource="{Binding Requests}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -118,66 +146,123 @@
                                 </Grid.RowDefinitions>
 
                                 <!-- Status badge -->
-                                <Border Grid.Row="0" HorizontalAlignment="Right"
-                                        Style="{StaticResource StatusBadge}">
-                                    <TextBlock Text="{Binding StatusDisplay}" FontSize="13"/>
+                                <Border Grid.Row="0"
+                                        HorizontalAlignment="Right"
+                                        Background="{StaticResource PrimarySoftBrush}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="9,4">
+                                    <TextBlock Text="{Binding StatusDisplay}"
+                                               FontSize="12"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource PrimaryBrush}"/>
                                 </Border>
 
-                                <!-- Naziv prostorije -->
-                                <TextBlock Grid.Row="0" Text="{Binding CommonRoomName}"
-                                           FontSize="18" FontWeight="Bold"/>
+                                <!-- Room name -->
+                                <TextBlock Grid.Row="0"
+                                           Text="{Binding CommonRoomName}"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
-                                <!-- Rental type i datumi -->
-                                <Grid Grid.Row="1" Margin="0,8,0,16">
+                                <!-- Rental type and dates -->
+                                <Grid Grid.Row="1"
+                                      Margin="0,10,0,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Rental type:" Style="{StaticResource SecondaryText}"/>
-                                        <TextBlock Text="{Binding RentalTypeDisplay}" FontSize="13"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <TextBlock Text="Requested Dates:" Style="{StaticResource SecondaryText}"/>
-                                        <TextBlock Text="{Binding DateRange}" FontSize="13"/>
-                                    </StackPanel>
+
+                                    <Border Grid.Column="0"
+                                            Background="{StaticResource SurfaceSoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="10,7">
+                                        <StackPanel>
+                                            <TextBlock Text="Rental type"
+                                                       Style="{StaticResource SecondaryText}"
+                                                       FontSize="12"/>
+
+                                            <TextBlock Text="{Binding RentalTypeDisplay}"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="2"
+                                            Background="{StaticResource SurfaceSoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="10,7">
+                                        <StackPanel>
+                                            <TextBlock Text="Requested Dates"
+                                                       Style="{StaticResource SecondaryText}"
+                                                       FontSize="12"/>
+
+                                            <TextBlock Text="{Binding DateRange}"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
 
                                 <!-- Approved date -->
-                                <TextBlock Grid.Row="2"
-                                           Text="{Binding ApprovedDateDisplay}"
-                                           FontSize="13" FontWeight="SemiBold"
-                                           Foreground="{StaticResource SuccessTextBrush}"
-                                           Margin="0,0,0,8"
-                                           Visibility="{Binding ApprovedDateVisible, Converter={StaticResource BoolToVis}}"/>
+                                <Border Grid.Row="2"
+                                        Background="{StaticResource SuccessBrush}"
+                                        BorderBrush="{StaticResource SuccessTextBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="10,7"
+                                        Margin="0,0,0,8"
+                                        Visibility="{Binding ApprovedDateVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="{Binding ApprovedDateDisplay}"
+                                               FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource SuccessTextBrush}"/>
+                                </Border>
 
-                                <!-- Date change sekcija -->
+                                <!-- Date change section -->
                                 <Border Grid.Row="3"
                                         Background="{StaticResource WarningBrush}"
-                                        CornerRadius="4"
-                                        Padding="12" Margin="0,0,0,8"
+                                        BorderBrush="{StaticResource WarningTextBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="12"
+                                        Margin="0,0,0,8"
                                         Visibility="{Binding CanAcceptDateChange, Converter={StaticResource BoolToVis}}">
                                     <StackPanel>
                                         <TextBlock Text="ADMINISTRATOR SUGGESTED NEW DATES"
-                                                   Style="{StaticResource SecondaryText}"
-                                                   FontSize="11" Margin="0,0,0,4"/>
+                                                   Foreground="{StaticResource WarningTextBrush}"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Margin="0,0,0,4"/>
+
                                         <TextBlock Text="{Binding ProposedDateRangeDisplay}"
-                                                   FontSize="13" FontWeight="SemiBold"
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"
                                                    Margin="0,0,0,6"/>
+
                                         <TextBlock Text="Review and accept or cancel the request"
                                                    Style="{StaticResource SecondaryText}"
                                                    FontSize="12"/>
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Akcije -->
+                                <!-- Actions -->
                                 <Grid Grid.Row="4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
+
                                     <Button Grid.Column="1"
                                             Content="Accept suggestion"
                                             Style="{StaticResource PrimaryButton}"
@@ -185,6 +270,7 @@
                                             Tag="{Binding}"
                                             Visibility="{Binding CanAcceptDateChange, Converter={StaticResource BoolToVis}}"
                                             Click="AcceptSuggestionButton_Click"/>
+
                                     <Button Grid.Column="2"
                                             Content="Cancel request"
                                             Style="{StaticResource DangerButton}"
@@ -199,6 +285,8 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="6"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>
