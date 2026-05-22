@@ -47,6 +47,10 @@ public static class Injector
         _commonRoomRepository,
         _commonRoomRequestAvailabilityService);
 
+    private static readonly CommonRoomRequestCommandService _commonRoomRequestCommandService = new(
+    _commonRoomRequestRepository,
+    _commonRoomRequestApprovalService);
+
     private static readonly Dictionary<Type, object> _implementations = new()
     {
         {
@@ -119,10 +123,15 @@ public static class Injector
             _commonRoomRequestApprovalService
         },
         {
+            typeof(CommonRoomRequestCommandService),
+            _commonRoomRequestCommandService
+        },
+        {
             typeof(CommonRoomRequestService),
             new CommonRoomRequestService(
                 _commonRoomRequestRepository,
-                _commonRoomRequestApprovalService)
+                _commonRoomRequestApprovalService,
+                _commonRoomRequestCommandService)
         },
         {
             typeof(NeighborhoodService),
