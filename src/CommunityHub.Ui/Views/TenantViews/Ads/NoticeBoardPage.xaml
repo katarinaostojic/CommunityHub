@@ -185,19 +185,22 @@
                     Content="{Binding Filters.AllFilterText}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
-                    Click="FilterAllButton_Click"/>
+                    Click="FilterTypeButton_Click"
+                    Tag="All"/>
 
             <Button x:Name="FilterOfferingButton"
                     Content="{Binding Filters.OfferingFilterText}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,6,0"
-                    Click="FilterOfferingButton_Click"/>
+                    Click="FilterTypeButton_Click"
+                    Tag="Offering"/>
 
             <Button x:Name="FilterSeekingButton"
                     Content="{Binding Filters.SeekingFilterText}"
                     Style="{StaticResource FilterChipButton}"
                     Margin="0,0,16,0"
-                    Click="FilterSeekingButton_Click"/>
+                    Click="FilterTypeButton_Click"
+                    Tag="Seeking"/>
 
             <TextBlock Text="Category:"
                        FontSize="13"

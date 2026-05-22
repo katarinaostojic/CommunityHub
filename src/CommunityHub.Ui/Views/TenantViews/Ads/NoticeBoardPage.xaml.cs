@@ -23,50 +23,47 @@ public partial class NoticeBoardPage : Page
 
         _user = user;
         _membership = membership;
-        _viewModel = CreateViewModel();
+
+        AdService adService = Injector.CreateInstance<AdService>();
+        AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
+
+        _viewModel = new NoticeBoardViewModel(
+            adService,
+            notificationService,
+            _membership,
+            _user.Id);
+
         _navigationHelper = new NoticeBoardNavigationHelper(_user, _membership, _viewModel, this);
 
         DataContext = _viewModel;
 
-        InitializeHeader();
-        InitializeCategoryFilter();
+        UserNameTextBlock.Text = _user.DisplayName;
+        AppMenu.Initialize(_user);
+
+        CategoryComboBox.ItemsSource = _viewModel.CategoryOptions;
+        CategoryComboBox.SelectedIndex = 0;
     }
 
     public void ShowBookingSuccess() =>
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Slots booked successfully!");
 
-    private NoticeBoardViewModel CreateViewModel()
+    private void FilterTypeButton_Click(object sender, RoutedEventArgs e)
     {
-        AdService adService = Injector.CreateInstance<AdService>();
-        AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
+        string filterType = (string)((Button)sender).Tag;
 
-        return new NoticeBoardViewModel(
-            adService,
-            notificationService,
-            _membership,
-            _user.Id);
+        switch (filterType)
+        {
+            case "All":
+                _viewModel.FilterAll();
+                break;
+            case "Offering":
+                _viewModel.FilterOffering();
+                break;
+            case "Seeking":
+                _viewModel.FilterSeeking();
+                break;
+        }
     }
-
-    private void InitializeHeader()
-    {
-        UserNameTextBlock.Text = _user.DisplayName;
-        AppMenu.Initialize(_user);
-    }
-
-    private void InitializeCategoryFilter()
-    {
-        CategoryComboBox.ItemsSource = _viewModel.CategoryOptions;
-        CategoryComboBox.SelectedIndex = 0;
-    }
-
-    private void FilterAllButton_Click(object sender, RoutedEventArgs e) =>
-        _viewModel.FilterAll();
-
-    private void FilterOfferingButton_Click(object sender, RoutedEventArgs e) =>
-        _viewModel.FilterOffering();
-
-    private void FilterSeekingButton_Click(object sender, RoutedEventArgs e) =>
-        _viewModel.FilterSeeking();
 
     private void CategoryComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) =>
         _viewModel.FilterByCategory(CategoryComboBox.SelectedIndex);
@@ -76,31 +73,43 @@ public partial class NoticeBoardPage : Page
 
     private void ArchiveButton_Click(object sender, RoutedEventArgs e)
     {
-        AdViewModel ad = GetAdFromButton(sender);
+        AdViewModel ad = (AdViewModel)((Button)sender).Tag;
+
         _lastArchivedAdId = ad.Id;
         _viewModel.ArchiveAd(ad.Id);
-        ShowArchiveSuccess();
+
+        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Ad archived successfully.");
+        RestoreAdButton.Visibility = Visibility.Visible;
     }
 
     private void RestoreAdButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_lastArchivedAdId == null) return;
+        if (_lastArchivedAdId == null)
+            return;
 
         _viewModel.RestoreAd(_lastArchivedAdId.Value);
         _lastArchivedAdId = null;
-        HideArchiveSuccess();
+
+        RestoreAdButton.Visibility = Visibility.Collapsed;
+        SuccessBanner.Visibility = Visibility.Collapsed;
     }
 
     private void ViewSlotsButton_Click(object sender, RoutedEventArgs e)
     {
-        AdViewModel ad = GetAdFromButton(sender);
-        NavigateTo(_navigationHelper.CreateBookSlotsPage(ad));
+        AdViewModel ad = (AdViewModel)((Button)sender).Tag;
+        Page? page = _navigationHelper.CreateBookSlotsPage(ad);
+
+        if (page != null)
+            NavigationService.Navigate(page);
     }
 
     private void ViewDetailsButton_Click(object sender, RoutedEventArgs e)
     {
-        AdViewModel ad = GetAdFromButton(sender);
-        NavigateTo(_navigationHelper.CreateAdDetailsPage(ad));
+        AdViewModel ad = (AdViewModel)((Button)sender).Tag;
+        Page? page = _navigationHelper.CreateAdDetailsPage(ad);
+
+        if (page != null)
+            NavigationService.Navigate(page);
     }
 
     private void DismissNotificationButton_Click(object sender, RoutedEventArgs e)
@@ -112,7 +121,10 @@ public partial class NoticeBoardPage : Page
     private void ViewSlotsFromNotificationButton_Click(object sender, RoutedEventArgs e)
     {
         AdNotificationViewModel notification = (AdNotificationViewModel)((Button)sender).DataContext;
-        NavigateTo(_navigationHelper.CreateAdDetailsPage(notification));
+        Page? page = _navigationHelper.CreateAdDetailsPage(notification);
+
+        if (page != null)
+            NavigationService.Navigate(page);
     }
 
     private void ExportPdfButton_Click(object sender, RoutedEventArgs e)
@@ -122,25 +134,4 @@ public partial class NoticeBoardPage : Page
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) =>
         AppMenu.Open();
-
-    private AdViewModel GetAdFromButton(object sender) =>
-        (AdViewModel)((Button)sender).Tag;
-
-    private void NavigateTo(Page? page)
-    {
-        if (page != null)
-            NavigationService.Navigate(page);
-    }
-
-    private void ShowArchiveSuccess()
-    {
-        NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Ad archived successfully.");
-        RestoreAdButton.Visibility = Visibility.Visible;
-    }
-
-    private void HideArchiveSuccess()
-    {
-        RestoreAdButton.Visibility = Visibility.Collapsed;
-        SuccessBanner.Visibility = Visibility.Collapsed;
-    }
 }
