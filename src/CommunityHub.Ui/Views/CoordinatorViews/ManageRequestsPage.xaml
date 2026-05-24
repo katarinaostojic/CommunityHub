@@ -3,8 +3,13 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Requests"
       Background="{StaticResource BackgroundLightBrush}">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -28,56 +33,122 @@
                     Style="{StaticResource OutlineButton}"/>
         </StackPanel>
 
+        <!-- Banneri -->
+        <Border x:Name="SuccessBanner" Grid.Row="2" Background="{StaticResource SuccessBrush}"
+                CornerRadius="8" Padding="12" Margin="16,0,16,8"
+                Visibility="Collapsed">
+            <TextBlock x:Name="SuccessText" TextWrapping="Wrap"
+                       Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
+        </Border>
+
+        <Border x:Name="ErrorBanner" Grid.Row="2" Background="{StaticResource DangerBrush}"
+                CornerRadius="8" Padding="12" Margin="16,0,16,8"
+                Visibility="Collapsed">
+            <TextBlock x:Name="ErrorText" TextWrapping="Wrap"
+                       Foreground="White" FontSize="13"/>
+        </Border>
+
         <!-- Requests list -->
-        <ScrollViewer Grid.Row="2">
+        <ScrollViewer Grid.Row="3">
             <StackPanel Margin="16,0,16,16">
                 <ItemsControl ItemsSource="{Binding Requests}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="0" Background="{StaticResource BackgroundLightBrush}"
-                                            Width="44" Height="44" Margin="0,0,12,0"
-                                            CornerRadius="22">
-                                        <TextBlock Text="👤" FontSize="22"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"/>
+                                        <Border Grid.Column="0" Background="{StaticResource BackgroundLightBrush}"
+                            Width="44" Height="44" Margin="0,0,12,0"
+                            CornerRadius="22">
+                                            <TextBlock Text="👤" FontSize="22"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock FontWeight="Bold" FontSize="14"
+                                   Foreground="{StaticResource PrimaryBrush}">
+                            <Run Text="{Binding CitizenFullName, Mode=OneWay}"/>
+                                            </TextBlock>
+                                            <TextBlock FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,4,0,0">
+                            <Run Text="Address: "/>
+                            <Run Text="{Binding CitizenAddress, Mode=OneWay}"/>
+                                            </TextBlock>
+                                            <TextBlock FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,2,0,0">
+                            <Run Text="District: "/>
+                            <Run Text="{Binding NeighborhoodName, Mode=OneWay}"/>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding CreatedAt, StringFormat='Date: {0:dd.MM.yyyy.}', Mode=OneWay}"
+                                   FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,2,0,0"/>
+                                            <TextBlock Text="{Binding StatusDisplay, Mode=OneWay}"
+                                   FontSize="12" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                                            <TextBlock Text="{Binding RejectionReasonDisplay, Mode=OneWay}"
+                                   FontSize="12" Foreground="{StaticResource DangerBrush}" Margin="0,2,0,0"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0"
+                                    Visibility="{Binding ApproveRejectVisible, Converter={StaticResource BoolToVis}}">
+                                                <Button Content="Approve" Margin="0,0,8,0"
+                                    Click="ApproveButton_Click" Tag="{Binding}"
+                                    Style="{StaticResource PrimaryButton}"/>
+                                                <Button Content="Decline"
+                                    Click="RejectButton_Click" Tag="{Binding}"
+                                    Style="{StaticResource DangerButton}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Approve Confirmation Panel -->
+                                    <Border Visibility="{Binding ApproveConfirmVisibility}"
+                        Background="{StaticResource SuccessBrush}"
+                        CornerRadius="8" Padding="12" Margin="0,8,0,0">
+                                        <StackPanel>
+                                            <TextBlock FontSize="13" Foreground="{StaticResource SuccessTextBrush}"
+                                   TextWrapping="Wrap" Margin="0,0,0,10">
+                            <Run Text="Approve this request for "/>
+                            <Run Text="{Binding CitizenFullName, Mode=OneWay}" FontWeight="Bold"/>
+                            <Run Text="?"/>
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Confirm" Margin="0,0,8,0"
+                                    Click="ConfirmApproveButton_Click" Tag="{Binding}"
+                                    Style="{StaticResource PrimaryButton}"/>
+                                                <Button Content="Cancel"
+                                    Click="CancelConfirmButton_Click" Tag="{Binding}"
+                                    Style="{StaticResource OutlineButton}"/>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </Border>
 
-                                    <StackPanel Grid.Column="1">
-                                        <TextBlock FontWeight="Bold" FontSize="14"
-                                                   Foreground="{StaticResource PrimaryBrush}">
-                                            <Run Text="{Binding CitizenFullName, Mode=OneWay}"/>
-                                        </TextBlock>
-                                        <TextBlock FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,4,0,0">
-                                            <Run Text="Address: "/>
-                                            <Run Text="{Binding CitizenAddress, Mode=OneWay}"/>
-                                        </TextBlock>
-                                        <TextBlock FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,2,0,0">
-                                            <Run Text="District: "/>
-                                            <Run Text="{Binding NeighborhoodName, Mode=OneWay}"/>
-                                        </TextBlock>
-                                        <TextBlock Text="{Binding CreatedAt, StringFormat='Date: {0:dd.MM.yyyy.}', Mode=OneWay}"
-                                                   FontSize="12" Style="{StaticResource SecondaryText}" Margin="0,2,0,0"/>
-                                        <TextBlock Text="{Binding StatusDisplay, Mode=OneWay}"
-                                                   FontSize="12" FontWeight="SemiBold" Margin="0,4,0,0"/>
-                                        <TextBlock Text="{Binding RejectionReasonDisplay, Mode=OneWay}"
-                                                   FontSize="12" Foreground="{StaticResource DangerBrush}" Margin="0,2,0,0"/>
-                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                            <Button Content="Approve" Margin="0,0,8,0"
-                                                    Click="ApproveButton_Click" Tag="{Binding}"
-                                                    Style="{StaticResource PrimaryButton}"/>
-                                            <Button Content="Decline"
-                                                    Click="RejectButton_Click" Tag="{Binding}"
-                                                    Style="{StaticResource DangerButton}"/>
+                                    <!-- Decline Confirmation Panel -->
+                                    <Border Visibility="{Binding DeclineConfirmVisibility}"
+                        Background="{StaticResource DangerBrush}"
+                        CornerRadius="8" Padding="12" Margin="0,8,0,0">
+                                        <StackPanel>
+                                            <TextBlock FontSize="13" Foreground="White"
+                                   TextWrapping="Wrap" Margin="0,0,0,8">
+                            <Run Text="Decline request for "/>
+                            <Run Text="{Binding CitizenFullName, Mode=OneWay}" FontWeight="Bold"/>
+                            <Run Text="? Add a reason (optional):"/>
+                                            </TextBlock>
+                                            <TextBox x:Name="RejectReasonBox" Padding="8,6" Margin="0,0,0,10"
+                                 BorderBrush="White" BorderThickness="1"
+                                 Background="White"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Confirm" Margin="0,0,8,0"
+                                    Click="ConfirmRejectButton_Click" Tag="{Binding}"
+                                    Style="{StaticResource PrimaryButton}"/>
+                                                <Button Content="Cancel"
+                                    Click="CancelConfirmButton_Click" Tag="{Binding}"
+                                    Style="{StaticResource OutlineButton}"/>
+                                            </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                </Grid>
+                                    </Border>
+
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

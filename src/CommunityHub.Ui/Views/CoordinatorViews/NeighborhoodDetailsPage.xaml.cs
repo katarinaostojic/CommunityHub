@@ -1,8 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
-using CommunityHub.Ui.ViewModels.CoordinatorViewModels;
-using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
+using CommunityHub.Ui.Converters;
 using System.Windows.Controls;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
@@ -10,21 +8,31 @@ namespace CommunityHub.Ui.Views.CoordinatorViews;
 public partial class NeighborhoodDetailsPage : Page
 {
     private readonly NeighborhoodDto _neighborhood;
-    private readonly NeighborhoodDetailsViewModel _viewModel;
 
     public NeighborhoodDetailsPage(NeighborhoodDto neighborhood)
     {
         InitializeComponent();
         _neighborhood = neighborhood;
-        NeighborhoodMembershipService membershipService = Injector.CreateInstance<NeighborhoodMembershipService>();
-        _viewModel = new NeighborhoodDetailsViewModel(membershipService, neighborhood.Id);
-        DataContext = _viewModel;
+
         NeighborhoodNameText.Text = neighborhood.Name;
+        NeighborhoodLocationText.Text = neighborhood.Location;
+        DescriptionText.Text = neighborhood.Description;
+        StreetsControl.ItemsSource = neighborhood.Streets;
+
+        if (neighborhood.ImagePaths.Count > 0)
+            NeighborhoodImage.Source = ImagePathConverter.LoadImage(neighborhood.ImagePaths[0]);
     }
 
-    private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    private void RequestsButton_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_neighborhood.CoordinatorId), "My Districts");
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new ManageRequestsPage(_neighborhood.CoordinatorId, _neighborhood.Name), "Requests");
+    }
+
+    private void MembersButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new NeighborhoodMembersPage(_neighborhood), "Members");
     }
 
     private void MeetingsButton_Click(object sender, System.Windows.RoutedEventArgs e)

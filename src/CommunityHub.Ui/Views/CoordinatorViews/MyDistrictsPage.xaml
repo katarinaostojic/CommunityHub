@@ -62,10 +62,20 @@
             </Grid>
         </ScrollViewer>
 
-        <Button Content="+" Click="AddDistrictButton_Click"
-                Width="50" Height="50" FontSize="24"
+        <Button Click="AddDistrictButton_Click"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Margin="0,0,16,16"
-                Style="{StaticResource PrimaryButton}"/>
+                Style="{StaticResource PrimaryButton}"
+                Padding="12,8">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Add New District" VerticalAlignment="Center" 
+                       Margin="0,0,8,0" FontSize="13"/>
+                <Border Width="28" Height="28" Background="White" CornerRadius="4">
+                    <TextBlock Text="+" FontSize="18" HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource PrimaryBrush}"/>
+                </Border>
+            </StackPanel>
+        </Button>
     </Grid>
 </Page>

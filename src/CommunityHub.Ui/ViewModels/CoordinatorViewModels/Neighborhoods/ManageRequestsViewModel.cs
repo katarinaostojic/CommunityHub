@@ -8,16 +8,18 @@ public class ManageRequestsViewModel : BaseViewModel
 {
     private readonly NeighborhoodAccessRequestService _requestService;
     private readonly long _coordinatorId;
+    private readonly string? _neighborhoodName;
 
     private ObservableCollection<NeighborhoodAccessRequestCoordinatorViewModel> _requests = new();
     private RequestStatus? _currentFilter = null;
     private bool _sortDescending = true;
     private string _sortButtonLabel = "Sort by Date ↓";
 
-    public ManageRequestsViewModel(NeighborhoodAccessRequestService requestService, long coordinatorId)
+    public ManageRequestsViewModel(NeighborhoodAccessRequestService requestService, long coordinatorId, string? neighborhoodName = null)
     {
         _requestService = requestService;
         _coordinatorId = coordinatorId;
+        _neighborhoodName = neighborhoodName;
         LoadRequests();
     }
 
@@ -84,6 +86,7 @@ public class ManageRequestsViewModel : BaseViewModel
     {
         string? statusFilter = _currentFilter == null ? null : StatusToString(_currentFilter.Value);
         var items = _requestService.GetAllByCoordinator(_coordinatorId, statusFilter, _sortDescending)
+            .Where(r => _neighborhoodName == null || r.NeighborhoodName == _neighborhoodName)
             .Select(r => new NeighborhoodAccessRequestCoordinatorViewModel(r))
             .ToList();
         Requests = new ObservableCollection<NeighborhoodAccessRequestCoordinatorViewModel>(items);
