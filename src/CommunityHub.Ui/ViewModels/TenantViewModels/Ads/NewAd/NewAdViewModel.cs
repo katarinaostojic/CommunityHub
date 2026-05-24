@@ -1,15 +1,15 @@
-﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 
 public class NewAdViewModel : BaseViewModel
 {
-    private readonly AdService _adService;
+    private readonly IAdService _adService;
     private readonly long _buildingId;
     private readonly User _author;
 
@@ -19,7 +19,7 @@ public class NewAdViewModel : BaseViewModel
     private string _dateError = string.Empty;
     private bool _hasDateError;
 
-    public NewAdViewModel(AdService adService, BuildingMembershipDto membership, User author)
+    public NewAdViewModel(IAdService adService, BuildingMembershipDto membership, User author)
     {
         _adService = adService;
         _buildingId = membership.BuildingId;

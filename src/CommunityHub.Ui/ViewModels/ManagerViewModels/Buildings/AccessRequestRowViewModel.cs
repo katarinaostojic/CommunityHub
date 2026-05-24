@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;

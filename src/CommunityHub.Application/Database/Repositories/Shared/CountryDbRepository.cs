@@ -1,6 +1,6 @@
 ﻿using System.Data;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
-using CommunityHub.Application.Domain.Shared;
 
 namespace CommunityHub.Application.Database.Repositories.Shared;
 

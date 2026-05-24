@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Entities.Shared;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;

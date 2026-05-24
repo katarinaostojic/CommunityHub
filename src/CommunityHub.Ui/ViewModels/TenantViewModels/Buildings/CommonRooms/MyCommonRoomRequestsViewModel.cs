@@ -1,12 +1,12 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 
 public class MyCommonRoomRequestsViewModel : BaseViewModel
 {
-    private readonly CommonRoomRequestService _requestService;
+    private readonly ICommonRoomRequestService _requestService;
     private readonly long _tenantId;
     private readonly long _buildingId;
 
@@ -19,7 +19,7 @@ public class MyCommonRoomRequestsViewModel : BaseViewModel
     private int _approvedCount;
     private int _rejectedCount;
 
-    public MyCommonRoomRequestsViewModel(CommonRoomRequestService requestService, long tenantId, long buildingId)
+    public MyCommonRoomRequestsViewModel(ICommonRoomRequestService requestService, long tenantId, long buildingId)
     {
         _requestService = requestService;
         _tenantId = tenantId;

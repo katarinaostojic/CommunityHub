@@ -6,7 +6,7 @@
       xmlns:controls="clr-namespace:CommunityHub.Ui.Controls"
       mc:Ignorable="d">
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -14,7 +14,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -22,35 +24,52 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="☰  Menu"
+
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
-                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center" Foreground="White"
-                           FontSize="15" Margin="0,0,8,0"/>
-                <TextBlock Grid.Column="3" Text="👤"
-                           VerticalAlignment="Center" Foreground="White" FontSize="17"/>
+
+                <TextBlock Grid.Column="2"
+                           x:Name="UserNameTextBlock"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="15"
+                           Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="3"
+                           Text="👤"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Title + go back -->
-        <Grid Grid.Row="1" Margin="16,12,16,8">
+        <Grid Grid.Row="1"
+              Margin="16,12,16,8">
             <Button Content="← Go back"
                     Style="{StaticResource OutlineButton}"
                     HorizontalAlignment="Left"
                     Click="GoBackButton_Click"/>
+
             <TextBlock Text="My Ad Details"
                        Style="{StaticResource PageTitle}"
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"/>
         </Grid>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="16,0,16,16">
+        <ScrollViewer Grid.Row="2"
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="16,0,16,16">
             <StackPanel>
 
                 <!-- My advertisement section -->
-                <TextBlock Text="My advertisement" FontSize="15" FontWeight="SemiBold"
+                <TextBlock Text="My advertisement"
+                           FontSize="15"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
                            Margin="0,0,0,8"/>
 
                 <!-- Archived warning -->
@@ -58,15 +77,22 @@
                         Background="{StaticResource WarningBrush}"
                         BorderBrush="{StaticResource WarningTextBrush}"
                         BorderThickness="1"
-                        CornerRadius="6" Padding="12,10" Margin="0,0,0,8">
+                        CornerRadius="8"
+                        Padding="12,10"
+                        Margin="0,0,0,8">
                     <TextBlock Foreground="{StaticResource WarningTextBrush}"
-                               FontSize="13" TextWrapping="Wrap"
+                               FontSize="13"
+                               TextWrapping="Wrap"
                                Text="⚠ This ad has been archived. It is no longer visible on the Notice Board and will not be suggested to other tenants. Existing bookings remain active."/>
                 </Border>
 
                 <!-- Ad summary box -->
-                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="6" Padding="16,12" Margin="0,0,0,20">
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="18,14"
+                        Margin="0,0,0,20">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -74,7 +100,8 @@
                         </Grid.RowDefinitions>
 
                         <!-- TYPE, CATEGORY, DATE RANGE, STATUS + actions -->
-                        <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid Grid.Row="0"
+                              Margin="0,0,0,12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -91,34 +118,76 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="TYPE" Style="{StaticResource SectionTitle}"
+                            <TextBlock Grid.Column="0"
+                                       Text="TYPE"
+                                       Style="{StaticResource SectionTitle}"
                                        VerticalAlignment="Center"/>
-                            <Border Grid.Column="1" Style="{StaticResource StatusBadge}"
-                                    VerticalAlignment="Center" Margin="8,0,0,0">
-                                <TextBlock Text="{Binding TypeDisplay}" FontSize="13" FontWeight="SemiBold"/>
+
+                            <Border Grid.Column="1"
+                                    Background="{StaticResource PrimarySoftBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="9,4"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0">
+                                <TextBlock Text="{Binding TypeDisplay}"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="3" Text="CATEGORY" Style="{StaticResource SectionTitle}"
+                            <TextBlock Grid.Column="3"
+                                       Text="CATEGORY"
+                                       Style="{StaticResource SectionTitle}"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="4"
-                                       Text="{Binding CategoryDisplay}"
-                                       FontSize="13" FontWeight="SemiBold"
-                                       VerticalAlignment="Center" Margin="8,0,0,0"/>
 
-                            <TextBlock Grid.Column="6" Text="DATE RANGE" Style="{StaticResource SectionTitle}"
+                            <Border Grid.Column="4"
+                                    Background="{StaticResource PrimarySoftBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="9,4"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0">
+                                <TextBlock Text="{Binding CategoryDisplay}"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource PrimaryBrush}"/>
+                            </Border>
+
+                            <TextBlock Grid.Column="6"
+                                       Text="DATE RANGE"
+                                       Style="{StaticResource SectionTitle}"
                                        VerticalAlignment="Center"/>
+
                             <TextBlock Grid.Column="7"
                                        Text="{Binding DateRangeDisplay}"
-                                       FontSize="13" FontWeight="SemiBold"
-                                       VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       VerticalAlignment="Center"
+                                       Margin="8,0,0,0"/>
 
-                            <TextBlock Grid.Column="9" Text="STATUS" Style="{StaticResource SectionTitle}"
+                            <TextBlock Grid.Column="9"
+                                       Text="STATUS"
+                                       Style="{StaticResource SectionTitle}"
                                        VerticalAlignment="Center"
                                        Visibility="{Binding AdStatusTextVisible}"/>
-                            <Border Grid.Column="10" Style="{StaticResource StatusBadge}"
-                                    VerticalAlignment="Center" Margin="8,0,0,0"
+
+                            <Border Grid.Column="10"
+                                    Background="{StaticResource SurfaceSoftBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="9,4"
+                                    VerticalAlignment="Center"
+                                    Margin="8,0,0,0"
                                     Visibility="{Binding AdStatusTextVisible}">
-                                <TextBlock Text="Archived" FontSize="13"/>
+                                <TextBlock Text="Archived"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextSecondaryBrush}"/>
                             </Border>
 
                             <Button Grid.Column="12"
@@ -127,6 +196,7 @@
                                     VerticalAlignment="Center"
                                     Visibility="{Binding ArchiveButtonVisible}"
                                     Click="ArchiveButton_Click"/>
+
                             <Button Grid.Column="12"
                                     Content="Restore"
                                     Style="{StaticResource OutlineButton}"
@@ -137,26 +207,40 @@
 
                         <!-- DESCRIPTION -->
                         <StackPanel Grid.Row="1">
-                            <TextBlock Text="DESCRIPTION" Style="{StaticResource SectionTitle}"
+                            <TextBlock Text="DESCRIPTION"
+                                       Style="{StaticResource SectionTitle}"
                                        Margin="0,0,0,4"/>
-                            <TextBlock Text="{Binding Description}" FontSize="13" TextWrapping="Wrap"/>
+
+                            <TextBlock Text="{Binding Description}"
+                                       FontSize="13"
+                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                       TextWrapping="Wrap"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
                 <!-- Booked slots -->
-                <TextBlock Text="{Binding Slots.BookedSlotsTitleText}" FontSize="15" FontWeight="SemiBold"
+                <TextBlock Text="{Binding Slots.BookedSlotsTitleText}"
+                           FontSize="15"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
                            Margin="0,0,0,8"/>
-                <ItemsControl ItemsSource="{Binding Slots.BookedSlotGroups}" Margin="0,0,0,20">
+
+                <ItemsControl ItemsSource="{Binding Slots.BookedSlotGroups}"
+                              Margin="0,0,0,20">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">
                                 <StackPanel>
                                     <TextBlock Text="{Binding TenantName}"
-                                               FontSize="15" FontWeight="Bold" Margin="0,0,0,8"/>
+                                               FontSize="15"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               Margin="0,0,0,8"/>
 
                                     <!-- Slots grouped by day -->
-                                    <ItemsControl ItemsSource="{Binding DayGroups}" Margin="0,0,0,8">
+                                    <ItemsControl ItemsSource="{Binding DayGroups}"
+                                                  Margin="0,0,0,8">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid Margin="0,0,0,6">
@@ -164,23 +248,32 @@
                                                         <ColumnDefinition Width="60"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
+
                                                     <TextBlock Grid.Column="0"
                                                                Text="{Binding DateDisplay}"
-                                                               FontSize="12" FontWeight="SemiBold"
+                                                               FontSize="12"
+                                                               FontWeight="SemiBold"
                                                                Style="{StaticResource SectionTitle}"
                                                                VerticalAlignment="Center"/>
-                                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Slots}">
+
+                                                    <ItemsControl Grid.Column="1"
+                                                                  ItemsSource="{Binding Slots}">
                                                         <ItemsControl.ItemsPanel>
                                                             <ItemsPanelTemplate>
                                                                 <WrapPanel/>
                                                             </ItemsPanelTemplate>
                                                         </ItemsControl.ItemsPanel>
+
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
                                                                 <Border Background="{StaticResource PrimaryBrush}"
-                                                                        CornerRadius="20" Padding="12,6" Margin="0,0,8,4">
+                                                                        CornerRadius="20"
+                                                                        Padding="12,6"
+                                                                        Margin="0,0,8,4">
                                                                     <TextBlock Text="{Binding Display}"
-                                                                               Foreground="White" FontSize="12"/>
+                                                                               Foreground="White"
+                                                                               FontSize="12"
+                                                                               FontWeight="SemiBold"/>
                                                                 </Border>
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
@@ -190,25 +283,42 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
 
-                                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                                            CornerRadius="4" Padding="10,8">
+                                    <Border Background="{StaticResource PrimarySoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="12,10">
                                         <StackPanel>
-                                            <TextBlock Text="THEIR AD" Style="{StaticResource SectionTitle}"
+                                            <TextBlock Text="THEIR AD"
+                                                       Style="{StaticResource SectionTitle}"
                                                        Margin="0,0,0,4"/>
+
                                             <TextBlock Text="{Binding TheirAdDescription}"
-                                                       FontSize="13" FontStyle="Italic"
-                                                       TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                                       FontSize="13"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                                       FontStyle="Italic"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,0,0,6"/>
+
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="{Binding TheirAdType}"
                                                            Style="{StaticResource SecondaryText}"
+                                                           FontWeight="SemiBold"
                                                            Margin="0,0,8,0"/>
-                                                <TextBlock Text="·" Style="{StaticResource SecondaryText}"
-                                                           Margin="0,0,8,0"/>
-                                                <TextBlock Text="{Binding TheirAdCategory}"
+
+                                                <TextBlock Text="·"
                                                            Style="{StaticResource SecondaryText}"
                                                            Margin="0,0,8,0"/>
-                                                <TextBlock Text="·" Style="{StaticResource SecondaryText}"
+
+                                                <TextBlock Text="{Binding TheirAdCategory}"
+                                                           Style="{StaticResource SecondaryText}"
+                                                           FontWeight="SemiBold"
                                                            Margin="0,0,8,0"/>
+
+                                                <TextBlock Text="·"
+                                                           Style="{StaticResource SecondaryText}"
+                                                           Margin="0,0,8,0"/>
+
                                                 <TextBlock Text="{Binding TheirAdDateRange}"
                                                            Style="{StaticResource SecondaryText}"/>
                                             </StackPanel>
@@ -221,10 +331,17 @@
                 </ItemsControl>
 
                 <!-- Free slots -->
-                <TextBlock Text="Free Slots" FontSize="15" FontWeight="SemiBold"
+                <TextBlock Text="Free Slots"
+                           FontSize="15"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
                            Margin="0,0,0,8"/>
-                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                        CornerRadius="6" Padding="16,12">
+
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="16,12">
                     <ItemsControl ItemsSource="{Binding Slots.FreeSlotDayGroups}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -234,25 +351,38 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="0" BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1" CornerRadius="20"
-                                            Padding="12,6" HorizontalAlignment="Left">
+                                    <Border Grid.Column="0"
+                                            Background="{StaticResource PrimarySoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="20"
+                                            Padding="12,6"
+                                            HorizontalAlignment="Left">
                                         <TextBlock Text="{Binding DateDisplay}"
-                                                   FontSize="13" FontWeight="SemiBold"/>
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource PrimaryBrush}"/>
                                     </Border>
 
-                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Slots}">
+                                    <ItemsControl Grid.Column="1"
+                                                  ItemsSource="{Binding Slots}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <WrapPanel/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
+
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border BorderBrush="{StaticResource BorderBrush}"
-                                                        BorderThickness="1" CornerRadius="20"
-                                                        Padding="12,6" Margin="0,0,8,0">
-                                                    <TextBlock Text="{Binding Display}" FontSize="12"/>
+                                                <Border Background="{StaticResource SurfaceSoftBrush}"
+                                                        BorderBrush="{StaticResource BorderBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="20"
+                                                        Padding="12,6"
+                                                        Margin="0,0,8,4">
+                                                    <TextBlock Text="{Binding Display}"
+                                                               FontSize="12"
+                                                               Foreground="{StaticResource TextPrimaryBrush}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -266,6 +396,8 @@
             </StackPanel>
         </ScrollViewer>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="3" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="3"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>

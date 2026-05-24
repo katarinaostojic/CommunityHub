@@ -1,7 +1,7 @@
-﻿using CommunityHub.Application.Domain.Ads;
-using CommunityHub.Application.DTOs.Buildings;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 
@@ -9,9 +9,13 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 
 public class AdPostedViewModel : BaseViewModel
 {
-    private readonly AdService _adService;
+    private readonly IAdService _adService;
 
-    public AdPostedViewModel(AdDto postedAd, List<AdDto> matchingAds, BuildingMembershipDto membership, AdService adService)
+    public AdPostedViewModel(
+        AdDto postedAd,
+        List<AdDto> matchingAds,
+        BuildingMembershipDto membership,
+        IAdService adService)
     {
         _adService = adService;
         PostedAdId = postedAd.Id;
@@ -44,8 +48,8 @@ public class AdPostedViewModel : BaseViewModel
         if (matchingAds.Count == 0)
             return "No matching ads found at the moment. You will be notified when one appears.";
 
-        string oppositeType = postedAd.Type == AdType.Offering ? "seeking" : "offering";
+        string oppositeLabel = postedAd.OppositeType == AdType.Seeking ? "seeking" : "offering";
         string tenants = matchingAds.Count == 1 ? "1 tenant" : $"{matchingAds.Count} tenants";
-        return $"{tenants} {oppositeType} help in {postedAd.Category.ToDisplayString()} · overlapping dates";
+        return $"{tenants} {oppositeLabel} help in {postedAd.Category.ToDisplayString()} · overlapping dates";
     }
 }

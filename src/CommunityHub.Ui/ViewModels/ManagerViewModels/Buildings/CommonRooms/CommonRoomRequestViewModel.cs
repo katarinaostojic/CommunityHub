@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using System.Collections.ObjectModel;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
 namespace CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.CommonRooms;
 

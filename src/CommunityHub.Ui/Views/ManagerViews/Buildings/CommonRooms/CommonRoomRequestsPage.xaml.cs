@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 

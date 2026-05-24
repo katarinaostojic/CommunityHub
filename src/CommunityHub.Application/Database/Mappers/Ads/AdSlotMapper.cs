@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Database.Mappers.Users;
-using CommunityHub.Application.Domain.Ads;
+using CommunityHub.Application.Domain.Entities.Ads;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Ads;

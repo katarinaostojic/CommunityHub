@@ -1,12 +1,12 @@
 ﻿using System.Windows;
-
-namespace CommunityHub.Ui.Views;
-
 using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.Views.CitizenViews;
 using CommunityHub.Ui.Views.ManagerViews;
 using CommunityHub.Ui.Views.TenantViews;
+
+namespace CommunityHub.Ui.Views;
 
 public partial class LogInForm : Window
 {
@@ -32,6 +32,8 @@ public partial class LogInForm : Window
             return;
         }
 
+        ThemeManager.ApplyTheme(user.Role);
+
         switch (user.Role)
         {
             case UserRole.Tenant:
@@ -39,25 +41,29 @@ public partial class LogInForm : Window
                 mainWindow.Show();
                 mainWindow.NavigateTo(new BrowseBuildingsPage(user));
                 break;
+
             case UserRole.Manager:
                 ManagerMainWindow managerWindow = new ManagerMainWindow(user);
                 managerWindow.Show();
                 break;
-            case UserRole.Coordinator:
 
-                CoordinatorViews.CoordinatorMainWindow coordinatorWindow = new CoordinatorViews.CoordinatorMainWindow(user.Id);
+            case UserRole.Coordinator:
+                CoordinatorViews.CoordinatorMainWindow coordinatorWindow =
+                    new CoordinatorViews.CoordinatorMainWindow(user.Id);
                 coordinatorWindow.Show();
                 break;
+
             case UserRole.Citizen:
                 BrowseNeighborhoodPage citizenWindow = new BrowseNeighborhoodPage(user);
                 citizenWindow.Show();
                 break;
+
             default:
                 ErrorMessageTextBlock.Text = "Unknown user role.";
                 ErrorMessageTextBlock.Visibility = Visibility.Visible;
                 return;
         }
 
-        this.Hide();
+        Hide();
     }
 }

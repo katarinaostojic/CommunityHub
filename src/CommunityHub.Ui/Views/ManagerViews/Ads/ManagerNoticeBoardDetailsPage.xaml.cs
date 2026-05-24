@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;

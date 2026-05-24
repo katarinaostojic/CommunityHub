@@ -1,7 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
@@ -25,8 +24,8 @@ public partial class CommonRoomsPage : Page
         _buildingId = buildingId;
         _buildingInfo = buildingInfo;
 
-        CommonRoomService commonRoomService = Injector.CreateInstance<CommonRoomService>();
-        CommonRoomRequestService requestService = Injector.CreateInstance<CommonRoomRequestService>();
+        ICommonRoomService commonRoomService = Injector.CreateInstance<ICommonRoomService>();
+        ICommonRoomRequestService requestService = Injector.CreateInstance<ICommonRoomRequestService>();
 
         _viewModel = new CommonRoomsViewModel(commonRoomService, requestService, user.Id, buildingId);
         DataContext = _viewModel;
@@ -44,7 +43,7 @@ public partial class CommonRoomsPage : Page
             _buildingInfo,
             room.Name,
             room.FloorDisplay,
-            room.RentalTypeDisplay);
+            room.RentalType);
 
         CommonRoomRequestDialog dialog = new CommonRoomRequestDialog(dialogViewModel);
         dialog.Owner = Window.GetWindow(this);
@@ -58,7 +57,6 @@ public partial class CommonRoomsPage : Page
     private void MyRequestsTab_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 
-    //banner button
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 

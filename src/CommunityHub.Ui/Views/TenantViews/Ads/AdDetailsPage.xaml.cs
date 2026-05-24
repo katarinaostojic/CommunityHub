@@ -1,11 +1,11 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Interfaces.Ads;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -21,8 +21,8 @@ public partial class AdDetailsPage : Page
         _user = user;
         _membership = membership;
 
-        AdService adService = Injector.CreateInstance<AdService>();
-        AdSlotBookingService slotBookingService = Injector.CreateInstance<AdSlotBookingService>();
+        IAdService adService = Injector.CreateInstance<IAdService>();
+        IAdSlotBookingService slotBookingService = Injector.CreateInstance<IAdSlotBookingService>();
 
         _viewModel = new AdDetailsViewModel(ad, adService, slotBookingService);
         DataContext = _viewModel;

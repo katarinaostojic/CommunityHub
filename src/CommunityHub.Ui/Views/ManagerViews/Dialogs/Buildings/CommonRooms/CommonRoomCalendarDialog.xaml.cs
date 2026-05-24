@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using System.Windows;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;

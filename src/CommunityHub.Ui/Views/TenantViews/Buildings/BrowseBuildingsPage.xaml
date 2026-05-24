@@ -11,7 +11,7 @@
         <converters:ImagePathConverter x:Key="ImageConverter"/>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,7 +21,9 @@
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -32,20 +34,29 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="☰  Menu"
+                <Button Grid.Column="0"
+                        Content="☰  Menu"
                         Style="{StaticResource GhostWhiteButton}"
                         Margin="0,0,10,0"
                         Click="MenuButton_Click"/>
 
-                <Grid Grid.Column="1" Margin="0,0,8,0">
+                <Grid Grid.Column="1"
+                      Margin="0,0,8,0">
                     <TextBox x:Name="SearchTextBox"
-                         Padding="8,6" FontSize="13"
-                         TextChanged="SearchTextBox_TextChanged"/>
+                             Padding="8,6"
+                             FontSize="13"
+                             Background="{StaticResource SurfaceBrush}"
+                             Foreground="{StaticResource TextPrimaryBrush}"
+                             BorderBrush="{StaticResource BorderBrush}"
+                             BorderThickness="1"
+                             TextChanged="SearchTextBox_TextChanged"/>
+
                     <TextBlock Text="Search address..."
-                           Foreground="Gray" FontSize="13"
-                           Margin="10,0,0,0"
-                           VerticalAlignment="Center"
-                           IsHitTestVisible="False">
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="13"
+                               Margin="10,0,0,0"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -59,36 +70,47 @@
                     </TextBlock>
                 </Grid>
 
-                <Button Grid.Column="2" Content="Reset All"
+                <Button Grid.Column="2"
+                        Content="Reset All"
                         Style="{StaticResource OutlineButton}"
                         Margin="0,0,8,0"
                         Click="ResetButton_Click"/>
 
-                <Button Grid.Column="3" Content="Filter  ▼"
+                <Button Grid.Column="3"
+                        Content="Filter  ▼"
                         Style="{StaticResource OutlineButton}"
                         Margin="0,0,8,0"
                         Click="FilterButton_Click"/>
 
-                <TextBlock Grid.Column="4" x:Name="UserNameTextBlock"
+                <TextBlock Grid.Column="4"
+                           x:Name="UserNameTextBlock"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"
+                           Foreground="White"
+                           FontSize="15"
                            Margin="0,0,8,0"/>
 
-                <TextBlock Grid.Column="5" Text="👤"
+                <TextBlock Grid.Column="5"
+                           Text="👤"
                            VerticalAlignment="Center"
-                           Foreground="White" FontSize="17"/>
+                           Foreground="White"
+                           FontSize="17"/>
             </Grid>
         </Border>
 
         <!-- Success banner -->
-        <Border x:Name="SuccessBanner" Grid.Row="1"
-                Background="{StaticResource SuccessBrush}" Padding="12,8"
+        <Border x:Name="SuccessBanner"
+                Grid.Row="1"
+                Background="{StaticResource SuccessBrush}"
+                Padding="12,8"
                 Visibility="Collapsed">
             <Grid>
                 <TextBlock x:Name="SuccessTextBlock"
-                           Foreground="{StaticResource SuccessTextBrush}" FontSize="13"
+                           Foreground="{StaticResource SuccessTextBrush}"
+                           FontSize="13"
                            VerticalAlignment="Center"/>
-                <Button x:Name="ViewRequestsButton" Content="View Requests →"
+
+                <Button x:Name="ViewRequestsButton"
+                        Content="View Requests →"
                         HorizontalAlignment="Right"
                         Style="{StaticResource GhostButton}"
                         Foreground="{StaticResource SuccessTextBrush}"
@@ -99,19 +121,23 @@
         </Border>
 
         <!-- Title row -->
-        <Grid Grid.Row="2" Margin="16,12,16,8">
+        <Grid Grid.Row="2"
+              Margin="16,12,16,8">
             <TextBlock Text="Browse Buildings"
                        Style="{StaticResource PageTitle}"
                        VerticalAlignment="Center"/>
         </Grid>
 
         <!-- Building list -->
-        <ItemsControl Grid.Row="3" ItemsSource="{Binding CurrentPageBuildings}" Margin="16,0,16,0">
+        <ItemsControl Grid.Row="3"
+                      ItemsSource="{Binding CurrentPageBuildings}"
+                      Margin="16,0,16,0">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="3"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Style="{StaticResource CardBorder}"
@@ -125,21 +151,28 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Slika -->
-                            <Border Grid.Column="0" Width="210"
+                            <!-- Image -->
+                            <Border Grid.Column="0"
+                                    Width="210"
                                     BorderBrush="{StaticResource BorderBrush}"
                                     BorderThickness="1"
+                                    CornerRadius="10"
                                     Margin="0,0,10,0"
-                                    Background="{StaticResource BackgroundLightBrush}"
-                                    VerticalAlignment="Stretch">
+                                    Background="{StaticResource SurfaceSoftBrush}"
+                                    VerticalAlignment="Stretch"
+                                    ClipToBounds="True">
                                 <Image Source="{Binding ImagePaths, Converter={StaticResource ImageConverter}}"
                                        Stretch="UniformToFill"
                                        MaxHeight="160"/>
                             </Border>
 
                             <!-- Info -->
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock FontSize="16" FontWeight="Bold" Margin="0,0,0,4">
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center">
+                                <TextBlock FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                           Margin="0,0,0,4">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0} {1}, {2}">
                                             <Binding Path="Street"/>
@@ -148,7 +181,9 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,0,4">
+
+                                <TextBlock Style="{StaticResource SecondaryText}"
+                                           Margin="0,0,0,4">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="📍 {0}, {1}">
                                             <Binding Path="CityName"/>
@@ -156,17 +191,25 @@
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <TextBlock Style="{StaticResource SecondaryText}" Margin="0,0,0,4"
+
+                                <TextBlock Style="{StaticResource SecondaryText}"
+                                           Margin="0,0,0,4"
                                            Text="{Binding NumberOfFloors, StringFormat='Number of floors: {0}'}"/>
+
                                 <TextBlock Style="{StaticResource SecondaryText}"
                                            Text="{Binding TotalUnits, StringFormat='Total units: {0}'}"/>
                             </StackPanel>
 
-                            <!-- Desna strana -->
-                            <Grid Grid.Column="2" Margin="10,0,0,0">
-                                <TextBlock Text="›" FontSize="20"
+                            <!-- Right side -->
+                            <Grid Grid.Column="2"
+                                  Margin="10,0,0,0">
+                                <TextBlock Text="›"
+                                           FontSize="24"
+                                           Foreground="{StaticResource PrimaryBrush}"
+                                           FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
+
                                 <Button Content="Request Access"
                                         Style="{StaticResource OutlineButton}"
                                         VerticalAlignment="Bottom"
@@ -181,67 +224,127 @@
         </ItemsControl>
 
         <!-- Pagination -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal"
-                    HorizontalAlignment="Center" Margin="0,10,0,10">
-            <Button Content="&lt;" Style="{StaticResource OutlineButton}"
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,10">
+            <Button Content="&lt;"
+                    Style="{StaticResource OutlineButton}"
                     Margin="0,0,4,0"
                     IsEnabled="{Binding HasPreviousPage}"
-                    Click="PrevPageButton_Click"/>
+                    Click="PageButton_Click"
+                    Tag="Previous"/>
+
             <TextBlock Text="{Binding PageLabelText}"
-                       VerticalAlignment="Center" Margin="8,0" FontSize="13"/>
-            <Button Content="&gt;" Style="{StaticResource OutlineButton}"
+                       VerticalAlignment="Center"
+                       Margin="8,0"
+                       FontSize="13"
+                       Foreground="{StaticResource TextSecondaryBrush}"/>
+
+            <Button Content="&gt;"
+                    Style="{StaticResource OutlineButton}"
                     Margin="4,0,0,0"
                     IsEnabled="{Binding HasNextPage}"
-                    Click="NextPageButton_Click"/>
+                    Click="PageButton_Click"
+                    Tag="Next"/>
         </StackPanel>
 
         <!-- Overlay -->
-        <Grid Grid.Row="0" Grid.RowSpan="5"
+        <Grid Grid.Row="0"
+              Grid.RowSpan="5"
               x:Name="Overlay"
               Background="#66000000"
               Visibility="Collapsed"
               MouseLeftButtonDown="Overlay_MouseLeftButtonDown"/>
 
         <!-- Filter panel -->
-        <Border Grid.Row="0" Grid.RowSpan="5"
+        <Border Grid.Row="0"
+                Grid.RowSpan="5"
                 x:Name="FilterPanel"
                 Width="300"
                 HorizontalAlignment="Left"
-                Background="White"
+                Background="{StaticResource SurfaceBrush}"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,0,1,0">
             <Border.RenderTransform>
                 <TranslateTransform x:Name="FilterPanelTranslate" X="-300"/>
             </Border.RenderTransform>
-            <StackPanel Margin="20">
 
+            <StackPanel Margin="20">
                 <Grid Margin="0,0,0,20">
-                    <TextBlock Text="Filter" FontSize="18" FontWeight="Bold"
+                    <TextBlock Text="Filter"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
                                VerticalAlignment="Center"/>
-                    <Button Content="✕" HorizontalAlignment="Right"
+
+                    <Button Content="✕"
+                            HorizontalAlignment="Right"
                             Style="{StaticResource GhostButton}"
-                            FontSize="16" Click="FilterButton_Click"/>
+                            Foreground="{StaticResource PrimaryBrush}"
+                            FontSize="16"
+                            Click="FilterButton_Click"/>
                 </Grid>
 
-                <TextBlock Text="Street Address:" FontSize="13"
-                           FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBlock Text="Street Address:"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Margin="0,0,0,4"/>
+
                 <TextBox x:Name="FilterStreetTextBox"
-                         Padding="8,6" FontSize="13" Margin="0,0,0,16"/>
+                         Padding="8,6"
+                         FontSize="13"
+                         Background="{StaticResource SurfaceBrush}"
+                         Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource BorderBrush}"
+                         BorderThickness="1"
+                         Margin="0,0,0,16"/>
 
-                <TextBlock Text="Neighborhood:" FontSize="13"
-                           FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBlock Text="Neighborhood:"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Margin="0,0,0,4"/>
+
                 <TextBox x:Name="FilterNeighborhoodTextBox"
-                         Padding="8,6" FontSize="13" Margin="0,0,0,16"/>
+                         Padding="8,6"
+                         FontSize="13"
+                         Background="{StaticResource SurfaceBrush}"
+                         Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource BorderBrush}"
+                         BorderThickness="1"
+                         Margin="0,0,0,16"/>
 
-                <TextBlock Text="City:" FontSize="13"
-                           FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBlock Text="City:"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Margin="0,0,0,4"/>
+
                 <TextBox x:Name="FilterCityTextBox"
-                         Padding="8,6" FontSize="13" Margin="0,0,0,16"/>
+                         Padding="8,6"
+                         FontSize="13"
+                         Background="{StaticResource SurfaceBrush}"
+                         Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource BorderBrush}"
+                         BorderThickness="1"
+                         Margin="0,0,0,16"/>
 
-                <TextBlock Text="Country:" FontSize="13"
-                           FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBlock Text="Country:"
+                           FontSize="13"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Margin="0,0,0,4"/>
+
                 <TextBox x:Name="FilterCountryTextBox"
-                         Padding="8,6" FontSize="13" Margin="0,0,0,24"/>
+                         Padding="8,6"
+                         FontSize="13"
+                         Background="{StaticResource SurfaceBrush}"
+                         Foreground="{StaticResource TextPrimaryBrush}"
+                         BorderBrush="{StaticResource BorderBrush}"
+                         BorderThickness="1"
+                         Margin="0,0,0,24"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -249,16 +352,22 @@
                         <ColumnDefinition Width="8"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="Reset Filters"
+
+                    <Button Grid.Column="0"
+                            Content="Reset Filters"
                             Style="{StaticResource OutlineButton}"
-                            Click="ResetFiltersButton_Click"/>
-                    <Button Grid.Column="2" Content="Apply Filters"
+                            Click="ResetButton_Click"/>
+
+                    <Button Grid.Column="2"
+                            Content="Apply Filters"
                             Style="{StaticResource PrimaryButton}"
                             Click="ApplyFiltersButton_Click"/>
                 </Grid>
             </StackPanel>
         </Border>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="5" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="5"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>
