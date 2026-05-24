@@ -1,11 +1,14 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Neighborhoods;
+using System.Windows;
 
 namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 
-public class NeighborhoodAccessRequestCoordinatorViewModel
+public class NeighborhoodAccessRequestCoordinatorViewModel : BaseViewModel
 {
     private readonly NeighborhoodAccessRequestDto _request;
+    private bool _showApproveConfirm = false;
+    private bool _showDeclineConfirm = false;
 
     public NeighborhoodAccessRequestCoordinatorViewModel(NeighborhoodAccessRequestDto request)
     {
@@ -27,11 +30,50 @@ public class NeighborhoodAccessRequestCoordinatorViewModel
         _ => _request.Status.ToString()
     };
 
-    public string RejectionReasonDisplay => _request.RejectionReason != null
+    public string RejectionReasonDisplay => _request.Status == RequestStatus.Rejected && _request.RejectionReason != null
         ? $"Note: {_request.RejectionReason}"
         : string.Empty;
 
     public bool ApproveRejectVisible => _request.Status == RequestStatus.PendingApproval;
     public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
                                        && _request.RejectionReason != null;
+
+    public bool ShowApproveConfirm
+    {
+        get => _showApproveConfirm;
+        set => SetProperty(ref _showApproveConfirm, value);
+    }
+
+    public bool ShowDeclineConfirm
+    {
+        get => _showDeclineConfirm;
+        set => SetProperty(ref _showDeclineConfirm, value);
+    }
+
+    public Visibility ApproveConfirmVisibility => ShowApproveConfirm ? Visibility.Visible : Visibility.Collapsed;
+    public Visibility DeclineConfirmVisibility => ShowDeclineConfirm ? Visibility.Visible : Visibility.Collapsed;
+
+    public void OpenApproveConfirm()
+    {
+        ShowApproveConfirm = true;
+        ShowDeclineConfirm = false;
+        OnPropertyChanged(nameof(ApproveConfirmVisibility));
+        OnPropertyChanged(nameof(DeclineConfirmVisibility));
+    }
+
+    public void OpenDeclineConfirm()
+    {
+        ShowDeclineConfirm = true;
+        ShowApproveConfirm = false;
+        OnPropertyChanged(nameof(ApproveConfirmVisibility));
+        OnPropertyChanged(nameof(DeclineConfirmVisibility));
+    }
+
+    public void CloseConfirm()
+    {
+        ShowApproveConfirm = false;
+        ShowDeclineConfirm = false;
+        OnPropertyChanged(nameof(ApproveConfirmVisibility));
+        OnPropertyChanged(nameof(DeclineConfirmVisibility));
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
@@ -10,11 +11,11 @@ public partial class ManageRequestsPage : Page
 {
     private readonly ManageRequestsViewModel _viewModel;
 
-    public ManageRequestsPage(long coordinatorId)
+    public ManageRequestsPage(long coordinatorId, string? neighborhoodName = null)
     {
         InitializeComponent();
         NeighborhoodAccessRequestService requestService = Injector.CreateInstance<NeighborhoodAccessRequestService>();
-        _viewModel = new ManageRequestsViewModel(requestService, coordinatorId);
+        _viewModel = new ManageRequestsViewModel(requestService, coordinatorId, neighborhoodName);
         DataContext = _viewModel;
     }
 
@@ -22,39 +23,70 @@ public partial class ManageRequestsPage : Page
     private void FilterPendingButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterPending();
     private void FilterApprovedButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterApproved();
     private void FilterRejectedButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterRejected();
-
     private void SortButton_Click(object sender, RoutedEventArgs e) => _viewModel.ToggleSort();
 
     private void ApproveButton_Click(object sender, RoutedEventArgs e)
     {
-        var requestViewModel = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
-        try
-        {
-            _viewModel.Approve(requestViewModel);
-            MessageBox.Show("Request approved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
+        vm.OpenApproveConfirm();
     }
 
     private void RejectButton_Click(object sender, RoutedEventArgs e)
     {
-        var requestViewModel = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
+        vm.OpenDeclineConfirm();
+    }
+
+    private void ConfirmApproveButton_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
         try
         {
-            RejectReasonWindow rejectWindow = new RejectReasonWindow();
-            rejectWindow.ShowDialog();
-            if (rejectWindow.Confirmed)
-            {
-                _viewModel.Reject(requestViewModel, rejectWindow.Reason);
-                MessageBox.Show("Request rejected.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            _viewModel.Approve(vm);
+            vm.CloseConfirm();
+            SuccessText.Text = "Request approved successfully!";
+            SuccessBanner.Visibility = Visibility.Visible;
+            ErrorBanner.Visibility = Visibility.Collapsed;
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorText.Text = ex.Message;
+            ErrorBanner.Visibility = Visibility.Visible;
+            SuccessBanner.Visibility = Visibility.Collapsed;
         }
+    }
+
+    private void ConfirmRejectButton_Click(object sender, RoutedEventArgs e)
+    {
+        var button = (Button)sender;
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)button.Tag;
+
+        var panel = button.Parent as StackPanel;
+        var border = panel?.Parent as Border;
+        var outerPanel = border?.Parent as StackPanel;
+        var textBox = outerPanel?.Children.OfType<TextBox>().FirstOrDefault(t => t.Name == "RejectReasonBox");
+        string? reason = textBox?.Text.Trim();
+        if (string.IsNullOrWhiteSpace(reason)) reason = null;
+
+        try
+        {
+            _viewModel.Reject(vm, reason);
+            vm.CloseConfirm();
+            SuccessText.Text = "Request rejected.";
+            SuccessBanner.Visibility = Visibility.Visible;
+            ErrorBanner.Visibility = Visibility.Collapsed;
+        }
+        catch (Exception ex)
+        {
+            ErrorText.Text = ex.Message;
+            ErrorBanner.Visibility = Visibility.Visible;
+            SuccessBanner.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void CancelConfirmButton_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = (NeighborhoodAccessRequestCoordinatorViewModel)((Button)sender).Tag;
+        vm.CloseConfirm();
     }
 }
