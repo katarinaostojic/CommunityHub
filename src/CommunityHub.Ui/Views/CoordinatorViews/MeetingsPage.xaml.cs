@@ -38,6 +38,16 @@ public partial class MeetingsPage : Page
     private void FinalizeVotingButton_Click(object sender, RoutedEventArgs e)
     {
         MeetingViewModel meetingViewModel = (MeetingViewModel)((Button)sender).Tag;
+
+        if (meetingViewModel.HasTiedVotes)
+        {
+            CoordinatorMainWindow.Instance.NavigateTo(
+                new SelectDatePage(_viewModel, meetingViewModel.MeetingId,
+                    _coordinatorId, _neighborhoodId, meetingViewModel.VoteCounts),
+                "Select Date");
+            return;
+        }
+
         try
         {
             _viewModel.FinalizeVoting(meetingViewModel.MeetingId);

@@ -69,4 +69,23 @@ public class MeetingService
         DateTime deadline = meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
         return DateTime.Now < deadline && meeting.Status == MeetingStatus.InPreparation;
     }
+    public bool HasTiedVotes(long meetingId)
+    {
+        var voteCounts = _repository.GetVoteCounts(meetingId);
+        if (voteCounts.Count < 2) return false;
+
+        var sorted = voteCounts.OrderByDescending(v => v.Value).ToList();
+        return sorted[0].Value == sorted[1].Value;
+    }
+
+    public Dictionary<DateOnly, int> GetVoteCounts(long meetingId)
+        => _repository.GetVoteCounts(meetingId);
+
+    public void ScheduleWithDate(long meetingId, DateOnly date)
+    {
+        Meeting? meeting = _repository.GetById(meetingId);
+        if (meeting == null) return;
+        meeting.Schedule(date);
+        _repository.Update(meeting);
+    }
 }

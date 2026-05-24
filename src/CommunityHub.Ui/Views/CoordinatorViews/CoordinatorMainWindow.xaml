@@ -33,8 +33,6 @@
                         FontSize="14" Style="{StaticResource PrimaryButton}"/>
                 <Button Content="Requests" Click="RequestsButton_Click" Margin="5"
                         FontSize="14" Style="{StaticResource PrimaryButton}"/>
-                <Button Content="Meetings" Click="MeetingsButton_Click" Margin="5"
-                        FontSize="14" Style="{StaticResource PrimaryButton}"/>
                 <Button Content="Forums" Click="ForumsButton_Click" Margin="5"
                         FontSize="14" Style="{StaticResource PrimaryButton}"/>
                 <Button Content="Budget" Margin="5"

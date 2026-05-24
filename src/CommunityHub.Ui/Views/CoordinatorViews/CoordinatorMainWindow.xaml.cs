@@ -53,10 +53,7 @@ public partial class CoordinatorMainWindow : Window
         loginForm.Show();
         this.Close();
     }
-    private void MeetingsButton_Click(object sender, RoutedEventArgs e)
-    {
-        NavigateTo(new MeetingsPage(_userId, -1), "Meetings");
-    }
+    
     private void ForumsButton_Click(object sender, RoutedEventArgs e)
     {
         NavigateTo(new ForumsPage(_userId), "Forums");

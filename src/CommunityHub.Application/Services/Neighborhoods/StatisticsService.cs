@@ -1,14 +1,14 @@
-﻿using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain;
+﻿using CommunityHub.Application.Domain;
 using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
+namespace CommunityHub.Application.Services.Neighborhoods;
 
-namespace CommunityHub.Application.Services;
 
 public class StatisticsService
 {
-    private readonly TrustRecordDbRepository _repository;
+    private readonly ITrustRecordRepository _repository;
 
-    public StatisticsService(TrustRecordDbRepository repository)
+    public StatisticsService(ITrustRecordRepository repository)
     {
         _repository = repository;
     }

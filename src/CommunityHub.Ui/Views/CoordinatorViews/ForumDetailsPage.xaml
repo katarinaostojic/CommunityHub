@@ -3,6 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Forum Details"
       Background="{StaticResource BackgroundLightBrush}">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid>
         <ScrollViewer>
             <StackPanel Margin="16">
@@ -21,6 +26,7 @@
                         <TextBlock Text="{Binding Forum.Description}" TextWrapping="Wrap"
                                    FontSize="13" Margin="0,0,0,12"/>
                         <Button Content="Close Forum" HorizontalAlignment="Left"
+                                Visibility="{Binding CanClose, Converter={StaticResource BoolToVis}}"
                                 Click="CloseForumButton_Click"
                                 Style="{StaticResource DangerButton}"/>
                     </StackPanel>
