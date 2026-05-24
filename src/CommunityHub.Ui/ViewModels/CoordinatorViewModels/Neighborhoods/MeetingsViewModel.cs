@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
+using CommunityHub.Application.Domain.Entities;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using System.Collections.ObjectModel;
 
@@ -103,6 +104,18 @@ public class MeetingsViewModel : BaseViewModel
         LoadMeetings();
     }
 
+    public bool MeetingHasTiedVotes(long meetingId)
+        => _meetingService.HasTiedVotes(meetingId);
+
+    public Dictionary<DateOnly, int> GetVoteCounts(long meetingId)
+        => _meetingService.GetVoteCounts(meetingId);
+
+    public void FinalizeWithDate(long meetingId, DateOnly chosenDate)
+    {
+        _meetingService.ScheduleWithDate(meetingId, chosenDate);
+        LoadMeetings();
+    }
+
     private void LoadStatistics()
     {
         if (_neighborhoodId == -1)
@@ -112,11 +125,11 @@ public class MeetingsViewModel : BaseViewModel
         }
 
         var trustStatistics = _statisticsService.GetTrustStatistics(_neighborhoodId);
-        NewCount = trustStatistics.NewCount;
-        InactiveCount = trustStatistics.InactiveCount;
-        ActiveCount = trustStatistics.ActiveCount;
-        DistinguishedCount = trustStatistics.DistinguishedCount;
-        TrustedCount = trustStatistics.TrustedCount;
+        NewCount = trustStatistics.GetValueOrDefault(TrustLevel.New, 0);
+        InactiveCount = trustStatistics.GetValueOrDefault(TrustLevel.Inactive, 0);
+        ActiveCount = trustStatistics.GetValueOrDefault(TrustLevel.Active, 0);
+        DistinguishedCount = trustStatistics.GetValueOrDefault(TrustLevel.Distinguished, 0);
+        TrustedCount = trustStatistics.GetValueOrDefault(TrustLevel.Trusted, 0);
 
         var meetingThemeSuggestion = _statisticsService.SuggestMeetingTheme(_neighborhoodId);
         SuggestionText = meetingThemeSuggestion == MeetingTheme.Welcome
@@ -130,10 +143,26 @@ public class MeetingsViewModel : BaseViewModel
     {
         var meetings = _meetingService.GetMeetingsByCoordinator(_coordinatorId);
 
+        foreach (var meeting in meetings.Where(m => m.Status == MeetingStatus.InPreparation))
+        {
+            DateTime deadline = meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
+            if (DateTime.Now >= deadline)
+            {
+                if (!_meetingService.HasTiedVotes(meeting.Id))
+                    _meetingService.CheckAndFinalizeVoting(meeting.Id);
+            }
+        }
+
+        meetings = _meetingService.GetMeetingsByCoordinator(_coordinatorId);
+
         if (_currentFilter.HasValue)
             meetings = meetings.Where(m => m.Status == _currentFilter.Value).ToList();
 
         Meetings = new ObservableCollection<MeetingViewModel>(
-            meetings.Select(m => new MeetingViewModel(m)).ToList());
+            meetings.Select(m => new MeetingViewModel(m)
+            {
+                HasTiedVotes = m.Status == MeetingStatus.InPreparation && _meetingService.HasTiedVotes(m.Id),
+                VoteCounts = m.Status == MeetingStatus.InPreparation ? _meetingService.GetVoteCounts(m.Id) : new()
+            }).ToList());
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CommunityHub.Application.Domain.Entities;
 
-namespace CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+namespace CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 
 public interface ITrustRecordRepository
 {
