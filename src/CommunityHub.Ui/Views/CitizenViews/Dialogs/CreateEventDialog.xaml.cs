@@ -135,4 +135,8 @@ public partial class CreateEventDialog : Window
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
+    private void NumberOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        e.Handled = !e.Text.All(char.IsDigit);
+    }
 }

@@ -6,9 +6,9 @@
         Height="760"
         Width="1280"
         WindowStartupLocation="CenterScreen"
-        Background="#ECECEF">
+        Background="{StaticResource BackgroundLightBrush}">
 
-    <Grid Background="#ECECEF">
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition Height="54"/>
@@ -16,33 +16,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#D8D8D8" BorderBrush="#8A8A8A" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="#BBDEFB"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
             <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="#F4F4F4" BorderBrush="#A0A0A0"
+                    Margin="14,0,0,0" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
                 <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </Border>
         </Border>
 
-        <Grid Grid.Row="1" Background="#ECECEC">
+        <Grid Grid.Row="1" Background="#E3F2FD">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="White"
-                    BorderBrush="#2F2F2F" BorderThickness="2" CornerRadius="18">
+            <Border Grid.Column="1" Margin="10,6,18,6" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                 <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+                           VerticalAlignment="Center" Margin="16,0,0,0"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </Border>
         </Grid>
 
-        <Border Grid.Row="2" Background="#F4F4F4" BorderBrush="#4A4A4A" BorderThickness="0,2,0,2">
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,1">
             <Grid Margin="16,0,16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90"/>
@@ -52,16 +60,19 @@
 
                 <Button Grid.Column="0" Content="☰" Click="BurgerButton_Click"
                         FontSize="32" FontWeight="Bold" Background="Transparent"
-                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"/>
+                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"
+                        Foreground="#0D47A1"/>
 
                 <TextBlock Grid.Column="1" Text="My Profile"
                            FontSize="28" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="👤" FontSize="32" Margin="0,0,10,0"/>
                     <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
-                               FontWeight="Bold" VerticalAlignment="Center"/>
+                               FontWeight="Bold" VerticalAlignment="Center"
+                               Foreground="{StaticResource TextPrimaryBrush}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -76,54 +87,98 @@
                 <TextBlock x:Name="UsernameText"
                            FontSize="28" FontWeight="Bold"
                            HorizontalAlignment="Center"
-                           Margin="0,0,0,30"/>
+                           Margin="0,0,0,30"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
-                <Border Background="White" BorderBrush="#CCCCCC"
-                        BorderThickness="1" CornerRadius="8"
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1" CornerRadius="12"
                         Padding="30" Margin="0,0,0,20">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="📅 Member since:" FontSize="22"
-                                       FontWeight="Bold" Width="300"/>
+                                       FontWeight="Bold" Width="300"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                             <TextBlock Text="{Binding JoinedAt}" FontSize="22"
-                                       FontWeight="Bold"/>
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="📌 Events organized:" FontSize="22"
-                                       FontWeight="Bold" Width="300"/>
+                                       FontWeight="Bold" Width="300"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                             <TextBlock Text="{Binding EventsOrganized}" FontSize="22"
-                                       FontWeight="Bold"/>
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="🤝 Events volunteered:" FontSize="22"
-                                       FontWeight="Bold" Width="300"/>
+                                       FontWeight="Bold" Width="300"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                             <TextBlock Text="{Binding EventsVolunteered}" FontSize="22"
-                                       FontWeight="Bold"/>
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="🏘️ Neighborhood:" FontSize="22"
-                                       FontWeight="Bold" Width="300"/>
+                                       FontWeight="Bold" Width="300"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                             <TextBlock x:Name="NeighborhoodNameText" FontSize="22"
-                                       FontWeight="Bold"/>
+                                       FontWeight="Bold"
+                                       Foreground="{StaticResource TextSecondaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="⭐ Trust level:" FontSize="22"
-                                       FontWeight="Bold" Width="300"/>
-                            <Ellipse Width="22" Height="22" Margin="0,2,10,0"
-                                     VerticalAlignment="Center">
-                                <Ellipse.Fill>
-                                    <SolidColorBrush Color="{Binding LevelColor}"/>
-                                </Ellipse.Fill>
-                            </Ellipse>
-                            <TextBlock Text="{Binding LevelDisplay}" FontSize="22"
-                                       FontWeight="Bold"/>
+                                       FontWeight="Bold" Width="300"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <Border CornerRadius="12"
+                                    Background="{Binding LevelBrush}"
+                                    Padding="14,4"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{Binding LevelDisplay}"
+                                           FontSize="20" FontWeight="Bold"
+                                           Foreground="White"/>
+                            </Border>
                         </StackPanel>
                     </StackPanel>
                 </Border>
+
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1" CornerRadius="12"
+                        Padding="30" Margin="0,0,0,20">
+                    <StackPanel HorizontalAlignment="Center">
+                        <Canvas x:Name="PieCanvas" Width="220" Height="220"
+                                HorizontalAlignment="Center" Margin="0,0,0,16"/>
+
+                        <TextBlock Text="Organized vs Volunteered"
+                                   FontSize="20" FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,16"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
+                            <Rectangle Width="20" Height="20"
+                                       Fill="#0D47A1"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Organized" FontSize="18" FontWeight="Bold"
+                                       VerticalAlignment="Center" Margin="0,0,20,0"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <Rectangle Width="20" Height="20"
+                                       Fill="#BBDEFB"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Volunteered" FontSize="18" FontWeight="Bold"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
         </ScrollViewer>
 

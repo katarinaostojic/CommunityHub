@@ -6,9 +6,9 @@
         Height="760"
         Width="1280"
         WindowStartupLocation="CenterScreen"
-        Background="#ECECEF">
+        Background="{StaticResource BackgroundLightBrush}">
 
-    <Grid Background="#ECECEF">
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition Height="54"/>
@@ -16,33 +16,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#D8D8D8" BorderBrush="#8A8A8A" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="#BBDEFB"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
             <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="#F4F4F4" BorderBrush="#A0A0A0"
+                    Margin="14,0,0,0" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
                 <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </Border>
         </Border>
 
-        <Grid Grid.Row="1" Background="#ECECEC">
+        <Grid Grid.Row="1" Background="#E3F2FD">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="White"
-                    BorderBrush="#2F2F2F" BorderThickness="2" CornerRadius="18">
+            <Border Grid.Column="1" Margin="10,6,18,6" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                 <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+                           VerticalAlignment="Center" Margin="16,0,0,0"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </Border>
         </Grid>
 
-        <Border Grid.Row="2" Background="#F4F4F4" BorderBrush="#4A4A4A" BorderThickness="0,2,0,2">
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,1">
             <Grid Margin="16,0,16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90"/>
@@ -52,11 +60,13 @@
 
                 <Button Grid.Column="0" Content="☰" Click="BurgerButton_Click"
                         FontSize="32" FontWeight="Bold" Background="Transparent"
-                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"/>
+                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"
+                        Foreground="#0D47A1"/>
 
                 <TextBlock Grid.Column="1" Text="Neighborhood Meetings"
                            FontSize="28" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Click="ProfileButton_Click"
@@ -65,7 +75,8 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👤" FontSize="32" Margin="0,0,6,0"/>
                             <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
-                                       FontWeight="Bold" VerticalAlignment="Center"/>
+                                       FontWeight="Bold" VerticalAlignment="Center"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -80,95 +91,108 @@
 
             <TextBlock Text="{Binding ResultsText}"
                        FontSize="28" FontWeight="Bold"
-                       Margin="0,0,0,14" VerticalAlignment="Center"/>
+                       Margin="0,0,0,14" VerticalAlignment="Center"
+                       Foreground="{StaticResource TextPrimaryBrush}"/>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding Meetings}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#4F4F4F" BorderThickness="2"
-                                    Background="#F9F9F9" Margin="0,0,0,16"
-                                    Padding="18" CornerRadius="6">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="300"/>
-                                        <ColumnDefinition Width="200"/>
-                                    </Grid.ColumnDefinitions>
+                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                    Background="{StaticResource SurfaceBrush}" Margin="0,0,0,16"
+                                    Padding="18" CornerRadius="12">
+                                <StackPanel>
 
-                                    <!-- LEFT -->
-                                    <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                                        <TextBlock Text="{Binding Theme}"
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Theme}"
                                                    FontSize="24" FontWeight="Bold"
-                                                   Margin="0,0,0,12"/>
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
 
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="🕐 Time: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding MeetingTime}" FontSize="18" FontWeight="Bold"/>
-                                        </StackPanel>
+                                        <Border Grid.Column="1"
+                                                CornerRadius="12"
+                                                Background="{Binding StatusBrush}"
+                                                Padding="14,4"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding StatusDisplay}"
+                                                       FontSize="16" FontWeight="Bold"
+                                                       Foreground="White"/>
+                                        </Border>
+                                    </Grid>
 
-                                        <!-- Date range for in preparation -->
-                                        <StackPanel Visibility="{Binding DateRangeVisibility}">
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <TextBlock Text="📅 Date range: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding DateRangeStart}" FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text=" - " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding DateRangeEnd}" FontSize="18" FontWeight="Bold"/>
-                                            </StackPanel>
-                                        </StackPanel>
-
-                                        <!-- Scheduled date -->
-                                        <StackPanel Orientation="Horizontal"
-                                                    Visibility="{Binding ScheduledDateVisibility}"
-                                                    Margin="0,0,0,8">
-                                            <TextBlock Text="📅 Scheduled date: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding ScheduledDate}" FontSize="18" FontWeight="Bold"/>
-                                        </StackPanel>
-
-                                        <!-- Voted date -->
-                                        <StackPanel Orientation="Horizontal"
-                                                    Visibility="{Binding VotedDateVisibility}"
-                                                    Margin="0,0,0,8">
-                                            <TextBlock Text="✔ Your vote: " FontSize="18"
-                                                       FontWeight="Bold" Foreground="#27AE60"/>
-                                            <TextBlock Text="{Binding CitizenVotedDate}" FontSize="18"
-                                                       FontWeight="Bold" Foreground="#27AE60"/>
-                                        </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="🕐" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding MeetingTime}" FontSize="18" FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
                                     </StackPanel>
 
-                                    <!-- MIDDLE -->
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="⚡ Status: " FontSize="18" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding StatusDisplay}" FontSize="18" FontWeight="Bold"/>
-                                        </StackPanel>
+                                    <StackPanel Orientation="Horizontal"
+                                                Visibility="{Binding DateRangeVisibility}"
+                                                Margin="0,0,0,8">
+                                        <TextBlock Text="📅" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding DateRangeStart}" FontSize="18" FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        <TextBlock Text=" — " FontSize="18" FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="{Binding DateRangeEnd}" FontSize="18" FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
                                     </StackPanel>
 
-                                    <!-- RIGHT -->
-                                    <StackPanel Grid.Column="2" VerticalAlignment="Center"
-                                                HorizontalAlignment="Right">
-                                        <Button Content="Vote"
+                                    <StackPanel Orientation="Horizontal"
+                                                Visibility="{Binding ScheduledDateVisibility}"
+                                                Margin="0,0,0,8">
+                                        <TextBlock Text="📅" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding ScheduledDate}" FontSize="18" FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal"
+                                                Visibility="{Binding VotedDateVisibility}"
+                                                Margin="0,0,0,12">
+                                        <TextBlock Text="✔" FontSize="18" Margin="0,0,8,0"
+                                                   Foreground="{StaticResource SuccessTextBrush}"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding CitizenVotedDate}" FontSize="18"
+                                                   FontWeight="Bold"
+                                                   Foreground="{StaticResource SuccessTextBrush}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="🗳 Vote"
                                                 Tag="{Binding}"
                                                 Click="VoteButton_Click"
                                                 FontSize="20" FontWeight="Bold"
-                                                Width="140" Height="52"
-                                                Background="#2C3E50"
+                                                Height="52" Padding="20,0"
+                                                Background="#0D47A1"
                                                 Foreground="White"
                                                 BorderThickness="0"
-                                                Margin="0,0,0,8"
+                                                Margin="0,0,8,0"
                                                 Visibility="{Binding VoteVisibility}"/>
 
-                                        <Button Content="Change Vote"
+                                        <Button Content="🔄 Change Vote"
                                                 Tag="{Binding}"
                                                 Click="ChangeVoteButton_Click"
                                                 FontSize="18" FontWeight="Bold"
-                                                Width="140" Height="52"
-                                                Background="#E67E22"
+                                                Height="52" Padding="20,0"
+                                                Background="#F9A825"
                                                 Foreground="White"
                                                 BorderThickness="0"
                                                 Visibility="{Binding ChangeVoteVisibility}"/>
                                     </StackPanel>
-                                </Grid>
+
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

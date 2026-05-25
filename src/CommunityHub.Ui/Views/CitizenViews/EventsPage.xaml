@@ -6,9 +6,9 @@
         Height="760"
         Width="1280"
         WindowStartupLocation="CenterScreen"
-        Background="#ECECEF">
+        Background="{StaticResource BackgroundLightBrush}">
 
-    <Grid Background="#ECECEF">
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition Height="54"/>
@@ -16,33 +16,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#D8D8D8" BorderBrush="#8A8A8A" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="#BBDEFB"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
             <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="#F4F4F4" BorderBrush="#A0A0A0"
+                    Margin="14,0,0,0" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
                 <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </Border>
         </Border>
 
-        <Grid Grid.Row="1" Background="#ECECEC">
+        <Grid Grid.Row="1" Background="#E3F2FD">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="White"
-                    BorderBrush="#2F2F2F" BorderThickness="2" CornerRadius="18">
+            <Border Grid.Column="1" Margin="10,6,18,6" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                 <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+                           VerticalAlignment="Center" Margin="16,0,0,0"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </Border>
         </Grid>
 
-        <Border Grid.Row="2" Background="#F4F4F4" BorderBrush="#4A4A4A" BorderThickness="0,2,0,2">
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,1">
             <Grid Margin="16,0,16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90"/>
@@ -52,21 +60,23 @@
 
                 <Button Grid.Column="0" Content="☰" Click="BurgerButton_Click"
                         FontSize="32" FontWeight="Bold" Background="Transparent"
-                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"/>
+                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"
+                        Foreground="#0D47A1"/>
 
                 <TextBlock Grid.Column="1" Text="Neighborhood Events"
                            FontSize="28" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Click="ProfileButton_Click"
                             Background="Transparent"
-                            BorderThickness="0"
-                            Padding="0">
+                            BorderThickness="0" Padding="0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👤" FontSize="32" Margin="0,0,6,0"/>
                             <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
-                                       FontWeight="Bold" VerticalAlignment="Center"/>
+                                       FontWeight="Bold" VerticalAlignment="Center"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -90,139 +100,154 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="{Binding ResultsText}"
-                           FontSize="28" FontWeight="Bold" VerticalAlignment="Center"/>
+                           FontSize="28" FontWeight="Bold" VerticalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <Button Grid.Column="1" Content="👥 View Citizens"
                         Click="ViewCitizensButton_Click"
                         FontSize="20" FontWeight="Bold"
                         Height="52" Padding="20,0"
-                        Background="White"
-                        BorderBrush="#3A3A3A"
-                        BorderThickness="2"/>
+                        Background="#0D47A1"
+                        Foreground="White" BorderThickness="0"/>
 
                 <Button Grid.Column="3" Content="🤝 View Meetings"
                         Click="ViewMeetingsButton_Click"
                         FontSize="20" FontWeight="Bold"
                         Height="52" Padding="20,0"
-                        Background="White"
-                        BorderBrush="#3A3A3A"
-                        BorderThickness="2"/>
+                        Background="#0D47A1"
+                        Foreground="White" BorderThickness="0"/>
 
                 <Button Grid.Column="5" Content="+ Create Event"
                         Click="CreateEventButton_Click"
                         FontSize="20" FontWeight="Bold"
                         Height="52" Padding="20,0"
-                        Background="#2C3E50" Foreground="White"
-                        BorderThickness="0"/>
+                        Background="#F9A825"
+                        Foreground="White" BorderThickness="0"/>
             </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding Events}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#4F4F4F" BorderThickness="2"
-                                    Background="#F9F9F9" Margin="0,0,0,16"
-                                    Padding="18" CornerRadius="6">
+                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                    Background="{StaticResource SurfaceBrush}" Margin="0,0,0,16"
+                                    Padding="18" CornerRadius="12">
                                 <StackPanel>
+
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Border Background="#F9A825"
+                                                    CornerRadius="4" Padding="8,4"
+                                                    Margin="0,0,10,0"
+                                                    Visibility="{Binding OrganizerVisibility}">
+                                                <TextBlock Text="⭐ Organizer"
+                                                           FontSize="14" FontWeight="Bold"
+                                                           Foreground="White"/>
+                                            </Border>
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="24" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="1"
+                                                CornerRadius="12"
+                                                Background="{Binding StatusColor}"
+                                                Padding="14,4"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding StatusDisplay}"
+                                                       FontSize="16" FontWeight="Bold"
+                                                       Foreground="White"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <TextBlock Text="{Binding Description}"
+                                               FontSize="18" TextWrapping="Wrap"
+                                               Margin="0,0,0,12"
+                                               Foreground="{StaticResource TextSecondaryBrush}"/>
+
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="300"/>
                                             <ColumnDefinition Width="200"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                                            <Border Background="#2C3E50"
-                                                    CornerRadius="4" Padding="8,4"
-                                                    HorizontalAlignment="Left"
-                                                    Margin="0,0,0,8"
-                                                    Visibility="{Binding OrganizerVisibility}">
-                                                <TextBlock Text="⭐ You are organizer"
-                                                           FontSize="16" FontWeight="Bold"
-                                                           Foreground="White"/>
-                                            </Border>
-
-                                            <TextBlock Text="{Binding Name}"
-                                                       FontSize="24" FontWeight="Bold"
-                                                       Margin="0,0,0,12"/>
-
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <TextBlock Text="📋 Description: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding Description}"
-                                                           FontSize="18" Width="400" TextWrapping="Wrap"/>
-                                            </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <TextBlock Text="📅 Date: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding EventDate}" FontSize="18" FontWeight="Bold"/>
-                                            </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="🕐 Time: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding StartTime}" FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text=" | Duration: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding DurationMinutes}" FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="min" FontSize="18" FontWeight="Bold"/>
-                                            </StackPanel>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <TextBlock Text="📅" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding EventDate}" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center" Margin="0,0,20,0"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="🕐" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding StartTime}" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center" Margin="0,0,4,0"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="·" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center" Margin="0,0,4,0"
+                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                            <TextBlock Text="{Binding DurationMinutes}" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="min" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center" Margin="2,0,20,0"
+                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                            <TextBlock Text="👥" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding VolunteerCount}" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="/" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                            <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                         </StackPanel>
 
-                                        <StackPanel Grid.Column="1" Margin="0,0,20,0">
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <TextBlock Text="👥 Volunteers: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding VolunteerCount}" FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="/" FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"/>
-                                            </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <TextBlock Text="🎒 Min volunteers: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding MinVolunteers}" FontSize="18" FontWeight="Bold"/>
-                                            </StackPanel>
-
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="⚡ Status: " FontSize="18" FontWeight="Bold"/>
-                                                <TextBlock Text="{Binding StatusDisplay}" FontSize="18" FontWeight="Bold"/>
-                                            </StackPanel>
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                            <Button Content="Join"
-                                                    Tag="{Binding}"
-                                                    Click="JoinButton_Click"
-                                                    FontSize="20" FontWeight="Bold"
-                                                    Width="140" Height="60"
-                                                    Background="#2C3E50"
-                                                    Foreground="White"
-                                                    BorderThickness="0"
-                                                    Visibility="{Binding JoinVisibility}"/>
-                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Content="🤝 Join"
+                                                Tag="{Binding}"
+                                                Click="JoinButton_Click"
+                                                FontSize="20" FontWeight="Bold"
+                                                Width="140" Height="50"
+                                                Background="#0D47A1"
+                                                Foreground="White"
+                                                BorderThickness="0"
+                                                HorizontalAlignment="Right"
+                                                Visibility="{Binding JoinVisibility}"/>
                                     </Grid>
 
                                     <Border Margin="0,12,0,0"
-                                            BorderBrush="#CCCCCC"
+                                            BorderBrush="{StaticResource BorderBrush}"
                                             BorderThickness="0,1,0,0"
                                             Padding="0,12,0,0"
                                             Visibility="{Binding AttendanceVisibility}">
                                         <StackPanel>
                                             <TextBlock Text="📋 Mark Attendance:"
                                                        FontSize="18" FontWeight="Bold"
-                                                       Margin="0,0,0,8"/>
+                                                       Margin="0,0,0,8"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                             <ItemsControl ItemsSource="{Binding AttendanceItems}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                             <TextBlock Text="{Binding CitizenFullName}"
                                                                        FontSize="18" FontWeight="Bold"
-                                                                       Width="200" VerticalAlignment="Center"/>
+                                                                       Width="200" VerticalAlignment="Center"
+                                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                                             <TextBlock Text="{Binding AttendanceDisplay}"
                                                                        FontSize="16" Width="150"
                                                                        VerticalAlignment="Center"
-                                                                       Margin="0,0,10,0"/>
+                                                                       Margin="0,0,10,0"
+                                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
                                                             <Button Content="✔ Attended"
                                                                     Tag="{Binding}"
                                                                     FontSize="16" FontWeight="Bold"
                                                                     Height="36" Padding="10,0"
-                                                                    Background="#27AE60"
+                                                                    Background="{StaticResource SuccessTextBrush}"
                                                                     Foreground="White"
                                                                     BorderThickness="0"
                                                                     Margin="0,0,8,0"
@@ -231,7 +256,7 @@
                                                                     Tag="{Binding}"
                                                                     FontSize="16" FontWeight="Bold"
                                                                     Height="36" Padding="10,0"
-                                                                    Background="#C0392B"
+                                                                    Background="{StaticResource DangerBrush}"
                                                                     Foreground="White"
                                                                     BorderThickness="0"
                                                                     Click="MarkAbsentButton_Click"/>
@@ -241,6 +266,7 @@
                                             </ItemsControl>
                                         </StackPanel>
                                     </Border>
+
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

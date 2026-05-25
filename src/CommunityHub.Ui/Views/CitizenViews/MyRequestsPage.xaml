@@ -6,9 +6,9 @@
         Height="760"
         Width="1280"
         WindowStartupLocation="CenterScreen"
-        Background="#ECECEF">
+        Background="{StaticResource BackgroundLightBrush}">
 
-    <Grid Background="#ECECEF">
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition Height="54"/>
@@ -17,33 +17,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#D8D8D8" BorderBrush="#8A8A8A" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="#BBDEFB"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
             <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="#F4F4F4" BorderBrush="#A0A0A0"
+                    Margin="14,0,0,0" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
                 <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </Border>
         </Border>
 
-        <Grid Grid.Row="1" Background="#ECECEC">
+        <Grid Grid.Row="1" Background="#E3F2FD">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"/>
-                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
             </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="White"
-                    BorderBrush="#2F2F2F" BorderThickness="2" CornerRadius="18">
+            <Border Grid.Column="1" Margin="10,6,18,6" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                 <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="16,0,0,0"/>
+                           VerticalAlignment="Center" Margin="16,0,0,0"
+                           Foreground="{StaticResource TextSecondaryBrush}"/>
             </Border>
         </Grid>
 
-        <Border Grid.Row="2" Background="#F4F4F4" BorderBrush="#4A4A4A" BorderThickness="0,2,0,2">
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,1">
             <Grid Margin="16,0,16,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90"/>
@@ -55,21 +63,23 @@
                         Content="☰" Click="BurgerButton_Click"
                         FontSize="32" FontWeight="Bold"
                         Background="Transparent" BorderThickness="0"
-                        Width="60" Height="60" VerticalAlignment="Center"/>
+                        Width="60" Height="60" VerticalAlignment="Center"
+                        Foreground="#0D47A1"/>
 
                 <TextBlock Grid.Column="1" Text="My Requests"
                            FontSize="28" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Click="ProfileButton_Click"
                             Background="Transparent"
-                            BorderThickness="0"
-                            Padding="0">
+                            BorderThickness="0" Padding="0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👤" FontSize="32" Margin="0,0,6,0"/>
                             <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
-                                       FontWeight="Bold" VerticalAlignment="Center"/>
+                                       FontWeight="Bold" VerticalAlignment="Center"
+                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -88,6 +98,7 @@
             <ComboBox x:Name="StatusFilterComboBox" Grid.Column="0"
                       Height="52" FontSize="20" FontWeight="Bold"
                       VerticalContentAlignment="Center"
+                      BorderBrush="{StaticResource BorderBrush}"
                       SelectionChanged="Filters_Changed">
                 <ComboBoxItem Content="All" IsSelected="True"/>
                 <ComboBoxItem Content="Pending approval"/>
@@ -98,14 +109,19 @@
             <Button x:Name="SortButton" Grid.Column="2"
                     Content="{Binding SortButtonLabel}"
                     FontSize="20" FontWeight="Bold" Height="52"
-                    Background="White" BorderBrush="#444"
-                    BorderThickness="2" Click="SortButton_Click"/>
+                    Background="{StaticResource SurfaceBrush}"
+                    Foreground="{StaticResource TextPrimaryBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1" Click="SortButton_Click"/>
 
             <Button x:Name="ResetButton" Grid.Column="4"
-                    Content="Reset" FontSize="20" FontWeight="Bold"
+                    Content="↺ Reset" FontSize="20" FontWeight="Bold"
                     Height="52" Width="190" HorizontalAlignment="Right"
-                    VerticalAlignment="Center" Background="#F8F8F8"
-                    BorderBrush="#444" BorderThickness="2"
+                    VerticalAlignment="Center"
+                    Background="{StaticResource SurfaceBrush}"
+                    Foreground="{StaticResource TextPrimaryBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
                     Click="ResetButton_Click"/>
         </Grid>
 
@@ -116,16 +132,17 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="{Binding ResultsText}" Grid.Row="0"
-                       FontSize="28" FontWeight="Bold" Margin="0,0,0,12"/>
+                       FontSize="28" FontWeight="Bold" Margin="0,0,0,12"
+                       Foreground="{StaticResource TextPrimaryBrush}"/>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Requests}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="#4F4F4F" BorderThickness="2"
-                                    Background="#F9F9F9" Margin="0,0,0,16"
-                                    Padding="18" CornerRadius="6">
+                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                    Background="{StaticResource SurfaceBrush}" Margin="0,0,0,16"
+                                    Padding="18" CornerRadius="12">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="380"/>
@@ -134,9 +151,17 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding NeighborhoodName}"
+                                                   FontSize="24" FontWeight="Bold"
+                                                   HorizontalAlignment="Left"
+                                                   Width="340"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                   Margin="0,0,0,8"/>
+
                                         <Border Width="340" Height="210"
-                                                BorderBrush="#2F2F2F" BorderThickness="2"
-                                                Background="White">
+                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderThickness="1"
+                                                Background="#E3F2FD">
                                             <Image Stretch="Fill">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
@@ -159,61 +184,50 @@
                                                 </Image.Style>
                                             </Image>
                                         </Border>
-
-                                        <TextBlock Text="{Binding NeighborhoodName}"
-                                                   FontSize="24" FontWeight="Bold"
-                                                   HorizontalAlignment="Center"
-                                                   Margin="0,10,0,0"/>
                                     </StackPanel>
 
-                                    <StackPanel Grid.Column="1" Margin="10,30,20,10"
+                                    <StackPanel Grid.Column="1" Margin="10,8,20,10"
                                                 VerticalAlignment="Top">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,28">
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
                                             <TextBlock Text="📅" FontSize="26"
                                                        Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                            <TextBlock Text="Request Date:" FontSize="22"
-                                                       FontWeight="Bold" Width="230"
-                                                       VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding CreatedAtFormatted}"
                                                        FontSize="22" FontWeight="Bold"
-                                                       VerticalAlignment="Center"/>
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                         </StackPanel>
 
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,28">
-                                            <TextBlock Text="🔵" FontSize="26"
-                                                       Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                            <TextBlock Text="Status:" FontSize="22"
-                                                       FontWeight="Bold" Width="230"
-                                                       VerticalAlignment="Center"/>
-                                            <Ellipse Width="26" Height="26"
-                                                     Fill="{Binding StatusBrush}"
-                                                     Stroke="Black" StrokeThickness="1.5"
-                                                     Margin="0,2,12,0"/>
-                                            <TextBlock Text="{Binding StatusDisplay}"
-                                                       FontSize="22" FontWeight="Bold"
-                                                       VerticalAlignment="Center"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                                            <Border CornerRadius="12"
+                                                    Background="{Binding StatusBrush}"
+                                                    Padding="14,4"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding StatusDisplay}"
+                                                           FontSize="20" FontWeight="Bold"
+                                                           Foreground="White"/>
+                                            </Border>
                                         </StackPanel>
 
                                         <StackPanel Orientation="Horizontal"
                                                     Visibility="{Binding RejectionVisibility}">
                                             <TextBlock Text="❌" FontSize="26"
                                                        Margin="0,0,10,0" VerticalAlignment="Top"/>
-                                            <TextBlock Text="Rejection Reason:" FontSize="22"
-                                                       FontWeight="Bold" Width="230"
-                                                       VerticalAlignment="Top"/>
                                             <TextBlock Text="{Binding RejectionReason}"
                                                        FontSize="22" FontWeight="Bold"
                                                        Width="380" TextWrapping="Wrap"
-                                                       VerticalAlignment="Top"/>
+                                                       VerticalAlignment="Top"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
                                         </StackPanel>
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" VerticalAlignment="Bottom"
                                                 HorizontalAlignment="Right">
-                                        <Button Content="Delete Request"
+                                        <Button Content="🗑 Delete"
                                                 Width="170" Height="60"
                                                 FontSize="20" FontWeight="Bold"
-                                                Background="#C0392B" Foreground="White"
+                                                Background="{StaticResource DangerBrush}"
+                                                Foreground="White"
                                                 BorderThickness="0"
                                                 Visibility="{Binding DeleteVisibility}"
                                                 Click="DeleteRequestButton_Click"

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using CommunityHub.Application.Domain.Entities;
+using CommunityHub.Application.DTOs.Neighborhoods;
+using System;
 using System.Collections.Generic;
 using System.Text;
-
-using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Domain.Entities;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
@@ -33,4 +33,6 @@ public class TrustRecordViewModel : BaseViewModel
         TrustLevel.Trusted => "#8E44AD",
         _ => "#888888"
     };
+    public SolidColorBrush LevelBrush => new SolidColorBrush(
+    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(LevelColor));
 }
