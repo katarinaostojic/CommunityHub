@@ -16,19 +16,35 @@
             <DockPanel>
                 <!-- Logo / App name -->
                 <Border DockPanel.Dock="Top" Background="#151D2B" Padding="20,25,20,20">
-                    <StackPanel>
-                        <TextBlock Text="🏛️" FontSize="32" HorizontalAlignment="Center"/>
-                        <TextBlock Text="BuildingHub" FontSize="16" FontWeight="Bold"
-                                   Foreground="White" HorizontalAlignment="Center"
-                                   Margin="0,5,0,0"/>
-                        <TextBlock Text="Manager Portal" FontSize="11"
-                                   Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="🏛️" FontSize="32" HorizontalAlignment="Center"/>
+                            <TextBlock Text="BuildingHub" FontSize="16" FontWeight="Bold"
+                                       Foreground="White" HorizontalAlignment="Center"
+                                       Margin="0,5,0,0"/>
+                            <TextBlock Text="Manager Portal" FontSize="11"
+                                       Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <Button Background="Transparent" BorderThickness="0"
+                                Cursor="Hand" HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Click="TooltipsButton_Click" Margin="-22,-15,0,0" Width="73">
+                            <StackPanel>
+                                <TextBlock Text="💡" FontSize="14" Foreground="#F1C40F"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="TooltipsText" Text="Tooltips: OFF" FontSize="10"
+                                           Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
                 </Border>
 
                 <!-- Profile -->
                 <Button DockPanel.Dock="Top" Height="70" Background="Transparent"
-                        BorderThickness="0" Cursor="Hand" Margin="10,15,10,5">
+                        BorderThickness="0" Cursor="Hand" Margin="0,15,0,5"
+                        HorizontalContentAlignment="Left"
+                        Padding="20,0,0,0"
+                        Click="ProfileButton_Click">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                         <Border Width="40" Height="40" CornerRadius="20"
                                 Background="#2980B9">
@@ -53,7 +69,8 @@
                     <Button x:Name="BtnBuildings" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="White" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand" Click="BuildingsButton_Click">
+                            Cursor="Hand" Click="BuildingsButton_Click"
+                            ToolTip="Register and view your buildings">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🏢" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Buildings" VerticalAlignment="Center"/>
@@ -62,7 +79,8 @@
                     <Button x:Name="BtnAccessRequests" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand" Click="AccessRequestsButton_Click">
+                            Cursor="Hand" Click="AccessRequestsButton_Click"
+                            ToolTip="View and manage tenant access requests">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📋" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Access Requests" VerticalAlignment="Center"/>
@@ -71,7 +89,8 @@
                     <Button x:Name="BtnNoticeboard" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand" Click="NoticeboardButton_Click"> 
+                            Cursor="Hand" Click="NoticeboardButton_Click"
+                            ToolTip="View ads and noticeboard statistics for your buildings">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📢" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Noticeboard" VerticalAlignment="Center"/>
@@ -80,7 +99,8 @@
                     <Button x:Name="BtnAssembly" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand">
+                            Cursor="Hand"
+                            ToolTip="Schedule and manage tenants assemblies">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👥" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Tenants Assembly" VerticalAlignment="Center"/>
@@ -89,7 +109,8 @@
                     <Button x:Name="BtnProblems" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand">
+                            Cursor="Hand"
+                            ToolTip="View reported problems in your buildings">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="⚠️" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Problems" VerticalAlignment="Center"/>
