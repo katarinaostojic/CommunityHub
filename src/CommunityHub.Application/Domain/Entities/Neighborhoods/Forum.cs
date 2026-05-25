@@ -41,4 +41,8 @@ public class Forum
 
     public void Close() => IsClosed = true;
     public void AddComment(ForumComment comment) => Comments.Add(comment);
+
+    public int CommentsCount { get; private set; }
+
+    public void SetCommentsCount(int count) => CommentsCount = count;
 }

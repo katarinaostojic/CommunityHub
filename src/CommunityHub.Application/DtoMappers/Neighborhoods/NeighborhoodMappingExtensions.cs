@@ -34,16 +34,18 @@ public static class NeighborhoodMappingExtensions
 
     public static ForumDto ToDto(this Forum forum, long currentCoordinatorId)
     {
-        return new ForumDto(
-            id: forum.Id,
-            title: forum.Title,
-            description: forum.Description,
-            coordinatorId: forum.CoordinatorId,
-            coordinatorFullName: $"{forum.CoordinatorName} {forum.CoordinatorSurname}",
-            isClosed: forum.IsClosed,
-            createdAt: forum.CreatedAt,
-            isAuthor: forum.CoordinatorId == currentCoordinatorId
-        );
+        return new ForumDto
+        {
+            Id = forum.Id,
+            Title = forum.Title,
+            Description = forum.Description,
+            CoordinatorId = forum.CoordinatorId,
+            CoordinatorFullName = $"{forum.CoordinatorName} {forum.CoordinatorSurname}",
+            IsClosed = forum.IsClosed,
+            CreatedAt = forum.CreatedAt,
+            IsAuthor = forum.CoordinatorId == currentCoordinatorId,
+            CommentsCount = forum.CommentsCount
+        };
     }
 
     public static List<ForumDto> ToDtoList(this IEnumerable<Forum> forums, long currentCoordinatorId)

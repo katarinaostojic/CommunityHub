@@ -80,4 +80,6 @@ public class MeetingService
         meeting.Schedule(date);
         _repository.Update(meeting);
     }
+    public Meeting? GetById(long meetingId)
+    => _repository.GetById(meetingId);
 }

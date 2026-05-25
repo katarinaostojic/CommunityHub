@@ -25,8 +25,8 @@ public class MeetingViewModel
     };
 
     public string DateDisplay => _meeting.Status == MeetingStatus.Scheduled && _meeting.ScheduledDate.HasValue
-        ? $"Date: {_meeting.ScheduledDate.Value:dd.MM.yyyy}."
-        : $"Date Range: {_meeting.DateRangeStart:dd.MM.yyyy} - {_meeting.DateRangeEnd:dd.MM.yyyy}";
+    ? $"Date: {_meeting.ScheduledDate.Value:dd.MM.yyyy}."
+    : $"Date: {_meeting.DateRangeStart:dd.MM.yyyy}.";
 
     public string TimeDisplay => $"Time: {_meeting.MeetingTime:HH.mm}h";
 
