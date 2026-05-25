@@ -17,4 +17,7 @@ public class ForumItemViewModel
     public string CreatedAtFormatted => _forum.CreatedAtFormatted;
     public bool IsAuthor => _forum.IsAuthor;
     public ForumDto Forum => _forum;
+
+    public int CommentsCount => _forum.CommentsCount;
+    public string CommentsDisplay => $"Comments: {CommentsCount}";
 }

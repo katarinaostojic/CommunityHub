@@ -29,19 +29,28 @@ public class ForumDbRepository : BaseDbRepository, IForumRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT f.id, f.title, f.description, f.coordinator_id, f.is_closed, f.created_at,
-                   u.name AS coordinator_name, u.surname AS coordinator_surname
-            FROM forums f
-            JOIN users u ON f.coordinator_id = u.id
-            WHERE f.is_closed = false OR f.coordinator_id = @coordinatorId
-            ORDER BY f.created_at DESC";
+        SELECT f.id, f.title, f.description, f.coordinator_id, f.is_closed, f.created_at,
+               u.name AS coordinator_name, u.surname AS coordinator_surname,
+               COUNT(fc.id) AS comments_count
+        FROM forums f
+        JOIN users u ON f.coordinator_id = u.id
+        LEFT JOIN forum_comments fc ON fc.forum_id = f.id
+        WHERE f.is_closed = false OR f.coordinator_id = @coordinatorId
+        GROUP BY f.id, f.title, f.description, f.coordinator_id, f.is_closed, f.created_at,
+                 u.name, u.surname
+        ORDER BY f.created_at DESC";
 
         AddParameter(command, "@coordinatorId", currentCoordinatorId);
 
         using IDataReader reader = command.ExecuteReader();
         List<Forum> forums = new();
         while (reader.Read())
-            forums.Add(MapForum(reader));
+        {
+            Forum forum = MapForum(reader);
+            int count = Convert.ToInt32(reader["comments_count"]);
+            forum.SetCommentsCount(count);
+            forums.Add(forum);
+        }
 
         return forums;
     }

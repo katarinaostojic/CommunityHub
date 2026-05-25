@@ -38,4 +38,9 @@ public partial class CoordinatorMainWindow : Window
     {
         NavigateToDashboard();
     }
+    public void GoBack()
+    {
+        if (MainFrame.CanGoBack)
+            MainFrame.GoBack();
+    }
 }

@@ -34,7 +34,7 @@ public partial class MeetingsPage : Page
             new AddNewMeetingPage(_coordinatorId, _neighborhoodId), "Add New Meeting");
     }
 
-    private void FinalizeVotingButton_Click(object sender, RoutedEventArgs e)
+    private async void FinalizeVotingButton_Click(object sender, RoutedEventArgs e)
     {
         MeetingViewModel meetingViewModel = (MeetingViewModel)((Button)sender).Tag;
 
@@ -50,11 +50,35 @@ public partial class MeetingsPage : Page
         try
         {
             _viewModel.FinalizeVoting(meetingViewModel.MeetingId);
-            MessageBox.Show("Voting finalized!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            SuccessText.Text = "Voting finalized!";
+            SuccessBanner.Visibility = Visibility.Visible;
+            ErrorBanner.Visibility = Visibility.Collapsed;
+            await Task.Delay(3000);
+            SuccessBanner.Visibility = Visibility.Collapsed;
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorText.Text = ex.Message;
+            ErrorBanner.Visibility = Visibility.Visible;
+            SuccessBanner.Visibility = Visibility.Collapsed;
+            await Task.Delay(3000);
+            ErrorBanner.Visibility = Visibility.Collapsed;
         }
+    }
+    private void GenerateReportButton_Click(object sender, RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new GenerateReportPage(_coordinatorId), "Generate Report");
+    }
+    private void SuggestionLink_Click(object sender, RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new AddNewMeetingPage(_coordinatorId, _neighborhoodId), "Add New Meeting");
+    }
+    private void ViewDetailsButton_Click(object sender, RoutedEventArgs e)
+    {
+        MeetingViewModel meetingViewModel = (MeetingViewModel)((Button)sender).Tag;
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new MeetingDetailsPage(meetingViewModel.MeetingId), "Meeting Details");
     }
 }
