@@ -1,0 +1,200 @@
+﻿<UserControl x:Class="CommunityHub.Ui.Views.ManagerViews.Controls.VirtualKeyboardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <Style x:Key="KeyButton" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D6EAF8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2980B9"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SpecialKeyButton" TargetType="Button">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Background" Value="#BDC3C7"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D6EAF8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2980B9"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="#ECF0F1" BorderBrush="#BDC3C7" BorderThickness="0,1,0,0"
+            ButtonBase.Click="KeyButton_Click">
+        <Grid>
+            <!-- LETTERS MOD -->
+            <StackPanel x:Name="LettersPanel" Margin="6,4,6,6">
+                <!-- Red 1: brojevi -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button Content="1" Style="{StaticResource KeyButton}"/>
+                    <Button Content="2" Style="{StaticResource KeyButton}"/>
+                    <Button Content="3" Style="{StaticResource KeyButton}"/>
+                    <Button Content="4" Style="{StaticResource KeyButton}"/>
+                    <Button Content="5" Style="{StaticResource KeyButton}"/>
+                    <Button Content="6" Style="{StaticResource KeyButton}"/>
+                    <Button Content="7" Style="{StaticResource KeyButton}"/>
+                    <Button Content="8" Style="{StaticResource KeyButton}"/>
+                    <Button Content="9" Style="{StaticResource KeyButton}"/>
+                    <Button Content="0" Style="{StaticResource KeyButton}"/>
+                    <Button Content="⌫" Width="56" Style="{StaticResource SpecialKeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 2: Q-P -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button x:Name="BtnQ" Content="Q" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnW" Content="W" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnE" Content="E" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnR" Content="R" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnT" Content="T" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnY" Content="Y" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnU" Content="U" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnI" Content="I" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnO" Content="O" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnP" Content="P" Style="{StaticResource KeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 3: A-L -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button x:Name="BtnA" Content="A" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnS" Content="S" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnD" Content="D" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnF" Content="F" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnG" Content="G" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnH" Content="H" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnJ" Content="J" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnK" Content="K" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnL" Content="L" Style="{StaticResource KeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 4: Shift, Z-M -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button x:Name="BtnShift" Content="⇧" Width="56" Style="{StaticResource SpecialKeyButton}"
+                            Click="ShiftButton_Click"/>
+                    <Button x:Name="BtnZ" Content="Z" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnX" Content="X" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnC" Content="C" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnV" Content="V" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnB" Content="B" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnN" Content="N" Style="{StaticResource KeyButton}"/>
+                    <Button x:Name="BtnM" Content="M" Style="{StaticResource KeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 5: ?123, Space, Hide -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button Content="?123" Width="56" Style="{StaticResource SpecialKeyButton}"
+                            Click="SymbolsButton_Click"/>
+                    <Button Content="Space" Width="260" Style="{StaticResource KeyButton}"/>
+                    <Button Content="Hide ✕" Width="76" Style="{StaticResource SpecialKeyButton}"
+                            Click="HideButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- SYMBOLS MOD -->
+            <StackPanel x:Name="SymbolsPanel" Margin="6,4,6,6" Visibility="Collapsed">
+                <!-- Red 1: specijalni 1 -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button Content="!" Style="{StaticResource KeyButton}"/>
+                    <Button Content="@" Style="{StaticResource KeyButton}"/>
+                    <Button Content="#" Style="{StaticResource KeyButton}"/>
+                    <Button Content="$" Style="{StaticResource KeyButton}"/>
+                    <Button Content="%" Style="{StaticResource KeyButton}"/>
+                    <Button Content="&amp;" Style="{StaticResource KeyButton}"/>
+                    <Button Content="*" Style="{StaticResource KeyButton}"/>
+                    <Button Content="(" Style="{StaticResource KeyButton}"/>
+                    <Button Content=")" Style="{StaticResource KeyButton}"/>
+                    <Button Content="⌫" Width="56" Style="{StaticResource SpecialKeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 2: specijalni 2 -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button Content="-" Style="{StaticResource KeyButton}"/>
+                    <Button Content="+" Style="{StaticResource KeyButton}"/>
+                    <Button Content="=" Style="{StaticResource KeyButton}"/>
+                    <Button Content="/" Style="{StaticResource KeyButton}"/>
+                    <Button Content="\" Style="{StaticResource KeyButton}"/>
+                    <Button Content=":" Style="{StaticResource KeyButton}"/>
+                    <Button Content=";" Style="{StaticResource KeyButton}"/>
+                    <Button Content="'" Style="{StaticResource KeyButton}"/>
+                    <Button Content="&quot;" Style="{StaticResource KeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 3: specijalni 3 -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button Content="," Style="{StaticResource KeyButton}"/>
+                    <Button Content="." Style="{StaticResource KeyButton}"/>
+                    <Button Content="?" Style="{StaticResource KeyButton}"/>
+                    <Button Content="_" Style="{StaticResource KeyButton}"/>
+                    <Button Content="~" Style="{StaticResource KeyButton}"/>
+                    <Button Content="^" Style="{StaticResource KeyButton}"/>
+                    <Button Content="[" Style="{StaticResource KeyButton}"/>
+                    <Button Content="]" Style="{StaticResource KeyButton}"/>
+                    <Button Content="{}{" Style="{StaticResource KeyButton}"/>
+                    <Button Content="}" Style="{StaticResource KeyButton}"/>
+                </StackPanel>
+
+                <!-- Red 4: ABC, Space, Hide -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Button Content="ABC" Width="56" Style="{StaticResource SpecialKeyButton}"
+                            Click="LettersButton_Click"/>
+                    <Button Content="Space" Width="260" Style="{StaticResource KeyButton}"/>
+                    <Button Content="Hide ✕" Width="76" Style="{StaticResource SpecialKeyButton}"
+                            Click="HideButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

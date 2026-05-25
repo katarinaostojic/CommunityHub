@@ -1,0 +1,45 @@
+﻿<Window x:Class="CommunityHub.Ui.Views.ManagerViews.Controls.FloatingKeyboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CommunityHub.Ui.Views.ManagerViews.Controls"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        SizeToContent="Height"
+        Width="520">
+
+    <Border Background="#ECF0F1" CornerRadius="12,12,0,0"
+            BorderBrush="#BDC3C7" BorderThickness="1,1,1,0">
+        <StackPanel>
+            <!-- Floating TextBox -->
+            <Border Background="White" CornerRadius="8" Margin="12,12,12,6"
+                    BorderBrush="#2980B9" BorderThickness="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="FloatingTextBox"
+                             Grid.Column="0"
+                             Height="42" FontSize="15"
+                             Background="Transparent"
+                             BorderThickness="0" Padding="12,0"
+                             VerticalContentAlignment="Center"/>
+                    <Button Grid.Column="1" Content="✓"
+                            FontSize="18" FontWeight="Bold"
+                            Foreground="#27AE60"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Click="Confirm_Click"
+                            Cursor="Hand"/>
+                </Grid>
+            </Border>
+
+            <!-- Tastatura -->
+            <controls:VirtualKeyboardControl x:Name="VirtualKeyboard"/>
+        </StackPanel>
+    </Border>
+</Window>
