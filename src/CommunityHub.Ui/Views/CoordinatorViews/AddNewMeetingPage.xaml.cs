@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 
@@ -22,16 +21,23 @@ public partial class AddNewMeetingPage : Page
             Injector.CreateInstance<MeetingService>(), neighborhoodId);
     }
 
+    private void StartCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e) { }
+
+    private void EndCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e) { }
+
     private void ScheduleMeetingButton_Click(object sender, RoutedEventArgs e)
     {
         string themeInput = ThemeComboBox.SelectedItem != null
             ? ((ComboBoxItem)ThemeComboBox.SelectedItem).Content.ToString()!
             : ThemeComboBox.Text;
 
+        DateTime? startDate = StartCalendar.SelectedDate;
+        DateTime? endDate = EndCalendar.SelectedDate;
+
         string? validationError = _viewModel.Validate(
             themeInput,
-            StartDatePicker.SelectedDate,
-            EndDatePicker.SelectedDate,
+            startDate,
+            endDate,
             TimeTextBox.Text);
 
         if (validationError != null)
@@ -40,13 +46,13 @@ public partial class AddNewMeetingPage : Page
             return;
         }
 
-        DateOnly startDate = DateOnly.FromDateTime(StartDatePicker.SelectedDate!.Value);
-        DateOnly endDate = DateOnly.FromDateTime(EndDatePicker.SelectedDate!.Value);
+        DateOnly start = DateOnly.FromDateTime(startDate!.Value);
+        DateOnly end = DateOnly.FromDateTime(endDate!.Value);
         TimeOnly.TryParse(TimeTextBox.Text, out TimeOnly meetingTime);
 
         try
         {
-            _viewModel.CreateMeeting(themeInput, meetingTime, startDate, endDate);
+            _viewModel.CreateMeeting(themeInput, meetingTime, start, end);
             MessageBox.Show("Meeting scheduled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             CoordinatorMainWindow.Instance.NavigateTo(
                 new MeetingsPage(_coordinatorId, _neighborhoodId), "Meetings");

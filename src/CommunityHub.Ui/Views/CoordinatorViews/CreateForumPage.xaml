@@ -8,15 +8,20 @@
 
             <Border Style="{StaticResource CardBorder}">
                 <StackPanel>
-                    <TextBlock Text="New Forum" Style="{StaticResource PageTitle}" Margin="0,0,0,6"/>
-                    <TextBlock Text="Fill in the details below to create a new forum for all coordinators."
-                               Style="{StaticResource SecondaryText}" TextWrapping="Wrap" Margin="0,0,0,16"/>
 
-                    <TextBlock Text="Forum Title*" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
+                    <!-- Forum Title -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="Forum Title:" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                    </StackPanel>
                     <TextBox x:Name="TitleTextBox" Margin="0,0,0,16" Padding="10,8"
                              BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
 
-                    <TextBlock Text="Description*" Style="{StaticResource SectionTitle}" Margin="0,0,0,6"/>
+                    <!-- Description -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                        <TextBlock Text="Description:" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                    </StackPanel>
                     <TextBox x:Name="DescriptionTextBox" Margin="0,0,0,4"
                              Height="120" TextWrapping="Wrap" AcceptsReturn="True"
                              MaxLength="500" Padding="10,8"
@@ -24,15 +29,29 @@
                     <TextBlock x:Name="CharCountText" Text="0/500" FontSize="11"
                                Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Right" Margin="0,0,0,4"/>
+
+                    <!-- Legenda -->
+                    <TextBlock Text="* Required field" Foreground="Red"
+                               FontSize="11" Margin="0,4,0,0"/>
+
                 </StackPanel>
             </Border>
 
-            <Button Content="Create Forum" HorizontalAlignment="Stretch" Margin="0,0,0,8"
-                    Click="CreateForumButton_Click"
-                    Style="{StaticResource PrimaryButtonLarge}"/>
-            <Button Content="Cancel" HorizontalAlignment="Stretch"
-                    Click="CancelButton_Click"
-                    Style="{StaticResource OutlineButtonLarge}"/>
+            <Grid Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Cancel" Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        Click="CancelButton_Click"
+                        Style="{StaticResource OutlineButtonLarge}"/>
+                <Button Content="Create Forum" Grid.Column="2"
+                        HorizontalAlignment="Stretch"
+                        Click="CreateForumButton_Click"
+                        Style="{StaticResource PrimaryButtonLarge}"/>
+            </Grid>
 
         </StackPanel>
     </ScrollViewer>
