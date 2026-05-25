@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using CommunityHub.Ui.Helpers.Manager;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 
@@ -15,6 +16,26 @@ public partial class ManagerMainWindow : Window
         _currentUser = user;
         MainFrame.Navigate(new MyBuildingsPage(_currentUser));
         SetActiveNavButton(BtnBuildings);
+        UpdateTooltips();
+    }
+
+    private void TooltipsButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppSession.IsTooltipsEnabled = !AppSession.IsTooltipsEnabled;
+        TooltipsText.Text = AppSession.IsTooltipsEnabled ? "  Tooltips: ON" : "  Tooltips: OFF";
+        UpdateTooltips();
+    }
+
+    private void UpdateTooltips()
+    {
+        var buttons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnAssembly, BtnProblems };
+        foreach (var btn in buttons)
+            ToolTipService.SetIsEnabled(btn, AppSession.IsTooltipsEnabled);
+    }
+
+    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        // TODO: navigate to profile
     }
 
     private void BuildingsButton_Click(object sender, RoutedEventArgs e)

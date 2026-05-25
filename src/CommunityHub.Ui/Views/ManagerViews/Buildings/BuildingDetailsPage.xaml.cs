@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
+using CommunityHub.Ui.Helpers.Manager;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using System.Windows;
@@ -20,6 +21,28 @@ public partial class BuildingDetailsPage : Page
         _currentUser = user;
         _viewModel = new BuildingDetailsViewModel(buildingId);
         DataContext = _viewModel;
+    }
+
+    private void UpdateCalendarButtonTooltips()
+    {
+        foreach (var btn in FindVisualChildren<Button>(this)
+            .Where(b => b.Content?.ToString() == "📅"))
+            ToolTipService.SetIsEnabled(btn, AppSession.IsTooltipsEnabled);
+
+        foreach (var btn in FindVisualChildren<Button>(this)
+            .Where(b => b.Content?.ToString() == "Requests"))
+            ToolTipService.SetIsEnabled(btn, AppSession.IsTooltipsEnabled);
+    }
+
+    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T t) yield return t;
+            foreach (var descendant in FindVisualChildren<T>(child))
+                yield return descendant;
+        }
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -42,6 +65,7 @@ public partial class BuildingDetailsPage : Page
         SetActiveTab(TabCommonRoom);
         SetInactiveTab(TabBuildingInfo);
         _viewModel.LoadCommonRooms();
+        UpdateCalendarButtonTooltips();
     }
 
     private void AddCommonRoom_Click(object sender, RoutedEventArgs e)
