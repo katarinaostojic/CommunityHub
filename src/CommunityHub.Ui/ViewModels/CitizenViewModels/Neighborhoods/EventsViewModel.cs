@@ -41,7 +41,9 @@ public class EventsViewModel : BaseViewModel
             .ToList();
 
         Events = new ObservableCollection<EventViewModel>(items);
-        ResultsText = $"Showing {items.Count} events";
+        string label = System.Windows.Application.Current.Resources["Events_Title"]?.ToString()
+               ?? "Events";
+        ResultsText = $"Showing {items.Count} {label.ToLower()}";
     }
 
     public long CreateEvent(CreateEventRequest req)
@@ -65,4 +67,5 @@ public class EventsViewModel : BaseViewModel
         _service.MarkAttendance(registrationId, attended);
         LoadEvents();
     }
+
 }

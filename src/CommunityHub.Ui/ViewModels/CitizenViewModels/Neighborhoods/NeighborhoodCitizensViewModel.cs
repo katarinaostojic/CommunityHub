@@ -40,6 +40,8 @@ public class NeighborhoodCitizensViewModel : BaseViewModel
             .ToList();
 
         Citizens = new ObservableCollection<TrustRecordViewModel>(items);
-        ResultsText = $"Neighborhood Citizens: {items.Count}";
+        string label = System.Windows.Application.Current.Resources["Menu_Citizens"]?.ToString()
+               ?? "Citizens";
+        ResultsText = $"{label}: {items.Count}";
     }
 }

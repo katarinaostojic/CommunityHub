@@ -17,4 +17,7 @@ public class AttendanceItemViewModel
     public long RegistrationId => _registration.Id;
     public string CitizenFullName => _registration.CitizenFullName;
     public string AttendanceDisplay => _registration.AttendanceDisplay;
+    public string AttendanceColor => _registration.Attended == true ? "#1A5C2A"
+    : _registration.Attended == false ? "#B54A4A"
+    : "#888888";
 }

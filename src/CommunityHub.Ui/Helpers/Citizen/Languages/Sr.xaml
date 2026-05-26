@@ -1,0 +1,94 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Meni -->
+    <system:String x:Key="Menu_Neighborhoods">Kvartovi</system:String>
+    <system:String x:Key="Menu_MyRequests">Moji zahtevi</system:String>
+    <system:String x:Key="Menu_Events">Događaji</system:String>
+    <system:String x:Key="Menu_Citizens">Građani</system:String>
+    <system:String x:Key="Menu_Meetings">Sastanci</system:String>
+    <system:String x:Key="Menu_CityObjects">Gradski objekti</system:String>
+    <system:String x:Key="Menu_Budget">Budžet</system:String>
+    <system:String x:Key="Menu_Logout">Odjava</system:String>
+
+    <!-- Profil -->
+    <system:String x:Key="Profile_Title">Moj profil</system:String>
+    <system:String x:Key="Profile_MemberSince">📅 Član od:</system:String>
+    <system:String x:Key="Profile_EventsOrganized">📌 Organizovani događaji:</system:String>
+    <system:String x:Key="Profile_EventsVolunteered">🤝 Volontiranja:</system:String>
+    <system:String x:Key="Profile_Neighborhood">🏘️ Kvart:</system:String>
+    <system:String x:Key="Profile_TrustLevel">⭐ Nivo poverenja:</system:String>
+    <system:String x:Key="Profile_Personalization">Personalizacija</system:String>
+    <system:String x:Key="Profile_Theme">Tema:</system:String>
+    <system:String x:Key="Profile_Language">Jezik:</system:String>
+    <system:String x:Key="Profile_OrganizedVsVolunteered">Organizovano vs Volontirano</system:String>
+    <system:String x:Key="Profile_Organized">Organizovano</system:String>
+    <system:String x:Key="Profile_Volunteered">Volontirano</system:String>
+
+    <!-- Trust levelovi -->
+    <system:String x:Key="TrustLevel_New">Nov u kvartu</system:String>
+    <system:String x:Key="TrustLevel_Inactive">Neaktivan građanin</system:String>
+    <system:String x:Key="TrustLevel_Active">Aktivan građanin</system:String>
+    <system:String x:Key="TrustLevel_Distinguished">Istaknut građanin</system:String>
+    <system:String x:Key="TrustLevel_Trusted">Građanin od poverenja</system:String>
+
+    <!-- Browse Neighborhoods -->
+    <system:String x:Key="Browse_Title">Pretraži kvartove</system:String>
+    <system:String x:Key="Browse_Reset">↺ Resetuj</system:String>
+    <system:String x:Key="Browse_Filter">⚙ Filter</system:String>
+    <system:String x:Key="Browse_RequestAccess">Zatraži pristup</system:String>
+    <system:String x:Key="Browse_Streets">🏘️ Ulice</system:String>
+    <system:String x:Key="Browse_FilterTitle">Filter</system:String>
+    <system:String x:Key="Browse_NeighborhoodName">Naziv kvarta:</system:String>
+    <system:String x:Key="Browse_Address">Adresa:</system:String>
+    <system:String x:Key="Browse_City">Grad:</system:String>
+    <system:String x:Key="Browse_Country">Država:</system:String>
+    <system:String x:Key="Browse_ResetFilters">↺ Resetuj filtere</system:String>
+    <system:String x:Key="Browse_ApplyFilters">✔ Primeni filtere</system:String>
+
+    <!-- My Requests -->
+    <system:String x:Key="Requests_Title">Moji zahtevi</system:String>
+    <system:String x:Key="Requests_Reset">↺ Resetuj</system:String>
+    <system:String x:Key="Requests_Delete">🗑 Obriši</system:String>
+    <system:String x:Key="Requests_All">Svi</system:String>
+    <system:String x:Key="Requests_Pending">Na čekanju</system:String>
+    <system:String x:Key="Requests_Approved">Odobreno</system:String>
+    <system:String x:Key="Requests_Rejected">Odbijeno</system:String>
+
+    <!-- Events -->
+    <system:String x:Key="Events_Title">Događaji kvarta</system:String>
+    <system:String x:Key="Events_ViewCitizens">👥 Građani</system:String>
+    <system:String x:Key="Events_ViewMeetings">🤝 Sastanci</system:String>
+    <system:String x:Key="Events_CreateEvent">+ Kreiraj događaj</system:String>
+    <system:String x:Key="Events_Join">🤝 Prijavi se</system:String>
+    <system:String x:Key="Events_MarkAttendance">📋 Označi prisustvo:</system:String>
+    <system:String x:Key="Events_Attended">✔ Prisustvovao</system:String>
+    <system:String x:Key="Events_Absent">✕ Nije prisustvovao</system:String>
+    <system:String x:Key="Events_Organizer">⭐ Organizator</system:String>
+    <system:String x:Key="Events_Status_Preparation">⏳ U pripremi</system:String>
+    <system:String x:Key="Events_Status_Scheduled">✔ Zakazano</system:String>
+    <system:String x:Key="Events_Status_Cancelled">✕ Otkazano</system:String>
+    <system:String x:Key="Events_Status_Finished">✔ Završeno</system:String>
+
+    <!-- Meetings -->
+    <system:String x:Key="Meetings_Title">Sastanci kvarta</system:String>
+    <system:String x:Key="Meetings_Vote">🗳 Glasaj</system:String>
+    <system:String x:Key="Meetings_ChangeVote">🔄 Promeni glas</system:String>
+    <system:String x:Key="Meetings_Status_InPreparation">⏳ U pripremi</system:String>
+    <system:String x:Key="Meetings_Status_Scheduled">✔ Zakazano</system:String>
+    <system:String x:Key="Meetings_Status_Cancelled">✕ Otkazano</system:String>
+
+    <!-- Citizens -->
+    <system:String x:Key="Citizens_TrustLevel">⭐ Nivo poverenja:</system:String>
+
+    <!-- Dugmad -->
+    <system:String x:Key="Button_Cancel">✕ Otkaži</system:String>
+    <system:String x:Key="Button_Create">✔ Kreiraj</system:String>
+    <system:String x:Key="Button_Add">✔ Dodaj</system:String>
+    <system:String x:Key="Button_Join">🤝 Prijavi se</system:String>
+    <system:String x:Key="Button_Vote">🗳 Glasaj</system:String>
+    <system:String x:Key="Button_Dashboard">🏠 Početna</system:String>
+    <system:String x:Key="Button_ViewRequests">📋 Moji zahtevi</system:String>
+
+</ResourceDictionary>

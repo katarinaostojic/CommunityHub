@@ -32,12 +32,12 @@ public partial class MyRequestsPage : Window
     private void Filters_Changed(object sender, EventArgs e)
     {
         if (!IsLoaded) return;
-        string selected = ((ComboBoxItem)StatusFilterComboBox.SelectedItem).Content?.ToString() ?? "All";
-        switch (selected)
+        int selectedIndex = StatusFilterComboBox.SelectedIndex;
+        switch (selectedIndex)
         {
-            case "Pending approval": _viewModel.FilterPending(); break;
-            case "Approved": _viewModel.FilterApproved(); break;
-            case "Rejected": _viewModel.FilterRejected(); break;
+            case 1: _viewModel.FilterPending(); break;
+            case 2: _viewModel.FilterApproved(); break;
+            case 3: _viewModel.FilterRejected(); break;
             default: _viewModel.FilterAll(); break;
         }
     }

@@ -14,8 +14,8 @@
         </Grid.ColumnDefinitions>
 
         <Border Grid.Column="0"
-                Background="{StaticResource SurfaceBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="0,0,1,0"
                 Padding="24">
             <Grid>
@@ -38,11 +38,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🏘️" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Neighborhoods" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_Neighborhoods}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -50,11 +50,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📋" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="My Requests" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_MyRequests}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -62,11 +62,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🎪" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Events" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_Events}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -74,11 +74,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👥" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Citizens" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_Citizens}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -86,11 +86,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🤝" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Meetings" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_Meetings}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -98,11 +98,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🏛️" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="City Objects" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_CityObjects}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
@@ -110,11 +110,11 @@
                             Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left"
                             FontSize="22" FontWeight="SemiBold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Padding="0" Margin="0,0,0,24">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="💰" FontSize="22" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="Budget" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Menu_Budget}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -129,11 +129,11 @@
                             BorderThickness="0"
                             Foreground="#0D47A1"
                             Click="Logout_Click"/>
-                    <TextBlock Text="Logout"
+                    <TextBlock Text="{DynamicResource Menu_Logout}"
                                FontSize="22" FontWeight="SemiBold"
                                HorizontalAlignment="Center"
                                Margin="0,6,0,0"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                 </StackPanel>
             </Grid>
         </Border>

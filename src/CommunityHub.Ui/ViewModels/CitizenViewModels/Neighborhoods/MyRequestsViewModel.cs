@@ -92,6 +92,8 @@ public class MyRequestsViewModel : BaseViewModel
             .ToList();
 
         Requests = new ObservableCollection<NeighborhoodAccessRequestViewModel>(items);
-        ResultsText = $"Showing {items.Count} requests";
+        string label = System.Windows.Application.Current.Resources["Requests_Title"]?.ToString()
+               ?? "Requests";
+        ResultsText = $"{label}: {items.Count}";
     }
 }

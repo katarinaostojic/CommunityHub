@@ -6,9 +6,9 @@
         Width="620"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{StaticResource BackgroundLightBrush}">
-    <Border Background="{StaticResource SurfaceBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
+        Background="{DynamicResource BackgroundLightBrush}">
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1.5" Margin="10" CornerRadius="12">
         <Grid Margin="30">
             <Grid.RowDefinitions>
@@ -16,36 +16,41 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="80"/>
             </Grid.RowDefinitions>
+
             <TextBlock Grid.Row="0" Text="Add Item +"
                        FontSize="30" FontWeight="Bold"
                        VerticalAlignment="Center"
-                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+
             <StackPanel Grid.Row="1" VerticalAlignment="Center">
                 <TextBlock Text="Item Name:"
                            FontSize="22" FontWeight="Bold"
                            Margin="0,0,0,12"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBox x:Name="ItemNameTextBox"
                          FontSize="20" FontWeight="Bold"
                          Padding="10,8" Height="50"
-                         BorderBrush="{StaticResource BorderBrush}"
-                         Foreground="{StaticResource TextPrimaryBrush}"/>
+                         BorderBrush="{DynamicResource BorderBrush}"
+                         Foreground="{DynamicResource TextPrimaryBrush}"/>
             </StackPanel>
+
             <Grid Grid.Row="2" VerticalAlignment="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="20"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="✕ Cancel"
+
+                <Button Grid.Column="0" Content="{DynamicResource Button_Cancel}"
                         Click="CancelButton_Click"
                         FontSize="22" FontWeight="Bold"
                         Height="58"
-                        Background="{StaticResource SurfaceBrush}"
-                        Foreground="{StaticResource TextPrimaryBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
+                        Background="{DynamicResource SurfaceBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="1"/>
-                <Button Grid.Column="2" Content="✔ Add"
+
+                <Button Grid.Column="2" Content="{DynamicResource Button_Add}"
                         Click="AddButton_Click"
                         FontSize="22" FontWeight="Bold"
                         Height="58"

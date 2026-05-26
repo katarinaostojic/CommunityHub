@@ -3,6 +3,7 @@ using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
+using CommunityHub.Ui.Helpers.Citizen;
 using System.Windows;
 using System.Windows.Media;
 
@@ -31,6 +32,9 @@ public partial class MyProfilePage : Window
         CitizenMenu.CloseRequested += CitizenMenu_CloseRequested;
         CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
         CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
+        ThemeToggleButton.IsChecked = ThemeManager.IsDark;
+        ThemeToggleButton.IsChecked = ThemeManager.IsDark;
+        LanguageToggleButton.IsChecked = !LanguageManager.IsSerbianActive;
         Loaded += (s, e) =>
         {
             var dto = _viewModel.TrustRecord;
@@ -145,5 +149,14 @@ public partial class MyProfilePage : Window
 
         PieCanvas.Children.Add(volunteeredPath);
         PieCanvas.Children.Add(organizedPath);
+    }
+
+    private void ThemeToggle_Click(object sender, RoutedEventArgs e)
+    {
+        ThemeManager.ToggleTheme();
+    }
+    private void LanguageToggle_Click(object sender, RoutedEventArgs e)
+    {
+        LanguageManager.ToggleLanguage();
     }
 }

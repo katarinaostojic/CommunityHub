@@ -7,6 +7,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/TenantTheme.xaml"/>
                 <ResourceDictionary Source="Themes/CitizenTheme.xaml"/>
+                <ResourceDictionary Source="Helpers/Citizen/Languages/Sr.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

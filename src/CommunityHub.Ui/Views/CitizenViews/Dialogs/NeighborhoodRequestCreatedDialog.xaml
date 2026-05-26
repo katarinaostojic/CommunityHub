@@ -9,11 +9,11 @@
         Width="900"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="{StaticResource BackgroundLightBrush}"
+        Background="{DynamicResource BackgroundLightBrush}"
         WindowStyle="SingleBorderWindow">
 
-    <Border Background="{StaticResource SurfaceBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1.5" Margin="10" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
@@ -23,15 +23,15 @@
                 <RowDefinition Height="95"/>
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0" Background="{StaticResource SurfaceBrush}" LastChildFill="False">
+            <DockPanel Grid.Row="0" Background="{DynamicResource SurfaceBrush}" LastChildFill="False">
                 <StackPanel Orientation="Horizontal" Margin="18,0,0,0" VerticalAlignment="Center">
                     <TextBlock Text="Request Created"
                                FontSize="30" FontWeight="Bold"
                                VerticalAlignment="Center"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBlock Text=" ⓘ"
                                FontSize="26" FontWeight="Bold"
-                               Foreground="{StaticResource TextSecondaryBrush}"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
                                VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -39,7 +39,7 @@
                         Content="✕" Width="45" Height="45"
                         FontSize="24" FontWeight="Bold"
                         Background="Transparent" BorderThickness="0"
-                        Foreground="{StaticResource TextPrimaryBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Cursor="Hand" DockPanel.Dock="Right"
                         Margin="0,4,10,4"/>
             </DockPanel>
@@ -48,12 +48,12 @@
                 <TextBlock Text="Your request has been successfully submitted."
                            FontSize="24" FontWeight="Bold"
                            TextWrapping="Wrap" HorizontalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
                            Margin="0,0,0,16"/>
                 <TextBlock Text="A coordinator will review your request shortly."
                            FontSize="24" FontWeight="Bold"
                            TextWrapping="Wrap" HorizontalAlignment="Center"
-                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
             </StackPanel>
 
             <Grid Grid.Row="2" Margin="24,0,24,0" VerticalAlignment="Top">
@@ -71,37 +71,37 @@
                 <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="🏘️ Neighborhood:" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock x:Name="NeighborhoodNameText"
                            Grid.Row="0" Grid.Column="1"
                            FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="👤 Citizen:" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock x:Name="CitizenNameText"
                            Grid.Row="1" Grid.Column="1"
                            FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0"
                            Text="📅 Created on:" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock x:Name="CreatedOnText"
                            Grid.Row="2" Grid.Column="1"
                            FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0"
                            Text="📌 Status:" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <Border Grid.Row="3" Grid.Column="1"
                         CornerRadius="12"
                         Background="#F9A825"
@@ -123,18 +123,18 @@
 
                 <Button x:Name="GoToDashboardButton"
                         Grid.Column="0"
-                        Content="🏠 Go to Dashboard"
+                        Content="{DynamicResource Button_Dashboard}"
                         FontSize="22" FontWeight="Bold"
                         Height="60" Width="230"
                         HorizontalAlignment="Left"
-                        Background="{StaticResource SurfaceBrush}"
-                        Foreground="{StaticResource TextPrimaryBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
+                        Background="{DynamicResource SurfaceBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="1"/>
 
                 <Button x:Name="ViewMyRequestsButton"
                         Grid.Column="2"
-                        Content="📋 View My Requests"
+                        Content="{DynamicResource Button_ViewRequests}"
                         FontSize="22" FontWeight="Bold"
                         Height="60" Width="230"
                         HorizontalAlignment="Right"

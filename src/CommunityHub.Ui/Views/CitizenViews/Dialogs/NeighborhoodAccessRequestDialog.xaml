@@ -9,11 +9,11 @@
         Width="980"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="{StaticResource BackgroundLightBrush}"
+        Background="{DynamicResource BackgroundLightBrush}"
         WindowStyle="SingleBorderWindow">
 
-    <Border Background="{StaticResource SurfaceBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1.5" Margin="10" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
@@ -22,17 +22,17 @@
                 <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0" Background="{StaticResource SurfaceBrush}" LastChildFill="False">
+            <DockPanel Grid.Row="0" Background="{DynamicResource SurfaceBrush}" LastChildFill="False">
                 <TextBlock Text="Request Access"
                            FontSize="30" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Margin="18,0,0,0"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <Button x:Name="CloseButton"
                         Content="✕" Width="45" Height="45"
                         FontSize="24" FontWeight="Bold"
                         Background="Transparent" BorderThickness="0"
-                        Foreground="{StaticResource TextPrimaryBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Cursor="Hand" DockPanel.Dock="Right"
                         Margin="0,4,10,4"/>
             </DockPanel>
@@ -49,15 +49,15 @@
                                FontSize="28" FontWeight="Bold"
                                HorizontalAlignment="Left"
                                Width="320"
-                               Foreground="{StaticResource TextPrimaryBrush}"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
                                Margin="18,0,0,8"/>
 
                     <Border Width="320" Height="220"
-        BorderBrush="{StaticResource BorderBrush}"
-        BorderThickness="1"
-        Background="#E3F2FD"
-        CornerRadius="8"
-        HorizontalAlignment="Center">
+                            BorderBrush="{DynamicResource BorderBrush}"
+                            BorderThickness="1"
+                            Background="{DynamicResource SurfaceSoftBrush}"
+                            CornerRadius="8"
+                            HorizontalAlignment="Center">
                         <Image x:Name="NeighborhoodImage" Stretch="Fill"/>
                     </Border>
                 </StackPanel>
@@ -69,7 +69,7 @@
                         <TextBlock x:Name="AddressText"
                                    FontSize="24" FontWeight="Bold"
                                    TextWrapping="Wrap" Width="480"
-                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
@@ -78,7 +78,7 @@
                         <TextBlock x:Name="LocationText"
                                    FontSize="24" FontWeight="Bold"
                                    TextWrapping="Wrap" Width="480"
-                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -87,7 +87,7 @@
                         <TextBlock x:Name="DescriptionText"
                                    FontSize="22" FontWeight="Bold"
                                    TextWrapping="Wrap" Width="480"
-                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -96,11 +96,11 @@
                 <TextBlock Text="Checking your address..."
                            FontSize="26" FontWeight="Bold"
                            HorizontalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
                            Margin="0,0,0,20"/>
                 <ProgressBar Width="220" Height="18"
-             IsIndeterminate="True"
-             Foreground="#F9A825"/>
+                             IsIndeterminate="True"
+                             Foreground="#F9A825"/>
             </StackPanel>
         </Grid>
     </Border>

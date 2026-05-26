@@ -1,0 +1,94 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Menu -->
+    <system:String x:Key="Menu_Neighborhoods">Neighborhoods</system:String>
+    <system:String x:Key="Menu_MyRequests">My Requests</system:String>
+    <system:String x:Key="Menu_Events">Events</system:String>
+    <system:String x:Key="Menu_Citizens">Citizens</system:String>
+    <system:String x:Key="Menu_Meetings">Meetings</system:String>
+    <system:String x:Key="Menu_CityObjects">City Objects</system:String>
+    <system:String x:Key="Menu_Budget">Budget</system:String>
+    <system:String x:Key="Menu_Logout">Logout</system:String>
+
+    <!-- Profile -->
+    <system:String x:Key="Profile_Title">My Profile</system:String>
+    <system:String x:Key="Profile_MemberSince">📅 Member since:</system:String>
+    <system:String x:Key="Profile_EventsOrganized">📌 Events organized:</system:String>
+    <system:String x:Key="Profile_EventsVolunteered">🤝 Events volunteered:</system:String>
+    <system:String x:Key="Profile_Neighborhood">🏘️ Neighborhood:</system:String>
+    <system:String x:Key="Profile_TrustLevel">⭐ Trust level:</system:String>
+    <system:String x:Key="Profile_Personalization">Personalization</system:String>
+    <system:String x:Key="Profile_Theme">Theme:</system:String>
+    <system:String x:Key="Profile_Language">Language:</system:String>
+    <system:String x:Key="Profile_OrganizedVsVolunteered">Organized vs Volunteered</system:String>
+    <system:String x:Key="Profile_Organized">Organized</system:String>
+    <system:String x:Key="Profile_Volunteered">Volunteered</system:String>
+
+    <!-- Trust levels -->
+    <system:String x:Key="TrustLevel_New">New in neighborhood</system:String>
+    <system:String x:Key="TrustLevel_Inactive">Inactive citizen</system:String>
+    <system:String x:Key="TrustLevel_Active">Active citizen</system:String>
+    <system:String x:Key="TrustLevel_Distinguished">Distinguished citizen</system:String>
+    <system:String x:Key="TrustLevel_Trusted">Trusted citizen</system:String>
+
+    <!-- Browse Neighborhoods -->
+    <system:String x:Key="Browse_Title">Browse Neighborhoods</system:String>
+    <system:String x:Key="Browse_Reset">↺ Reset</system:String>
+    <system:String x:Key="Browse_Filter">⚙ Filter</system:String>
+    <system:String x:Key="Browse_RequestAccess">Request Access</system:String>
+    <system:String x:Key="Browse_Streets">🏘️ Streets</system:String>
+    <system:String x:Key="Browse_FilterTitle">Filter</system:String>
+    <system:String x:Key="Browse_NeighborhoodName">Neighborhood Name:</system:String>
+    <system:String x:Key="Browse_Address">Address:</system:String>
+    <system:String x:Key="Browse_City">City:</system:String>
+    <system:String x:Key="Browse_Country">Country:</system:String>
+    <system:String x:Key="Browse_ResetFilters">↺ Reset Filters</system:String>
+    <system:String x:Key="Browse_ApplyFilters">✔ Apply Filters</system:String>
+
+    <!-- My Requests -->
+    <system:String x:Key="Requests_Title">My Requests</system:String>
+    <system:String x:Key="Requests_Reset">↺ Reset</system:String>
+    <system:String x:Key="Requests_Delete">🗑 Delete</system:String>
+    <system:String x:Key="Requests_All">All</system:String>
+    <system:String x:Key="Requests_Pending">Pending approval</system:String>
+    <system:String x:Key="Requests_Approved">Approved</system:String>
+    <system:String x:Key="Requests_Rejected">Rejected</system:String>
+
+    <!-- Events -->
+    <system:String x:Key="Events_Title">Neighborhood Events</system:String>
+    <system:String x:Key="Events_ViewCitizens">👥 View Citizens</system:String>
+    <system:String x:Key="Events_ViewMeetings">🤝 View Meetings</system:String>
+    <system:String x:Key="Events_CreateEvent">+ Create Event</system:String>
+    <system:String x:Key="Events_Join">🤝 Join</system:String>
+    <system:String x:Key="Events_MarkAttendance">📋 Mark Attendance:</system:String>
+    <system:String x:Key="Events_Attended">✔ Attended</system:String>
+    <system:String x:Key="Events_Absent">✕ Absent</system:String>
+    <system:String x:Key="Events_Organizer">⭐ Organizer</system:String>
+    <system:String x:Key="Events_Status_Preparation">⏳ Preparation</system:String>
+    <system:String x:Key="Events_Status_Scheduled">✔ Scheduled</system:String>
+    <system:String x:Key="Events_Status_Cancelled">✕ Cancelled</system:String>
+    <system:String x:Key="Events_Status_Finished">✔ Finished</system:String>
+
+    <!-- Meetings -->
+    <system:String x:Key="Meetings_Title">Neighborhood Meetings</system:String>
+    <system:String x:Key="Meetings_Vote">🗳 Vote</system:String>
+    <system:String x:Key="Meetings_ChangeVote">🔄 Change Vote</system:String>
+    <system:String x:Key="Meetings_Status_InPreparation">⏳ In Preparation</system:String>
+    <system:String x:Key="Meetings_Status_Scheduled">✔ Scheduled</system:String>
+    <system:String x:Key="Meetings_Status_Cancelled">✕ Cancelled</system:String>
+
+    <!-- Citizens -->
+    <system:String x:Key="Citizens_TrustLevel">⭐ Trust level:</system:String>
+
+    <!-- Buttons -->
+    <system:String x:Key="Button_Cancel">✕ Cancel</system:String>
+    <system:String x:Key="Button_Create">✔ Create</system:String>
+    <system:String x:Key="Button_Add">✔ Add</system:String>
+    <system:String x:Key="Button_Join">🤝 Join</system:String>
+    <system:String x:Key="Button_Vote">🗳 Vote</system:String>
+    <system:String x:Key="Button_Dashboard">🏠 Go to Dashboard</system:String>
+    <system:String x:Key="Button_ViewRequests">📋 View My Requests</system:String>
+
+</ResourceDictionary>

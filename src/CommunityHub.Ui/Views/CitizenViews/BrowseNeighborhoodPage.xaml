@@ -10,13 +10,13 @@
         Height="760"
         Width="1280"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BackgroundLightBrush}">
+        Background="{DynamicResource BackgroundLightBrush}">
 
     <Window.Resources>
         <converters:ImagePathConverter x:Key="ImagePathConverter"/>
     </Window.Resources>
 
-    <Grid Background="{StaticResource BackgroundLightBrush}">
+    <Grid Background="{DynamicResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition Height="54"/>
@@ -24,41 +24,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#BBDEFB"
-                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Background="{DynamicResource PrimarySoftBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
             <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="{StaticResource SurfaceBrush}"
-                    BorderBrush="{StaticResource BorderBrush}"
+                    Margin="14,0,0,0" Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="1" CornerRadius="8">
                 <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
             </Border>
         </Border>
 
-        <Grid Grid.Row="1" Background="#E3F2FD">
+        <Grid Grid.Row="1" Background="{DynamicResource SurfaceSoftBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
                 <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
             </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="{StaticResource SurfaceBrush}"
-                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="18">
+            <Border Grid.Column="1" Margin="10,6,18,6" Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                 <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
                            VerticalAlignment="Center" Margin="16,0,0,0"
-                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
             </Border>
         </Grid>
 
-        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
-                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,1">
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,1">
             <Grid Margin="18,0,18,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90"/>
@@ -76,8 +76,8 @@
                         Foreground="#0D47A1"/>
 
                 <Border Grid.Column="1" Height="46" VerticalAlignment="Center"
-                        Margin="22,0,28,0" Background="{StaticResource SurfaceBrush}"
-                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" CornerRadius="18">
+                        Margin="22,0,28,0" Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
@@ -89,35 +89,36 @@
                         <TextBox Grid.Column="1" x:Name="SearchTextBox" BorderThickness="0"
                                  Background="Transparent" FontSize="18" FontWeight="Bold"
                                  VerticalContentAlignment="Center"
-                                 Foreground="{StaticResource TextPrimaryBrush}"
+                                 Foreground="{DynamicResource TextPrimaryBrush}"
                                  TextChanged="SearchTextBox_TextChanged"/>
                     </Grid>
                 </Border>
 
-                <Button Grid.Column="2" Content="↺ Reset" Click="ResetButton_Click"
+                <Button Grid.Column="2" Content="{DynamicResource Browse_Reset}"
+                        Click="ResetButton_Click"
                         FontSize="20" FontWeight="Bold"
-                        Background="{StaticResource SurfaceBrush}"
-                        Foreground="{StaticResource TextPrimaryBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
+                        Background="{DynamicResource SurfaceBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="2" Height="54" Margin="0,0,26,0"/>
 
-                <Button Grid.Column="3" Content="⚙ Filter" Click="FilterButton_Click"
+                <Button Grid.Column="3" Content="{DynamicResource Browse_Filter}"
+                        Click="FilterButton_Click"
                         FontSize="20" FontWeight="Bold"
-                        Background="{StaticResource SurfaceBrush}"
-                        Foreground="{StaticResource TextPrimaryBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
+                        Background="{DynamicResource SurfaceBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="2" Height="54" Margin="0,0,24,0"/>
 
                 <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Click="ProfileButton_Click"
                             Background="Transparent"
-                            BorderThickness="0"
-                            Padding="0">
+                            BorderThickness="0" Padding="0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👤" FontSize="32" Margin="0,0,6,0"/>
                             <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
                                        FontWeight="Bold" VerticalAlignment="Center"
-                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -132,7 +133,7 @@
 
             <TextBlock Text="{Binding ResultsTitleText}"
                        FontSize="32" FontWeight="Bold"
-                       Foreground="{StaticResource TextPrimaryBrush}"
+                       Foreground="{DynamicResource TextPrimaryBrush}"
                        Margin="0,0,0,14" VerticalAlignment="Center"/>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
@@ -140,8 +141,8 @@
                 <ItemsControl ItemsSource="{Binding FilteredNeighborhoods}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                                    Background="{StaticResource SurfaceBrush}" Margin="0,0,0,16"
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                    Background="{DynamicResource SurfaceBrush}" Margin="0,0,0,16"
                                     Padding="18" CornerRadius="12">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -155,13 +156,13 @@
                                                    FontSize="26" FontWeight="Bold"
                                                    HorizontalAlignment="Left"
                                                    Width="300"
-                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                   Foreground="{DynamicResource TextPrimaryBrush}"
                                                    Margin="0,0,0,8"/>
 
                                         <Border Width="300" Height="200"
-                                                BorderBrush="{StaticResource BorderBrush}"
+                                                BorderBrush="{DynamicResource BorderBrush}"
                                                 BorderThickness="1"
-                                                Background="#E3F2FD">
+                                                Background="{DynamicResource SurfaceSoftBrush}">
                                             <Image Stretch="Fill">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
@@ -185,15 +186,15 @@
 
                                     <StackPanel Grid.Column="1" Margin="24,4,20,4">
                                         <StackPanel Margin="0,0,0,18">
-                                            <TextBlock Text="🏘️ Streets" FontSize="22"
+                                            <TextBlock Text="{DynamicResource Browse_Streets}" FontSize="22"
                                                        FontWeight="Bold" Margin="0,0,0,8"
-                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
                                             <ItemsControl ItemsSource="{Binding Streets, Mode=OneWay}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock FontSize="20" FontWeight="Bold"
                                                                    Margin="12,0,0,6"
-                                                                   Foreground="{StaticResource TextSecondaryBrush}">
+                                                                   Foreground="{DynamicResource TextSecondaryBrush}">
                                                             <Run Text="{Binding StreetName, Mode=OneWay}"/>
                                                             <Run Text=" "/>
                                                             <Run Text="{Binding StartNumber, Mode=OneWay}"/>
@@ -210,7 +211,7 @@
                                                        Margin="0,0,10,0" VerticalAlignment="Center"/>
                                             <TextBlock FontSize="22" FontWeight="Bold"
                                                        VerticalAlignment="Center"
-                                                       Foreground="{StaticResource TextPrimaryBrush}">
+                                                       Foreground="{DynamicResource TextPrimaryBrush}">
                                                 <Run Text="{Binding CityName, Mode=OneWay}"/>
                                                 <Run Text=", "/>
                                                 <Run Text="{Binding CountryName, Mode=OneWay}"/>
@@ -224,12 +225,12 @@
                                                        FontSize="20" FontWeight="Bold"
                                                        Width="440" TextWrapping="Wrap"
                                                        VerticalAlignment="Top"
-                                                       Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                       Foreground="{DynamicResource TextSecondaryBrush}"/>
                                         </StackPanel>
                                     </StackPanel>
 
                                     <Button Grid.Column="2"
-                                            Content="Request Access"
+                                            Content="{DynamicResource Browse_RequestAccess}"
                                             Tag="{Binding Mode=OneWay}"
                                             Click="RequestAccessButton_Click"
                                             FontSize="20" FontWeight="Bold"
@@ -256,8 +257,8 @@
 
         <Border Grid.Row="0" Grid.RowSpan="4"
                 Width="320" HorizontalAlignment="Left"
-                Background="{StaticResource SurfaceBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="0,0,1,0" Panel.ZIndex="21">
             <Border.RenderTransform>
                 <TranslateTransform x:Name="FilterPanelTranslate" X="-320"/>
@@ -265,43 +266,43 @@
 
             <StackPanel Margin="22">
                 <Grid Margin="0,0,0,20">
-                    <TextBlock Text="Filter" FontSize="26" FontWeight="Bold"
+                    <TextBlock Text="{DynamicResource Browse_FilterTitle}" FontSize="26" FontWeight="Bold"
                                VerticalAlignment="Center"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <Button Content="✕" HorizontalAlignment="Right"
                             Background="Transparent" BorderThickness="0"
                             FontSize="20" FontWeight="Bold"
-                            Foreground="{StaticResource TextPrimaryBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
                             Click="FilterButton_Click"/>
                 </Grid>
 
-                <TextBlock Text="Neighborhood Name:" FontSize="18"
+                <TextBlock Text="{DynamicResource Browse_NeighborhoodName}" FontSize="18"
                            FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBox x:Name="FilterNameTextBox" Padding="8,8"
                          FontSize="18" FontWeight="Bold" Margin="0,0,0,16"
-                         BorderBrush="{StaticResource BorderBrush}"/>
+                         BorderBrush="{DynamicResource BorderBrush}"/>
 
-                <TextBlock Text="Address:" FontSize="18"
+                <TextBlock Text="{DynamicResource Browse_Address}" FontSize="18"
                            FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBox x:Name="FilterAddressTextBox" Padding="8,8"
                          FontSize="18" FontWeight="Bold" Margin="0,0,0,16"
-                         BorderBrush="{StaticResource BorderBrush}"/>
+                         BorderBrush="{DynamicResource BorderBrush}"/>
 
-                <TextBlock Text="City:" FontSize="18"
+                <TextBlock Text="{DynamicResource Browse_City}" FontSize="18"
                            FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBox x:Name="FilterCityTextBox" Padding="8,8"
                          FontSize="18" FontWeight="Bold" Margin="0,0,0,16"
-                         BorderBrush="{StaticResource BorderBrush}"/>
+                         BorderBrush="{DynamicResource BorderBrush}"/>
 
-                <TextBlock Text="Country:" FontSize="18"
+                <TextBlock Text="{DynamicResource Browse_Country}" FontSize="18"
                            FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <TextBox x:Name="FilterCountryTextBox" Padding="8,8"
                          FontSize="18" FontWeight="Bold" Margin="0,0,0,24"
-                         BorderBrush="{StaticResource BorderBrush}"/>
+                         BorderBrush="{DynamicResource BorderBrush}"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -310,15 +311,15 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="0" Content="↺ Reset Filters"
+                    <Button Grid.Column="0" Content="{DynamicResource Browse_ResetFilters}"
                             Padding="0,12" FontSize="16" FontWeight="Bold"
-                            Background="{StaticResource SurfaceBrush}"
-                            Foreground="{StaticResource TextPrimaryBrush}"
-                            BorderBrush="{StaticResource BorderBrush}"
+                            Background="{DynamicResource SurfaceBrush}"
+                            Foreground="{DynamicResource TextPrimaryBrush}"
+                            BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="1"
                             Click="ResetFiltersButton_Click"/>
 
-                    <Button Grid.Column="2" Content="✔ Apply Filters"
+                    <Button Grid.Column="2" Content="{DynamicResource Browse_ApplyFilters}"
                             Padding="0,12" FontSize="16" FontWeight="Bold"
                             Background="#0D47A1"
                             Foreground="White" BorderThickness="0"

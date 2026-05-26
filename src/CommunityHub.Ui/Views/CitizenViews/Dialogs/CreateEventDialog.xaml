@@ -6,10 +6,10 @@
         Width="900"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{StaticResource BackgroundLightBrush}">
+        Background="{DynamicResource BackgroundLightBrush}">
 
-    <Border Background="{StaticResource SurfaceBrush}"
-            BorderBrush="{StaticResource BorderBrush}"
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1.5" Margin="10" CornerRadius="12">
         <Grid Margin="24">
             <Grid.RowDefinitions>
@@ -21,57 +21,57 @@
             <TextBlock Grid.Row="0" Text="Create Event"
                        FontSize="30" FontWeight="Bold"
                        VerticalAlignment="Center"
-                       Foreground="{StaticResource TextPrimaryBrush}"/>
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
                     <TextBlock Text="Title:" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBox x:Name="TitleTextBox" FontSize="18" FontWeight="Bold"
                              Padding="8,6" Margin="0,0,0,16"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             Foreground="{StaticResource TextPrimaryBrush}"/>
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <TextBlock Text="Description:" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBox x:Name="DescriptionTextBox" FontSize="18" FontWeight="Bold"
                              Padding="8,6" Height="100" TextWrapping="Wrap"
                              AcceptsReturn="True" Margin="0,0,0,16"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             Foreground="{StaticResource TextPrimaryBrush}"/>
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <TextBlock Text="📅 Date:" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <DatePicker x:Name="EventDatePicker" FontSize="18" FontWeight="Bold"
                                 Height="40" Margin="0,0,0,16"
-                                BorderBrush="{StaticResource BorderBrush}"
-                                Foreground="{StaticResource TextPrimaryBrush}"/>
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <TextBlock Text="🕐 Start Time (HH:mm):" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBox x:Name="StartTimeTextBox" FontSize="18" FontWeight="Bold"
                              Padding="8,6" Margin="0,0,0,16"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             Foreground="{StaticResource TextPrimaryBrush}"/>
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <TextBlock Text="⏱ Duration (minutes):" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBox x:Name="DurationTextBox" FontSize="18" FontWeight="Bold"
                              Padding="8,6" Margin="0,0,0,16"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             Foreground="{StaticResource TextPrimaryBrush}"
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             Foreground="{DynamicResource TextPrimaryBrush}"
                              PreviewTextInput="NumberOnly_PreviewTextInput"/>
 
                     <TextBlock Text="👥 Minimum Volunteers:" FontSize="20" FontWeight="Bold" Margin="0,0,0,6"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBox x:Name="MinVolunteersTextBox" FontSize="18" FontWeight="Bold"
                              Padding="8,6" Margin="0,0,0,16"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             Foreground="{StaticResource TextPrimaryBrush}"
+                             BorderBrush="{DynamicResource BorderBrush}"
+                             Foreground="{DynamicResource TextPrimaryBrush}"
                              PreviewTextInput="NumberOnly_PreviewTextInput"/>
 
                     <TextBlock Text="🎒 Things to Bring:" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"
-                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                     <ItemsControl x:Name="ItemsListControl">
                         <ItemsControl.ItemTemplate>
@@ -82,12 +82,12 @@
                                                Foreground="#F9A825"/>
                                     <TextBlock Text="{Binding}" FontSize="18" FontWeight="Bold"
                                                Width="400" VerticalAlignment="Center"
-                                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     <Button Content="✕ Remove" Tag="{Binding}"
                                             Click="RemoveItemButton_Click"
                                             FontSize="16" Background="Transparent"
                                             BorderThickness="0"
-                                            Foreground="{StaticResource DangerBrush}"/>
+                                            Foreground="{DynamicResource DangerBrush}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -111,16 +111,16 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="✕ Cancel"
+                <Button Grid.Column="0" Content="{DynamicResource Button_Cancel}"
                         Click="CancelButton_Click"
                         FontSize="20" FontWeight="Bold"
                         Height="52"
-                        Background="{StaticResource SurfaceBrush}"
-                        Foreground="{StaticResource TextPrimaryBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
+                        Background="{DynamicResource SurfaceBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
                         BorderThickness="1"/>
 
-                <Button Grid.Column="2" Content="✔ Create"
+                <Button Grid.Column="2" Content="{DynamicResource Button_Create}"
                         Click="CreateButton_Click"
                         FontSize="20" FontWeight="Bold"
                         Height="52"
