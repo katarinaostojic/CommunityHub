@@ -40,12 +40,26 @@ public class NoticeBoardNavigationHelper
     public Page? CreateAdDetailsPage(AdViewModel adViewModel) =>
         CreateAdDetailsPage(adViewModel.Id);
 
-    public Page? CreateAdDetailsPage(AdNotificationViewModel notification) =>
-        CreateAdDetailsPage(notification.AdId);
-
     private Page? CreateAdDetailsPage(long adId)
     {
         AdDto? ad = _viewModel.GetAdById(adId);
         return ad == null ? null : new AdDetailsPage(_user, _membership, ad);
+    }
+
+    public Page? CreatePageFromNotification(AdNotificationViewModel notification)
+    {
+        return notification.IsMatchingAdNotification
+            ? CreateBookSlotsPage(notification)
+            : CreateAdDetailsPage(notification.AdId);
+    }
+
+    private Page? CreateBookSlotsPage(AdNotificationViewModel notification)
+    {
+        AdDto? myAd = _viewModel.GetAdById(notification.AdId);
+        AdDto? theirAd = _viewModel.GetAdById(notification.RelatedAdId);
+
+        return myAd == null || theirAd == null
+            ? null
+            : new BookSlotsPage(_user, _membership, theirAd, myAd, _noticeBoardPage);
     }
 }
