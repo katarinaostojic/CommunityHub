@@ -1,4 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.ProblemReports;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.DTOs.Buildings.ProblemReports;
 using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
 using System.Collections.ObjectModel;
 
@@ -57,6 +59,18 @@ public class ReportedProblemsViewModel : BaseViewModel
     public void FilterSolved() =>
         ApplyFilter(ProblemReportStatus.Solved);
 
+    public void CreateReport(User tenant, string description, ProblemPriority priority)
+    {
+        CreateProblemReportDto request = new CreateProblemReportDto(
+            _buildingId,
+            tenant,
+            description,
+            priority);
+
+        _problemReportService.Create(request);
+        Refresh();
+    }
+
     public void ConfirmResolved(long reportId)
     {
         _problemReportService.ConfirmResolved(reportId, _tenantId);
@@ -89,14 +103,17 @@ public class ReportedProblemsViewModel : BaseViewModel
     private void UpdateCounts()
     {
         _allCount = _problemReportService.CountByTenantAndBuilding(_tenantId, _buildingId);
+
         _unresolvedCount = _problemReportService.CountByTenantAndBuilding(
             _tenantId,
             _buildingId,
             ProblemReportStatus.Unresolved);
+
         _potentiallySolvedCount = _problemReportService.CountByTenantAndBuilding(
             _tenantId,
             _buildingId,
             ProblemReportStatus.PotentiallySolved);
+
         _solvedCount = _problemReportService.CountByTenantAndBuilding(
             _tenantId,
             _buildingId,

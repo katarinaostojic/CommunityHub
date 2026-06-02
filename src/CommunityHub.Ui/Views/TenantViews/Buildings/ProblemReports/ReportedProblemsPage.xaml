@@ -78,10 +78,9 @@
                            VerticalAlignment="Center"/>
 
                 <Button Grid.Column="1"
-                        Content="+ Report a Problem"
-                        Style="{StaticResource OutlineButton}"
-                        IsEnabled="False"
-                        ToolTip="Reporting form will be added in the next commit."/>
+                            Content="+ Report a Problem"
+                            Style="{StaticResource OutlineButton}"
+                            Click="ReportProblemButton_Click"/>
             </Grid>
 
             <Border Background="{StaticResource SurfaceBrush}"

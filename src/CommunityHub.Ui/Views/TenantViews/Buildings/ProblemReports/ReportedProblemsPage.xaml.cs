@@ -4,6 +4,7 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.ProblemReports;
+using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,6 +29,25 @@ public partial class ReportedProblemsPage : Page
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = $"{_membership.BuildingFullAddress}, {_membership.BuildingNeighborhood}";
         AppMenu.Initialize(_user);
+    }
+
+    private void ReportProblemButton_Click(object sender, RoutedEventArgs e)
+    {
+        ReportProblemDialogViewModel dialogViewModel = new ReportProblemDialogViewModel(
+            BuildingInfoTextBlock.Text);
+
+        ReportProblemDialog dialog = new ReportProblemDialog(dialogViewModel);
+        dialog.Owner = Window.GetWindow(this);
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        _viewModel.CreateReport(_user, dialog.Description, dialog.SelectedPriority);
+
+        NotificationBanner.ShowSuccess(
+            SuccessBanner,
+            SuccessTextBlock,
+            "✔ Problem report sent successfully.");
     }
 
     private void FilterAllButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterAll();

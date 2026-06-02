@@ -3,7 +3,7 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Interfaces.Buildings;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings;
 
 public class BuildingAccessRequestDialogViewModel : BaseViewModel
 {

@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.ProblemReports;
 using CommunityHub.Application.DTOs.Buildings.ProblemReports;
+using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.ProblemReports;
 
@@ -15,22 +16,14 @@ public class ProblemReportRowViewModel : BaseViewModel
     public long Id => _report.Id;
     public string Description => _report.Description;
     public ProblemReportStatus Status => _report.Status;
-
-    public string PriorityDisplay => _report.Priority switch
-    {
-        ProblemPriority.CanWait => "Can wait",
-        ProblemPriority.Soon => "Soon",
-        ProblemPriority.Urgent => "⚠ Urgent",
-        _ => _report.Priority.ToString()
-    };
-
+    public string PriorityDisplay => _report.Priority.ToDisplayString();
     public string ReportedDateDisplay => _report.ReportedAt.ToString("dd.MM.yyyy.");
 
     public string StatusDisplay => _report.Status switch
     {
         ProblemReportStatus.Unresolved => "Unresolved",
-        ProblemReportStatus.PotentiallySolved => "⏳ Potentially solved",
-        ProblemReportStatus.Solved => "✓ Solved",
+        ProblemReportStatus.PotentiallySolved => "Potentially solved",
+        ProblemReportStatus.Solved => "Solved",
         _ => _report.Status.ToString()
     };
 
