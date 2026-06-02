@@ -65,13 +65,8 @@ public class ReportedProblemsViewModel : BaseViewModel
 
     public void Refresh()
     {
-        List<ProblemReportRowViewModel> allReports = _problemReportService
-            .GetByTenantAndBuilding(_tenantId, _buildingId)
-            .Select(r => new ProblemReportRowViewModel(r))
-            .ToList();
-
-        UpdateCounts(allReports);
-        UpdateReports(allReports);
+        UpdateCounts();
+        UpdateReports();
     }
 
     private void ApplyFilter(ProblemReportStatus? status)
@@ -80,22 +75,32 @@ public class ReportedProblemsViewModel : BaseViewModel
         Refresh();
     }
 
-    private void UpdateReports(List<ProblemReportRowViewModel> allReports)
+    private void UpdateReports()
     {
-        List<ProblemReportRowViewModel> filteredReports = allReports
-            .Where(r => _currentFilter == null || r.Status == _currentFilter)
+        List<ProblemReportRowViewModel> reports = _problemReportService
+            .GetByTenantAndBuilding(_tenantId, _buildingId, _currentFilter)
+            .Select(r => new ProblemReportRowViewModel(r))
             .ToList();
 
-        Reports = new ObservableCollection<ProblemReportRowViewModel>(filteredReports);
-        ResultsCountText = $"Showing {filteredReports.Count} reported problem{(filteredReports.Count == 1 ? "" : "s")}";
+        Reports = new ObservableCollection<ProblemReportRowViewModel>(reports);
+        ResultsCountText = $"Showing {reports.Count} reported problem{(reports.Count == 1 ? "" : "s")}";
     }
 
-    private void UpdateCounts(List<ProblemReportRowViewModel> reports)
+    private void UpdateCounts()
     {
-        _allCount = reports.Count;
-        _unresolvedCount = reports.Count(r => r.Status == ProblemReportStatus.Unresolved);
-        _potentiallySolvedCount = reports.Count(r => r.Status == ProblemReportStatus.PotentiallySolved);
-        _solvedCount = reports.Count(r => r.Status == ProblemReportStatus.Solved);
+        _allCount = _problemReportService.CountByTenantAndBuilding(_tenantId, _buildingId);
+        _unresolvedCount = _problemReportService.CountByTenantAndBuilding(
+            _tenantId,
+            _buildingId,
+            ProblemReportStatus.Unresolved);
+        _potentiallySolvedCount = _problemReportService.CountByTenantAndBuilding(
+            _tenantId,
+            _buildingId,
+            ProblemReportStatus.PotentiallySolved);
+        _solvedCount = _problemReportService.CountByTenantAndBuilding(
+            _tenantId,
+            _buildingId,
+            ProblemReportStatus.Solved);
 
         OnPropertyChanged(nameof(AllButtonLabel));
         OnPropertyChanged(nameof(UnresolvedButtonLabel));
