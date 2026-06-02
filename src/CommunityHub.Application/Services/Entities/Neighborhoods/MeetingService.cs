@@ -60,10 +60,9 @@ public class MeetingService
     public bool HasTiedVotes(long meetingId)
     {
         var voteCounts = _repository.GetVoteCounts(meetingId);
-        if (voteCounts.Count < 2) return false;
-
-        var sorted = voteCounts.OrderByDescending(v => v.Value).ToList();
-        return sorted[0].Value == sorted[1].Value;
+        Meeting? meeting = _repository.GetById(meetingId);
+        if (meeting == null) return false;
+        return meeting.HasTiedVotes(voteCounts);
     }
 
     public Dictionary<DateOnly, int> GetVoteCounts(long meetingId)
