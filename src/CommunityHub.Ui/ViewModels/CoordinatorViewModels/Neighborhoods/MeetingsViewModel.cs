@@ -188,8 +188,7 @@ public class MeetingsViewModel : BaseViewModel
 
         foreach (var meeting in meetings.Where(m => m.Status == MeetingStatus.InPreparation))
         {
-            DateTime deadline = meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
-            if (DateTime.Now >= deadline)
+            if (!_meetingService.CanVote(meeting))
             {
                 if (!_meetingService.HasTiedVotes(meeting.Id))
                     _meetingService.CheckAndFinalizeVoting(meeting.Id);

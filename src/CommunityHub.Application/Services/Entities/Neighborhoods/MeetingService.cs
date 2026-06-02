@@ -56,11 +56,7 @@ public class MeetingService
     public void UpdateVote(long voteId, DateOnly newDate)
         => _repository.UpdateVote(voteId, newDate);
 
-    public bool CanVote(Meeting meeting)
-    {
-        DateTime deadline = meeting.DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
-        return DateTime.Now < deadline && meeting.Status == MeetingStatus.InPreparation;
-    }
+    public bool CanVote(Meeting meeting) => meeting.CanVote();
     public bool HasTiedVotes(long meetingId)
     {
         var voteCounts = _repository.GetVoteCounts(meetingId);

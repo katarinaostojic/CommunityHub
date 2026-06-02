@@ -80,4 +80,9 @@ public class Meeting
 
         Schedule(winningDate);
     }
+    public bool CanVote()
+    {
+        DateTime deadline = DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
+        return DateTime.Now < deadline && Status == MeetingStatus.InPreparation;
+    }
 }
