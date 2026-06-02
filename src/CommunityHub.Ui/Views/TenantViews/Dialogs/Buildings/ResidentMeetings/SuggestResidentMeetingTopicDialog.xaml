@@ -29,7 +29,7 @@
                     Padding="14,12"
                     Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="{Binding BuildingInfo}"
+                    <TextBlock Text="{Binding Path=BuildingInfo, Mode=OneWay}"
                                FontSize="14"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource PrimaryBrush}"
@@ -39,9 +39,9 @@
                                Foreground="{StaticResource TextPrimaryBrush}"
                                Margin="0,6,0,0">
                         <Run Text="Meeting: "/>
-                        <Run Text="{Binding MeetingDate}" FontWeight="SemiBold"/>
+                        <Run Text="{Binding Path=MeetingDate, Mode=OneWay}" FontWeight="SemiBold"/>
                         <Run Text=" at "/>
-                        <Run Text="{Binding MeetingTime}" FontWeight="SemiBold"/>
+                        <Run Text="{Binding Path=MeetingTime, Mode=OneWay}" FontWeight="SemiBold"/>
                     </TextBlock>
                 </StackPanel>
             </Border>

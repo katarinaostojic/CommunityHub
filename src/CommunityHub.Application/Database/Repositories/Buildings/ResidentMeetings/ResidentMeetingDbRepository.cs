@@ -177,7 +177,9 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
     {
         IDbDataParameter dbParam = command.CreateParameter();
         dbParam.ParameterName = name;
-        dbParam.Value = value;
+        dbParam.Value = value.Kind == DateTimeKind.Utc
+            ? value
+            : value.ToUniversalTime();
         dbParam.DbType = DbType.DateTime;
         command.Parameters.Add(dbParam);
     }

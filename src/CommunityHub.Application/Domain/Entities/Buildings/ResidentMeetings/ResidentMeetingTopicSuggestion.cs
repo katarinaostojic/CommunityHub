@@ -28,6 +28,6 @@ public class ResidentMeetingTopicSuggestion
         MeetingId = meetingId;
         TenantId = tenantId;
         Topic = topic.Trim();
-        SuggestedAt = DateTime.Now;
+        SuggestedAt = DateTime.UtcNow;
     }
 }

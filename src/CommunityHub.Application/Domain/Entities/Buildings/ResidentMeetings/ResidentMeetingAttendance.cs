@@ -28,6 +28,6 @@ public class ResidentMeetingAttendance
         MeetingId = meetingId;
         TenantId = tenantId;
         UnitNumber = unitNumber;
-        CreatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
     }
 }

@@ -192,8 +192,8 @@
                                                            Foreground="{StaticResource TextPrimaryBrush}"
                                                            TextWrapping="Wrap"
                                                            Margin="0,2,0,0">
-                                                    <Run Text="• "/>
-                                                    <Run Text="{Binding}"/>
+                                                           <Run Text="• "/>
+                                                           <Run Text="{Binding Path=., Mode=OneWay}"/>
                                                 </TextBlock>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
