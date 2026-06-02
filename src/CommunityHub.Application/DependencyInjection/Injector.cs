@@ -1,11 +1,13 @@
 ﻿using CommunityHub.Application.Database.Repositories.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings;
 using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
+using CommunityHub.Application.Database.Repositories.Buildings.ProblemReports;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
+using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Shared;
 using CommunityHub.Application.Services.Interfaces.Ads;
@@ -34,6 +36,8 @@ public static class Injector
 
     private static readonly CommonRoomDbRepository _commonRoomRepository = new();
     private static readonly CommonRoomRequestDbRepository _commonRoomRequestRepository = new();
+
+    private static readonly ProblemReportDbRepository _problemReportRepository = new();
 
     private static readonly BuildingService _buildingService = new(
         _buildingRepository,
@@ -89,6 +93,10 @@ public static class Injector
         _commonRoomRequestRepository,
         _commonRoomRequestApprovalService,
         _commonRoomRequestCommandService);
+
+    private static readonly ProblemReportService _problemReportService = new(
+        _problemReportRepository,
+        _buildingMembershipRepository);
 
     private static readonly Dictionary<Type, object> _implementations = new()
     {
@@ -196,6 +204,10 @@ public static class Injector
         {
             typeof(CommonRoomRequestCommandService),
             _commonRoomRequestCommandService
+        },
+        {
+            typeof(ProblemReportService),
+            _problemReportService
         },
         {
             typeof(NeighborhoodService),
