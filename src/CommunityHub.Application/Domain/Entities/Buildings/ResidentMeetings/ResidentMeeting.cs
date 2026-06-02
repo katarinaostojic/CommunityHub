@@ -64,6 +64,25 @@ public class ResidentMeeting
             throw new InvalidOperationException("Topics can be suggested up to 24h before the meeting.");
     }
 
+    public ResidentMeetingStatus ResolveCurrentStatus(DateTime now)
+    {
+        if (Status == ResidentMeetingStatus.Cancelled)
+            return ResidentMeetingStatus.Cancelled;
+
+        if (HasQuorum)
+            return ResidentMeetingStatus.Confirmed;
+
+        if (now >= DeadlineAt)
+            return ResidentMeetingStatus.Cancelled;
+
+        return ResidentMeetingStatus.Scheduled;
+    }
+
+    public bool ShouldUpdateStatus(DateTime now)
+    {
+        return Status != ResolveCurrentStatus(now);
+    }
+
     public static string? ValidateTopic(string topic)
     {
         if (string.IsNullOrWhiteSpace(topic))
