@@ -80,4 +80,15 @@ public class Meeting
 
         Schedule(winningDate);
     }
+    public bool CanVote()
+    {
+        DateTime deadline = DateRangeStart.ToDateTime(TimeOnly.MinValue).AddHours(-24);
+        return DateTime.Now < deadline && Status == MeetingStatus.InPreparation;
+    }
+    public bool HasTiedVotes(Dictionary<DateOnly, int> voteCounts)
+    {
+        if (voteCounts.Count < 2) return false;
+        var sorted = voteCounts.OrderByDescending(v => v.Value).ToList();
+        return sorted[0].Value == sorted[1].Value;
+    }
 }

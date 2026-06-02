@@ -20,17 +20,8 @@ public class StatisticsService
 
     public MeetingTheme? SuggestMeetingTheme(long neighborhoodId)
     {
-        var stats = _repository.GetTrustLevelCounts(neighborhoodId);
-
-        int newCount = stats.GetValueOrDefault(TrustLevel.New, 0);
-        int inactiveCount = stats.GetValueOrDefault(TrustLevel.Inactive, 0);
-
-        if (newCount == 0 && inactiveCount == 0)
-            return null;
-
-        if (newCount >= inactiveCount)
-            return MeetingTheme.Welcome;
-
-        return MeetingTheme.Motivation;
+        var counts = _repository.GetTrustLevelCounts(neighborhoodId);
+        var stats = new CitizenTrustStatistics(counts);
+        return stats.SuggestTheme();
     }
 }
