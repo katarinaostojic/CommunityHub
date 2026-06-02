@@ -219,7 +219,9 @@
                                             Style="{StaticResource SubMenuButtonStyle}"/>
 
                                     <Button Content="→ Reported Problems"
-                                            Style="{StaticResource SubMenuButtonStyle}"/>
+                                            Style="{StaticResource SubMenuButtonStyle}"
+                                            Tag="{Binding}"
+                                            Click="ReportedProblemsMenuItem_Click"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

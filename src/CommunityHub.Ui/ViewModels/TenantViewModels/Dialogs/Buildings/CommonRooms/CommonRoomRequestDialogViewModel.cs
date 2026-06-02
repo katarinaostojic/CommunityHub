@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Ui.Extensions;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.CommonRooms;
 
 public class CommonRoomRequestDialogViewModel : BaseViewModel
 {

@@ -2,8 +2,8 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.CommonRooms;
 using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
 using System.Windows;
 using System.Windows.Controls;
