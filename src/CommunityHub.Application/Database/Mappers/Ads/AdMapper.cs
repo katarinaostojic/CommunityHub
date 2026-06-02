@@ -100,4 +100,33 @@ public static class AdMapper
         AdStatus.Archived => "archived",
         _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
     };
+
+    public static Ad MapRelatedAd(IDataReader reader, User author)
+    {
+        return new Ad(
+            id: Convert.ToInt64(reader["ra_id"]),
+            buildingId: Convert.ToInt64(reader["ra_building_id"]),
+            author: author,
+            type: MapType(reader["ra_type"].ToString()!),
+            category: MapCategory(reader["ra_category"].ToString()!),
+            description: reader["ra_description"].ToString()!,
+            dateFrom: (DateOnly)reader["ra_date_from"],
+            dateTo: (DateOnly)reader["ra_date_to"],
+            status: MapStatus(reader["ra_status"].ToString()!)
+        );
+    }
+
+    public static AdNotificationType MapNotificationType(string value) => value switch
+    {
+        "booking" => AdNotificationType.Booking,
+        "matching_ad" => AdNotificationType.MatchingAd,
+        _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+    };
+
+    public static string ToDbNotificationType(AdNotificationType type) => type switch
+    {
+        AdNotificationType.Booking => "booking",
+        AdNotificationType.MatchingAd => "matching_ad",
+        _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+    };
 }

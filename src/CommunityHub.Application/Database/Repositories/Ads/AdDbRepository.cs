@@ -148,6 +148,35 @@ public class AdDbRepository : BaseDbRepository, IAdRepository
         return Convert.ToInt64(command.ExecuteScalar());
     }
 
+    public bool HasActiveMatchBefore(Ad ad, long beforeAdId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT EXISTS (
+            SELECT 1
+            FROM notice_board_ads candidate
+            WHERE candidate.id < @beforeAdId
+              AND candidate.building_id = @buildingId
+              AND candidate.user_id <> @authorId
+              AND candidate.status = 'active'
+              AND candidate.type = @type::ad_type
+              AND candidate.category = @category::ad_category
+              AND candidate.date_from <= @dateTo
+              AND candidate.date_to >= @dateFrom
+        )";
+
+        AddParameter(command, "@beforeAdId", beforeAdId);
+        AddParameter(command, "@buildingId", ad.BuildingId);
+        AddParameter(command, "@authorId", ad.Author.Id);
+        AddParameter(command, "@type", AdMapper.ToDbType(ad.OppositeType));
+        AddParameter(command, "@category", AdMapper.ToDbCategory(ad.Category));
+        AddParameter(command, "@dateFrom", ToUtcDateTime(ad.DateFrom));
+        AddParameter(command, "@dateTo", ToUtcDateTime(ad.DateTo));
+
+        return Convert.ToBoolean(command.ExecuteScalar());
+    }
+
     public void Update(Ad ad)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

@@ -127,7 +127,7 @@ public partial class NoticeBoardPage : Page
     private void ViewSlotsFromNotificationButton_Click(object sender, RoutedEventArgs e)
     {
         AdNotificationViewModel notification = (AdNotificationViewModel)((Button)sender).DataContext;
-        Page? page = _navigationHelper.CreateAdDetailsPage(notification);
+        Page? page = _navigationHelper.CreatePageFromNotification(notification);
 
         if (page != null)
             NavigationService.Navigate(page);

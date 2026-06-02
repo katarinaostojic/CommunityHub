@@ -4,7 +4,8 @@ namespace CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 
 public interface IAdNotificationRepository
 {
-    void Create(long recipientId, long adId, long bookedByAdId);
+    void CreateBookingNotification(long recipientId, long adId, long bookedByAdId);
+    void CreateMatchingAdNotification(long recipientId, long adId, long matchingAdId);
     List<AdNotification> GetUnreadByUser(long userId);
     void MarkAsRead(long notificationId);
     void MarkAllAsRead(long userId);

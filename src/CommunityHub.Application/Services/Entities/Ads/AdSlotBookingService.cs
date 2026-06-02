@@ -52,6 +52,6 @@ public class AdSlotBookingService : IAdSlotBookingService
         Ad? ownerAd = _adRepository.GetById(ownerAdId);
         if (ownerAd == null) return;
 
-        _notificationRepository.Create(ownerAd.Author.Id, ownerAdId, bookedByAdId);
+        _notificationRepository.CreateBookingNotification(ownerAd.Author.Id, ownerAdId, bookedByAdId);
     }
 }
