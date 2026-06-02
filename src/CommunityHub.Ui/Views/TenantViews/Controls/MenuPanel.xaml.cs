@@ -145,4 +145,13 @@ public partial class MenuPanel : UserControl
         NavigationService.GetNavigationService(this)?.Navigate(
             new ReportedProblemsPage(_user, membership));
     }
+
+    private void ResidentsMeetingsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingMembershipDto membership = (BuildingMembershipDto)((Button)sender).Tag;
+        Close();
+
+        NavigationService.GetNavigationService(this)?.Navigate(
+            new ResidentsMeetingsPage(_user, membership));
+    }
 }

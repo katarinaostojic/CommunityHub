@@ -215,8 +215,10 @@
                                             Tag="{Binding}"
                                             Click="CommonRoomsMenuItem_Click"/>
 
-                                    <Button Content="→ Residents' Meeting"
-                                            Style="{StaticResource SubMenuButtonStyle}"/>
+                                    <Button Content="→ Residents' Meetings"
+                                            Style="{StaticResource SubMenuButtonStyle}"
+                                            Tag="{Binding}"
+                                            Click="ResidentsMeetingsMenuItem_Click"/>
 
                                     <Button Content="→ Reported Problems"
                                             Style="{StaticResource SubMenuButtonStyle}"
