@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.ProblemReports;
 using CommunityHub.Ui.Extensions;
 
-namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.ProblemReports;
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.ProblemReports;
 
 public class ReportProblemDialogViewModel : BaseViewModel
 {

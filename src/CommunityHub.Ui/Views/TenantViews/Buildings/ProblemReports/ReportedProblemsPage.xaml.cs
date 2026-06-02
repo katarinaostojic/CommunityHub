@@ -4,6 +4,7 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.ProblemReports;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.ProblemReports;
 using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
 using System.Windows;
 using System.Windows.Controls;
