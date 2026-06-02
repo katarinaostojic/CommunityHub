@@ -50,7 +50,8 @@ public static class AdMappingExtensions
             id: notification.Id,
             recipientId: notification.RecipientId,
             ad: notification.Ad.ToAdDto(),
-            bookedByAd: notification.BookedByAd.ToAdDto(),
+            relatedAd: notification.RelatedAd.ToAdDto(),
+            type: notification.Type,
             createdAt: notification.CreatedAt,
             isRead: notification.IsRead
         );

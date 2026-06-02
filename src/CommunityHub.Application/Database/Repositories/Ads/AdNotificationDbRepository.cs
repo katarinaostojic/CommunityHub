@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Database.Readers.Ads;
+﻿using CommunityHub.Application.Database.Mappers.Ads;
+using CommunityHub.Application.Database.Readers.Ads;
 using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
@@ -8,19 +9,14 @@ namespace CommunityHub.Application.Database.Repositories.Ads;
 
 public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepository
 {
-    public void Create(long recipientId, long adId, long bookedByAdId)
+    public void CreateBookingNotification(long recipientId, long adId, long bookedByAdId)
     {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            INSERT INTO notice_board_notifications (recipient_id, ad_id, booked_by_ad_id)
-            VALUES (@recipientId, @adId, @bookedByAdId)";
+        Create(recipientId, adId, bookedByAdId, AdNotificationType.Booking);
+    }
 
-        AddParameter(command, "@recipientId", recipientId);
-        AddParameter(command, "@adId", adId);
-        AddParameter(command, "@bookedByAdId", bookedByAdId);
-
-        command.ExecuteNonQuery();
+    public void CreateMatchingAdNotification(long recipientId, long adId, long matchingAdId)
+    {
+        Create(recipientId, adId, matchingAdId, AdNotificationType.MatchingAd);
     }
 
     public List<AdNotification> GetUnreadByUser(long userId)
@@ -29,6 +25,7 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
             SELECT n.id AS notif_id, n.recipient_id, n.created_at, n.is_read,
+                   n.type AS notification_type,
                    a.id AS id, a.building_id AS building_id,
                    a.type AS type, a.category AS category,
                    a.description AS description,
@@ -36,19 +33,19 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
                    a.status AS status,
                    ua.id AS user_id, ua.username, ua.password,
                    ua.name, ua.surname, ua.birthday, ua.role,
-                   b.id AS ba_id, b.building_id AS ba_building_id,
-                   b.type AS ba_type, b.category AS ba_category,
-                   b.description AS ba_description,
-                   b.date_from AS ba_date_from, b.date_to AS ba_date_to,
-                   b.status AS ba_status,
-                   ub.id AS ub_id, ub.username AS ub_username, ub.password AS ub_password,
-                   ub.name AS ub_name, ub.surname AS ub_surname,
-                   ub.birthday AS ub_birthday, ub.role AS ub_role
+                   ra.id AS ra_id, ra.building_id AS ra_building_id,
+                   ra.type AS ra_type, ra.category AS ra_category,
+                   ra.description AS ra_description,
+                   ra.date_from AS ra_date_from, ra.date_to AS ra_date_to,
+                   ra.status AS ra_status,
+                   ura.id AS ra_user_id, ura.username AS ra_username, ura.password AS ra_password,
+                   ura.name AS ra_name, ura.surname AS ra_surname,
+                   ura.birthday AS ra_birthday, ura.role AS ra_role
             FROM notice_board_notifications n
             JOIN notice_board_ads a ON a.id = n.ad_id
             JOIN users ua ON ua.id = a.user_id
-            JOIN notice_board_ads b ON b.id = n.booked_by_ad_id
-            JOIN users ub ON ub.id = b.user_id
+            JOIN notice_board_ads ra ON ra.id = n.related_ad_id
+            JOIN users ura ON ura.id = ra.user_id
             WHERE n.recipient_id = @userId AND n.is_read = FALSE
             ORDER BY n.created_at DESC";
 
@@ -82,6 +79,22 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
             WHERE recipient_id = @userId";
 
         AddParameter(command, "@userId", userId);
+
+        command.ExecuteNonQuery();
+    }
+
+    private void Create(long recipientId, long adId, long relatedAdId, AdNotificationType type)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+            INSERT INTO notice_board_notifications (recipient_id, ad_id, related_ad_id, type)
+            VALUES (@recipientId, @adId, @relatedAdId, @type::ad_notification_type)";
+
+        AddParameter(command, "@recipientId", recipientId);
+        AddParameter(command, "@adId", adId);
+        AddParameter(command, "@relatedAdId", relatedAdId);
+        AddParameter(command, "@type", AdMapper.ToDbNotificationType(type));
 
         command.ExecuteNonQuery();
     }

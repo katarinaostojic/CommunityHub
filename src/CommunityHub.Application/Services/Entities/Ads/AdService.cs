@@ -11,13 +11,16 @@ public class AdService : IAdService
     private readonly IAdRepository _adRepository;
     private readonly IAdSlotBookingService _slotBookingService;
     private readonly AdExpirationService _expirationService;
+    private readonly IAdNotificationRepository _notificationRepository;
 
     public AdService(
-        IAdRepository adRepository,
-        IAdSlotBookingService slotBookingService,
-        AdExpirationService expirationService)
+    IAdRepository adRepository,
+    IAdNotificationRepository notificationRepository,
+    IAdSlotBookingService slotBookingService,
+    AdExpirationService expirationService)
     {
         _adRepository = adRepository;
+        _notificationRepository = notificationRepository;
         _slotBookingService = slotBookingService;
         _expirationService = expirationService;
     }
@@ -84,9 +87,10 @@ public class AdService : IAdService
             request.DateTo);
 
         Ad newAd = CreateAdWithSlots(ad);
-        List<AdDto> matchingAds = FindMatchingAds(newAd).ToAdDtoList();
+        List<Ad> matchingAds = FindMatchingAds(newAd);
+        NotifyAdsWaitingForMatch(newAd, matchingAds);
 
-        return (newAd.ToAdDto(), matchingAds);
+        return (newAd.ToAdDto(), matchingAds.ToAdDtoList());
     }
 
     public void Archive(long adId)
@@ -118,5 +122,21 @@ public class AdService : IAdService
             .GetFilteredActiveByBuilding(newAd.BuildingId, newAd.OppositeType, newAd.Category)
             .Where(ad => ad.IsEligibleMatchFor(newAd))
             .ToList();
+    }
+
+    private void NotifyAdsWaitingForMatch(Ad newAd, List<Ad> matchingAds)
+    {
+        foreach (Ad matchingAd in matchingAds.Where(IsWaitingForMatch))
+        {
+            _notificationRepository.CreateMatchingAdNotification(
+                matchingAd.Author.Id,
+                matchingAd.Id,
+                newAd.Id);
+        }
+
+        bool IsWaitingForMatch(Ad matchingAd)
+        {
+            return !_adRepository.HasActiveMatchBefore(matchingAd, newAd.Id);
+        }
     }
 }

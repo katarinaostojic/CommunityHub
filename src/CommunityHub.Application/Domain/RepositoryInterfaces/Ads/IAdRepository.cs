@@ -9,6 +9,8 @@ public interface IAdRepository
     int CountFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category);
     Ad? GetById(long adId);
     long Create(Ad ad);
+
+    bool HasActiveMatchBefore(Ad ad, long beforeAdId);
     void Update(Ad ad);
     List<Ad> GetAllByBuilding(long buildingId);
 }

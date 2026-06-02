@@ -60,6 +60,7 @@ public static class Injector
 
     private static readonly AdService _adService = new(
         _adRepository,
+        _adNotificationRepository,
         _adSlotBookingService,
         _adExpirationService);
 

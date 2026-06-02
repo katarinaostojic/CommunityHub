@@ -1,4 +1,6 @@
-﻿namespace CommunityHub.Application.DTOs.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Ads;
+
+namespace CommunityHub.Application.DTOs.Ads;
 
 public class AdNotificationDto
 {
@@ -6,14 +8,16 @@ public class AdNotificationDto
         long id,
         long recipientId,
         AdDto ad,
-        AdDto bookedByAd,
+        AdDto relatedAd,
+        AdNotificationType type,
         DateTime createdAt,
         bool isRead)
     {
         Id = id;
         RecipientId = recipientId;
         Ad = ad;
-        BookedByAd = bookedByAd;
+        RelatedAd = relatedAd;
+        Type = type;
         CreatedAt = createdAt;
         IsRead = isRead;
     }
@@ -21,7 +25,8 @@ public class AdNotificationDto
     public long Id { get; init; }
     public long RecipientId { get; init; }
     public AdDto Ad { get; init; }
-    public AdDto BookedByAd { get; init; }
+    public AdDto RelatedAd { get; init; }
+    public AdNotificationType Type { get; init; }
     public DateTime CreatedAt { get; init; }
     public bool IsRead { get; init; }
 }
