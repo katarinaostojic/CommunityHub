@@ -14,6 +14,8 @@ using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Reports;
+using CommunityHub.Application.Database.Repositories.Buildings.ResidentMeetings;
+using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 
 namespace CommunityHub.Application.DependencyInjection;
 
@@ -38,6 +40,8 @@ public static class Injector
     private static readonly CommonRoomRequestDbRepository _commonRoomRequestRepository = new();
 
     private static readonly ProblemReportDbRepository _problemReportRepository = new();
+
+    private static readonly ResidentMeetingDbRepository _residentMeetingRepository = new();
 
     private static readonly BuildingService _buildingService = new(
         _buildingRepository,
@@ -97,6 +101,10 @@ public static class Injector
     private static readonly ProblemReportService _problemReportService = new(
         _problemReportRepository,
         _buildingMembershipRepository);
+
+    private static readonly ResidentMeetingService _residentMeetingService = new(
+    _residentMeetingRepository,
+    _buildingMembershipRepository);
 
     private static readonly Dictionary<Type, object> _implementations = new()
     {
@@ -208,6 +216,10 @@ public static class Injector
         {
             typeof(ProblemReportService),
             _problemReportService
+        },
+        {
+            typeof(ResidentMeetingService),
+            _residentMeetingService
         },
         {
             typeof(NeighborhoodService),
