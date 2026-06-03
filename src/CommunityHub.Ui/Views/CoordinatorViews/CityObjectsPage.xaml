@@ -4,14 +4,32 @@
       Title="City Objects"
       Background="{StaticResource BackgroundLightBrush}">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0">
-            <StackPanel Margin="16,12,16,80">
+        <!-- Dropdown za kvart -->
+        <Border Grid.Row="0" Margin="16,12,16,0" Padding="12"
+                Background="White" CornerRadius="8"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="Select Neighborhood" FontSize="12" Foreground="Gray" Margin="0,0,0,4"/>
+                <ComboBox ItemsSource="{Binding Neighborhoods}"
+                          SelectedItem="{Binding SelectedNeighborhood, Mode=TwoWay}"
+                          DisplayMemberPath="Name"
+                          FontSize="14" Padding="8,6"/>
+            </StackPanel>
+        </Border>
 
+        <!-- Lista objekata -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Margin="16,10,16,80">
                 <ItemsControl ItemsSource="{Binding CityObjects}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -49,7 +67,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -28,6 +28,16 @@ public partial class CoordinatorDashboardPage : Page
         CoordinatorMainWindow.Instance.NavigateTo(new ForumsPage(_userId), "Forums");
     }
 
+    private void CityObjectsButton_Click(object sender, RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(new CityObjectsPage(_userId), "City Objects");
+    }
+
+    private void ReviewsButton_Click(object sender, RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(new NeighborhoodReviewsPage(_userId), "Reviews");
+    }
+
     private void LogoutButton_Click(object sender, RoutedEventArgs e)
     {
         LogInForm loginForm = new LogInForm();
