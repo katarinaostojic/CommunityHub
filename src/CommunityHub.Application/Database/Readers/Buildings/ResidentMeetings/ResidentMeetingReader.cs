@@ -89,4 +89,38 @@ public static class ResidentMeetingReader
             _ => TimeSpan.Parse(value.ToString()!)
         };
     }
+
+    public static List<ResidentMeetingAttendance> ReadAttendances(IDataReader reader)
+    {
+        List<ResidentMeetingAttendance> attendances = new();
+
+        while (reader.Read())
+        {
+            attendances.Add(new ResidentMeetingAttendance(
+                id: Convert.ToInt64(reader["id"]),
+                meetingId: Convert.ToInt64(reader["meeting_id"]),
+                tenantId: Convert.ToInt64(reader["tenant_id"]),
+                unitNumber: reader["unit_number"].ToString()!,
+                createdAt: ReadDateTime(reader, "created_at")));
+        }
+
+        return attendances;
+    }
+
+    public static List<ResidentMeetingTopicSuggestion> ReadTopicSuggestions(IDataReader reader)
+    {
+        List<ResidentMeetingTopicSuggestion> suggestions = new();
+
+        while (reader.Read())
+        {
+            suggestions.Add(new ResidentMeetingTopicSuggestion(
+                id: Convert.ToInt64(reader["id"]),
+                meetingId: Convert.ToInt64(reader["meeting_id"]),
+                tenantId: Convert.ToInt64(reader["tenant_id"]),
+                topic: reader["topic"].ToString()!,
+                suggestedAt: ReadDateTime(reader, "suggested_at")));
+        }
+
+        return suggestions;
+    }
 }
