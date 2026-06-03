@@ -263,6 +263,11 @@ public static class Injector
                 new TrustRecordDbRepository(),
                 new NeighborhoodMembershipDbRepository())
         },
+        {
+            typeof(CityObjectService),
+            new CityObjectService(
+                new CityObjectDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()
