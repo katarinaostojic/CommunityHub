@@ -15,12 +15,10 @@
                 FontSize="14" Style="{StaticResource PrimaryButton}"/>
         <Button Content="City Objects" Click="CityObjectsButton_Click" Margin="5"
                 FontSize="14" Style="{StaticResource PrimaryButton}"/>
-        <Button Content="Citizen Statistics" Margin="5"
-                FontSize="14" Style="{StaticResource OutlineButton}"/>
         <Button Content="Reviews" Click="ReviewsButton_Click" Margin="5"
                 FontSize="14" Style="{StaticResource PrimaryButton}"/>
-        <Button Content="City Gifts" Margin="5"
-                FontSize="14" Style="{StaticResource OutlineButton}"/>
+        <Button Content="City Gifts" Click="CityGiftsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
         <Button Content="Log Out" Click="LogoutButton_Click" Margin="5"
                 FontSize="14" Style="{StaticResource DangerButton}"/>
     </UniformGrid>

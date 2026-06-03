@@ -281,7 +281,13 @@ public static class Injector
         {
             typeof(DonationService),
             new DonationService(_donationRepository)
-},
+        },
+        {
+            typeof(CityGiftService),
+            new CityGiftService(
+                new CityGiftDbRepository(),
+                new NeighborhoodDbRepository())
+        },
     };
 
     public static T CreateInstance<T>()
