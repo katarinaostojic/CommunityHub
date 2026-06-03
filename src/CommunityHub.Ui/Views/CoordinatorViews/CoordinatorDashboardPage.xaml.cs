@@ -48,4 +48,8 @@ public partial class CoordinatorDashboardPage : Page
     {
         CoordinatorMainWindow.Instance.NavigateTo(new BudgetPage(_userId), "Budget");
     }
+    private void CityGiftsButton_Click(object sender, RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(new CityGiftsPage(_userId), "City Gifts");
+    }
 }
