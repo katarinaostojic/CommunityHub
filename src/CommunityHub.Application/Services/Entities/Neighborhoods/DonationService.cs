@@ -56,4 +56,25 @@ public class DonationService
                 CreatedAt = e.CreatedAt.ToString("dd/MM/yyyy")
             }).ToList();
     }
+    public (bool success, string? error) AddExpense(long neighborhoodId, long categoryId,
+    decimal amount, string description)
+    {
+        var (success, error) = Expense.Validate(amount, description);
+        if (!success) return (false, error);
+
+        _repository.AddExpense(neighborhoodId, categoryId, amount, description);
+        return (true, null);
+    }
+
+    public List<DonationDto> GetDonationsByNeighborhood(long neighborhoodId)
+    {
+        return _repository.GetDonationsByNeighborhood(neighborhoodId)
+            .Select(d => new DonationDto
+            {
+                Id = d.Id,
+                CategoryName = d.CategoryName,
+                Amount = d.Amount,
+                CreatedAt = d.CreatedAt.ToString("dd/MM/yyyy")
+            }).ToList();
+    }
 }

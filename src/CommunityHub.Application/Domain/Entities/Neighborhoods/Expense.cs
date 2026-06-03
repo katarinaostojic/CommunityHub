@@ -24,4 +24,13 @@ public class Expense
         Description = description;
         CreatedAt = createdAt;
     }
+
+    public static (bool success, string? error) Validate(decimal amount, string description)
+    {
+        if (amount <= 0)
+            return (false, "Amount must be greater than 0.");
+        if (string.IsNullOrWhiteSpace(description))
+            return (false, "Description is required.");
+        return (true, null);
+    }
 }

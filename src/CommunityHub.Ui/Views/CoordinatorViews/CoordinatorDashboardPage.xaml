@@ -11,8 +11,8 @@
                 FontSize="14" Style="{StaticResource PrimaryButton}"/>
         <Button Content="Forums" Click="ForumsButton_Click" Margin="5"
                 FontSize="14" Style="{StaticResource PrimaryButton}"/>
-        <Button Content="Budget" Margin="5"
-                FontSize="14" Style="{StaticResource OutlineButton}"/>
+        <Button Content="Budget" Click="BudgetButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
         <Button Content="City Objects" Click="CityObjectsButton_Click" Margin="5"
                 FontSize="14" Style="{StaticResource PrimaryButton}"/>
         <Button Content="Citizen Statistics" Margin="5"
