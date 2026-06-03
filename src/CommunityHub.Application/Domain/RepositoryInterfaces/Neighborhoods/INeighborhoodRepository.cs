@@ -11,4 +11,5 @@ public interface INeighborhoodRepository
     void AddImage(long neighborhoodId, string imagePath);
     Neighborhood? GetById(long id);
     string? GetNameById(long id);
+    (long coordinatorId, string coordinatorName) GetCoordinatorInfo(long neighborhoodId);
 }

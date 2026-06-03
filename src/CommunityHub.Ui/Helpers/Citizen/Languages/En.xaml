@@ -91,4 +91,14 @@
     <system:String x:Key="Button_Dashboard">🏠 Go to Dashboard</system:String>
     <system:String x:Key="Button_ViewRequests">📋 View My Requests</system:String>
 
+    <system:String x:Key="Reviews_Title">Coordinator Reviews</system:String>
+    <system:String x:Key="Reviews_Coordinator">👤 Coordinator:</system:String>
+    <system:String x:Key="Reviews_RateButton">⭐ Rate Coordinator</system:String>
+    <system:String x:Key="Reviews_Rating">⭐ Rating:</system:String>
+    <system:String x:Key="Reviews_Comment">💬 Comment:</system:String>
+    <system:String x:Key="Reviews_Reports">🚩 Reports:</system:String>
+    <system:String x:Key="Reviews_ReportButton">🚩 Report</system:String>
+    <system:String x:Key="Menu_CoordinatorReviews">Coordinator Reviews</system:String>
+    <system:String x:Key="Events_CoordinatorReviews">⭐ Coordinator Reviews</system:String>
+
 </ResourceDictionary>

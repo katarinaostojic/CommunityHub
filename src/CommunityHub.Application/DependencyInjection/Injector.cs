@@ -105,6 +105,8 @@ public static class Injector
     private static readonly ResidentMeetingService _residentMeetingService = new(
     _residentMeetingRepository,
     _buildingMembershipRepository);
+    private static readonly CoordinatorReviewDbRepository _coordinatorReviewRepository = new();
+    private static readonly TrustRecordDbRepository _trustRecordRepository = new();
 
     private static readonly Dictionary<Type, object> _implementations = new()
     {
@@ -268,6 +270,12 @@ public static class Injector
             new CityObjectService(
                 new CityObjectDbRepository())
         },
+        {
+            typeof(CoordinatorReviewService),
+            new CoordinatorReviewService(
+                _coordinatorReviewRepository,
+                _trustRecordRepository)
+},
     };
 
     public static T CreateInstance<T>()

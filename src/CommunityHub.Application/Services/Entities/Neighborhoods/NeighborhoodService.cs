@@ -30,4 +30,6 @@ public class NeighborhoodService
         => _repository.AddImage(neighborhoodId, imagePath);
     public string? GetNameById(long neighborhoodId)
     => _repository.GetNameById(neighborhoodId);
+    public (long coordinatorId, string coordinatorName) GetCoordinatorInfo(long neighborhoodId)
+    => _repository.GetCoordinatorInfo(neighborhoodId);
 }

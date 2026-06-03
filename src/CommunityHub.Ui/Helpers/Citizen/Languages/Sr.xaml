@@ -91,4 +91,14 @@
     <system:String x:Key="Button_Dashboard">🏠 Početna</system:String>
     <system:String x:Key="Button_ViewRequests">📋 Moji zahtevi</system:String>
 
+    <system:String x:Key="Reviews_Title">Recenzije koordinatora</system:String>
+    <system:String x:Key="Reviews_Coordinator">👤 Koordinator:</system:String>
+    <system:String x:Key="Reviews_RateButton">⭐ Oceni koordinatora</system:String>
+    <system:String x:Key="Reviews_Rating">⭐ Ocena:</system:String>
+    <system:String x:Key="Reviews_Comment">💬 Komentar:</system:String>
+    <system:String x:Key="Reviews_Reports">🚩 Prijave:</system:String>
+    <system:String x:Key="Reviews_ReportButton">🚩 Prijavi</system:String>
+    <system:String x:Key="Menu_CoordinatorReviews">Recenzije koordinatora</system:String>
+    <system:String x:Key="Events_CoordinatorReviews">⭐ Recenzije koordinatora</system:String>
+
 </ResourceDictionary>

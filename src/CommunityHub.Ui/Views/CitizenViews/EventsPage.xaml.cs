@@ -72,6 +72,13 @@ public partial class EventsPage : Window
         new MeetingsPage(_user, _neighborhoodId).Show();
         Close();
     }
+    private void CoordinatorReviewsButton_Click(object sender, RoutedEventArgs e)
+    {
+        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
+        var (coordinatorId, coordinatorName) = ns.GetCoordinatorInfo(_neighborhoodId);
+        new CoordinatorReviewsPage(_user, _neighborhoodId, coordinatorId, coordinatorName).Show();
+        Close();
+    }
 
     private void ProfileButton_Click(object sender, RoutedEventArgs e)
     {

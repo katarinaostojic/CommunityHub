@@ -97,32 +97,41 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="{Binding ResultsText}"
-                           FontSize="28" FontWeight="Bold" VerticalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+               FontSize="28" FontWeight="Bold" VerticalAlignment="Center"
+               Foreground="{DynamicResource TextPrimaryBrush}"/>
 
                 <Button Grid.Column="1" Content="{DynamicResource Events_ViewCitizens}"
-                        Click="ViewCitizensButton_Click"
-                        FontSize="20" FontWeight="Bold"
-                        Height="52" Padding="20,0"
-                        Background="#0D47A1"
-                        Foreground="White" BorderThickness="0"/>
+            Click="ViewCitizensButton_Click"
+            FontSize="20" FontWeight="Bold"
+            Height="52" Padding="20,0"
+            Background="#0D47A1"
+            Foreground="White" BorderThickness="0"/>
 
                 <Button Grid.Column="3" Content="{DynamicResource Events_ViewMeetings}"
-                        Click="ViewMeetingsButton_Click"
-                        FontSize="20" FontWeight="Bold"
-                        Height="52" Padding="20,0"
-                        Background="#0D47A1"
-                        Foreground="White" BorderThickness="0"/>
+            Click="ViewMeetingsButton_Click"
+            FontSize="20" FontWeight="Bold"
+            Height="52" Padding="20,0"
+            Background="#0D47A1"
+            Foreground="White" BorderThickness="0"/>
 
-                <Button Grid.Column="5" Content="{DynamicResource Events_CreateEvent}"
-                        Click="CreateEventButton_Click"
-                        FontSize="20" FontWeight="Bold"
-                        Height="52" Padding="20,0"
-                        Background="#F9A825"
-                        Foreground="White" BorderThickness="0"/>
+                <Button Grid.Column="5" Content="{DynamicResource Events_CoordinatorReviews}"
+            Click="CoordinatorReviewsButton_Click"
+            FontSize="20" FontWeight="Bold"
+            Height="52" Padding="20,0"
+            Background="#0D47A1"
+            Foreground="White" BorderThickness="0"/>
+
+                <Button Grid.Column="7" Content="{DynamicResource Events_CreateEvent}"
+            Click="CreateEventButton_Click"
+            FontSize="20" FontWeight="Bold"
+            Height="52" Padding="20,0"
+            Background="#F9A825"
+            Foreground="White" BorderThickness="0"/>
             </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
