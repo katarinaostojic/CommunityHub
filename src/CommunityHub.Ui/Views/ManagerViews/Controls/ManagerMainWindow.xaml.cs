@@ -88,6 +88,6 @@ public partial class ManagerMainWindow : Window
     private void ResidentMeetingButton_Click(object sender, RoutedEventArgs e)
     {
         SetActiveNavButton(BtnResidentMeeting);
-        // TODO: navigate to ResidentMeeting page
+        MainFrame.Navigate(new Buildings.ResidentMeetings.ResidentMeetingsPage(_currentUser));
     }
 }
