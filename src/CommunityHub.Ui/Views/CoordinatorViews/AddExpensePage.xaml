@@ -1,0 +1,75 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.AddExpensePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Add Expense"
+      Background="{StaticResource BackgroundLightBrush}">
+
+    <ScrollViewer>
+        <StackPanel Margin="16,12,16,24">
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+
+                    <!-- Kategorija -->
+                    <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
+                        Category <Run Foreground="Red">*</Run>
+                    </TextBlock>
+                    <ComboBox ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                              DisplayMemberPath="CategoryName"
+                              FontSize="13" Padding="8,6" Margin="0,0,0,14"/>
+
+                    <!-- Iznos -->
+                    <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
+                        Amount (RSD) <Run Foreground="Red">*</Run>
+                    </TextBlock>
+                    <TextBox Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}"
+                             Padding="8,6" FontSize="13"
+                             BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                             Margin="0,0,0,14"/>
+
+                    <!-- Opis -->
+                    <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
+                        Description <Run Foreground="Red">*</Run>
+                    </TextBlock>
+                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                             Padding="8,6" FontSize="13"
+                             BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                             TextWrapping="Wrap" AcceptsReturn="True" Height="80"
+                             Margin="0,0,0,14"/>
+
+                    <!-- Datum -->
+                    <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
+                        Date <Run Foreground="Red">*</Run>
+                    </TextBlock>
+                    <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                                FontSize="13" Margin="0,0,0,14"/>
+
+                    <!-- Error baner -->
+                    <Border x:Name="ErrorBanner" Padding="10,8" CornerRadius="6"
+                            Background="#FFEBEE" BorderBrush="#EF5350" BorderThickness="1"
+                            Margin="0,0,0,10" Visibility="Collapsed">
+                        <TextBlock x:Name="ErrorText" Foreground="#C62828" FontSize="13"/>
+                    </Border>
+
+                    <!-- Dugmad -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Save Expense"
+                                Click="SaveButton_Click"
+                                Style="{StaticResource PrimaryButton}"
+                                Padding="12,8"/>
+                        <Button Grid.Column="2" Content="Cancel"
+                                Click="CancelButton_Click"
+                                Style="{StaticResource OutlineButton}"
+                                Padding="12,8"/>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

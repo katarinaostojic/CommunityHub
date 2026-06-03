@@ -137,4 +137,20 @@ public class DonationDbRepository : BaseDbRepository, IDonationRepository
             (DateOnly)reader["created_at"]
         );
     }
+
+    public void AddExpense(long neighborhoodId, long categoryId, decimal amount, string description)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        INSERT INTO expenses (neighborhood_id, category_id, amount, description, created_at)
+        VALUES (@neighborhoodId, @categoryId, @amount, @description, @createdAt)";
+
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        AddParameter(command, "@categoryId", categoryId);
+        AddParameter(command, "@amount", amount);
+        AddParameter(command, "@description", description);
+        AddParameter(command, "@createdAt", DateTime.UtcNow);
+        command.ExecuteNonQuery();
+    }
 }

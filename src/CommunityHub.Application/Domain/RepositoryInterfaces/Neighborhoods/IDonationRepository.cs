@@ -13,4 +13,5 @@ public interface IDonationRepository
     List<Donation> GetDonationsByNeighborhood(long neighborhoodId);
     decimal GetBudgetByCategory(long neighborhoodId, long categoryId);
     List<Expense> GetExpensesByNeighborhood(long neighborhoodId);
+    void AddExpense(long neighborhoodId, long categoryId, decimal amount, string description);
 }

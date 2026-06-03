@@ -44,4 +44,8 @@ public partial class CoordinatorDashboardPage : Page
         loginForm.Show();
         CoordinatorMainWindow.Instance.Close();
     }
+    private void BudgetButton_Click(object sender, RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(new BudgetPage(_userId), "Budget");
+    }
 }
