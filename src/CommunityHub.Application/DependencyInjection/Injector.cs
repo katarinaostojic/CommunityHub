@@ -108,6 +108,8 @@ public static class Injector
         _residentMeetingRepository,
         _buildingMembershipRepository);
 
+    private static readonly DonationDbRepository _donationRepository = new();
+
     private static readonly Dictionary<Type, object> _implementations = new()
     {
         {
@@ -276,6 +278,10 @@ public static class Injector
                 _coordinatorReviewRepository,
                 _trustRecordRepository)
         },
+        {
+            typeof(DonationService),
+            new DonationService(_donationRepository)
+},
     };
 
     public static T CreateInstance<T>()

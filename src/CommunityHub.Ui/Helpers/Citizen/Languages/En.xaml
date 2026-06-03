@@ -118,5 +118,18 @@
     <system:String x:Key="History_TotalVisits">Total visits:</system:String>
     <system:String x:Key="History_VisitDates">Visit dates:</system:String>
     <system:String x:Key="Button_Back">◀ Back</system:String>
+    <system:String x:Key="Budget_Title">Neighborhood Budget</system:String>
+    <system:String x:Key="Budget_TotalBudget">💰 Total Budget:</system:String>
+    <system:String x:Key="Budget_ByCategory">Budget by category:</system:String>
+    <system:String x:Key="Budget_SpendingHistory">📋 Spending History</system:String>
+    <system:String x:Key="Budget_Donate">+ Donate</system:String>
+    <system:String x:Key="Donate_Title">Donate to Neighborhood</system:String>
+    <system:String x:Key="Donate_Amount">Amount:</system:String>
+    <system:String x:Key="Donate_Category">Category:</system:String>
+    <system:String x:Key="Donate_Button">💰 Donate</system:String>
+    <system:String x:Key="Spending_Title">Spending History</system:String>
+    <system:String x:Key="Spending_Amount">💰 Amount:</system:String>
+    <system:String x:Key="Spending_Description">📋 Description:</system:String>
+    <system:String x:Key="Spending_Date">📅 Date:</system:String>
 
 </ResourceDictionary>

@@ -79,7 +79,7 @@ public partial class MyRequestsPage : Window
             case "Meetings": CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
             case "Profile": CitizenNavigationHelper.NavigateToProfile(_user, this); break;
             case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
-            case "Budget": MessageBox.Show("Go to Budget page."); break;
+            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
         }
     }
 

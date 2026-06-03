@@ -118,5 +118,18 @@
     <system:String x:Key="History_TotalVisits">Ukupno poseta:</system:String>
     <system:String x:Key="History_VisitDates">Datumi poseta:</system:String>
     <system:String x:Key="Button_Back">◀ Nazad</system:String>
+    <system:String x:Key="Budget_Title">Budžet kvarta</system:String>
+    <system:String x:Key="Budget_TotalBudget">💰 Ukupan budžet:</system:String>
+    <system:String x:Key="Budget_ByCategory">Budžet po kategorijama:</system:String>
+    <system:String x:Key="Budget_SpendingHistory">📋 Istorija troškova</system:String>
+    <system:String x:Key="Budget_Donate">+ Donacija</system:String>
+    <system:String x:Key="Donate_Title">Donacija kvartu</system:String>
+    <system:String x:Key="Donate_Amount">Iznos:</system:String>
+    <system:String x:Key="Donate_Category">Kategorija:</system:String>
+    <system:String x:Key="Donate_Button">💰 Doniraj</system:String>
+    <system:String x:Key="Spending_Title">Istorija troškova</system:String>
+    <system:String x:Key="Spending_Amount">💰 Iznos:</system:String>
+    <system:String x:Key="Spending_Description">📋 Opis:</system:String>
+    <system:String x:Key="Spending_Date">📅 Datum:</system:String>
 
 </ResourceDictionary>

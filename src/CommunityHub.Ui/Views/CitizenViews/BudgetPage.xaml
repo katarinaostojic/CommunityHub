@@ -1,0 +1,175 @@
+﻿<Window x:Class="CommunityHub.Ui.Views.CitizenViews.BudgetPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:CommunityHub.Ui.Views.CitizenViews"
+        Title="Budget"
+        Height="760"
+        Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource BackgroundLightBrush}">
+
+    <Grid Background="{DynamicResource BackgroundLightBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42"/>
+            <RowDefinition Height="54"/>
+            <RowDefinition Height="78"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource PrimarySoftBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+            <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
+                    Margin="14,0,0,0" Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1" CornerRadius="8">
+                <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+            </Border>
+        </Border>
+
+        <Grid Grid.Row="1" Background="{DynamicResource SurfaceSoftBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
+                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+            </StackPanel>
+            <Border Grid.Column="1" Margin="10,6,18,6" Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="18">
+                <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
+                           VerticalAlignment="Center" Margin="16,0,0,0"
+                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,1">
+            <Grid Margin="16,0,16,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="☰" Click="BurgerButton_Click"
+                        FontSize="32" FontWeight="Bold" Background="Transparent"
+                        BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"
+                        Foreground="#0D47A1"/>
+
+                <TextBlock Grid.Column="1" Text="{DynamicResource Budget_Title}"
+                           FontSize="28" FontWeight="Bold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Click="ProfileButton_Click"
+                            Background="Transparent"
+                            BorderThickness="0" Padding="0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="👤" FontSize="32" Margin="0,0,6,0"/>
+                            <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
+                                       FontWeight="Bold" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="3" Margin="24,14,24,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Total budget i dugmad -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{DynamicResource Budget_TotalBudget}"
+                               FontSize="26" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="{Binding TotalBudgetDisplay}"
+                               FontSize="26" FontWeight="Bold"
+                               Margin="8,0,0,0" Foreground="#0D47A1"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="{DynamicResource Budget_SpendingHistory}"
+                        Click="SpendingHistoryButton_Click"
+                        FontSize="20" FontWeight="Bold"
+                        Height="52" Padding="20,0"
+                        Background="#0D47A1"
+                        Foreground="White" BorderThickness="0"/>
+
+                <Button Grid.Column="3"
+                        Content="{DynamicResource Budget_Donate}"
+                        Click="DonateButton_Click"
+                        FontSize="20" FontWeight="Bold"
+                        Height="52" Padding="20,0"
+                        Background="#F9A825"
+                        Foreground="White" BorderThickness="0"/>
+            </Grid>
+
+            <!-- Budget po kategorijama -->
+            <TextBlock Grid.Row="1" Text="{DynamicResource Budget_ByCategory}"
+                       FontSize="22" FontWeight="Bold"
+                       Margin="0,0,0,14"
+                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding CategoryBudgets}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                    Background="{DynamicResource SurfaceBrush}" Margin="0,0,0,12"
+                                    Padding="20,14" CornerRadius="12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding CategoryName}"
+                                               FontSize="22" FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+                                    <TextBlock Grid.Column="1"
+                                               FontSize="22" FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               Foreground="#0D47A1">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0:0.##} €">
+                                                <Binding Path="Budget"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <views:CitizenMenuView x:Name="CitizenMenu"
+                               Grid.RowSpan="4"
+                               Visibility="Collapsed"
+                               Panel.ZIndex="100"/>
+    </Grid>
+</Window>

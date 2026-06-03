@@ -53,4 +53,10 @@ public static class CitizenNavigationHelper
         if (nId == null) return;
         new CityObjectsPage(user, nId.Value).Show(); current.Close();
     }
+    public static void NavigateToBudget(User user, Window current)
+    {
+        long? nId = GetMembershipId(user.Id);
+        if (nId == null) return;
+        new BudgetPage(user, nId.Value).Show(); current.Close();
+    }
 }
