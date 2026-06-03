@@ -1,0 +1,148 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.ReserveCityObjectPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      Title="Reserve City Object"
+      Background="{StaticResource BackgroundLightBrush}">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <StackPanel Margin="16,12,16,24">
+
+            <!-- Sve u jednoj kartici -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+
+                    <!-- Header -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <TextBlock Text="🏛" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding SelectedCityObject.Name}"
+                                       FontWeight="Bold" FontSize="16"
+                                       Foreground="{StaticResource PrimaryBrush}"/>
+                            <TextBlock Text="{Binding SelectedCityObject.VoteDisplay}"
+                                       FontSize="12" Foreground="Gray"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Separator -->
+                    <Separator Margin="0,0,0,16"/>
+
+                    <!-- Duration -->
+                    <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
+                        Duration (days) <Run Foreground="Red">*</Run>
+                    </TextBlock>
+                    <TextBox Text="{Binding DurationDaysText, UpdateSourceTrigger=PropertyChanged}"
+                             Padding="8,6" FontSize="13" Margin="0,0,0,16"
+                             BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                             Width="140" HorizontalAlignment="Left"/>
+
+                    <!-- Date range -->
+                    <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,8">
+                        Desired date range <Run Foreground="Red">*</Run>
+                    </TextBlock>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <StackPanel Margin="0,0,24,0">
+                            <TextBlock Text="From" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                            <Calendar SelectedDate="{Binding RangeFrom, Mode=TwoWay}"
+                                      DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="To" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{StaticResource PrimaryBrush}"
+                                       HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                            <Calendar SelectedDate="{Binding RangeTo, Mode=TwoWay}"
+                                      DisplayDateStart="{x:Static sys:DateTime.Today}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Find slot dugme -->
+                    <Button Content="🔍  Find Available Slot"
+                        Click="SearchSlotButton_Click"
+                        Style="{StaticResource PrimaryButton}"
+                        HorizontalAlignment="Left"
+                        Padding="16,8" Margin="0,0,0,16"/>
+
+                    <!-- Slobodan termin pronađen -->
+                    <Border Padding="12,10" CornerRadius="8"
+                            Background="#E8F5E9" BorderBrush="#4CAF50" BorderThickness="1"
+                            Margin="0,0,0,8"
+                            Visibility="{Binding HasFoundSlot, Converter={StaticResource BoolToVis}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="✔" FontSize="16" Foreground="#2E7D32"
+                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Free slot found in your date range:"
+                                           FontSize="12" Foreground="#2E7D32"/>
+                                <TextBlock Text="{Binding FoundSlot.Display}"
+                                           FontSize="14" FontWeight="Bold" Foreground="#2E7D32"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Nema slobodnog termina — alternative -->
+                    <Border Padding="12,10" CornerRadius="8"
+                            Background="#FFF3E0" BorderBrush="#FF9800" BorderThickness="1"
+                            Margin="0,0,0,8"
+                            Visibility="{Binding ShowNoSlotWarning, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="⚠ No free slot in the selected range."
+                                       FontSize="13" FontWeight="Bold"
+                                       Foreground="#E65100" Margin="0,0,0,4"/>
+                            <TextBlock Text="Select one of the available alternatives:"
+                                       FontSize="12" Foreground="#BF360C" Margin="0,0,0,8"/>
+                            <ItemsControl ItemsSource="{Binding AlternativeSlots}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <RadioButton Content="{Binding Display}"
+                                                     Tag="{Binding}"
+                                                     Checked="AlternativeSlot_Checked"
+                                                     GroupName="SlotGroup"
+                                                     Margin="0,4,0,0"
+                                                     FontSize="13"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Error baner -->
+                    <Border x:Name="ErrorBanner" Padding="12,8" CornerRadius="8"
+                            Background="#FFEBEE" BorderBrush="#EF5350" BorderThickness="1"
+                            Margin="0,0,0,8" Visibility="Collapsed">
+                        <TextBlock x:Name="ErrorText" Foreground="#C62828" FontSize="13"/>
+                    </Border>
+
+                    <Separator Margin="0,4,0,16"/>
+
+                    <!-- Confirm + Cancel dugmad -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Content="✔  Confirm Reservation"
+                                Click="ConfirmReservationButton_Click"
+                                IsEnabled="{Binding CanConfirm}"
+                                Style="{StaticResource PrimaryButton}"
+                                Padding="12,8"/>
+                        <Button Grid.Column="2"
+                                Content="Cancel"
+                                Click="CancelButton_Click"
+                                Style="{StaticResource OutlineButton}"
+                                Padding="12,8"/>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
