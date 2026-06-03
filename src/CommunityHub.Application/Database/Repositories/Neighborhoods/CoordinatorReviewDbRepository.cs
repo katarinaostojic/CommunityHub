@@ -140,16 +140,17 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT COUNT(*) 
-            FROM coordinator_review_reports rp
-            JOIN neighborhood_memberships nm ON rp.citizen_id = nm.citizen_id
-            JOIN event_registrations er ON rp.citizen_id = er.citizen_id
-            WHERE rp.review_id = @reviewId
-            GROUP BY rp.citizen_id
-            HAVING COUNT(er.id) > 10";
+        SELECT COUNT(DISTINCT rp.citizen_id)
+        FROM coordinator_review_reports rp
+        JOIN neighborhood_memberships nm ON rp.citizen_id = nm.citizen_id
+        LEFT JOIN event_registrations er ON rp.citizen_id = er.citizen_id AND er.attended = true
+        WHERE rp.review_id = @reviewId
+        GROUP BY rp.citizen_id
+        HAVING COUNT(er.id) > 10";
 
         AddParameter(command, "@reviewId", reviewId);
-        return Convert.ToInt32(command.ExecuteScalar());
+        object? result = command.ExecuteScalar();
+        return result == null || result == DBNull.Value ? 0 : Convert.ToInt32(result);
     }
 
     private List<CoordinatorReview> ReadReviews(IDataReader reader)

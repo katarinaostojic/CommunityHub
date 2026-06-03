@@ -24,4 +24,6 @@ public class CoordinatorReviewItemViewModel : BaseViewModel
     public int ReportCount => _dto.ReportCount;
     public bool CanReport => _dto.CanReport;
     public string ReportVisibility => _dto.CanReport ? "Visible" : "Collapsed";
+    public bool HasReported => _dto.HasReported;
+    public string ReportedVisibility => _dto.HasReported ? "Visible" : "Collapsed";
 }

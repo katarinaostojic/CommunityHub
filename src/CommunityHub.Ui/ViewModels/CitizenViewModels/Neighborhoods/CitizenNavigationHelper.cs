@@ -47,4 +47,10 @@ public static class CitizenNavigationHelper
         string name = ns.GetNameById(nId.Value) ?? "";
         new MyProfilePage(user, nId.Value, name).Show(); current.Close();
     }
+    public static void NavigateToCityObjects(User user, Window current)
+    {
+        long? nId = GetMembershipId(user.Id);
+        if (nId == null) return;
+        new CityObjectsPage(user, nId.Value).Show(); current.Close();
+    }
 }

@@ -64,4 +64,80 @@ public class CityObjectService
         _repository.AddReservation(newReservation);
         _repository.ResetVotes(cityObjectId, neighborhoodId);
     }
+
+    public List<CitizenCityObjectDto> GetByNeighborhood(long neighborhoodId, long citizenId)
+    {
+        return _repository.GetByNeighborhood(neighborhoodId, citizenId)
+            .Select(co => new CitizenCityObjectDto
+            {
+                Id = co.Id,
+                Name = co.Name,
+                Description = co.Description,
+                VoteCount = co.VoteCount,
+                LastVisit = co.LastVisit?.ToString("dd/MM/yyyy"),
+                HasVoted = co.HasVoted
+            }).ToList();
+    }
+
+    public void ToggleVote(long cityObjectId, long citizenId, long neighborhoodId)
+    {
+        if (_repository.HasVoted(cityObjectId, citizenId))
+            _repository.RemoveVote(cityObjectId, citizenId);
+        else
+            _repository.AddVote(cityObjectId, citizenId, neighborhoodId);
+    }
+
+    public CityObjectStatisticsDto GetStatistics(long neighborhoodId, int? month, int? year)
+    {
+        var reservations = _repository.GetReservationsByNeighborhood(neighborhoodId, month, year);
+
+        var visitCounts = reservations
+            .GroupBy(r => r.CityObjectId)
+            .Select(g => new CityObjectVisitCountDto
+        {
+            CityObjectId = g.Key,
+            CityObjectName = GetCityObjectName(g.Key),
+            VisitCount = g.Count()
+        }).ToList();
+
+        return new CityObjectStatisticsDto
+        {
+            TotalReservations = reservations.Count,
+            VisitCounts = visitCounts
+        };
+    }
+
+    public List<CityObjectReservationDto> GetReservationHistory(long cityObjectId, long neighborhoodId)
+    {
+        string cityObjectName = GetCityObjectName(cityObjectId);
+        return _repository.GetReservationsByCityObject(cityObjectId, neighborhoodId)
+            .Select(r => new CityObjectReservationDto
+            {
+                Id = r.Id,
+                CityObjectId = r.CityObjectId,
+                CityObjectName = cityObjectName,
+                DateFrom = r.DateFrom.ToString("dd/MM/yyyy"),
+                DateTo = r.DateTo.ToString("dd/MM/yyyy")
+            }).ToList();
+    }
+
+    private string GetCityObjectName(long cityObjectId)
+    {
+        return _repository.GetById(cityObjectId)?.Name ?? "Unknown";
+    }
+    public List<CityObjectReservationDto> GetReservationHistoryFiltered(long cityObjectId, long neighborhoodId, int? month, int? year)
+    {
+        string cityObjectName = GetCityObjectName(cityObjectId);
+        return _repository.GetReservationsByCityObject(cityObjectId, neighborhoodId)
+            .Where(r => (!month.HasValue || r.DateFrom.Month == month) &&
+                        (!year.HasValue || r.DateFrom.Year == year))
+            .Select(r => new CityObjectReservationDto
+            {
+                Id = r.Id,
+                CityObjectId = r.CityObjectId,
+                CityObjectName = cityObjectName,
+                DateFrom = r.DateFrom.ToString("dd/MM/yyyy"),
+                DateTo = r.DateTo.ToString("dd/MM/yyyy")
+            }).ToList();
+    }
 }
