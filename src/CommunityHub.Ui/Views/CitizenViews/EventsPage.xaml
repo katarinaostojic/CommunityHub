@@ -7,7 +7,7 @@
         Width="1280"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundLightBrush}">
-
+    
     <Grid Background="{DynamicResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>

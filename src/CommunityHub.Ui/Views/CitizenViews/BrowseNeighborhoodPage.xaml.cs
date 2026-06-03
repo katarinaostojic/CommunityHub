@@ -120,7 +120,7 @@ public partial class BrowseNeighborhoodPage : Window
             case "Citizens": CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
             case "Meetings": CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
             case "Profile": CitizenNavigationHelper.NavigateToProfile(_user, this); break;
-            case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
+            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
     }

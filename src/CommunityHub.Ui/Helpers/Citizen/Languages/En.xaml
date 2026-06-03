@@ -100,5 +100,23 @@
     <system:String x:Key="Reviews_ReportButton">🚩 Report</system:String>
     <system:String x:Key="Menu_CoordinatorReviews">Coordinator Reviews</system:String>
     <system:String x:Key="Events_CoordinatorReviews">⭐ Coordinator Reviews</system:String>
+    <system:String x:Key="Reviews_Reported">✔ Reported</system:String>
+    <system:String x:Key="CityObjects_Title">Neighborhood City Objects</system:String>
+    <system:String x:Key="CityObjects_ViewStatistics">📊 Statistics</system:String>
+    <system:String x:Key="CityObjects_Votes">👍 Votes:</system:String>
+    <system:String x:Key="CityObjects_LastVisit">📅 Last visit:</system:String>
+    <system:String x:Key="CityObjects_Vote">👍 Vote</system:String>
+    <system:String x:Key="CityObjects_Unvote">👎 Remove vote</system:String>
+    <system:String x:Key="CityObjects_NoVisit">No visits yet</system:String>
+    <system:String x:Key="Statistics_Title">Statistics</system:String>
+    <system:String x:Key="Statistics_Monthly">Monthly</system:String>
+    <system:String x:Key="Statistics_Yearly">Yearly</system:String>
+    <system:String x:Key="Statistics_Total">Total reservations:</system:String>
+    <system:String x:Key="Statistics_Visits">Visits:</system:String>
+    <system:String x:Key="Statistics_ViewHistory">📋 View History</system:String>
+    <system:String x:Key="History_Title">Visit History</system:String>
+    <system:String x:Key="History_TotalVisits">Total visits:</system:String>
+    <system:String x:Key="History_VisitDates">Visit dates:</system:String>
+    <system:String x:Key="Button_Back">◀ Back</system:String>
 
 </ResourceDictionary>

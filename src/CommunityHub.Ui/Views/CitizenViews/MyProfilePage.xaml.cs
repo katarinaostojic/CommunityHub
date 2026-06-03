@@ -60,7 +60,7 @@ public partial class MyProfilePage : Window
             case "Citizens": NavigateToCitizens(); break;
             case "Meetings": NavigateToMeetings(); break;
             case "Profile": break;
-            case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
+            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
     }

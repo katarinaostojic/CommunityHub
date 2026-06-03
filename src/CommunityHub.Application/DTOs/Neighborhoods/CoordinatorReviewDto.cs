@@ -15,4 +15,5 @@ public class CoordinatorReviewDto
     public int ReportCount { get; set; }
     public bool IsRemoved { get; set; }
     public bool CanReport { get; set; }
+    public bool HasReported { get; set; }
 }

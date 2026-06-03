@@ -100,5 +100,23 @@
     <system:String x:Key="Reviews_ReportButton">🚩 Prijavi</system:String>
     <system:String x:Key="Menu_CoordinatorReviews">Recenzije koordinatora</system:String>
     <system:String x:Key="Events_CoordinatorReviews">⭐ Recenzije koordinatora</system:String>
+    <system:String x:Key="Reviews_Reported">✔ Prijavljeno</system:String>
+    <system:String x:Key="CityObjects_Title">Gradski objekti kvarta</system:String>
+    <system:String x:Key="CityObjects_ViewStatistics">📊 Statistika</system:String>
+    <system:String x:Key="CityObjects_Votes">👍 Glasova:</system:String>
+    <system:String x:Key="CityObjects_LastVisit">📅 Poslednja poseta:</system:String>
+    <system:String x:Key="CityObjects_Vote">👍 Glasaj</system:String>
+    <system:String x:Key="CityObjects_Unvote">👎 Ukloni glas</system:String>
+    <system:String x:Key="CityObjects_NoVisit">Još nema poseta</system:String>
+    <system:String x:Key="Statistics_Title">Statistika</system:String>
+    <system:String x:Key="Statistics_Monthly">Mesečno</system:String>
+    <system:String x:Key="Statistics_Yearly">Godišnje</system:String>
+    <system:String x:Key="Statistics_Total">Ukupno rezervacija:</system:String>
+    <system:String x:Key="Statistics_Visits">Poseta:</system:String>
+    <system:String x:Key="Statistics_ViewHistory">📋 Istorija poseta</system:String>
+    <system:String x:Key="History_Title">Istorija poseta</system:String>
+    <system:String x:Key="History_TotalVisits">Ukupno poseta:</system:String>
+    <system:String x:Key="History_VisitDates">Datumi poseta:</system:String>
+    <system:String x:Key="Button_Back">◀ Nazad</system:String>
 
 </ResourceDictionary>

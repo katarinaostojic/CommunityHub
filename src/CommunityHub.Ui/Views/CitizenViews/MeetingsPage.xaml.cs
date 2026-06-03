@@ -68,7 +68,7 @@ public partial class MeetingsPage : Window
             case "Citizens": new NeighborhoodCitizensPage(_user, _neighborhoodId).Show(); Close(); break;
             case "Meetings": break;
             case "Profile": NavigateToProfile(); break;
-            case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
+            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
             case "Budget": MessageBox.Show("Go to Budget page."); break;
         }
     }

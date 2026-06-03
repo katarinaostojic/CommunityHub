@@ -7,13 +7,18 @@ public class CityObject
     public string Description { get; private set; }
     public int VoteCount { get; private set; }
     public List<CityObjectReservation> Reservations { get; private set; }
+    public DateOnly? LastVisit { get; private set; }
+    public bool HasVoted { get; private set; }
 
-    public CityObject(long id, string name, string description, int voteCount)
+    public CityObject(long id, string name, string description, int voteCount,
+    DateOnly? lastVisit = null, bool hasVoted = false)
     {
         Id = id;
         Name = name;
         Description = description;
         VoteCount = voteCount;
+        LastVisit = lastVisit;
+        HasVoted = hasVoted;
         Reservations = new List<CityObjectReservation>();
     }
 

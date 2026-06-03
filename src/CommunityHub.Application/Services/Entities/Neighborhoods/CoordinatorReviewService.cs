@@ -33,6 +33,7 @@ public class CoordinatorReviewService
                 CreatedAt = r.CreatedAt.ToString("dd/MM/yyyy"),
                 ReportCount = r.ReportCount,
                 IsRemoved = r.IsRemoved,
+                HasReported = _reviewRepository.HasAlreadyReported(r.Id, currentCitizenId),
                 CanReport = r.CitizenId != currentCitizenId &&
                             !_reviewRepository.HasAlreadyReported(r.Id, currentCitizenId)
             }).ToList();
