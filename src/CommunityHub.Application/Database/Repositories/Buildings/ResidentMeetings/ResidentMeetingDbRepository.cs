@@ -173,6 +173,128 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
         command.ExecuteNonQuery();
     }
 
+    public List<ResidentMeeting> GetAllByBuilding(long buildingId, ResidentMeetingStatus? status)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = $@"
+        {SelectMeetingsSql()}
+        WHERE rm.building_id = @buildingId
+          AND (@status IS NULL OR rm.status = @status::resident_meeting_status)
+        ORDER BY rm.meeting_date, rm.meeting_time";
+
+        AddParameter(command, "@tenantId", 0L);
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@status", GetStatusParameterValue(status));
+
+        using IDataReader reader = command.ExecuteReader();
+        return ResidentMeetingReader.ReadMeetings(reader);
+    }
+
+    public int CountByBuilding(long buildingId, ResidentMeetingStatus? status)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT COUNT(*)
+        FROM resident_meetings rm
+        WHERE rm.building_id = @buildingId
+          AND (@status IS NULL OR rm.status = @status::resident_meeting_status)";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@status", GetStatusParameterValue(status));
+
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
+
+    public long CreateMeeting(long buildingId, DateTime date, TimeSpan time)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        INSERT INTO resident_meetings (building_id, meeting_date, meeting_time, status)
+        VALUES (@buildingId, @date, @time, 'scheduled'::resident_meeting_status)
+        RETURNING id";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@date", date.Date);
+        AddParameter(command, "@time", time);
+
+        return Convert.ToInt64(command.ExecuteScalar());
+    }
+
+    public void AddTopic(long meetingId, string topic)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        INSERT INTO resident_meeting_topics (meeting_id, topic)
+        VALUES (@meetingId, @topic)";
+
+        AddParameter(command, "@meetingId", meetingId);
+        AddParameter(command, "@topic", topic);
+
+        command.ExecuteNonQuery();
+    }
+
+    public List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT id, meeting_id, tenant_id, topic, suggested_at
+        FROM resident_meeting_topic_suggestions
+        WHERE meeting_id = @meetingId
+        ORDER BY suggested_at";
+
+        AddParameter(command, "@meetingId", meetingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ResidentMeetingReader.ReadTopicSuggestions(reader);
+    }
+
+    public List<ResidentMeetingAttendance> GetAttendances(long meetingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT id, meeting_id, tenant_id, unit_number, created_at
+        FROM resident_meeting_attendances
+        WHERE meeting_id = @meetingId
+        ORDER BY unit_number";
+
+        AddParameter(command, "@meetingId", meetingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ResidentMeetingReader.ReadAttendances(reader);
+    }
+
+    public bool HasConflict(long buildingId, DateTime date, TimeSpan time)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        SELECT COUNT(*)
+        FROM resident_meetings
+        WHERE building_id = @buildingId
+          AND meeting_date = @date
+          AND meeting_time = @time
+          AND status <> 'cancelled'::resident_meeting_status";
+
+        AddParameter(command, "@buildingId", buildingId);
+        AddParameter(command, "@date", date.Date);
+        AddParameter(command, "@time", time);
+
+        return Convert.ToInt32(command.ExecuteScalar()) > 0;
+    }
+
     private static void AddTimestampParameter(IDbCommand command, string name, DateTime value)
     {
         IDbDataParameter dbParam = command.CreateParameter();

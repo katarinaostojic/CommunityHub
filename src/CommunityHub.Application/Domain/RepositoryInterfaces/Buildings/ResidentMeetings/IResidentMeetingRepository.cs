@@ -27,4 +27,18 @@ public interface IResidentMeetingRepository
     void CreateTopicSuggestion(ResidentMeetingTopicSuggestion suggestion);
 
     void UpdateStatus(long meetingId, ResidentMeetingStatus status);
+
+    List<ResidentMeeting> GetAllByBuilding(long buildingId, ResidentMeetingStatus? status);
+
+    int CountByBuilding(long buildingId, ResidentMeetingStatus? status);
+
+    long CreateMeeting(long buildingId, DateTime date, TimeSpan time);
+
+    void AddTopic(long meetingId, string topic);
+
+    List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId);
+
+    List<ResidentMeetingAttendance> GetAttendances(long meetingId);
+
+    bool HasConflict(long buildingId, DateTime date, TimeSpan time);
 }

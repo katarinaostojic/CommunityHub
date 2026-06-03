@@ -161,4 +161,47 @@ public class ResidentMeetingService
         if (validationError != null)
             throw new InvalidOperationException(validationError);
     }
+
+    public List<ResidentMeetingDto> GetAllByBuilding(long buildingId, ResidentMeetingStatus? status = null)
+    {
+        RefreshMeetingStatuses(buildingId);
+        return _meetingRepository
+            .GetAllByBuilding(buildingId, status)
+            .ToDtoList(DateTime.Now);
+    }
+
+    public int CountByBuilding(long buildingId, ResidentMeetingStatus? status = null)
+    {
+        return _meetingRepository.CountByBuilding(buildingId, status);
+    }
+
+    public void CreateMeeting(long buildingId, DateTime date, TimeSpan time, List<string> topics)
+    {
+        if (_meetingRepository.HasConflict(buildingId, date, time))
+            throw new InvalidOperationException("A meeting is already scheduled for this date and time.");
+
+        long meetingId = _meetingRepository.CreateMeeting(buildingId, date, time);
+
+        foreach (string topic in topics)
+            _meetingRepository.AddTopic(meetingId, topic.Trim());
+    }
+
+    public List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId)
+    {
+        return _meetingRepository.GetTopicSuggestions(meetingId);
+    }
+
+    public void AddTopicFromSuggestion(long meetingId, string topic)
+    {
+        string? error = ResidentMeeting.ValidateTopic(topic);
+        if (error != null)
+            throw new InvalidOperationException(error);
+
+        _meetingRepository.AddTopic(meetingId, topic.Trim());
+    }
+
+    public List<ResidentMeetingAttendance> GetAttendances(long meetingId)
+    {
+        return _meetingRepository.GetAttendances(meetingId);
+    }
 }
