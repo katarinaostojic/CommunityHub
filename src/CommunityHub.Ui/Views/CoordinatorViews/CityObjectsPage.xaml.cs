@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Database.Repositories.Neighborhoods;
+using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 using System.Windows;
@@ -9,21 +10,22 @@ namespace CommunityHub.Ui.Views.CoordinatorViews;
 public partial class CityObjectsPage : Page
 {
     private readonly CityObjectsViewModel _viewModel;
-    private readonly long _neighborhoodId;
 
-    public CityObjectsPage(long neighborhoodId)
+    public CityObjectsPage(long coordinatorId)
     {
         InitializeComponent();
-        _neighborhoodId = neighborhoodId;
         var cityObjectService = new CityObjectService(new CityObjectDbRepository());
-        _viewModel = new CityObjectsViewModel(cityObjectService, neighborhoodId);
+        var neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
+        _viewModel = new CityObjectsViewModel(cityObjectService, neighborhoodService, coordinatorId);
         DataContext = _viewModel;
     }
 
     private void ReserveButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_viewModel.CurrentNeighborhoodId == null) return;
         CityObjectItemViewModel item = (CityObjectItemViewModel)((Button)sender).Tag;
         CoordinatorMainWindow.Instance.NavigateTo(
-            new ReserveCityObjectPage(item, _neighborhoodId), "Reserve City Object");
+            new ReserveCityObjectPage(item, _viewModel.CurrentNeighborhoodId.Value),
+            "Reserve City Object");
     }
 }
