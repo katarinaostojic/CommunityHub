@@ -96,20 +96,20 @@
                             <TextBlock Text="  Noticeboard" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="BtnAssembly" Height="48" Background="Transparent"
+                    <Button x:Name="BtnResidentMeeting" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand"
-                            ToolTip="Schedule and manage tenants assemblies">
+                            Cursor="Hand" Click="ResidentMeetingButton_Click"
+                            ToolTip="Schedule and manage resident meetings">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="👥" FontSize="16" VerticalAlignment="Center"/>
-                            <TextBlock Text="  Tenants Assembly" VerticalAlignment="Center"/>
+                            <TextBlock Text="  Resident Meeting" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button x:Name="BtnProblems" Height="48" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand"
+                            Cursor="Hand" Click="ProblemsButton_Click"
                             ToolTip="View reported problems in your buildings">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="⚠️" FontSize="16" VerticalAlignment="Center"/>

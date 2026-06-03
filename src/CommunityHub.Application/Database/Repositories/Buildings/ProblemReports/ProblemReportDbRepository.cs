@@ -57,6 +57,25 @@ public class ProblemReportDbRepository : BaseDbRepository, IProblemReportReposit
         return Convert.ToInt32(command.ExecuteScalar());
     }
 
+    public List<ProblemReport> GetByBuilding(long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+    SELECT pr.id, pr.building_id, pr.description, pr.priority, pr.reported_at, pr.status,
+           u.id AS user_id, u.username, u.password, u.name, u.surname, u.birthday, u.role
+    FROM problem_reports pr
+    JOIN users u ON pr.tenant_id = u.id
+    WHERE pr.building_id = @buildingId
+    ORDER BY pr.reported_at DESC, pr.id DESC";
+
+        AddParameter(command, "@buildingId", buildingId);
+
+        using IDataReader reader = command.ExecuteReader();
+        return ProblemReportReader.ReadReports(reader);
+    }
+
     public ProblemReport? GetById(long reportId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

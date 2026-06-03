@@ -41,6 +41,13 @@ public class ProblemReportService
         return _reportRepository.CountByTenantAndBuilding(tenantId, buildingId, status);
     }
 
+    public List<ProblemReportDto> GetByBuilding(long buildingId)
+    {
+        return _reportRepository
+            .GetByBuilding(buildingId)
+            .ToDtoList();
+    }
+
     public ProblemReportDto Create(CreateProblemReportDto request)
     {
         EnsureTenantHasBuildingMembership(request.Tenant.Id, request.BuildingId);

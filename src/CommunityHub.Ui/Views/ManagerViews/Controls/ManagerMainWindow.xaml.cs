@@ -28,7 +28,7 @@ public partial class ManagerMainWindow : Window
 
     private void UpdateTooltips()
     {
-        var buttons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnAssembly, BtnProblems };
+        var buttons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems };
         foreach (var btn in buttons)
             ToolTipService.SetIsEnabled(btn, AppSession.IsTooltipsEnabled);
     }
@@ -63,7 +63,7 @@ public partial class ManagerMainWindow : Window
 
     private void SetActiveNavButton(Button activeButton)
     {
-        var navButtons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnAssembly, BtnProblems };
+        var navButtons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems };
         foreach (var btn in navButtons)
         {
             btn.Background = Brushes.Transparent;
@@ -77,5 +77,17 @@ public partial class ManagerMainWindow : Window
     {
         SetActiveNavButton(BtnNoticeboard);
         MainFrame.Navigate(new ManagerNoticeBoardPage(_currentUser));
+    }
+
+    private void ProblemsButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveNavButton(BtnProblems);
+        MainFrame.Navigate(new Buildings.Problems.ProblemsPage(_currentUser));
+    }
+
+    private void ResidentMeetingButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveNavButton(BtnResidentMeeting);
+        // TODO: navigate to ResidentMeeting page
     }
 }

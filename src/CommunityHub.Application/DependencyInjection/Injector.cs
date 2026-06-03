@@ -2,20 +2,20 @@
 using CommunityHub.Application.Database.Repositories.Buildings;
 using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Buildings.ProblemReports;
+using CommunityHub.Application.Database.Repositories.Buildings.ResidentMeetings;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
+using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Shared;
 using CommunityHub.Application.Services.Interfaces.Ads;
 using CommunityHub.Application.Services.Interfaces.Buildings;
 using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Reports;
-using CommunityHub.Application.Database.Repositories.Buildings.ResidentMeetings;
-using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 
 namespace CommunityHub.Application.DependencyInjection;
 
@@ -40,8 +40,10 @@ public static class Injector
     private static readonly CommonRoomRequestDbRepository _commonRoomRequestRepository = new();
 
     private static readonly ProblemReportDbRepository _problemReportRepository = new();
-
     private static readonly ResidentMeetingDbRepository _residentMeetingRepository = new();
+
+    private static readonly CoordinatorReviewDbRepository _coordinatorReviewRepository = new();
+    private static readonly TrustRecordDbRepository _trustRecordRepository = new();
 
     private static readonly BuildingService _buildingService = new(
         _buildingRepository,
@@ -103,10 +105,8 @@ public static class Injector
         _buildingMembershipRepository);
 
     private static readonly ResidentMeetingService _residentMeetingService = new(
-    _residentMeetingRepository,
-    _buildingMembershipRepository);
-    private static readonly CoordinatorReviewDbRepository _coordinatorReviewRepository = new();
-    private static readonly TrustRecordDbRepository _trustRecordRepository = new();
+        _residentMeetingRepository,
+        _buildingMembershipRepository);
 
     private static readonly Dictionary<Type, object> _implementations = new()
     {
@@ -275,7 +275,7 @@ public static class Injector
             new CoordinatorReviewService(
                 _coordinatorReviewRepository,
                 _trustRecordRepository)
-},
+        },
     };
 
     public static T CreateInstance<T>()
