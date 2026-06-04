@@ -13,15 +13,17 @@
                     <!-- Topic -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                         <TextBlock Text="Topic:" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                        <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                     </StackPanel>
-                    <ComboBox x:Name="ThemeComboBox" HorizontalAlignment="Stretch" Margin="0,0,0,16" IsEditable="True">
+                    <ComboBox x:Name="ThemeComboBox" HorizontalAlignment="Stretch" Margin="0,0,0,4" IsEditable="True">
                         <ComboBoxItem Content="Welcome"/>
                         <ComboBoxItem Content="Motivation"/>
                     </ComboBox>
+                    <TextBlock x:Name="TopicErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,0,0,10" Visibility="Collapsed"/>
 
                     <!-- Kalendari -->
-                    <Grid Margin="0,0,0,16">
+                    <Grid Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="8"/>
@@ -32,7 +34,7 @@
                         <StackPanel Grid.Column="0">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,6">
                                 <TextBlock Text="Start Date:" Style="{StaticResource SectionTitle}"/>
-                                <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                                <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                             </StackPanel>
                             <Calendar x:Name="StartCalendar"
                                       Width="200"
@@ -45,7 +47,7 @@
                         <StackPanel Grid.Column="2">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,6">
                                 <TextBlock Text="End Date:" Style="{StaticResource SectionTitle}"/>
-                                <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                                <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                             </StackPanel>
                             <Calendar x:Name="EndCalendar"
                                       Width="200"
@@ -54,19 +56,23 @@
                                       SelectedDatesChanged="EndCalendar_SelectedDatesChanged"/>
                         </StackPanel>
                     </Grid>
+                    <TextBlock x:Name="DateErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,0,0,10" Visibility="Collapsed"/>
 
                     <!-- Time -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                         <TextBlock Text="Time (HH:mm):" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                        <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                     </StackPanel>
                     <TextBox x:Name="TimeTextBox" HorizontalAlignment="Stretch"
-                             Margin="0,0,0,0"
+                             Margin="0,0,0,4"
                              Padding="10,8" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                    <TextBlock x:Name="TimeErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,0,0,4" Visibility="Collapsed"/>
 
                     <!-- Legenda -->
-                    <TextBlock Text="* Required field" Foreground="Red"
-                               FontSize="11" Margin="0,8,0,0"/>
+                    <TextBlock Text="* Required field" Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="11" Margin="0,4,0,0"/>
 
                 </StackPanel>
             </Border>

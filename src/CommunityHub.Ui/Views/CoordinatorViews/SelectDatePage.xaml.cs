@@ -41,7 +41,8 @@ public partial class SelectDatePage : Page
         }
         else
         {
-            MessageBox.Show("Please select a date.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            DateErrorText.Text = "Please select a date.";
+            DateErrorText.Visibility = Visibility.Visible;
         }
     }
 

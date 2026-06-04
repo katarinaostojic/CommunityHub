@@ -13,6 +13,9 @@
                 <ListBox x:Name="DateOptionsListBox" BorderThickness="0"/>
             </Border>
 
+            <TextBlock x:Name="DateErrorText" Foreground="{StaticResource DangerBrush}"
+                       FontSize="11" Margin="0,0,0,8" Visibility="Collapsed"/>
+
             <Button Content="Confirm" HorizontalAlignment="Stretch"
                     Margin="0,0,0,8" Click="ConfirmButton_Click"
                     Style="{StaticResource PrimaryButtonLarge}"/>

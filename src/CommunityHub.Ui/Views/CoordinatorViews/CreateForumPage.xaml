@@ -12,15 +12,17 @@
                     <!-- Forum Title -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                         <TextBlock Text="Forum Title:" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                        <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                     </StackPanel>
-                    <TextBox x:Name="TitleTextBox" Margin="0,0,0,16" Padding="10,8"
+                    <TextBox x:Name="TitleTextBox" Margin="0,0,0,4" Padding="10,8"
                              BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                    <TextBlock x:Name="TitleErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,0,0,10" Visibility="Collapsed"/>
 
                     <!-- Description -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                         <TextBlock Text="Description:" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                        <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                     </StackPanel>
                     <TextBox x:Name="DescriptionTextBox" Margin="0,0,0,4"
                              Height="120" TextWrapping="Wrap" AcceptsReturn="True"
@@ -29,9 +31,11 @@
                     <TextBlock x:Name="CharCountText" Text="0/500" FontSize="11"
                                Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Right" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="DescriptionErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,0,0,4" Visibility="Collapsed"/>
 
                     <!-- Legenda -->
-                    <TextBlock Text="* Required field" Foreground="Red"
+                    <TextBlock Text="* Required field" Foreground="{StaticResource TextSecondaryBrush}"
                                FontSize="11" Margin="0,4,0,0"/>
 
                 </StackPanel>

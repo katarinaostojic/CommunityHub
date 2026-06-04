@@ -48,11 +48,12 @@
                             <Run Text="District Name"/>
                             <Run Text=" *" Foreground="{StaticResource DangerBrush}"/>
                         </TextBlock>
-                        <TextBox x:Name="NameTextBox" Padding="10,8" Margin="0,0,0,12"
+                        <TextBox x:Name="NameTextBox" Padding="10,8" Margin="0,0,0,4"
                                  BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                        <TextBlock x:Name="NameErrorText" Foreground="{StaticResource DangerBrush}"
+                                   FontSize="11" Margin="0,0,0,8" Visibility="Collapsed"/>
                         <TextBlock Style="{StaticResource SectionTitle}" Margin="0,0,0,6">
                             <Run Text="City"/>
-                            <Run Text=" *" Foreground="{StaticResource DangerBrush}"/>
                         </TextBlock>
                         <ComboBox x:Name="CityComboBox" HorizontalAlignment="Stretch"
                                   DisplayMemberPath="Name" Margin="0,0,0,4"/>
@@ -70,16 +71,15 @@
                     <TextBox x:Name="DescriptionTextBox" Padding="10,8" Height="80"
                              TextWrapping="Wrap" AcceptsReturn="True"
                              BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                    <TextBlock x:Name="DescriptionErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,4,0,0" Visibility="Collapsed"/>
                 </StackPanel>
             </Border>
 
             <!-- Streets -->
             <Border Style="{StaticResource CardBorder}">
                 <StackPanel>
-                    <TextBlock Style="{StaticResource SectionTitle}" Margin="0,0,0,10">
-                        <Run Text="Streets"/>
-                        <Run Text=" *" Foreground="{StaticResource DangerBrush}"/>
-                    </TextBlock>
+                    <TextBlock Text="Streets" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -103,7 +103,8 @@
                                      BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
                         </StackPanel>
                     </Grid>
-
+                    <TextBlock x:Name="StreetErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,6,0,0" Visibility="Collapsed"/>
                     <Grid Margin="0,8,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -117,10 +118,6 @@
                     </Grid>
                 </StackPanel>
             </Border>
-
-            <!-- Required field napomena -->
-            <TextBlock Text="* Required field" FontSize="11"
-                       Foreground="Gray" Margin="4,4,0,8"/>
 
             <!-- Banneri -->
             <Border x:Name="ErrorBanner" Background="{StaticResource DangerBrush}"

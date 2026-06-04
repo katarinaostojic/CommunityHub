@@ -34,17 +34,40 @@ public partial class AddNewMeetingPage : Page
         DateTime? startDate = StartCalendar.SelectedDate;
         DateTime? endDate = EndCalendar.SelectedDate;
 
-        string? validationError = _viewModel.Validate(
-            themeInput,
-            startDate,
-            endDate,
-            TimeTextBox.Text);
+        TopicErrorText.Visibility = Visibility.Collapsed;
+        DateErrorText.Visibility = Visibility.Collapsed;
+        TimeErrorText.Visibility = Visibility.Collapsed;
 
-        if (validationError != null)
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(themeInput))
         {
-            MessageBox.Show(validationError, "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            TopicErrorText.Text = "Please select or enter a topic.";
+            TopicErrorText.Visibility = Visibility.Visible;
+            isValid = false;
         }
+
+        if (startDate == null || endDate == null)
+        {
+            DateErrorText.Text = "Please select start and end date.";
+            DateErrorText.Visibility = Visibility.Visible;
+            isValid = false;
+        }
+        else if (endDate < startDate)
+        {
+            DateErrorText.Text = "End date cannot be before start date.";
+            DateErrorText.Visibility = Visibility.Visible;
+            isValid = false;
+        }
+
+        if (!TimeOnly.TryParse(TimeTextBox.Text, out _))
+        {
+            TimeErrorText.Text = "Please enter a valid time (HH:mm).";
+            TimeErrorText.Visibility = Visibility.Visible;
+            isValid = false;
+        }
+
+        if (!isValid) return;
 
         DateOnly start = DateOnly.FromDateTime(startDate!.Value);
         DateOnly end = DateOnly.FromDateTime(endDate!.Value);
@@ -53,13 +76,13 @@ public partial class AddNewMeetingPage : Page
         try
         {
             _viewModel.CreateMeeting(themeInput, meetingTime, start, end);
-            MessageBox.Show("Meeting scheduled successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             CoordinatorMainWindow.Instance.NavigateTo(
                 new MeetingsPage(_coordinatorId, _neighborhoodId), "Meetings");
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            TimeErrorText.Text = ex.Message;
+            TimeErrorText.Visibility = Visibility.Visible;
         }
     }
 
