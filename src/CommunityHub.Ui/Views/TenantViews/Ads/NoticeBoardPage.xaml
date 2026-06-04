@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -82,8 +83,34 @@
             </Grid>
         </Border>
 
+        <!-- Export success banner -->
+        <Border x:Name="ExportSuccessBanner"
+        Grid.Row="2"
+        Background="{StaticResource SuccessBrush}"
+        Padding="12,8"
+        Visibility="Collapsed">
+            <Grid>
+                <TextBlock x:Name="ExportSuccessTextBlock"
+                   Foreground="{StaticResource SuccessTextBrush}"
+                   FontSize="13"
+                   VerticalAlignment="Center"
+                   Margin="0,0,32,0"/>
+
+                <Button Content="✕"
+                Width="26"
+                Height="26"
+                HorizontalAlignment="Right"
+                Padding="5"
+                VerticalAlignment="Center"
+                Style="{StaticResource GhostButton}"
+                Foreground="{StaticResource SuccessTextBrush}"
+                FontWeight="Bold"
+                Click="DismissExportSuccessButton_Click"/>
+            </Grid>
+        </Border>
+
         <!-- Notifications -->
-        <ItemsControl Grid.Row="2"
+        <ItemsControl Grid.Row="3"
                       ItemsSource="{Binding Notifications.Items}"
                       Margin="16,10,16,0"
                       Visibility="{Binding Notifications.HasItems, Converter={StaticResource BoolToVis}}">
@@ -150,7 +177,7 @@
         </ItemsControl>
 
         <!-- Title row -->
-        <Grid Grid.Row="3" Margin="16,12,16,8">
+        <Grid Grid.Row="4" Margin="16,12,16,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -165,33 +192,6 @@
                    Style="{StaticResource SecondaryText}"
                    Margin="0,2,0,0"/>
             </StackPanel>
-
-            <Border x:Name="ExportSuccessBanner"
-            Grid.Column="1"
-            Background="{StaticResource SuccessBrush}"
-            BorderBrush="{StaticResource SuccessTextBrush}"
-            BorderThickness="1"
-            Padding="10,6"
-            Margin="16,0,16,0"
-            VerticalAlignment="Center"
-            Visibility="Collapsed">
-                <Grid>
-                    <TextBlock x:Name="ExportSuccessTextBlock"
-                       Foreground="{StaticResource SuccessTextBrush}"
-                       FontSize="13"
-                       VerticalAlignment="Center"
-                       Margin="0,0,28,0"/>
-
-                    <Button Content="✕"
-                    Width="24"
-                    Height="24"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource GhostButton}"
-                    Foreground="{StaticResource SuccessTextBrush}"
-                    Click="DismissExportSuccessButton_Click"/>
-                </Grid>
-            </Border>
 
             <StackPanel Grid.Column="2"
                 Orientation="Horizontal"
@@ -208,7 +208,7 @@
         </Grid>
 
         <!-- Filters -->
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="5"
                     Orientation="Horizontal"
                     Margin="16,8,16,8">
             <TextBlock Text="Type:"
@@ -253,13 +253,13 @@
         </StackPanel>
 
         <!-- Results count -->
-        <TextBlock Grid.Row="5"
+        <TextBlock Grid.Row="6"
                    Text="{Binding ResultsCountText}"
                    Style="{StaticResource SecondaryText}"
                    Margin="16,0,16,10"/>
 
         <!-- Ad list -->
-        <ScrollViewer Grid.Row="6"
+        <ScrollViewer Grid.Row="7"
                       VerticalScrollBarVisibility="Auto"
                       Margin="16,0,16,16">
             <ItemsControl ItemsSource="{Binding FilteredAds}">
@@ -375,7 +375,7 @@
         </ScrollViewer>
 
         <controls:MenuPanel Grid.Row="0"
-                            Grid.RowSpan="7"
+                            Grid.RowSpan="8"
                             x:Name="AppMenu"/>
     </Grid>
 </Page>
