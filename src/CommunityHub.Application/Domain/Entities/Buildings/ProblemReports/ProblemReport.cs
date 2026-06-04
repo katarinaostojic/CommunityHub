@@ -47,6 +47,12 @@ public class ProblemReport
 
     public bool CanConfirmResolved => Status == ProblemReportStatus.PotentiallySolved;
 
+    public void EnsureReportedBy(long tenantId)
+    {
+        if (Tenant.Id != tenantId)
+            throw new InvalidOperationException("You can only update your own problem reports.");
+    }
+
     public void MarkAsPotentiallySolved()
     {
         if (Status != ProblemReportStatus.Unresolved)

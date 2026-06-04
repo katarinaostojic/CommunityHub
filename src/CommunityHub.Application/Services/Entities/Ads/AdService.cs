@@ -68,7 +68,7 @@ public class AdService : IAdService
 
         return _adRepository
             .GetAllByBuilding(buildingId)
-            .Where(ad => ad.DateFrom <= dateTo && ad.DateTo >= dateFrom)
+            .Where(ad => ad.OverlapsWith(dateFrom, dateTo))
             .OrderBy(ad => ad.DateFrom)
             .ThenBy(ad => ad.DateTo)
             .ThenBy(ad => ad.Type)

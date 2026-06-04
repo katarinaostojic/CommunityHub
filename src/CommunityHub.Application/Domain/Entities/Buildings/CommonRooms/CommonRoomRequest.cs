@@ -47,6 +47,17 @@ public class CommonRoomRequest
            ProposedDateFrom != null &&
            ProposedDateTo != null;
 
+    public void EnsureCanBeCancelled()
+    {
+        if (!CanBeCancelled)
+            throw new InvalidOperationException("Only pending requests can be cancelled.");
+    }
+
+    public bool CanBeAutoApproved(bool isRequestedRangeFree)
+    {
+        return CommonRoom.IsMultiDayRental && isRequestedRangeFree;
+    }
+
     public int RequestedDays => (int)(DateTo - DateFrom).TotalDays + 1;
 
     public void AutoApprove()
@@ -74,9 +85,11 @@ public class CommonRoomRequest
 
     public void AcceptProposedDates()
     {
-        if (ProposedDateFrom == null || ProposedDateTo == null) return;
-        DateFrom = ProposedDateFrom.Value;
-        DateTo = ProposedDateTo.Value;
+        if (!CanAcceptProposedDateChange)
+            throw new InvalidOperationException("Only requests with proposed date changes can be accepted.");
+
+        DateFrom = ProposedDateFrom!.Value;
+        DateTo = ProposedDateTo!.Value;
         ProposedDateFrom = null;
         ProposedDateTo = null;
         Status = CommonRoomRequestStatus.Pending;

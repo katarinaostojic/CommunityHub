@@ -20,12 +20,9 @@ public class CommonRoomRequestAvailabilityService
     {
         LoadOccupiedDates(request.CommonRoom);
 
-        List<DateTime> freeDays = new();
-
-        for (DateTime date = request.DateFrom; date <= request.DateTo; date = date.AddDays(1))
-            AddIfFree(request.CommonRoom, date, freeDays);
-
-        return freeDays;
+        return request.CommonRoom.GetFreeDatesInRange(
+            request.DateFrom,
+            request.DateTo);
     }
 
     public List<(DateTime, DateTime)> FindAlternativeRanges(CommonRoomRequest request)
@@ -41,25 +38,13 @@ public class CommonRoomRequestAvailabilityService
     {
         LoadOccupiedDates(commonRoom);
 
-        for (DateTime date = dateFrom; date <= dateTo; date = date.AddDays(1))
-        {
-            if (!commonRoom.IsFreeOnDate(date))
-                return false;
-        }
-
-        return true;
+        return commonRoom.IsRangeFree(dateFrom, dateTo);
     }
 
     private void LoadOccupiedDates(CommonRoom room)
     {
         List<DateTime> occupiedDates = _commonRoomRepository.GetOccupiedDates(room.Id);
         room.SetOccupiedDates(occupiedDates);
-    }
-
-    private static void AddIfFree(CommonRoom room, DateTime date, List<DateTime> freeDays)
-    {
-        if (room.IsFreeOnDate(date))
-            freeDays.Add(date);
     }
 
     private static List<(DateTime, DateTime)> FindRanges(
@@ -89,18 +74,7 @@ public class CommonRoomRequestAvailabilityService
 
         DateTime end = start.AddDays(request.RequestedDays - 1);
 
-        if (IsRangeFreeWithoutReload(start, end, request.CommonRoom))
+        if (request.CommonRoom.IsRangeFree(start, end))
             alternatives.Add((start, end));
-    }
-
-    private static bool IsRangeFreeWithoutReload(DateTime dateFrom, DateTime dateTo, CommonRoom room)
-    {
-        for (DateTime date = dateFrom; date <= dateTo; date = date.AddDays(1))
-        {
-            if (!room.IsFreeOnDate(date))
-                return false;
-        }
-
-        return true;
     }
 }

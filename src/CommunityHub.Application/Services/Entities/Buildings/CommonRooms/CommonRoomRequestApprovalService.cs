@@ -98,8 +98,12 @@ public class CommonRoomRequestApprovalService
 
     private bool CanAutoApprove(CommonRoomRequest request)
     {
-        return request.CommonRoom.IsMultiDayRental &&
-               _availabilityService.IsRangeFree(request.DateFrom, request.DateTo, request.CommonRoom);
+        bool isRequestedRangeFree = _availabilityService.IsRangeFree(
+            request.DateFrom,
+            request.DateTo,
+            request.CommonRoom);
+
+        return request.CanBeAutoApproved(isRequestedRangeFree);
     }
 
     private void ApproveAndBookRange(CommonRoomRequest request)

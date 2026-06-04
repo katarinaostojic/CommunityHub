@@ -81,8 +81,7 @@ public class ProblemReportService
     {
         ProblemReport report = GetReport(reportId);
 
-        if (report.Tenant.Id != tenantId)
-            throw new InvalidOperationException("You can only update your own problem reports.");
+        report.EnsureReportedBy(tenantId);
 
         return report;
     }
