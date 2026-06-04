@@ -31,15 +31,16 @@ public partial class NoticeBoardPage : Page
         AdsReportService reportService = Injector.CreateInstance<AdsReportService>();
         AdsPdfExporter pdfExporter = Injector.CreateInstance<AdsPdfExporter>();
 
-        _viewModel = new NoticeBoardViewModel(
-            adService,
-            notificationService,
-            reportService,
-            pdfExporter,
-            _membership,
-            _user.Id);
+		_viewModel = new NoticeBoardViewModel(
+			adService,
+			notificationService,
+			reportService,
+			pdfExporter,
+			_membership,
+			_user.Id,
+			_user.DisplayName);
 
-        _navigationHelper = new NoticeBoardNavigationHelper(_user, _membership, _viewModel, this);
+		_navigationHelper = new NoticeBoardNavigationHelper(_user, _membership, _viewModel, this);
 
         DataContext = _viewModel;
 

@@ -20,8 +20,11 @@ public class AdsPdfExporter
     private const string PrimaryDark = "#22362E";
     private const string PrimarySoft = "#E4EDE8";
 
-    private const string Accent = "#D98EA3";
-    private const string AccentSoft = "#FBE8EE";
+    private const string Active = "#2F6B4F";
+    private const string ActiveSoft = "#E6F4EA";
+
+    private const string Archived = "#9A4A61";
+    private const string ArchivedSoft = "#FBE8EE";
 
     private const string TextPrimary = "#1F2F29";
     private const string TextSecondary = "#5F756B";
@@ -40,20 +43,10 @@ public class AdsPdfExporter
                 page.PageColor(BackgroundLight);
                 page.DefaultTextStyle(text => text.FontSize(10).FontColor(TextPrimary));
 
-                page.Header().Element(HeaderContainer).Column(column =>
+                page.Header().Column(column =>
                 {
-                    column.Item().Text("Tenant Ads Report")
-                        .FontSize(24)
-                        .Bold()
-                        .FontColor(Primary);
-
-                    column.Item().PaddingTop(4).Text(report.BuildingSubtitle)
-                        .FontSize(12)
-                        .FontColor(TextSecondary);
-
-                    column.Item().PaddingTop(2).Text($"Period: {FormatDate(report.DateFrom)} - {FormatDate(report.DateTo)}")
-                        .FontSize(12)
-                        .FontColor(TextSecondary);
+                    AddAppBanner(column, report);
+                    AddReportHeader(column, report);
                 });
 
                 page.Content().PaddingTop(18).Column(column =>
@@ -64,24 +57,87 @@ public class AdsPdfExporter
 
                 page.Footer()
                     .PaddingTop(12)
-                    .AlignCenter()
-                    .Text(text =>
+                    .Row(row =>
                     {
-                        text.DefaultTextStyle(style => style.FontSize(9).FontColor(TextSecondary));
-                        text.Span("Generated on ");
-                        text.Span(DateTime.Now.ToString("dd.MM.yyyy. HH:mm")).SemiBold();
+                        row.RelativeItem()
+                            .AlignLeft()
+                            .Text(text =>
+                            {
+                                text.DefaultTextStyle(style => style.FontSize(9).FontColor(TextSecondary));
+                                text.Span("Generated on ");
+                                text.Span(DateTime.Now.ToString("dd.MM.yyyy. HH:mm")).SemiBold();
+                            });
+
+                        row.RelativeItem()
+                            .AlignRight()
+                            .Text(text =>
+                            {
+                                text.DefaultTextStyle(style => style.FontSize(9).FontColor(TextSecondary));
+                                text.Span("Page ");
+                                text.CurrentPageNumber();
+                                text.Span(" of ");
+                                text.TotalPages();
+                            });
                     });
             });
         }).GeneratePdf(filePath);
     }
 
-    private static QuestPdfContainer HeaderContainer(QuestPdfContainer container)
+    private static void AddAppBanner(ColumnDescriptor column, AdsReportDto report)
     {
-        return container
+        column.Item()
+            .Background(Primary)
+            .Padding(14)
+            .Row(row =>
+            {
+                row.RelativeItem().Column(left =>
+                {
+                    left.Item().Text("CommunityHub")
+                        .FontSize(18)
+                        .Bold()
+                        .FontColor(Colors.White);
+
+                    left.Item().PaddingTop(2).Text("Tenant module / Notice board")
+                        .FontSize(9)
+                        .FontColor(PrimarySoft);
+                });
+
+                row.ConstantItem(260).AlignRight().Column(right =>
+                {
+                    right.Item().AlignRight().Text("Generated for")
+                        .FontSize(8)
+                        .FontColor(PrimarySoft);
+
+                    right.Item().AlignRight().Text(report.TenantName)
+                        .FontSize(13)
+                        .Bold()
+                        .FontColor(Colors.White);
+                });
+            });
+    }
+
+    private static void AddReportHeader(ColumnDescriptor column, AdsReportDto report)
+    {
+        column.Item()
             .Background(Surface)
             .Border(1)
             .BorderColor(Border)
-            .Padding(16);
+            .Padding(16)
+            .Column(header =>
+            {
+                header.Item().Text("Tenant Ads Report")
+                    .FontSize(24)
+                    .Bold()
+                    .FontColor(Primary);
+
+                header.Item().PaddingTop(4).Text($"Building: {report.BuildingSubtitle}")
+                    .FontSize(12)
+                    .FontColor(TextSecondary);
+
+                header.Item().PaddingTop(2).Text($"Period: {FormatDate(report.DateFrom)} - {FormatDate(report.DateTo)}")
+                    .FontSize(12)
+                    .FontColor(TextSecondary);
+            });
     }
 
     private static void AddSummary(ColumnDescriptor column, AdsReportDto report)
@@ -97,18 +153,23 @@ public class AdsPdfExporter
                 columns.RelativeColumn();
             });
 
-            AddSummaryCell(table, "Total ads", report.TotalAds);
-            AddSummaryCell(table, "Offering", report.OfferingAds);
-            AddSummaryCell(table, "Seeking", report.SeekingAds);
-            AddSummaryCell(table, "Active", report.ActiveAds);
-            AddSummaryCell(table, "Archived", report.ArchivedAds);
+            AddSummaryCell(table, "Total ads", report.TotalAds, Primary, Surface);
+            AddSummaryCell(table, "Offering", report.OfferingAds, Primary, Surface);
+            AddSummaryCell(table, "Seeking", report.SeekingAds, Primary, Surface);
+            AddSummaryCell(table, "Active", report.ActiveAds, Active, ActiveSoft);
+            AddSummaryCell(table, "Archived", report.ArchivedAds, Archived, ArchivedSoft);
         });
     }
 
-    private static void AddSummaryCell(TableDescriptor table, string label, int value)
+    private static void AddSummaryCell(
+        TableDescriptor table,
+        string label,
+        int value,
+        string valueColor,
+        string background)
     {
         table.Cell()
-            .Background(Surface)
+            .Background(background)
             .Border(1)
             .BorderColor(Border)
             .Padding(10)
@@ -122,7 +183,7 @@ public class AdsPdfExporter
                 column.Item().PaddingTop(4).Text(value.ToString())
                     .FontSize(18)
                     .Bold()
-                    .FontColor(Primary);
+                    .FontColor(valueColor);
             });
     }
 
@@ -182,7 +243,12 @@ public class AdsPdfExporter
         table.Cell().Element(TypeCell).Text(FormatType(ad.Type));
         table.Cell().Element(BodyCell).Text(FormatCategory(ad.Category));
         table.Cell().Element(BodyCell).Text($"{FormatDate(ad.DateFrom)} - {FormatDate(ad.DateTo)}");
-        table.Cell().Element(StatusCell).Text(FormatStatus(ad.Status));
+
+        table.Cell()
+            .Element(container => StatusCell(container, ad.Status))
+            .AlignCenter()
+            .Text(FormatStatus(ad.Status));
+
         table.Cell().Element(BodyCell).Text(ad.Description);
     }
 
@@ -199,6 +265,7 @@ public class AdsPdfExporter
     private static QuestPdfContainer BodyCell(QuestPdfContainer container)
     {
         return container
+            .ShowEntire()
             .Background(Surface)
             .BorderBottom(1)
             .BorderColor(Border)
@@ -209,6 +276,7 @@ public class AdsPdfExporter
     private static QuestPdfContainer TypeCell(QuestPdfContainer container)
     {
         return container
+            .ShowEntire()
             .Background(PrimarySoft)
             .BorderBottom(1)
             .BorderColor(Border)
@@ -216,14 +284,35 @@ public class AdsPdfExporter
             .DefaultTextStyle(text => text.SemiBold().FontColor(Primary));
     }
 
-    private static QuestPdfContainer StatusCell(QuestPdfContainer container)
+    private static QuestPdfContainer StatusCell(QuestPdfContainer container, AdStatus status)
     {
         return container
-            .Background(AccentSoft)
+            .ShowEntire()
+            .Background(GetStatusBackground(status))
             .BorderBottom(1)
             .BorderColor(Border)
             .Padding(7)
-            .DefaultTextStyle(text => text.SemiBold().FontColor(TextPrimary));
+            .DefaultTextStyle(text => text.SemiBold().FontColor(GetStatusTextColor(status)));
+    }
+
+    private static string GetStatusBackground(AdStatus status)
+    {
+        return status switch
+        {
+            AdStatus.Active => ActiveSoft,
+            AdStatus.Archived => ArchivedSoft,
+            _ => SurfaceSoft
+        };
+    }
+
+    private static string GetStatusTextColor(AdStatus status)
+    {
+        return status switch
+        {
+            AdStatus.Active => Active,
+            AdStatus.Archived => Archived,
+            _ => TextPrimary
+        };
     }
 
     private static string FormatDate(DateOnly date)

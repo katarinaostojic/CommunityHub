@@ -16,6 +16,7 @@ public class AdsReportService
     public AdsReportDto Create(
         long buildingId,
         string buildingSubtitle,
+        string tenantName,
         DateOnly dateFrom,
         DateOnly dateTo)
     {
@@ -23,6 +24,7 @@ public class AdsReportService
 
         return new AdsReportDto(
             buildingSubtitle,
+            tenantName,
             dateFrom,
             dateTo,
             ads);
