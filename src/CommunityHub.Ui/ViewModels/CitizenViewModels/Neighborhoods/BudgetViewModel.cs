@@ -36,7 +36,7 @@ public class BudgetViewModel : BaseViewModel
         private set => SetProperty(ref _totalBudget, value);
     }
 
-    public string TotalBudgetDisplay => $"{_totalBudget:0.##} €";
+    public string TotalBudgetDisplay => $"{_totalBudget:0.##} RSD";
 
     public void LoadData()
     {

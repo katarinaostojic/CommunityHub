@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityHub.Application.Domain.Entities;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 using CommunityHub.Application.DTOs.Neighborhoods;
 
@@ -65,12 +66,26 @@ public class CoordinatorReviewService
         var review = _reviewRepository.GetById(reviewId);
         if (review == null) return (true, null);
 
-        int highTrustCount = _reviewRepository.GetHighTrustReportCount(reviewId);
-        bool shouldRemove = review.ReportCount > 10 || highTrustCount >= 5;
+        int highTrustCount = CountHighTrustReporters(reviewId, review.NeighborhoodId);
 
-        if (shouldRemove)
+        if (review.ShouldBeRemoved(highTrustCount))
             _reviewRepository.Remove(reviewId);
 
         return (true, null);
+    }
+
+    private int CountHighTrustReporters(long reviewId, long neighborhoodId)
+    {
+        return _reviewRepository.GetReporterIds(reviewId).Count(id =>
+        {
+            try
+            {
+                TrustRecord tr = _trustRecordRepository.GetByCitizen(id, neighborhoodId);
+                if (tr == null) return false;
+                TrustLevel level = tr.GetLevel();
+                return level == TrustLevel.Distinguished || level == TrustLevel.Trusted;
+            }
+            catch { return false; }
+        });
     }
 }

@@ -135,22 +135,20 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
         command.ExecuteNonQuery();
     }
 
-    public int GetHighTrustReportCount(long reviewId)
+    public List<long> GetReporterIds(long reviewId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        SELECT COUNT(DISTINCT rp.citizen_id)
-        FROM coordinator_review_reports rp
-        JOIN neighborhood_memberships nm ON rp.citizen_id = nm.citizen_id
-        LEFT JOIN event_registrations er ON rp.citizen_id = er.citizen_id AND er.attended = true
-        WHERE rp.review_id = @reviewId
-        GROUP BY rp.citizen_id
-        HAVING COUNT(er.id) > 10";
+        SELECT citizen_id FROM coordinator_review_reports
+        WHERE review_id = @reviewId";
 
         AddParameter(command, "@reviewId", reviewId);
-        object? result = command.ExecuteScalar();
-        return result == null || result == DBNull.Value ? 0 : Convert.ToInt32(result);
+        using IDataReader reader = command.ExecuteReader();
+        List<long> ids = new();
+        while (reader.Read())
+            ids.Add(Convert.ToInt64(reader["citizen_id"]));
+        return ids;
     }
 
     private List<CoordinatorReview> ReadReviews(IDataReader reader)

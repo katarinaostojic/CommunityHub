@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 namespace CommunityHub.Application.Domain.Entities.Neighborhoods;
 
 public class CoordinatorReview
@@ -32,10 +33,10 @@ public class CoordinatorReview
         CitizenFullName = citizenFullName;
     }
 
-    public bool CanBeRemovedByReports(bool hasHighTrustReports, int highTrustReportCount)
+    public bool ShouldBeRemoved(int highTrustReportCount)
     {
-        if (ReportCount > 10) return true;
-        if (highTrustReportCount >= 5 && hasHighTrustReports) return true;
+        if (ReportCount >= 10) return true;
+        if (highTrustReportCount >= 5) return true;
         return false;
     }
 

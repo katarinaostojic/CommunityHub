@@ -154,7 +154,7 @@
                                                VerticalAlignment="Center"
                                                Foreground="#0D47A1">
                                         <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0:0.##} €">
+                                            <MultiBinding StringFormat="{}{0:0.##} RSD">
                                                 <Binding Path="Budget"/>
                                             </MultiBinding>
                                         </TextBlock.Text>

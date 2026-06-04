@@ -131,5 +131,6 @@
     <system:String x:Key="Spending_Amount">💰 Iznos:</system:String>
     <system:String x:Key="Spending_Description">📋 Opis:</system:String>
     <system:String x:Key="Spending_Date">📅 Datum:</system:String>
+    <system:String x:Key="Spending_Category">🏷️ Kategorija:</system:String>
 
 </ResourceDictionary>

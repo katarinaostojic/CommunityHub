@@ -131,5 +131,6 @@
     <system:String x:Key="Spending_Amount">💰 Amount:</system:String>
     <system:String x:Key="Spending_Description">📋 Description:</system:String>
     <system:String x:Key="Spending_Date">📅 Date:</system:String>
+    <system:String x:Key="Spending_Category">🏷️ Category:</system:String>
 
 </ResourceDictionary>

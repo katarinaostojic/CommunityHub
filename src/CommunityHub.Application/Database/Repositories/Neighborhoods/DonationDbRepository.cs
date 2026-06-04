@@ -80,12 +80,11 @@ public class DonationDbRepository : BaseDbRepository, IDonationRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            SELECT COALESCE(SUM(d.amount), 0) - COALESCE(SUM(e.amount), 0)
-            FROM donations d
-            LEFT JOIN expenses e ON e.neighborhood_id = d.neighborhood_id 
-                AND e.category_id = d.category_id
-            WHERE d.neighborhood_id = @neighborhoodId
-              AND d.category_id = @categoryId";
+        SELECT 
+            COALESCE((SELECT SUM(amount) FROM donations 
+                      WHERE neighborhood_id = @neighborhoodId AND category_id = @categoryId), 0) -
+            COALESCE((SELECT SUM(amount) FROM expenses 
+                      WHERE neighborhood_id = @neighborhoodId AND category_id = @categoryId), 0)";
 
         AddParameter(command, "@neighborhoodId", neighborhoodId);
         AddParameter(command, "@categoryId", categoryId);

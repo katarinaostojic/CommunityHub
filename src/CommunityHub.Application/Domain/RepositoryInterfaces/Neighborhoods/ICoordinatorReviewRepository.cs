@@ -15,5 +15,5 @@ public interface ICoordinatorReviewRepository
     void AddReport(long reviewId, long citizenId);
     bool HasAlreadyReported(long reviewId, long citizenId);
     void Remove(long reviewId);
-    int GetHighTrustReportCount(long reviewId);
+    List<long> GetReporterIds(long reviewId);
 }
