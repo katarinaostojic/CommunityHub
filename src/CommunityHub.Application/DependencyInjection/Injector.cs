@@ -104,9 +104,32 @@ public static class Injector
         _problemReportRepository,
         _buildingMembershipRepository);
 
-    private static readonly ResidentMeetingService _residentMeetingService = new(
+    private static readonly ResidentMeetingAccessService _residentMeetingAccessService = new(
         _residentMeetingRepository,
         _buildingMembershipRepository);
+
+    private static readonly ResidentMeetingStatusService _residentMeetingStatusService = new(
+        _residentMeetingRepository);
+
+    private static readonly ResidentMeetingAttendanceService _residentMeetingAttendanceService = new(
+        _residentMeetingRepository,
+        _residentMeetingAccessService,
+        _residentMeetingStatusService);
+
+    private static readonly ResidentMeetingTopicService _residentMeetingTopicService = new(
+        _residentMeetingRepository,
+        _residentMeetingAccessService);
+
+    private static readonly ResidentMeetingScheduleService _residentMeetingScheduleService = new(
+        _residentMeetingRepository);
+
+    private static readonly ResidentMeetingService _residentMeetingService = new(
+        _residentMeetingRepository,
+        _residentMeetingAccessService,
+        _residentMeetingStatusService,
+        _residentMeetingAttendanceService,
+        _residentMeetingTopicService,
+        _residentMeetingScheduleService);
 
     private static readonly DonationDbRepository _donationRepository = new();
 
@@ -220,6 +243,26 @@ public static class Injector
         {
             typeof(ProblemReportService),
             _problemReportService
+        },
+        {
+            typeof(ResidentMeetingAccessService),
+            _residentMeetingAccessService
+        },
+        {
+            typeof(ResidentMeetingStatusService),
+            _residentMeetingStatusService
+        },
+        {
+            typeof(ResidentMeetingAttendanceService),
+            _residentMeetingAttendanceService
+        },
+        {
+            typeof(ResidentMeetingTopicService),
+            _residentMeetingTopicService
+        },
+        {
+            typeof(ResidentMeetingScheduleService),
+            _residentMeetingScheduleService
         },
         {
             typeof(ResidentMeetingService),

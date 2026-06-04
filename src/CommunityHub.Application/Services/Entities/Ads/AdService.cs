@@ -14,10 +14,10 @@ public class AdService : IAdService
     private readonly IAdNotificationRepository _notificationRepository;
 
     public AdService(
-    IAdRepository adRepository,
-    IAdNotificationRepository notificationRepository,
-    IAdSlotBookingService slotBookingService,
-    AdExpirationService expirationService)
+        IAdRepository adRepository,
+        IAdNotificationRepository notificationRepository,
+        IAdSlotBookingService slotBookingService,
+        AdExpirationService expirationService)
     {
         _adRepository = adRepository;
         _notificationRepository = notificationRepository;
@@ -77,7 +77,7 @@ public class AdService : IAdService
 
     public (AdDto newAd, List<AdDto> matchingAds) Create(CreateAdDto request)
     {
-        Ad ad = new Ad(
+        Ad ad = new(
             request.BuildingId,
             request.Author,
             request.Type,
@@ -95,14 +95,16 @@ public class AdService : IAdService
 
     public void Archive(long adId)
     {
-        Ad ad = _adRepository.GetById(adId)!;
+        Ad ad = GetRequiredAd(adId);
+
         ad.Archive();
         _adRepository.Update(ad);
     }
 
     public void Restore(long adId)
     {
-        Ad ad = _adRepository.GetById(adId)!;
+        Ad ad = GetRequiredAd(adId);
+
         ad.Restore();
         _adRepository.Update(ad);
     }
@@ -110,8 +112,16 @@ public class AdService : IAdService
     private Ad CreateAdWithSlots(Ad ad)
     {
         long adId = _adRepository.Create(ad);
+
         _slotBookingService.CreateSlotsForAd(adId, ad.DateFrom, ad.DateTo);
-        return _adRepository.GetById(adId)!;
+
+        return GetRequiredAd(adId);
+    }
+
+    private Ad GetRequiredAd(long adId)
+    {
+        return _adRepository.GetById(adId)
+            ?? throw new InvalidOperationException("Ad was not found.");
     }
 
     private List<Ad> FindMatchingAds(Ad newAd)
@@ -128,10 +138,7 @@ public class AdService : IAdService
     {
         foreach (Ad matchingAd in matchingAds.Where(IsWaitingForMatch))
         {
-            _notificationRepository.CreateMatchingAdNotification(
-                matchingAd.Author.Id,
-                matchingAd.Id,
-                newAd.Id);
+            _notificationRepository.CreateMatchingAdNotification(matchingAd.Author.Id, matchingAd.Id, newAd.Id);
         }
 
         bool IsWaitingForMatch(Ad matchingAd)
