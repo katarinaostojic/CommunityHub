@@ -47,8 +47,7 @@ public class CommonRoomRequestCommandService
         if (request == null)
             return;
 
-        if (!request.CanBeCancelled)
-            throw new InvalidOperationException("Only pending requests can be cancelled.");
+        request.EnsureCanBeCancelled();
 
         _requestRepository.Delete(request.Id);
     }
@@ -57,10 +56,8 @@ public class CommonRoomRequestCommandService
     {
         CommonRoomRequest? request = _requestRepository.GetById(requestId);
 
-        if (request == null || !request.CanAcceptProposedDateChange)
+        if (request == null)
             return;
-
-        ValidateDateRange(request.ProposedDateFrom!.Value, request.ProposedDateTo!.Value);
 
         request.AcceptProposedDates();
         _requestRepository.Update(request);

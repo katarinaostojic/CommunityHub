@@ -1,17 +1,17 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
 public class BuildingDetailsViewModel : BaseViewModel
 {
-    private readonly IBuildingAccessRequestService _requestService;
+    private readonly BuildingAccessRequestService _requestService;
     private int _currentImageIndex = 0;
     private string _imageCounterText = string.Empty;
     private List<string> _imageDotColors = new();
     private int _pendingRequestsCount;
 
-    public BuildingDetailsViewModel(BuildingDto buildingDto, IBuildingAccessRequestService requestService)
+    public BuildingDetailsViewModel(BuildingDto buildingDto, BuildingAccessRequestService requestService)
     {
         BuildingDto = buildingDto;
         _requestService = requestService;

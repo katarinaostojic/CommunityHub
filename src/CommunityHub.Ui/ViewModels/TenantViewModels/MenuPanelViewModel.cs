@@ -1,13 +1,13 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels;
 
 public class MenuPanelViewModel
 {
-    private readonly IBuildingMembershipService _membershipService;
+    private readonly BuildingMembershipService _membershipService;
 
-    public MenuPanelViewModel(IBuildingMembershipService membershipService)
+    public MenuPanelViewModel(BuildingMembershipService membershipService)
     {
         _membershipService = membershipService;
     }

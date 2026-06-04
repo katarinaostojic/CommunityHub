@@ -1,32 +1,14 @@
-﻿using CommunityHub.Application.Domain.Entities.Ads;
-using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.DTOs.Reports;
+﻿using CommunityHub.Application.DTOs.Reports;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
 using QuestPdfDocument = QuestPDF.Fluent.Document;
-using QuestPdfContainer = QuestPDF.Infrastructure.IContainer;
 
 namespace CommunityHub.Application.Services.Reports;
 
 public class AdsPdfExporter
 {
-    private const string BackgroundLight = "#F7F8F6";
-    private const string Surface = "#FFFFFF";
-    private const string SurfaceSoft = "#F4FBF7";
-
-    private const string Primary = "#314B40";
-    private const string PrimaryDark = "#22362E";
-    private const string PrimarySoft = "#E4EDE8";
-
-    private const string Accent = "#D98EA3";
-    private const string AccentSoft = "#FBE8EE";
-
-    private const string TextPrimary = "#1F2F29";
-    private const string TextSecondary = "#5F756B";
-    private const string Border = "#DDE8E2";
-
     public void Export(string filePath, AdsReportDto report)
     {
         QuestPDF.Settings.License = LicenseType.Community;
@@ -37,230 +19,63 @@ public class AdsPdfExporter
             {
                 page.Size(PageSizes.A4.Landscape());
                 page.Margin(30);
-                page.PageColor(BackgroundLight);
-                page.DefaultTextStyle(text => text.FontSize(10).FontColor(TextPrimary));
+                page.PageColor(AdsPdfReportStyles.BackgroundLight);
+                page.DefaultTextStyle(text => text
+                    .FontSize(10)
+                    .FontColor(AdsPdfReportStyles.TextPrimary));
 
-                page.Header().Element(HeaderContainer).Column(column =>
+                page.Header().Column(column =>
                 {
-                    column.Item().Text("Tenant Ads Report")
-                        .FontSize(24)
-                        .Bold()
-                        .FontColor(Primary);
-
-                    column.Item().PaddingTop(4).Text(report.BuildingSubtitle)
-                        .FontSize(12)
-                        .FontColor(TextSecondary);
-
-                    column.Item().PaddingTop(2).Text($"Period: {FormatDate(report.DateFrom)} - {FormatDate(report.DateTo)}")
-                        .FontSize(12)
-                        .FontColor(TextSecondary);
+                    AdsPdfReportHeader.AddAppBanner(column, report);
+                    AdsPdfReportHeader.AddReportHeader(column, report);
                 });
 
                 page.Content().PaddingTop(18).Column(column =>
                 {
-                    AddSummary(column, report);
-                    AddAdsTable(column, report.Ads);
+                    AdsPdfReportSummary.AddSummary(column, report);
+                    AdsPdfReportTable.AddAdsTable(column, report.Ads);
                 });
 
                 page.Footer()
                     .PaddingTop(12)
-                    .AlignCenter()
-                    .Text(text =>
+                    .Row(row =>
                     {
-                        text.DefaultTextStyle(style => style.FontSize(9).FontColor(TextSecondary));
-                        text.Span("Generated on ");
-                        text.Span(DateTime.Now.ToString("dd.MM.yyyy. HH:mm")).SemiBold();
+                        AddGeneratedInfo(row);
+                        AddPageNumbers(row);
                     });
             });
         }).GeneratePdf(filePath);
     }
 
-    private static QuestPdfContainer HeaderContainer(QuestPdfContainer container)
+    private static void AddGeneratedInfo(RowDescriptor row)
     {
-        return container
-            .Background(Surface)
-            .Border(1)
-            .BorderColor(Border)
-            .Padding(16);
-    }
-
-    private static void AddSummary(ColumnDescriptor column, AdsReportDto report)
-    {
-        column.Item().PaddingBottom(16).Table(table =>
-        {
-            table.ColumnsDefinition(columns =>
+        row.RelativeItem()
+            .AlignLeft()
+            .Text(text =>
             {
-                columns.RelativeColumn();
-                columns.RelativeColumn();
-                columns.RelativeColumn();
-                columns.RelativeColumn();
-                columns.RelativeColumn();
-            });
-
-            AddSummaryCell(table, "Total ads", report.TotalAds);
-            AddSummaryCell(table, "Offering", report.OfferingAds);
-            AddSummaryCell(table, "Seeking", report.SeekingAds);
-            AddSummaryCell(table, "Active", report.ActiveAds);
-            AddSummaryCell(table, "Archived", report.ArchivedAds);
-        });
-    }
-
-    private static void AddSummaryCell(TableDescriptor table, string label, int value)
-    {
-        table.Cell()
-            .Background(Surface)
-            .Border(1)
-            .BorderColor(Border)
-            .Padding(10)
-            .Column(column =>
-            {
-                column.Item().Text(label)
+                text.DefaultTextStyle(style => style
                     .FontSize(9)
-                    .SemiBold()
-                    .FontColor(TextSecondary);
+                    .FontColor(AdsPdfReportStyles.TextSecondary));
 
-                column.Item().PaddingTop(4).Text(value.ToString())
-                    .FontSize(18)
-                    .Bold()
-                    .FontColor(Primary);
+                text.Span("Generated on ");
+                text.Span(DateTime.Now.ToString("dd.MM.yyyy. HH:mm")).SemiBold();
             });
     }
 
-    private static void AddAdsTable(ColumnDescriptor column, List<AdDto> ads)
+    private static void AddPageNumbers(RowDescriptor row)
     {
-        if (ads.Count == 0)
-        {
-            column.Item()
-                .Background(Surface)
-                .Border(1)
-                .BorderColor(Border)
-                .Padding(14)
-                .Text("No ads were found for the selected period.")
-                .Italic()
-                .FontColor(TextSecondary);
-
-            return;
-        }
-
-        column.Item().Table(table =>
-        {
-            table.ColumnsDefinition(columns =>
+        row.RelativeItem()
+            .AlignRight()
+            .Text(text =>
             {
-                columns.RelativeColumn(1.5f);
-                columns.RelativeColumn(1);
-                columns.RelativeColumn(1.3f);
-                columns.RelativeColumn(1.5f);
-                columns.RelativeColumn(1);
-                columns.RelativeColumn(3);
+                text.DefaultTextStyle(style => style
+                    .FontSize(9)
+                    .FontColor(AdsPdfReportStyles.TextSecondary));
+
+                text.Span("Page ");
+                text.CurrentPageNumber();
+                text.Span(" of ");
+                text.TotalPages();
             });
-
-            AddHeader(table);
-
-            foreach (AdDto ad in ads)
-            {
-                AddRow(table, ad);
-            }
-        });
-    }
-
-    private static void AddHeader(TableDescriptor table)
-    {
-        table.Header(header =>
-        {
-            header.Cell().Element(HeaderCell).Text("Tenant");
-            header.Cell().Element(HeaderCell).Text("Type");
-            header.Cell().Element(HeaderCell).Text("Category");
-            header.Cell().Element(HeaderCell).Text("Date range");
-            header.Cell().Element(HeaderCell).Text("Status");
-            header.Cell().Element(HeaderCell).Text("Description");
-        });
-    }
-
-    private static void AddRow(TableDescriptor table, AdDto ad)
-    {
-        table.Cell().Element(BodyCell).Text(ad.AuthorName);
-        table.Cell().Element(TypeCell).Text(FormatType(ad.Type));
-        table.Cell().Element(BodyCell).Text(FormatCategory(ad.Category));
-        table.Cell().Element(BodyCell).Text($"{FormatDate(ad.DateFrom)} - {FormatDate(ad.DateTo)}");
-        table.Cell().Element(StatusCell).Text(FormatStatus(ad.Status));
-        table.Cell().Element(BodyCell).Text(ad.Description);
-    }
-
-    private static QuestPdfContainer HeaderCell(QuestPdfContainer container)
-    {
-        return container
-            .Background(Primary)
-            .Border(1)
-            .BorderColor(PrimaryDark)
-            .Padding(7)
-            .DefaultTextStyle(text => text.Bold().FontColor(Colors.White));
-    }
-
-    private static QuestPdfContainer BodyCell(QuestPdfContainer container)
-    {
-        return container
-            .Background(Surface)
-            .BorderBottom(1)
-            .BorderColor(Border)
-            .Padding(7)
-            .DefaultTextStyle(text => text.FontColor(TextPrimary));
-    }
-
-    private static QuestPdfContainer TypeCell(QuestPdfContainer container)
-    {
-        return container
-            .Background(PrimarySoft)
-            .BorderBottom(1)
-            .BorderColor(Border)
-            .Padding(7)
-            .DefaultTextStyle(text => text.SemiBold().FontColor(Primary));
-    }
-
-    private static QuestPdfContainer StatusCell(QuestPdfContainer container)
-    {
-        return container
-            .Background(AccentSoft)
-            .BorderBottom(1)
-            .BorderColor(Border)
-            .Padding(7)
-            .DefaultTextStyle(text => text.SemiBold().FontColor(TextPrimary));
-    }
-
-    private static string FormatDate(DateOnly date)
-    {
-        return date.ToString("dd.MM.yyyy.");
-    }
-
-    private static string FormatType(AdType type)
-    {
-        return type switch
-        {
-            AdType.Offering => "Offering",
-            AdType.Seeking => "Seeking",
-            _ => type.ToString()
-        };
-    }
-
-    private static string FormatCategory(AdCategory category)
-    {
-        return category switch
-        {
-            AdCategory.Moving => "Moving",
-            AdCategory.ApplianceRepair => "Appliance repair",
-            AdCategory.Lending => "Lending",
-            AdCategory.Cleaning => "Cleaning",
-            AdCategory.Other => "Other",
-            _ => category.ToString()
-        };
-    }
-
-    private static string FormatStatus(AdStatus status)
-    {
-        return status switch
-        {
-            AdStatus.Active => "Active",
-            AdStatus.Archived => "Archived",
-            _ => status.ToString()
-        };
     }
 }

@@ -1,11 +1,10 @@
 ﻿using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 using CommunityHub.Application.Mappings.Buildings.CommonRooms;
-using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
-public class CommonRoomRequestService : ICommonRoomRequestService
+public class CommonRoomRequestService
 {
     private readonly ICommonRoomRequestRepository _requestRepository;
     private readonly CommonRoomRequestApprovalService _approvalService;

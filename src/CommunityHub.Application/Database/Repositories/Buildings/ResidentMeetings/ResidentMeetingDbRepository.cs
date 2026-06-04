@@ -30,27 +30,6 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
         using IDataReader reader = command.ExecuteReader();
         return ResidentMeetingReader.ReadMeetings(reader);
     }
-
-    public int CountByTenantAndBuilding(
-        long tenantId,
-        long buildingId,
-        ResidentMeetingStatus? status)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        SELECT COUNT(*)
-        FROM resident_meetings rm
-        WHERE rm.building_id = @buildingId
-          AND (@status IS NULL OR rm.status = @status::resident_meeting_status)";
-
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@status", GetStatusParameterValue(status));
-
-        return Convert.ToInt32(command.ExecuteScalar());
-    }
-
     public List<ResidentMeeting> GetActiveByBuilding(long buildingId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

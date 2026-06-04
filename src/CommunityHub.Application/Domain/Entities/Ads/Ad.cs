@@ -59,7 +59,14 @@ public class Ad
     public AdType OppositeType => Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
 
     public bool IsEligibleMatchFor(Ad other)
-        => Author.Id != other.Author.Id && OverlapsWith(other.DateFrom, other.DateTo);
+    {
+        return IsActive
+            && other.IsActive
+            && Author.Id != other.Author.Id
+            && Type == other.OppositeType
+            && Category == other.Category
+            && OverlapsWith(other.DateFrom, other.DateTo);
+    }
 
     public static string? ValidateDateRange(DateOnly dateFrom, DateOnly dateTo)
     {

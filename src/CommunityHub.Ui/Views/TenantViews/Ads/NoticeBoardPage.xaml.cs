@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Application.Services.Reports;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
@@ -26,20 +26,21 @@ public partial class NoticeBoardPage : Page
         _user = user;
         _membership = membership;
 
-        IAdService adService = Injector.CreateInstance<IAdService>();
-        IAdNotificationService notificationService = Injector.CreateInstance<IAdNotificationService>();
+        AdService adService = Injector.CreateInstance<AdService>();
+        AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
         AdsReportService reportService = Injector.CreateInstance<AdsReportService>();
         AdsPdfExporter pdfExporter = Injector.CreateInstance<AdsPdfExporter>();
 
-        _viewModel = new NoticeBoardViewModel(
-            adService,
-            notificationService,
-            reportService,
-            pdfExporter,
-            _membership,
-            _user.Id);
+		_viewModel = new NoticeBoardViewModel(
+			adService,
+			notificationService,
+			reportService,
+			pdfExporter,
+			_membership,
+			_user.Id,
+			_user.DisplayName);
 
-        _navigationHelper = new NoticeBoardNavigationHelper(_user, _membership, _viewModel, this);
+		_navigationHelper = new NoticeBoardNavigationHelper(_user, _membership, _viewModel, this);
 
         DataContext = _viewModel;
 

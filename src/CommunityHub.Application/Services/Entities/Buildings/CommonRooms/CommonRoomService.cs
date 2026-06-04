@@ -5,11 +5,10 @@ using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 using CommunityHub.Application.Mappings.Buildings.CommonRooms;
-using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
-public class CommonRoomService : ICommonRoomService
+public class CommonRoomService
 {
     private readonly ICommonRoomRepository _repository;
     private readonly IBuildingRepository _buildingRepository;

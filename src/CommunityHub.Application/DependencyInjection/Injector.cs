@@ -12,9 +12,6 @@ using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
 using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Shared;
-using CommunityHub.Application.Services.Interfaces.Ads;
-using CommunityHub.Application.Services.Interfaces.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Reports;
 
 namespace CommunityHub.Application.DependencyInjection;
@@ -104,33 +101,44 @@ public static class Injector
         _problemReportRepository,
         _buildingMembershipRepository);
 
-    private static readonly ResidentMeetingService _residentMeetingService = new(
+    private static readonly ResidentMeetingAccessService _residentMeetingAccessService = new(
         _residentMeetingRepository,
         _buildingMembershipRepository);
+
+    private static readonly ResidentMeetingStatusService _residentMeetingStatusService = new(
+        _residentMeetingRepository);
+
+    private static readonly ResidentMeetingAttendanceService _residentMeetingAttendanceService = new(
+        _residentMeetingRepository,
+        _residentMeetingAccessService,
+        _residentMeetingStatusService);
+
+    private static readonly ResidentMeetingTopicService _residentMeetingTopicService = new(
+        _residentMeetingRepository,
+        _residentMeetingAccessService);
+
+    private static readonly ResidentMeetingScheduleService _residentMeetingScheduleService = new(
+        _residentMeetingRepository);
+
+    private static readonly ResidentMeetingService _residentMeetingService = new(
+        _residentMeetingRepository,
+        _residentMeetingAccessService,
+        _residentMeetingStatusService,
+        _residentMeetingAttendanceService,
+        _residentMeetingTopicService,
+        _residentMeetingScheduleService);
 
     private static readonly DonationDbRepository _donationRepository = new();
 
     private static readonly Dictionary<Type, object> _implementations = new()
     {
         {
-            typeof(IBuildingService),
-            _buildingService
-        },
-        {
             typeof(BuildingService),
             _buildingService
         },
         {
-            typeof(IBuildingAccessRequestService),
-            _buildingAccessRequestService
-        },
-        {
             typeof(BuildingAccessRequestService),
             _buildingAccessRequestService
-        },
-        {
-            typeof(IBuildingMembershipService),
-            _buildingMembershipService
         },
         {
             typeof(BuildingMembershipService),
@@ -151,16 +159,8 @@ public static class Injector
             _adExpirationService
         },
         {
-            typeof(IAdSlotBookingService),
-            _adSlotBookingService
-        },
-        {
             typeof(AdSlotBookingService),
             _adSlotBookingService
-        },
-        {
-            typeof(IAdNotificationService),
-            _adNotificationService
         },
         {
             typeof(AdNotificationService),
@@ -172,10 +172,6 @@ public static class Injector
                 _adRepository,
                 _adSlotRepository,
                 _adExpirationService)
-        },
-        {
-            typeof(IAdService),
-            _adService
         },
         {
             typeof(AdService),
@@ -190,16 +186,8 @@ public static class Injector
             _tenantAdsPdfExporter
         },
         {
-            typeof(ICommonRoomService),
-            _commonRoomService
-        },
-        {
             typeof(CommonRoomService),
             _commonRoomService
-        },
-        {
-            typeof(ICommonRoomRequestService),
-            _commonRoomRequestService
         },
         {
             typeof(CommonRoomRequestService),
@@ -220,6 +208,26 @@ public static class Injector
         {
             typeof(ProblemReportService),
             _problemReportService
+        },
+        {
+            typeof(ResidentMeetingAccessService),
+            _residentMeetingAccessService
+        },
+        {
+            typeof(ResidentMeetingStatusService),
+            _residentMeetingStatusService
+        },
+        {
+            typeof(ResidentMeetingAttendanceService),
+            _residentMeetingAttendanceService
+        },
+        {
+            typeof(ResidentMeetingTopicService),
+            _residentMeetingTopicService
+        },
+        {
+            typeof(ResidentMeetingScheduleService),
+            _residentMeetingScheduleService
         },
         {
             typeof(ResidentMeetingService),

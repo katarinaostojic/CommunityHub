@@ -1,19 +1,19 @@
 ﻿using CommunityHub.Application.Domain.Entities.Ads;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Extensions;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class NoticeBoardFiltersViewModel : BaseViewModel
 {
-    private readonly IAdService _adService;
+    private readonly AdService _adService;
     private readonly long _buildingId;
 
     private string _allFilterText = "All (0)";
     private string _offeringFilterText = "Offering (0)";
     private string _seekingFilterText = "Seeking (0)";
 
-    public NoticeBoardFiltersViewModel(IAdService adService, long buildingId)
+    public NoticeBoardFiltersViewModel(AdService adService, long buildingId)
     {
         _adService = adService;
         _buildingId = buildingId;

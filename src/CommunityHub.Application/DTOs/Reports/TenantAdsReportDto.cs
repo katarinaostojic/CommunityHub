@@ -7,17 +7,20 @@ public class AdsReportDto
 {
     public AdsReportDto(
         string buildingSubtitle,
+        string tenantName,
         DateOnly dateFrom,
         DateOnly dateTo,
         List<AdDto> ads)
     {
         BuildingSubtitle = buildingSubtitle;
+        TenantName = tenantName;
         DateFrom = dateFrom;
         DateTo = dateTo;
         Ads = ads;
     }
 
     public string BuildingSubtitle { get; }
+    public string TenantName { get; }
     public DateOnly DateFrom { get; }
     public DateOnly DateTo { get; }
     public List<AdDto> Ads { get; }

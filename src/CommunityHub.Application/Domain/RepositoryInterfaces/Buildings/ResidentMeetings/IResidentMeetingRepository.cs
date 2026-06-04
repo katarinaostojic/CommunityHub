@@ -9,11 +9,6 @@ public interface IResidentMeetingRepository
         long buildingId,
         ResidentMeetingStatus? status);
 
-    int CountByTenantAndBuilding(
-        long tenantId,
-        long buildingId,
-        ResidentMeetingStatus? status);
-
     List<ResidentMeeting> GetActiveByBuilding(long buildingId);
 
     ResidentMeeting? GetById(long meetingId, long tenantId);

@@ -47,4 +47,28 @@ public class CommonRoom
     {
         return !_occupiedDates.Any(d => d.Date == date.Date);
     }
+
+    public List<DateTime> GetFreeDatesInRange(DateTime dateFrom, DateTime dateTo)
+    {
+        List<DateTime> freeDates = new();
+
+        for (DateTime date = dateFrom; date <= dateTo; date = date.AddDays(1))
+        {
+            if (IsFreeOnDate(date))
+                freeDates.Add(date);
+        }
+
+        return freeDates;
+    }
+
+    public bool IsRangeFree(DateTime dateFrom, DateTime dateTo)
+    {
+        for (DateTime date = dateFrom; date <= dateTo; date = date.AddDays(1))
+        {
+            if (!IsFreeOnDate(date))
+                return false;
+        }
+
+        return true;
+    }
 }

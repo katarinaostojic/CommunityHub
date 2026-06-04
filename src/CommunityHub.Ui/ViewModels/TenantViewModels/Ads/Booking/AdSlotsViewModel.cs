@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
 
 public class AdSlotsViewModel : BaseViewModel
 {
-    private readonly IAdSlotBookingService _slotBookingService;
+    private readonly AdSlotBookingService _slotBookingService;
     private readonly long _adId;
     private readonly DateOnly _dateFrom;
     private readonly DateOnly _dateTo;
@@ -16,7 +16,7 @@ public class AdSlotsViewModel : BaseViewModel
     private string _bookedSlotsTitleText = string.Empty;
 
     public AdSlotsViewModel(
-        IAdSlotBookingService slotBookingService,
+        AdSlotBookingService slotBookingService,
         long adId,
         DateOnly dateFrom,
         DateOnly dateTo)
