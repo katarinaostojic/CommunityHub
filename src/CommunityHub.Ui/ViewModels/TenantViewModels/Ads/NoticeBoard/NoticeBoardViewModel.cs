@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.Reports;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Application.Services.Reports;
 using System.Collections.ObjectModel;
 
@@ -9,7 +9,7 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
 
 public class NoticeBoardViewModel : BaseViewModel
 {
-    private readonly IAdService _adService;
+    private readonly AdService _adService;
     private readonly AdsReportService _reportService;
     private readonly AdsPdfExporter _pdfExporter;
     private readonly long _currentUserId;
@@ -19,8 +19,8 @@ public class NoticeBoardViewModel : BaseViewModel
     private string _resultsCountText = string.Empty;
 
     public NoticeBoardViewModel(
-        IAdService adService,
-        IAdNotificationService notificationService,
+        AdService adService,
+        AdNotificationService notificationService,
         AdsReportService reportService,
         AdsPdfExporter pdfExporter,
         BuildingMembershipDto membership,

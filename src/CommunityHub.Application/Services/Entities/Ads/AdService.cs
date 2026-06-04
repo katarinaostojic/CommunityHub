@@ -2,21 +2,21 @@
 using CommunityHub.Application.Domain.RepositoryInterfaces.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.Mappings.Ads;
-using CommunityHub.Application.Services.Interfaces.Ads;
+
 
 namespace CommunityHub.Application.Services.Entities.Ads;
 
-public class AdService : IAdService
+public class AdService
 {
     private readonly IAdRepository _adRepository;
-    private readonly IAdSlotBookingService _slotBookingService;
+    private readonly AdSlotBookingService _slotBookingService;
     private readonly AdExpirationService _expirationService;
     private readonly IAdNotificationRepository _notificationRepository;
 
     public AdService(
         IAdRepository adRepository,
         IAdNotificationRepository notificationRepository,
-        IAdSlotBookingService slotBookingService,
+        AdSlotBookingService slotBookingService,
         AdExpirationService expirationService)
     {
         _adRepository = adRepository;

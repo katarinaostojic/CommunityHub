@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Ads;
 using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Extensions;
 using System.Collections.ObjectModel;
 
@@ -9,13 +9,13 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 
 public class AdPostedViewModel : BaseViewModel
 {
-    private readonly IAdService _adService;
+    private readonly AdService _adService;
 
     public AdPostedViewModel(
         AdDto postedAd,
         List<AdDto> matchingAds,
         BuildingMembershipDto membership,
-        IAdService adService)
+        AdService adService)
     {
         _adService = adService;
         PostedAdId = postedAd.Id;

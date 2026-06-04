@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
 public class BrowseBuildingsViewModel : BaseViewModel
 {
-    private readonly IBuildingService _buildingService;
+    private readonly BuildingService _buildingService;
     private const int BuildingsPerPage = 3;
 
     private List<BuildingDto> _allBuildings = new();
@@ -16,7 +16,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
     private bool _hasPreviousPage;
     private bool _hasNextPage;
 
-    public BrowseBuildingsViewModel(IBuildingService buildingService)
+    public BrowseBuildingsViewModel(BuildingService buildingService)
     {
         _buildingService = buildingService;
         Search(null, null, null, null);

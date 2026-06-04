@@ -1,14 +1,14 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings;
 
 public class BuildingAccessRequestDialogViewModel : BaseViewModel
 {
-    private readonly IBuildingAccessRequestService _requestService;
-    private readonly IBuildingService _buildingService;
+    private readonly BuildingAccessRequestService _requestService;
+    private readonly BuildingService _buildingService;
     private readonly BuildingDto _building;
     private readonly User _user;
 
@@ -17,8 +17,8 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
     private bool _hasWarning;
 
     public BuildingAccessRequestDialogViewModel(
-        IBuildingAccessRequestService requestService,
-        IBuildingService buildingService,
+        BuildingAccessRequestService requestService,
+        BuildingService buildingService,
         BuildingDto building,
         User user)
     {

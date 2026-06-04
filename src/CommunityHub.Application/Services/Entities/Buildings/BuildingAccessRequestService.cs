@@ -3,11 +3,10 @@ using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings;
 
 namespace CommunityHub.Application.Services.Entities.Buildings;
 
-public class BuildingAccessRequestService : IBuildingAccessRequestService
+public class BuildingAccessRequestService
 {
     private readonly IBuildingAccessRequestRepository _repository;
     private readonly IBuildingMembershipRepository _membershipRepository;

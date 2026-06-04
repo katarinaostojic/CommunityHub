@@ -3,11 +3,10 @@ using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Mappings.Buildings;
-using CommunityHub.Application.Services.Interfaces.Buildings;
 
 namespace CommunityHub.Application.Services.Entities.Buildings;
 
-public class BuildingService : IBuildingService
+public class BuildingService
 {
     private readonly IBuildingRepository _repository;
     private readonly IImageRepository _imageRepository;

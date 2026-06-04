@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.Booking;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -24,7 +24,7 @@ public partial class BookSlotsPage : Page
         _membership = membership;
         _returnPage = returnPage;
 
-        IAdSlotBookingService slotBookingService = Injector.CreateInstance<IAdSlotBookingService>();
+        AdSlotBookingService slotBookingService = Injector.CreateInstance<AdSlotBookingService>();
         _viewModel = new BookSlotsViewModel(slotBookingService, theirAd, myAd);
         DataContext = _viewModel;
 

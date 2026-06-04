@@ -1,14 +1,14 @@
 ﻿using CommunityHub.Application.DTOs.Ads;
 using CommunityHub.Application.DTOs.Reports;
-using CommunityHub.Application.Services.Interfaces.Ads;
+using CommunityHub.Application.Services.Entities.Ads;
 
 namespace CommunityHub.Application.Services.Reports;
 
 public class AdsReportService
 {
-    private readonly IAdService _adService;
+    private readonly AdService _adService;
 
-    public AdsReportService(IAdService adService)
+    public AdsReportService(AdService adService)
     {
         _adService = adService;
     }
