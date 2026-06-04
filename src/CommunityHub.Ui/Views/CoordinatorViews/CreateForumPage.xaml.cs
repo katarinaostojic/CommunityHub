@@ -29,20 +29,28 @@ public partial class CreateForumPage : Page
         string title = TitleTextBox.Text.Trim();
         string description = DescriptionTextBox.Text.Trim();
 
+        TitleErrorText.Visibility = Visibility.Collapsed;
+        DescriptionErrorText.Visibility = Visibility.Collapsed;
+
+        bool isValid = true;
+
         if (string.IsNullOrWhiteSpace(title))
         {
-            MessageBox.Show("Please enter a title.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            TitleErrorText.Text = "Please enter a title.";
+            TitleErrorText.Visibility = Visibility.Visible;
+            isValid = false;
         }
 
         if (string.IsNullOrWhiteSpace(description))
         {
-            MessageBox.Show("Please enter a description.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            DescriptionErrorText.Text = "Please enter a description.";
+            DescriptionErrorText.Visibility = Visibility.Visible;
+            isValid = false;
         }
 
+        if (!isValid) return;
+
         _forumService.Create(new CreateForumRequest(title, description, _coordinatorId));
-        MessageBox.Show("Forum created successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         CoordinatorMainWindow.Instance.NavigateTo(new ForumsPage(_coordinatorId), "Forums");
     }
 

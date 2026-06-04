@@ -4,7 +4,6 @@ using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Reports;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Services.Reports;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
@@ -28,10 +27,12 @@ public partial class GenerateReportPage : Page
 
     private void GeneratePdfButton_Click(object sender, RoutedEventArgs e)
     {
+        DateErrorText.Visibility = Visibility.Collapsed;
+
         if (StartCalendar.SelectedDate == null || EndCalendar.SelectedDate == null)
         {
-            MessageBox.Show("Please select both start and end date.", "Validation",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
+            DateErrorText.Text = "Please select both start and end date.";
+            DateErrorText.Visibility = Visibility.Visible;
             return;
         }
 
@@ -40,8 +41,8 @@ public partial class GenerateReportPage : Page
 
         if (startDate > endDate)
         {
-            MessageBox.Show("Start date must be before end date.", "Validation",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
+            DateErrorText.Text = "Start date must be before end date.";
+            DateErrorText.Visibility = Visibility.Visible;
             return;
         }
 

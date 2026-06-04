@@ -41,9 +41,5 @@ public partial class NeighborhoodDetailsPage : Page
             new MeetingsPage(_neighborhood.CoordinatorId, _neighborhood.Id), "Meetings");
     }
 
-    private void CityObjectsButton_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-        CoordinatorMainWindow.Instance.NavigateTo(
-            new CityObjectsPage(_neighborhood.Id), "City Objects");
-    }
+    
 }

@@ -64,20 +64,22 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="8"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="View Requests" Click="RequestsButton_Click"
-                        Style="{StaticResource OutlineButton}"/>
-                <Button Grid.Column="2" Content="View Members" Click="MembersButton_Click"
-                        Style="{StaticResource OutlineButton}"/>
+                <Button Grid.Column="0" Content="Meetings" Click="MeetingsButton_Click"
+                        Background="#1B4332" Foreground="White" Padding="16,10" FontSize="13"
+                        FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"
+                        Style="{StaticResource PrimaryButton}"/>
+                <Button Grid.Column="2" Content="View Requests" Click="RequestsButton_Click"
+                        Background="#2D6A4F" Foreground="White" Padding="16,10" FontSize="13"
+                        FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"
+                        Style="{StaticResource PrimaryButton}"/>
+                <Button Grid.Column="4" Content="View Members" Click="MembersButton_Click"
+                        Background="#52B788" Foreground="White" Padding="16,10" FontSize="13"
+                        FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"
+                        Style="{StaticResource PrimaryButton}"/>
             </Grid>
-
-            <Button Content="Meetings" Click="MeetingsButton_Click"
-                    HorizontalAlignment="Stretch" Margin="0,8,0,0"
-                    Style="{StaticResource PrimaryButton}"/>
-
-            <Button Content="🏙 City Objects" Click="CityObjectsButton_Click"
-                    HorizontalAlignment="Stretch" Margin="0,8,0,0"
-                    Style="{StaticResource OutlineButton}"/>
 
         </StackPanel>
     </ScrollViewer>

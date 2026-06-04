@@ -1,5 +1,8 @@
 ﻿using CommunityHub.Application.Services.Entities.Neighborhoods;
+using LiveCharts;
+using LiveCharts.Wpf;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 
@@ -9,6 +12,13 @@ public class CategoryDetailsViewModel : BaseViewModel
     private ObservableCollection<ExpenseItemViewModel> _expenses = new();
     private bool _hasDonations;
     private bool _hasExpenses;
+    private SeriesCollection _budgetSeriesCollection = new();
+
+    public SeriesCollection BudgetSeriesCollection
+    {
+        get => _budgetSeriesCollection;
+        private set => SetProperty(ref _budgetSeriesCollection, value);
+    }
 
     public CategoryDetailsViewModel(DonationService donationService,
         CategoryBudgetItemViewModel category, long neighborhoodId)
@@ -29,6 +39,37 @@ public class CategoryDetailsViewModel : BaseViewModel
             .ToList();
         Expenses = new ObservableCollection<ExpenseItemViewModel>(expenses);
         HasExpenses = expenses.Count > 0;
+
+        decimal totalDonations = donationService.GetDonationsByNeighborhood(neighborhoodId)
+            .Where(d => d.CategoryName == category.CategoryName)
+            .Sum(d => d.Amount);
+        decimal totalExpenses = donationService.GetExpenses(neighborhoodId)
+            .Where(e => e.CategoryName == category.CategoryName)
+            .Sum(e => e.Amount);
+
+        BudgetSeriesCollection = new SeriesCollection
+        {
+            new ColumnSeries
+            {
+                Title = "Donations",
+                Values = new ChartValues<decimal> { totalDonations },
+                Fill = new SolidColorBrush(Color.FromRgb(133, 212, 176)),
+                StrokeThickness = 0,
+                DataLabels = true,
+                FontSize = 11,
+                Foreground = new SolidColorBrush(Color.FromRgb(80, 80, 80))
+            },
+            new ColumnSeries
+            {
+                Title = "Expenses",
+                Values = new ChartValues<decimal> { totalExpenses },
+                Fill = new SolidColorBrush(Color.FromRgb(244, 160, 181)),
+                StrokeThickness = 0,
+                DataLabels = true,
+                FontSize = 11,
+                Foreground = new SolidColorBrush(Color.FromRgb(80, 80, 80))
+            }
+        };
     }
 
     public string CategoryName { get; }

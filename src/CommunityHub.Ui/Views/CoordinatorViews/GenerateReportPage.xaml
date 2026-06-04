@@ -13,7 +13,7 @@
                     <!-- Report type -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                         <TextBlock Text="Report type:" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                        <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                     </StackPanel>
                     <ComboBox x:Name="ReportTypeComboBox"
                               HorizontalAlignment="Stretch"
@@ -39,7 +39,7 @@
                         <StackPanel Grid.Column="0">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,6">
                                 <TextBlock Text="Start Date:" Style="{StaticResource SectionTitle}"/>
-                                <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                                <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                             </StackPanel>
                             <Calendar x:Name="StartCalendar"
                                       Width="200"
@@ -51,7 +51,7 @@
                         <StackPanel Grid.Column="2">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,6">
                                 <TextBlock Text="End Date:" Style="{StaticResource SectionTitle}"/>
-                                <TextBlock Text=" *" Foreground="Red" FontWeight="Bold"/>
+                                <TextBlock Text=" *" Foreground="{StaticResource DangerBrush}" FontWeight="Bold"/>
                             </StackPanel>
                             <Calendar x:Name="EndCalendar"
                                       Width="200"
@@ -60,9 +60,12 @@
                         </StackPanel>
                     </Grid>
 
+                    <TextBlock x:Name="DateErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,6,0,0" Visibility="Collapsed"/>
+
                     <!-- Legenda -->
-                    <TextBlock Text="* Required field" Foreground="Red"
-                               FontSize="11" Margin="0,12,0,0"/>
+                    <TextBlock Text="* Required field" Foreground="{StaticResource TextSecondaryBrush}"
+                               FontSize="11" Margin="0,8,0,0"/>
 
                 </StackPanel>
             </Border>

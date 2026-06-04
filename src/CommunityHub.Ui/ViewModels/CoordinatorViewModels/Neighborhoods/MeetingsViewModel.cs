@@ -165,20 +165,20 @@ public class MeetingsViewModel : BaseViewModel
 
         TrustSeriesCollection = new SeriesCollection
         {
-            new PieSeries { Title = "Nov u kvartu",            Values = new ChartValues<int> { NewCount },           Fill = new SolidColorBrush(Color.FromRgb(94, 163, 110)),   StrokeThickness = 0 },
-            new PieSeries { Title = "Neaktivan gradjanin",     Values = new ChartValues<int> { InactiveCount },      Fill = new SolidColorBrush(Color.FromRgb(158, 225, 203)),  StrokeThickness = 0 },
-            new PieSeries { Title = "Aktivan gradjanin",       Values = new ChartValues<int> { ActiveCount },        Fill = new SolidColorBrush(Color.FromRgb(29, 158, 117)),   StrokeThickness = 0 },
-            new PieSeries { Title = "Istaknut gradjanin",      Values = new ChartValues<int> { DistinguishedCount }, Fill = new SolidColorBrush(Color.FromRgb(15, 110, 86)),    StrokeThickness = 0 },
-            new PieSeries { Title = "Gradjanin od povjerenja", Values = new ChartValues<int> { TrustedCount },       Fill = new SolidColorBrush(Color.FromRgb(8, 80, 65)),      StrokeThickness = 0 },
+            new PieSeries { Title = "Nov u kvartu",            Values = new ChartValues<int> { NewCount },           Fill = new SolidColorBrush(Color.FromRgb(126, 200, 227)),  StrokeThickness = 0 },
+            new PieSeries { Title = "Neaktivan gradjanin",     Values = new ChartValues<int> { InactiveCount },      Fill = new SolidColorBrush(Color.FromRgb(244, 169, 106)),  StrokeThickness = 0 },
+            new PieSeries { Title = "Aktivan gradjanin",       Values = new ChartValues<int> { ActiveCount },        Fill = new SolidColorBrush(Color.FromRgb(133, 212, 176)),  StrokeThickness = 0 },
+            new PieSeries { Title = "Istaknut gradjanin",      Values = new ChartValues<int> { DistinguishedCount }, Fill = new SolidColorBrush(Color.FromRgb(244, 160, 181)),  StrokeThickness = 0 },
+            new PieSeries { Title = "Gradjanin od povjerenja", Values = new ChartValues<int> { TrustedCount },       Fill = new SolidColorBrush(Color.FromRgb(247, 217, 106)),  StrokeThickness = 0 },
         };
 
         TrustStats = new List<TrustStatItem>
         {
-            new("Nov u kvartu",            NewCount,          new SolidColorBrush(Color.FromRgb(94, 163, 110))),
-            new("Neaktivan gradjanin",     InactiveCount,     new SolidColorBrush(Color.FromRgb(158, 225, 203))),
-            new("Aktivan gradjanin",       ActiveCount,       new SolidColorBrush(Color.FromRgb(29, 158, 117))),
-            new("Istaknut gradjanin",      DistinguishedCount,new SolidColorBrush(Color.FromRgb(15, 110, 86))),
-            new("Gradjanin od povjerenja", TrustedCount,      new SolidColorBrush(Color.FromRgb(8, 80, 65))),
+            new("Nov u kvartu",            NewCount,           new SolidColorBrush(Color.FromRgb(126, 200, 227))),
+            new("Neaktivan gradjanin",     InactiveCount,      new SolidColorBrush(Color.FromRgb(244, 169, 106))),
+            new("Aktivan gradjanin",       ActiveCount,        new SolidColorBrush(Color.FromRgb(133, 212, 176))),
+            new("Istaknut gradjanin",      DistinguishedCount, new SolidColorBrush(Color.FromRgb(244, 160, 181))),
+            new("Gradjanin od povjerenja", TrustedCount,       new SolidColorBrush(Color.FromRgb(247, 217, 106))),
         };
     }
 

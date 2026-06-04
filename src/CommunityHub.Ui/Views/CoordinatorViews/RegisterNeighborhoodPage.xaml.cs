@@ -73,19 +73,22 @@ public partial class RegisterNeighborhoodPage : Page
 
         if (string.IsNullOrEmpty(streetName) || string.IsNullOrEmpty(startText) || string.IsNullOrEmpty(endText))
         {
-            ShowError("Please fill in all street fields.");
+            StreetErrorText.Text = "Please fill in all street fields.";
+            StreetErrorText.Visibility = Visibility.Visible;
             return false;
         }
 
         if (!int.TryParse(startText, out startNumber) || !int.TryParse(endText, out endNumber))
         {
-            ShowError("Start and end numbers must be integers.");
+            StreetErrorText.Text = "Start and end numbers must be integers.";
+            StreetErrorText.Visibility = Visibility.Visible;
             return false;
         }
 
         if (startNumber >= endNumber)
         {
-            ShowError("Start number must be less than end number.");
+            StreetErrorText.Text = "Start number must be less than end number.";
+            StreetErrorText.Visibility = Visibility.Visible;
             return false;
         }
 
@@ -97,12 +100,13 @@ public partial class RegisterNeighborhoodPage : Page
         int selectedIndex = StreetsListBox.SelectedIndex;
         if (selectedIndex < 0)
         {
-            ShowError("Please select a street to remove.");
+            StreetErrorText.Text = "Please select a street to remove.";
+            StreetErrorText.Visibility = Visibility.Visible;
             return;
         }
         _streets.RemoveAt(selectedIndex);
         StreetsListBox.Items.RemoveAt(selectedIndex);
-        ErrorBanner.Visibility = Visibility.Collapsed;
+        StreetErrorText.Visibility = Visibility.Collapsed;
     }
 
     private void AddImage_Click(object sender, RoutedEventArgs e)
@@ -186,11 +190,26 @@ public partial class RegisterNeighborhoodPage : Page
 
     private bool ValidateInputs(string name, string description, City? selectedCity)
     {
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
+        bool isValid = true;
+
+        NameErrorText.Visibility = Visibility.Collapsed;
+        DescriptionErrorText.Visibility = Visibility.Collapsed;
+
+        if (string.IsNullOrEmpty(name))
         {
-            ShowError("Name and description are required.");
-            return false;
+            NameErrorText.Text = "District name is required.";
+            NameErrorText.Visibility = Visibility.Visible;
+            isValid = false;
         }
+
+        if (string.IsNullOrEmpty(description))
+        {
+            DescriptionErrorText.Text = "Description is required.";
+            DescriptionErrorText.Visibility = Visibility.Visible;
+            isValid = false;
+        }
+
+        if (!isValid) return false;
 
         if (selectedCity == null)
         {
