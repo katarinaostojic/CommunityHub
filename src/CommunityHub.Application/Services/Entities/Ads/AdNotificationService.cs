@@ -13,6 +13,13 @@ public class AdNotificationService
         _notificationRepository = notificationRepository;
     }
 
+    public List<AdNotificationDto> GetNotifications(long userId)
+    {
+        return _notificationRepository
+            .GetByUser(userId)
+            .ToAdNotificationDtoList();
+    }
+
     public List<AdNotificationDto> GetUnreadNotifications(long userId)
     {
         return _notificationRepository
@@ -23,5 +30,10 @@ public class AdNotificationService
     public void MarkNotificationAsRead(long notificationId)
     {
         _notificationRepository.MarkAsRead(notificationId);
+    }
+
+    public void MarkAllAsRead(long userId)
+    {
+        _notificationRepository.MarkAllAsRead(userId);
     }
 }
