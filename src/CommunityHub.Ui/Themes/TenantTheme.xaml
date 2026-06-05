@@ -750,4 +750,12 @@
         <Setter Property="BorderBrush" Value="{StaticResource TextPrimaryBrush}"/>
     </Style>
 
+    <Style x:Key="TopBarIconButton" TargetType="Button" BasedOn="{StaticResource GhostWhiteButton}">
+        <Setter Property="Width" Value="36"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="Margin" Value="0,0,8,0"/>
+    </Style>
+
 </ResourceDictionary>

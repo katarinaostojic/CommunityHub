@@ -177,7 +177,7 @@
 
                 <!-- My Buildings lista -->
                 <ScrollViewer x:Name="MyBuildingsScrollViewer"
-                              MaxHeight="447"
+                              MaxHeight="493"
                               VerticalScrollBarVisibility="Auto"
                               Visibility="Collapsed">
                     <ItemsControl x:Name="MyBuildingsMenuPanel" Margin="0,6,0,6">
@@ -240,19 +240,6 @@
                                    Margin="0,0,10,0"
                                    VerticalAlignment="Center"/>
                         <TextBlock Text="My Requests"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-
-                <Separator Margin="0" Background="{StaticResource BorderBrush}"/>
-
-                <!-- Notifications -->
-                <Button Style="{StaticResource MenuButtonStyle}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🔔"
-                                   Margin="0,0,10,0"
-                                   VerticalAlignment="Center"/>
-                        <TextBlock Text="Notifications"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>

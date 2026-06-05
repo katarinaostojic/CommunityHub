@@ -29,6 +29,7 @@ public partial class BrowseBuildingsPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
+        NotificationBell.Initialize(_user.Id);
         AppMenu.Initialize(_user);
     }
 
