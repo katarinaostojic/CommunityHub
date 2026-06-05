@@ -16,7 +16,7 @@ public static class ThemeManager
 
             // OVDE UBACITE KAD ODRADITE
             UserRole.Manager => "Themes/TenantTheme.xaml",
-            UserRole.Citizen => "Themes/TenantTheme.xaml",
+            UserRole.Citizen => "Themes/CitizenTheme.xaml",
 
             _ => "Themes/TenantTheme.xaml"
         };
