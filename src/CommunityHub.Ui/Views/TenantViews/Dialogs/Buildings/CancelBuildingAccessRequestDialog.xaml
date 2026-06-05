@@ -24,8 +24,7 @@
                        Margin="0,0,0,20"/>
 
             <Border Background="{StaticResource AccentSoftBrush}"
-                    BorderBrush="{StaticResource BorderBrush}"
-                    BorderThickness="1"
+                    BorderThickness="0"
                     CornerRadius="10"
                     Padding="14,12"
                     Margin="0,0,0,20">

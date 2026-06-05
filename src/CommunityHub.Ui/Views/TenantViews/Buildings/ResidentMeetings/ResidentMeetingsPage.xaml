@@ -160,8 +160,7 @@
                                 <Border Grid.Row="0"
                                         HorizontalAlignment="Right"
                                         Background="{StaticResource PrimarySoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="12"
                                         Padding="12,5">
                                     <TextBlock Text="{Binding StatusDisplay}"
@@ -208,8 +207,7 @@
 
                                 <Border Grid.Row="2"
                                         Background="{StaticResource SurfaceSoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="10"
                                         Padding="12,10"
                                         Margin="0,14,0,0">

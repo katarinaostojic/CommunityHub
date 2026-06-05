@@ -130,8 +130,7 @@
 
                             <Border Grid.Column="1"
                                     Background="{StaticResource PrimarySoftBrush}"
-                                    BorderBrush="{StaticResource BorderBrush}"
-                                    BorderThickness="1"
+                                    BorderThickness="0"
                                     CornerRadius="8"
                                     Padding="9,4"
                                     VerticalAlignment="Center"
@@ -149,8 +148,7 @@
 
                             <Border Grid.Column="4"
                                     Background="{StaticResource PrimarySoftBrush}"
-                                    BorderBrush="{StaticResource BorderBrush}"
-                                    BorderThickness="1"
+                                    BorderThickness="0"
                                     CornerRadius="8"
                                     Padding="9,4"
                                     VerticalAlignment="Center"
@@ -182,8 +180,7 @@
 
                             <Border Grid.Column="10"
                                     Background="{StaticResource SurfaceSoftBrush}"
-                                    BorderBrush="{StaticResource BorderBrush}"
-                                    BorderThickness="1"
+                                    BorderThickness="0"
                                     CornerRadius="8"
                                     Padding="9,4"
                                     VerticalAlignment="Center"
@@ -289,8 +286,7 @@
                                     </ItemsControl>
 
                                     <Border Background="{StaticResource PrimarySoftBrush}"
-                                            BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1"
+                                            BorderThickness="0"
                                             CornerRadius="8"
                                             Padding="12,10">
                                         <StackPanel>
@@ -358,8 +354,7 @@
 
                                     <Border Grid.Column="0"
                                             Background="{StaticResource PrimarySoftBrush}"
-                                            BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1"
+                                            BorderThickness="0"
                                             CornerRadius="20"
                                             Padding="12,6"
                                             HorizontalAlignment="Left">
@@ -380,8 +375,7 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="{StaticResource SurfaceSoftBrush}"
-                                                        BorderBrush="{StaticResource BorderBrush}"
-                                                        BorderThickness="1"
+                                                        BorderThickness="0"
                                                         CornerRadius="20"
                                                         Padding="12,6"
                                                         Margin="0,0,8,4">

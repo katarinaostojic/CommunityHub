@@ -13,16 +13,20 @@
     <Color x:Key="PrimaryDarkColor">#22362E</Color>
     <Color x:Key="PrimarySoftColor">#E4EDE8</Color>
 
-    <!-- 10% akcenat - nežna roza -->
-    <Color x:Key="AccentColor">#D98EA3</Color>
-    <Color x:Key="AccentSoftColor">#FBE8EE</Color>
+    <!-- 10% akcenat - nežna roza --><!--
+    < roza opcija:  Color x:Key="AccentColor">#D98EA3</Color>
+    < roza opcija:  Color x:Key="AccentSoftColor">#FBE8EE</Color>-->
+
+    <!-- 10% akcenat - muted teal/sage, da ne liči na warning -->
+    <Color x:Key="AccentColor">#8A6F8E</Color>
+    <Color x:Key="AccentSoftColor">#F4EEF5</Color>
 
     <!-- tekst -->
     <Color x:Key="TextPrimaryColor">#1F2F29</Color>
     <Color x:Key="TextSecondaryColor">#5F756B</Color>
     <Color x:Key="TextMutedColor">#9AA8A1</Color>
-    <Color x:Key="SecondaryColor">#553E4E</Color>
-
+    <!-- roza opcija: <Color x:Key="SecondaryColor">#553E4E</Color>-->
+    <Color x:Key="SecondaryColor">#5F4B63</Color>
     <!-- linije / borderi -->
     <Color x:Key="BorderColor">#DDE8E2</Color>
 

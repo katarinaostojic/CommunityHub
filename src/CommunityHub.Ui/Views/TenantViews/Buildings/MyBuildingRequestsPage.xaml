@@ -174,8 +174,7 @@
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
                                         Background="{StaticResource PrimarySoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="10"
                                         Padding="12,7">
                                     <TextBlock Text="{Binding StatusDisplay}"
@@ -191,51 +190,39 @@
                                       Margin="0,16,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="30"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="0"
-                                            Background="{StaticResource SurfaceSoftBrush}"
-                                            BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="8"
-                                            Padding="14,9"
-                                            MinWidth="68">
-                                        <StackPanel>
-                                            <TextBlock Text="Unit"
-                                                       Style="{StaticResource SecondaryText}"
-                                                       FontSize="12"/>
+                                    <StackPanel Grid.Column="0"
+                                                Margin="0,0,36,0"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="Unit"
+                                                   Style="{StaticResource SecondaryText}"
+                                                   FontSize="12"/>
 
-                                            <TextBlock Text="{Binding UnitNumber}"
-                                                       FontSize="13"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
-                                        </StackPanel>
-                                    </Border>
+                                        <TextBlock Text="{Binding UnitNumber}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                   Margin="0,3,0,0"/>
+                                    </StackPanel>
 
-                                    <Border Grid.Column="2"
-                                            Background="{StaticResource SurfaceSoftBrush}"
-                                            BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="8"
-                                            Padding="14,9"
-                                            MinWidth="150">
-                                        <StackPanel>
-                                            <TextBlock Text="Submission date"
-                                                       Style="{StaticResource SecondaryText}"
-                                                       FontSize="12"/>
+                                    <StackPanel Grid.Column="1"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="Submission date"
+                                                   Style="{StaticResource SecondaryText}"
+                                                   FontSize="12"/>
 
-                                            <TextBlock Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy}"
-                                                       FontSize="13"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
-                                        </StackPanel>
-                                    </Border>
+                                        <TextBlock Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy}"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                   Margin="0,3,0,0"/>
+                                    </StackPanel>
 
-                                    <Button Grid.Column="4"
+                                    <Button Grid.Column="3"
                                             Content="Cancel request"
                                             Style="{StaticResource DangerButton}"
                                             HorizontalAlignment="Right"
@@ -252,8 +239,7 @@
                                         Grid.Column="0"
                                         Grid.ColumnSpan="2"
                                         Background="{StaticResource AccentSoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="8"
                                         Padding="10,7"
                                         Margin="0,12,0,0"

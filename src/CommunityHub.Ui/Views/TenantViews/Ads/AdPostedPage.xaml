@@ -79,8 +79,7 @@
         <!-- Success box -->
         <Border Grid.Row="3"
                 Background="{StaticResource PrimarySoftBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
+                BorderThickness="0"
                 CornerRadius="10"
                 Padding="16,12"
                 Margin="16,0,16,12">
@@ -129,8 +128,7 @@
 
                 <Border Grid.Column="1"
                         Background="{StaticResource PrimarySoftBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="1"
+                        BorderThickness="0"
                         CornerRadius="8"
                         Padding="9,4"
                         VerticalAlignment="Center"
@@ -149,8 +147,7 @@
 
                 <Border Grid.Column="4"
                         Background="{StaticResource PrimarySoftBrush}"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="1"
+                        BorderThickness="0"
                         CornerRadius="8"
                         Padding="9,4"
                         VerticalAlignment="Center"
@@ -223,8 +220,7 @@
                                                    VerticalAlignment="Center"/>
 
                                         <Border Background="{StaticResource PrimarySoftBrush}"
-                                                BorderBrush="{StaticResource BorderBrush}"
-                                                BorderThickness="1"
+                                                BorderThickness="0"
                                                 CornerRadius="8"
                                                 Padding="9,4"
                                                 HorizontalAlignment="Right"
@@ -253,8 +249,7 @@
                                                        Margin="0,0,8,0"/>
 
                                             <Border Background="{StaticResource PrimarySoftBrush}"
-                                                    BorderBrush="{StaticResource BorderBrush}"
-                                                    BorderThickness="1"
+                                                    BorderThickness="0"
                                                     CornerRadius="6"
                                                     Padding="8,3"
                                                     Margin="0,0,8,0"
@@ -266,8 +261,7 @@
                                             </Border>
 
                                             <Border Background="{StaticResource SurfaceSoftBrush}"
-                                                    BorderBrush="{StaticResource BorderBrush}"
-                                                    BorderThickness="1"
+                                                    BorderThickness="0"
                                                     CornerRadius="6"
                                                     Padding="8,3"
                                                     VerticalAlignment="Center">
