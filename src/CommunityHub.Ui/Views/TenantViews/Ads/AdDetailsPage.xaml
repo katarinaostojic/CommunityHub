@@ -78,17 +78,18 @@
                            Margin="0,0,0,8"/>
 
                 <!-- Archived warning -->
+                <!-- Archived info -->
                 <Border Visibility="{Binding ArchivedWarningVisible}"
-                        Background="{StaticResource WarningBrush}"
-                        BorderBrush="{StaticResource WarningTextBrush}"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="12,10"
-                        Margin="0,0,0,8">
-                    <TextBlock Foreground="{StaticResource WarningTextBrush}"
-                               FontSize="13"
-                               TextWrapping="Wrap"
-                               Text="⚠ This ad has been archived. It is no longer visible on the Notice Board and will not be suggested to other tenants. Existing bookings remain active."/>
+                            Background="{StaticResource ArchivedSoftBrush}"
+                            BorderThickness="0"
+                            CornerRadius="8"
+                            Padding="12,10"
+                            Margin="0,0,0,8">
+                                    <TextBlock Foreground="{StaticResource ArchivedBrush}"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   Text="This ad has been archived. It is no longer visible on the Notice Board and will not be suggested to other tenants. Existing bookings remain active."/>
                 </Border>
 
                 <!-- Ad summary box -->
@@ -179,17 +180,17 @@
                                        Visibility="{Binding AdStatusTextVisible}"/>
 
                             <Border Grid.Column="10"
-                                    Background="{StaticResource SurfaceSoftBrush}"
-                                    BorderThickness="0"
-                                    CornerRadius="8"
-                                    Padding="9,4"
-                                    VerticalAlignment="Center"
-                                    Margin="8,0,0,0"
-                                    Visibility="{Binding AdStatusTextVisible}">
+                                        Background="{StaticResource ArchivedSoftBrush}"
+                                        BorderThickness="0"
+                                        CornerRadius="8"
+                                        Padding="9,4"
+                                        VerticalAlignment="Center"
+                                        Margin="8,0,0,0"
+                                        Visibility="{Binding AdStatusTextVisible}">
                                 <TextBlock Text="Archived"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{StaticResource ArchivedBrush}"/>
                             </Border>
 
                             <Button Grid.Column="12"

@@ -7,7 +7,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="350"/>
+            <RowDefinition Height="340"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -313,6 +313,7 @@
                 Background="{StaticResource SurfaceBrush}"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,1,0,0"
+                Margin="0,0,0,0"
                 Padding="16,8">
             <Button Content="Request Access →"
                     Style="{StaticResource PrimaryButtonLarge}"

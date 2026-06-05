@@ -21,6 +21,10 @@
     <Color x:Key="AccentColor">#8A6F8E</Color>
     <Color x:Key="AccentSoftColor">#F4EEF5</Color>
 
+    <!-- archived status - ljubičasto, nije warning -->
+    <Color x:Key="ArchivedColor">#8A6F8E</Color>
+    <Color x:Key="ArchivedSoftColor">#F4EEF5</Color>
+
     <!-- tekst -->
     <Color x:Key="TextPrimaryColor">#1F2F29</Color>
     <Color x:Key="TextSecondaryColor">#5F756B</Color>
@@ -50,6 +54,9 @@
 
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
     <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}"/>
+
+    <SolidColorBrush x:Key="ArchivedBrush" Color="{StaticResource ArchivedColor}"/>
+    <SolidColorBrush x:Key="ArchivedSoftBrush" Color="{StaticResource ArchivedSoftColor}"/>
 
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
