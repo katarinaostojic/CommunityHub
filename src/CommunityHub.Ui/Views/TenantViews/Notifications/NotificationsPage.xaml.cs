@@ -13,14 +13,16 @@ namespace CommunityHub.Ui.Views.TenantViews.Notifications;
 public partial class NotificationsPage : Page
 {
     private readonly User _user;
+    private readonly Page? _returnPage;
     private readonly NotificationsPageViewModel _viewModel;
     private readonly BuildingMembershipService _membershipService;
 
-    public NotificationsPage(User user)
+    public NotificationsPage(User user, Page? returnPage = null)
     {
         InitializeComponent();
 
         _user = user;
+        _returnPage = returnPage;
 
         AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
         _membershipService = Injector.CreateInstance<BuildingMembershipService>();
@@ -30,6 +32,18 @@ public partial class NotificationsPage : Page
 
         UserNameTextBlock.Text = _user.DisplayName;
         AppMenu.Initialize(_user);
+    }
+
+    private void GoBackButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_returnPage != null)
+        {
+            NavigationService.Navigate(_returnPage);
+            return;
+        }
+
+        if (NavigationService.CanGoBack)
+            NavigationService.GoBack();
     }
 
     private void MarkAllAsReadButton_Click(object sender, RoutedEventArgs e)

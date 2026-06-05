@@ -4,6 +4,7 @@ using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Ui.Views.TenantViews.Notifications;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
 
 namespace CommunityHub.Ui.Controls;
@@ -68,6 +69,26 @@ public partial class NotificationBell : UserControl
             return;
 
         NavigationService? navigationService = NavigationService.GetNavigationService(this);
-        navigationService?.Navigate(new NotificationsPage(_user));
+        Page? returnPage = FindCurrentPage();
+
+        navigationService?.Navigate(new NotificationsPage(_user, returnPage));
+    }
+
+    private Page? FindCurrentPage()
+    {
+        DependencyObject current = this;
+
+        while (true)
+        {
+            DependencyObject? parent = VisualTreeHelper.GetParent(current);
+
+            if (parent == null)
+                return null;
+
+            if (parent is Page page)
+                return page;
+
+            current = parent;
+        }
     }
 }
