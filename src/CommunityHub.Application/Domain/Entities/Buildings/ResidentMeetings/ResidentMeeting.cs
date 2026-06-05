@@ -49,6 +49,11 @@ public class ResidentMeeting
 
     public bool CanSuggestTopic(DateTime now)
     {
+        return CanChangeTopics(now);
+    }
+
+    public bool CanChangeTopics(DateTime now)
+    {
         return Status != ResidentMeetingStatus.Cancelled && now < DeadlineAt;
     }
 
@@ -62,6 +67,12 @@ public class ResidentMeeting
     {
         if (!CanSuggestTopic(now))
             throw new InvalidOperationException("Topics can be suggested up to 24h before the meeting.");
+    }
+
+    public void EnsureTopicsCanBeChanged(DateTime now)
+    {
+        if (!CanChangeTopics(now))
+            throw new InvalidOperationException("Topics can be changed up to 24h before the meeting.");
     }
 
     public ResidentMeetingStatus ResolveCurrentStatus(DateTime now)

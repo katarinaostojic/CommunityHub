@@ -73,5 +73,16 @@ public partial class ReportedProblemsPage : Page
             "✔ Problem confirmed as resolved. Thank you for your feedback.");
     }
 
+    private void RejectResolutionButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProblemReportRowViewModel report = (ProblemReportRowViewModel)((Button)sender).Tag;
+        _viewModel.RejectResolution(report.Id);
+
+        NotificationBanner.ShowSuccess(
+            SuccessBanner,
+            SuccessTextBlock,
+            "✔ Problem marked as still unresolved. The administrator can review it again.");
+    }
+
     private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();
 }

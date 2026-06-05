@@ -29,13 +29,8 @@ public partial class BuildingAccessRequestDialog : Window
 
     private void SendRequestButton_Click(object sender, RoutedEventArgs e)
     {
-        string? errorMessage = _viewModel.SubmitRequest();
-
-        if (errorMessage != null)
-        {
-            MessageBox.Show(errorMessage, "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        if (!_viewModel.SubmitRequest())
             return;
-        }
 
         DialogResult = true;
         Close();

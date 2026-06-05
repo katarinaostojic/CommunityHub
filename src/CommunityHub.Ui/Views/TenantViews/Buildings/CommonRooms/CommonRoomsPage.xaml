@@ -22,34 +22,39 @@
 
         <!-- Top bar -->
         <Border Grid.Row="0"
-                Background="{StaticResource PrimaryBrush}"
-                Padding="10,8">
+        Background="{StaticResource PrimaryBrush}"
+        Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="☰  Menu"
-                        Style="{StaticResource GhostWhiteButton}"
-                        Margin="0,0,10,0"
-                        Click="MenuButton_Click"/>
+                Content="☰  Menu"
+                Style="{StaticResource GhostWhiteButton}"
+                Margin="0,0,10,0"
+                Click="MenuButton_Click"/>
 
-                <TextBlock Grid.Column="2"
-                           x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="15"
+                <controls:NotificationBell Grid.Column="2"
+                           x:Name="NotificationBell"
                            Margin="0,0,8,0"/>
 
                 <TextBlock Grid.Column="3"
-                           Text="👤"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="17"/>
+                   x:Name="UserNameTextBlock"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="15"
+                   Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="4"
+                   Text="👤"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="17"/>
             </Grid>
         </Border>
 
@@ -157,32 +162,20 @@
                                                 Orientation="Horizontal"
                                                 VerticalAlignment="Center"
                                                 Margin="0,0,16,0">
-                                        <Border Background="{StaticResource PrimarySoftBrush}"
-                                                BorderBrush="{StaticResource BorderBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="8"
-                                                Padding="12,6"
-                                                MinWidth="84">
-                                            <TextBlock Text="{Binding FloorDisplay}"
-                                                       FontSize="12"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource PrimaryBrush}"
-                                                       HorizontalAlignment="Center"/>
-                                        </Border>
+                                        <TextBlock Text="{Binding FloorDisplay}"
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource PrimaryBrush}"/>
 
-                                        <Border Background="{StaticResource SurfaceSoftBrush}"
-                                                BorderBrush="{StaticResource BorderBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="8"
-                                                Padding="12,6"
-                                                MinWidth="90"
-                                                Margin="8,0,0,0">
-                                            <TextBlock Text="{Binding RentalTypeDisplay}"
-                                                       FontSize="12"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource TextSecondaryBrush}"
-                                                       HorizontalAlignment="Center"/>
-                                        </Border>
+                                        <TextBlock Text="•"
+                                                   FontSize="13"
+                                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                                   Margin="10,0"/>
+
+                                        <TextBlock Text="{Binding RentalTypeDisplay}"
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TextSecondaryBrush}"/>
                                     </StackPanel>
 
                                     <!-- Akcija -->

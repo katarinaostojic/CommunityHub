@@ -11,7 +11,7 @@ public interface IResidentMeetingRepository
 
     List<ResidentMeeting> GetActiveByBuilding(long buildingId);
 
-    ResidentMeeting? GetById(long meetingId, long tenantId);
+    ResidentMeeting? GetById(long meetingId, long tenantId = 0L);
 
     ResidentMeetingAttendance? GetAttendance(long meetingId, string unitNumber);
 

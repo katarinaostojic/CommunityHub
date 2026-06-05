@@ -28,6 +28,7 @@ public partial class AdDetailsPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
         _viewModel.Slots.LoadSlots();
     }

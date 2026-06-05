@@ -22,34 +22,39 @@
 
         <!-- Top bar -->
         <Border Grid.Row="0"
-                Background="{StaticResource PrimaryBrush}"
-                Padding="10,8">
+        Background="{StaticResource PrimaryBrush}"
+        Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="☰  Menu"
-                        Style="{StaticResource GhostWhiteButton}"
-                        Margin="0,0,10,0"
-                        Click="MenuButton_Click"/>
+                Content="☰  Menu"
+                Style="{StaticResource GhostWhiteButton}"
+                Margin="0,0,10,0"
+                Click="MenuButton_Click"/>
 
-                <TextBlock Grid.Column="2"
-                           x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="15"
+                <controls:NotificationBell Grid.Column="2"
+                           x:Name="NotificationBell"
                            Margin="0,0,8,0"/>
 
                 <TextBlock Grid.Column="3"
-                           Text="👤"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="17"/>
+                   x:Name="UserNameTextBlock"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="15"
+                   Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="4"
+                   Text="👤"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="17"/>
             </Grid>
         </Border>
 
@@ -149,8 +154,7 @@
                                 <Border Grid.Row="0"
                                         HorizontalAlignment="Right"
                                         Background="{StaticResource PrimarySoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="8"
                                         Padding="9,4">
                                     <TextBlock Text="{Binding StatusDisplay}"
@@ -165,53 +169,7 @@
                                            FontSize="18"
                                            FontWeight="Bold"
                                            Foreground="{StaticResource TextPrimaryBrush}"/>
-
-                                <!-- Rental type and dates -->
-                                <Grid Grid.Row="1"
-                                      Margin="0,10,0,14">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="40"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Column="0"
-                                            Background="{StaticResource SurfaceSoftBrush}"
-                                            BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="8"
-                                            Padding="10,7">
-                                        <StackPanel>
-                                            <TextBlock Text="Rental type"
-                                                       Style="{StaticResource SecondaryText}"
-                                                       FontSize="12"/>
-
-                                            <TextBlock Text="{Binding RentalTypeDisplay}"
-                                                       FontSize="13"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Border Grid.Column="2"
-                                            Background="{StaticResource SurfaceSoftBrush}"
-                                            BorderBrush="{StaticResource BorderBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="8"
-                                            Padding="10,7">
-                                        <StackPanel>
-                                            <TextBlock Text="Requested Dates"
-                                                       Style="{StaticResource SecondaryText}"
-                                                       FontSize="12"/>
-
-                                            <TextBlock Text="{Binding DateRange}"
-                                                       FontSize="13"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="{StaticResource TextPrimaryBrush}"/>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
+                                
                                 <!-- Approved date -->
                                 <Border Grid.Row="2"
                                         Background="{StaticResource SuccessBrush}"
@@ -255,28 +213,65 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Actions -->
-                                <Grid Grid.Row="4">
+                                <!-- Bottom row: request info + actions -->
+                                <Grid Grid.Row="4"
+                                      Margin="0,30,0,0"
+                                      VerticalAlignment="Bottom">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Button Grid.Column="1"
-                                            Content="Accept suggestion"
-                                            Style="{StaticResource PrimaryButton}"
-                                            Margin="0,0,8,0"
-                                            Tag="{Binding}"
-                                            Visibility="{Binding CanAcceptDateChange, Converter={StaticResource BoolToVis}}"
-                                            Click="AcceptSuggestionButton_Click"/>
+                                    <!-- Rental type -->
+                                    <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Bottom">
+                                        <TextBlock Text="Rental type"
+                                               Style="{StaticResource SecondaryText}"
+                                               FontSize="12"/>
 
-                                    <Button Grid.Column="2"
-                                            Content="Cancel request"
-                                            Style="{StaticResource DangerButton}"
-                                            Tag="{Binding}"
-                                            Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
-                                            Click="CancelRequestButton_Click"/>
+                                        <TextBlock Text="{Binding RentalTypeDisplay}"
+                                               FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               Margin="0,3,0,0"/>
+                                    </StackPanel>
+
+                                    <!-- Requested dates -->
+                                    <StackPanel Grid.Column="2"
+                                        VerticalAlignment="Bottom">
+                                        <TextBlock Text="Requested dates"
+                                               Style="{StaticResource SecondaryText}"
+                                               FontSize="12"/>
+
+                                        <TextBlock Text="{Binding DateRange}"
+                                               FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               Margin="0,3,0,0"/>
+                                    </StackPanel>
+
+                                    <!-- Accept button -->
+                                    <Button Grid.Column="4"
+                                                Content="Accept suggestion"
+                                                Style="{StaticResource PrimaryButton}"
+                                                Margin="0,0,8,0"
+                                                VerticalAlignment="Bottom"
+                                                Tag="{Binding}"
+                                                Visibility="{Binding CanAcceptDateChange, Converter={StaticResource BoolToVis}}"
+                                                Click="AcceptSuggestionButton_Click"/>
+
+                                    <!-- Cancel button -->
+                                    <Button Grid.Column="5"
+                                                Content="Cancel request"
+                                                Style="{StaticResource DangerButton}"
+                                                VerticalAlignment="Bottom"
+                                                Tag="{Binding}"
+                                                Visibility="{Binding CanCancel, Converter={StaticResource BoolToVis}}"
+                                                Click="CancelRequestButton_Click"/>
                                 </Grid>
                             </Grid>
                         </Border>

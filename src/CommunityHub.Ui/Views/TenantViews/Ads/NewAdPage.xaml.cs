@@ -27,6 +27,7 @@ public partial class NewAdPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
 
         DateFromPicker.DisplayDateStart = DateTime.Today;

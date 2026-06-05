@@ -19,35 +19,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- Top bar -->
         <Border Grid.Row="0"
-                Background="{StaticResource PrimaryBrush}"
-                Padding="10,8">
+        Background="{StaticResource PrimaryBrush}"
+        Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="☰  Menu"
-                        Style="{StaticResource GhostWhiteButton}"
-                        Margin="0,0,10,0"
-                        Click="MenuButton_Click"/>
+                Content="☰  Menu"
+                Style="{StaticResource GhostWhiteButton}"
+                Margin="0,0,10,0"
+                Click="MenuButton_Click"/>
 
-                <TextBlock Grid.Column="2"
-                           x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="15"
+                <controls:NotificationBell Grid.Column="2"
+                           x:Name="NotificationBell"
                            Margin="0,0,8,0"/>
 
                 <TextBlock Grid.Column="3"
-                           Text="👤"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="17"/>
+                   x:Name="UserNameTextBlock"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="15"
+                   Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="4"
+                   Text="👤"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="17"/>
             </Grid>
         </Border>
 
@@ -154,8 +160,7 @@
                                 <Border Grid.Row="0"
                                         HorizontalAlignment="Right"
                                         Background="{StaticResource PrimarySoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="12"
                                         Padding="12,5">
                                     <TextBlock Text="{Binding StatusDisplay}"
@@ -202,8 +207,7 @@
 
                                 <Border Grid.Row="2"
                                         Background="{StaticResource SurfaceSoftBrush}"
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="0"
                                         CornerRadius="10"
                                         Padding="12,10"
                                         Margin="0,14,0,0">

@@ -22,8 +22,8 @@
 
         <!-- Top bar -->
         <Border Grid.Row="0"
-                Background="{StaticResource PrimaryBrush}"
-                Padding="10,8">
+        Background="{StaticResource PrimaryBrush}"
+        Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -32,31 +32,32 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="☰  Menu"
-                        Style="{StaticResource GhostWhiteButton}"
-                        Margin="0,0,10,0"
-                        Click="MenuButton_Click"/>
+                Content="☰  Menu"
+                Style="{StaticResource GhostWhiteButton}"
+                Margin="0,0,10,0"
+                Click="MenuButton_Click"/>
 
                 <Grid Grid.Column="1"
-                      Margin="0,0,8,0">
+              Margin="0,0,8,0">
                     <TextBox x:Name="SearchTextBox"
-                             Padding="8,6"
-                             FontSize="13"
-                             Background="{StaticResource SurfaceBrush}"
-                             Foreground="{StaticResource TextPrimaryBrush}"
-                             BorderBrush="{StaticResource BorderBrush}"
-                             BorderThickness="1"
-                             TextChanged="SearchTextBox_TextChanged"/>
+                     Padding="8,6"
+                     FontSize="13"
+                     Background="{StaticResource SurfaceBrush}"
+                     Foreground="{StaticResource TextPrimaryBrush}"
+                     BorderBrush="{StaticResource BorderBrush}"
+                     BorderThickness="1"
+                     TextChanged="SearchTextBox_TextChanged"/>
 
                     <TextBlock Text="Search address..."
-                               Foreground="{StaticResource TextSecondaryBrush}"
-                               FontSize="13"
-                               Margin="10,0,0,0"
-                               VerticalAlignment="Center"
-                               IsHitTestVisible="False">
+                       Foreground="{StaticResource TextSecondaryBrush}"
+                       FontSize="13"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       IsHitTestVisible="False">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -71,29 +72,33 @@
                 </Grid>
 
                 <Button Grid.Column="2"
-                        Content="Reset All"
-                        Style="{StaticResource OutlineButton}"
-                        Margin="0,0,8,0"
-                        Click="ResetButton_Click"/>
+                Content="Reset All"
+                Style="{StaticResource OutlineButton}"
+                Margin="0,0,8,0"
+                Click="ResetButton_Click"/>
 
                 <Button Grid.Column="3"
-                        Content="Filter  ▼"
-                        Style="{StaticResource OutlineButton}"
-                        Margin="0,0,8,0"
-                        Click="FilterButton_Click"/>
-
-                <TextBlock Grid.Column="4"
-                           x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="15"
+                Content="Filter  ▼"
+                Style="{StaticResource OutlineButton}"
+                Margin="0,0,8,0"
+                Click="FilterButton_Click"/>
+                
+                <controls:NotificationBell Grid.Column="4"
+                           x:Name="NotificationBell"
                            Margin="0,0,8,0"/>
 
                 <TextBlock Grid.Column="5"
-                           Text="👤"
-                           VerticalAlignment="Center"
-                           Foreground="White"
-                           FontSize="17"/>
+                   x:Name="UserNameTextBlock"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="15"
+                   Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="6"
+                   Text="👤"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="17"/>
             </Grid>
         </Border>
 

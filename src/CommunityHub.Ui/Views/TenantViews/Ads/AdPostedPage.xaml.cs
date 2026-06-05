@@ -27,6 +27,7 @@ public partial class AdPostedPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
     }
 

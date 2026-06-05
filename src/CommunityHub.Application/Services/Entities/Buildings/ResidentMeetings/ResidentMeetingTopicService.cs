@@ -39,8 +39,12 @@ public class ResidentMeetingTopicService
         return _meetingRepository.GetTopicSuggestions(meetingId);
     }
 
-    public void AddTopicFromSuggestion(long meetingId, string topic)
+    public void AddTopicFromSuggestion(long meetingId, string topic, DateTime now)
     {
+        ResidentMeeting meeting = _meetingRepository.GetById(meetingId)
+            ?? throw new InvalidOperationException("Residents' meeting was not found.");
+
+        meeting.EnsureTopicsCanBeChanged(now);
         ValidateTopic(topic);
 
         _meetingRepository.AddTopic(meetingId, topic.Trim());
