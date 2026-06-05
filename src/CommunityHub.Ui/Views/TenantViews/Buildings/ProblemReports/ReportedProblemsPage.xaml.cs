@@ -28,7 +28,6 @@ public partial class ReportedProblemsPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
-        NotificationBell.Initialize(_user);
         BuildingInfoTextBlock.Text = $"{_membership.BuildingFullAddress}, {_membership.BuildingNeighborhood}";
         AppMenu.Initialize(_user);
     }
@@ -72,6 +71,17 @@ public partial class ReportedProblemsPage : Page
             SuccessBanner,
             SuccessTextBlock,
             "✔ Problem confirmed as resolved. Thank you for your feedback.");
+    }
+
+    private void RejectResolutionButton_Click(object sender, RoutedEventArgs e)
+    {
+        ProblemReportRowViewModel report = (ProblemReportRowViewModel)((Button)sender).Tag;
+        _viewModel.RejectResolution(report.Id);
+
+        NotificationBanner.ShowSuccess(
+            SuccessBanner,
+            SuccessTextBlock,
+            "✔ Problem marked as still unresolved. The administrator can review it again.");
     }
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) => AppMenu.Open();

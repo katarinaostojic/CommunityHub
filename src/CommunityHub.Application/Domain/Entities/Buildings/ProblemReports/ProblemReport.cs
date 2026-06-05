@@ -47,6 +47,8 @@ public class ProblemReport
 
     public bool CanConfirmResolved => Status == ProblemReportStatus.PotentiallySolved;
 
+    public bool CanRejectResolution => Status == ProblemReportStatus.PotentiallySolved;
+
     public void EnsureReportedBy(long tenantId)
     {
         if (Tenant.Id != tenantId)
@@ -67,6 +69,14 @@ public class ProblemReport
             throw new InvalidOperationException("Only potentially solved reports can be confirmed as solved.");
 
         Status = ProblemReportStatus.Solved;
+    }
+
+    public void RejectResolution()
+    {
+        if (!CanRejectResolution)
+            throw new InvalidOperationException("Only potentially solved reports can be marked as still unresolved.");
+
+        Status = ProblemReportStatus.Unresolved;
     }
 
     public static string? ValidateDescription(string description)

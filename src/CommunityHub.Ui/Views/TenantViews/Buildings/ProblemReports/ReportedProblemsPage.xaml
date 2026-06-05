@@ -231,16 +231,18 @@
                                 </Grid>
 
                                 <Border Grid.Row="2"
-                                        Background="{StaticResource SurfaceSoftBrush}"
-                                        BorderBrush="{StaticResource PrimaryBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="10"
-                                        Padding="12,10"
-                                        Margin="0,14,0,0"
-                                        Visibility="{Binding CanConfirmResolved, Converter={StaticResource BoolToVis}}">
+                                    Background="{StaticResource SurfaceSoftBrush}"
+                                    BorderBrush="{StaticResource PrimaryBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10"
+                                    Padding="12,10"
+                                    Margin="0,14,0,0"
+                                    Visibility="{Binding CanConfirmResolved, Converter={StaticResource BoolToVis}}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="10"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
@@ -257,10 +259,17 @@
 
                                         <Button Grid.Column="1"
                                                 Content="✓ Confirm resolved"
-                                                Style="{StaticResource OutlineButton}"
+                                                Style="{StaticResource PrimaryButton}"
                                                 VerticalAlignment="Center"
                                                 Tag="{Binding}"
                                                 Click="ConfirmResolvedButton_Click"/>
+
+                                        <Button Grid.Column="3"
+                                                Content="✕ Still not solved"
+                                                Style="{StaticResource OutlineButton}"
+                                                VerticalAlignment="Center"
+                                                Tag="{Binding}"
+                                                Click="RejectResolutionButton_Click"/>
                                     </Grid>
                                 </Border>
                             </Grid>

@@ -70,6 +70,13 @@ public class ProblemReportService
         _reportRepository.Update(report);
     }
 
+    public void RejectResolution(long reportId, long tenantId)
+    {
+        ProblemReport report = GetTenantReport(reportId, tenantId);
+        report.RejectResolution();
+        _reportRepository.Update(report);
+    }
+
     public void MarkAsPotentiallySolved(long reportId)
     {
         ProblemReport report = GetReport(reportId);

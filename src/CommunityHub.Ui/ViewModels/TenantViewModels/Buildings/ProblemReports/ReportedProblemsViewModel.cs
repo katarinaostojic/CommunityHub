@@ -77,6 +77,12 @@ public class ReportedProblemsViewModel : BaseViewModel
         Refresh();
     }
 
+    public void RejectResolution(long reportId)
+    {
+        _problemReportService.RejectResolution(reportId, _tenantId);
+        Refresh();
+    }
+
     public void Refresh()
     {
         UpdateCounts();
