@@ -35,7 +35,7 @@ public partial class ResidentsMeetingsPage : Page
 
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = GetBuildingInfo();
-        NotificationBell.Initialize(_user.Id);
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
     }
 

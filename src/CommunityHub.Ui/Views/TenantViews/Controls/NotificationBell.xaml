@@ -15,7 +15,8 @@
                 Foreground="White"
                 BorderThickness="0"
                 Cursor="Hand"
-                ToolTip="Notifications"/>
+                ToolTip="Notifications"
+                Click="BellButton_Click"/>
 
         <Border x:Name="BadgeBorder"
                 Width="16"

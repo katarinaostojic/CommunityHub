@@ -28,7 +28,7 @@ public partial class ReportedProblemsPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
-        NotificationBell.Initialize(_user.Id);
+        NotificationBell.Initialize(_user);
         BuildingInfoTextBlock.Text = $"{_membership.BuildingFullAddress}, {_membership.BuildingNeighborhood}";
         AppMenu.Initialize(_user);
     }

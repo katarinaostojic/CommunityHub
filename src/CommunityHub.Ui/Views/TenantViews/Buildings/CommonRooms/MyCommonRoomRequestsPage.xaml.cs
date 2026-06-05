@@ -27,7 +27,7 @@ public partial class MyCommonRoomRequestsPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
-        NotificationBell.Initialize(_user.Id);
+        NotificationBell.Initialize(_user);
         BuildingInfoTextBlock.Text = $"Building: {_buildingInfo}";
         AppMenu.Initialize(_user);
     }

@@ -32,7 +32,7 @@ public partial class CommonRoomsPage : Page
 
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = $"Building: {_buildingInfo}";
-        NotificationBell.Initialize(_user.Id);
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
     }
 

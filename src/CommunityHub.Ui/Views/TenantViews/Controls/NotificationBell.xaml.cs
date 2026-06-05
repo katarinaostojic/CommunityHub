@@ -1,25 +1,34 @@
 ﻿using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Ui.Views.TenantViews.Notifications;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace CommunityHub.Ui.Controls;
 
 public partial class NotificationBell : UserControl
 {
+    private User? _user;
+
     public NotificationBell()
     {
         InitializeComponent();
     }
 
-    public void Initialize(long userId)
+    public void Initialize(User user)
     {
-        LoadUnreadCount(userId);
+        _user = user;
+        LoadUnreadCount(user.Id);
     }
 
-    public void Refresh(long userId)
+    public void Refresh()
     {
-        LoadUnreadCount(userId);
+        if (_user == null)
+            return;
+
+        LoadUnreadCount(_user.Id);
     }
 
     private void LoadUnreadCount(long userId)
@@ -51,5 +60,14 @@ public partial class NotificationBell : UserControl
 
         BadgeTextBlock.Text = unreadCount > 99 ? "99+" : unreadCount.ToString();
         BadgeBorder.Visibility = Visibility.Visible;
+    }
+
+    private void BellButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_user == null)
+            return;
+
+        NavigationService? navigationService = NavigationService.GetNavigationService(this);
+        navigationService?.Navigate(new NotificationsPage(_user));
     }
 }
