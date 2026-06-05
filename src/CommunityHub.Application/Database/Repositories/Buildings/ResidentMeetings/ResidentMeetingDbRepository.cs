@@ -48,7 +48,7 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
         return ResidentMeetingReader.ReadMeetings(reader);
     }
 
-    public ResidentMeeting? GetById(long meetingId, long tenantId)
+    public ResidentMeeting? GetById(long meetingId, long tenantId = 0L)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();

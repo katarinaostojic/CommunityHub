@@ -107,7 +107,7 @@ public class ResidentMeetingService
 
     public void AddTopicFromSuggestion(long meetingId, string topic)
     {
-        _topicService.AddTopicFromSuggestion(meetingId, topic);
+        _topicService.AddTopicFromSuggestion(meetingId, topic, CurrentTime);
     }
 
     public List<ResidentMeetingAttendance> GetAttendances(long meetingId)
