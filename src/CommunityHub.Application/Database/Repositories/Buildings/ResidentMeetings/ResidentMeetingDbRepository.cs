@@ -7,7 +7,7 @@ using System.Data;
 
 namespace CommunityHub.Application.Database.Repositories.Buildings.ResidentMeetings;
 
-public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRepository
+public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRepository
 {
     public List<ResidentMeeting> GetByTenantAndBuilding(
         long tenantId,
@@ -30,6 +30,7 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
         using IDataReader reader = command.ExecuteReader();
         return ResidentMeetingReader.ReadMeetings(reader);
     }
+
     public List<ResidentMeeting> GetActiveByBuilding(long buildingId)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -62,78 +63,6 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
 
         using IDataReader reader = command.ExecuteReader();
         return ResidentMeetingReader.ReadSingleMeeting(reader);
-    }
-
-    public ResidentMeetingAttendance? GetAttendance(long meetingId, string unitNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        SELECT id, meeting_id, tenant_id, unit_number, created_at
-        FROM resident_meeting_attendances
-        WHERE meeting_id = @meetingId
-          AND unit_number = @unitNumber";
-
-        AddParameter(command, "@meetingId", meetingId);
-        AddParameter(command, "@unitNumber", unitNumber);
-
-        using IDataReader reader = command.ExecuteReader();
-        return ResidentMeetingReader.ReadSingleAttendance(reader);
-    }
-
-    public void CreateAttendance(ResidentMeetingAttendance attendance)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        INSERT INTO resident_meeting_attendances
-            (meeting_id, tenant_id, unit_number, created_at)
-        VALUES
-            (@meetingId, @tenantId, @unitNumber, @createdAt)";
-
-        AddParameter(command, "@meetingId", attendance.MeetingId);
-        AddParameter(command, "@tenantId", attendance.TenantId);
-        AddParameter(command, "@unitNumber", attendance.UnitNumber);
-        AddTimestampParameter(command, "@createdAt", attendance.CreatedAt);
-
-        command.ExecuteNonQuery();
-    }
-
-    public void DeleteAttendance(long meetingId, string unitNumber)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        DELETE FROM resident_meeting_attendances
-        WHERE meeting_id = @meetingId
-          AND unit_number = @unitNumber";
-
-        AddParameter(command, "@meetingId", meetingId);
-        AddParameter(command, "@unitNumber", unitNumber);
-
-        command.ExecuteNonQuery();
-    }
-
-    public void CreateTopicSuggestion(ResidentMeetingTopicSuggestion suggestion)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        INSERT INTO resident_meeting_topic_suggestions
-            (meeting_id, tenant_id, topic, suggested_at)
-        VALUES
-            (@meetingId, @tenantId, @topic, @suggestedAt)";
-
-        AddParameter(command, "@meetingId", suggestion.MeetingId);
-        AddParameter(command, "@tenantId", suggestion.TenantId);
-        AddParameter(command, "@topic", suggestion.Topic);
-        AddTimestampParameter(command, "@suggestedAt", suggestion.SuggestedAt);
-
-        command.ExecuteNonQuery();
     }
 
     public void UpdateStatus(long meetingId, ResidentMeetingStatus status)
@@ -188,103 +117,6 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
         return Convert.ToInt32(command.ExecuteScalar());
     }
 
-    public long CreateMeeting(long buildingId, DateTime date, TimeSpan time)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        INSERT INTO resident_meetings (building_id, meeting_date, meeting_time, status)
-        VALUES (@buildingId, @date, @time, 'scheduled'::resident_meeting_status)
-        RETURNING id";
-
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@date", date.Date);
-        AddParameter(command, "@time", time);
-
-        return Convert.ToInt64(command.ExecuteScalar());
-    }
-
-    public void AddTopic(long meetingId, string topic)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        INSERT INTO resident_meeting_topics (meeting_id, topic)
-        VALUES (@meetingId, @topic)";
-
-        AddParameter(command, "@meetingId", meetingId);
-        AddParameter(command, "@topic", topic);
-
-        command.ExecuteNonQuery();
-    }
-
-    public List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        SELECT id, meeting_id, tenant_id, topic, suggested_at
-        FROM resident_meeting_topic_suggestions
-        WHERE meeting_id = @meetingId
-        ORDER BY suggested_at";
-
-        AddParameter(command, "@meetingId", meetingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        return ResidentMeetingReader.ReadTopicSuggestions(reader);
-    }
-
-    public List<ResidentMeetingAttendance> GetAttendances(long meetingId)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        SELECT id, meeting_id, tenant_id, unit_number, created_at
-        FROM resident_meeting_attendances
-        WHERE meeting_id = @meetingId
-        ORDER BY unit_number";
-
-        AddParameter(command, "@meetingId", meetingId);
-
-        using IDataReader reader = command.ExecuteReader();
-        return ResidentMeetingReader.ReadAttendances(reader);
-    }
-
-    public bool HasConflict(long buildingId, DateTime date, TimeSpan time)
-    {
-        using IDbConnection connection = PostgresConnection.CreateConnection();
-        IDbCommand command = connection.CreateCommand();
-
-        command.CommandText = @"
-        SELECT COUNT(*)
-        FROM resident_meetings
-        WHERE building_id = @buildingId
-          AND meeting_date = @date
-          AND meeting_time = @time
-          AND status <> 'cancelled'::resident_meeting_status";
-
-        AddParameter(command, "@buildingId", buildingId);
-        AddParameter(command, "@date", date.Date);
-        AddParameter(command, "@time", time);
-
-        return Convert.ToInt32(command.ExecuteScalar()) > 0;
-    }
-
-    private static void AddTimestampParameter(IDbCommand command, string name, DateTime value)
-    {
-        IDbDataParameter dbParam = command.CreateParameter();
-        dbParam.ParameterName = name;
-        dbParam.Value = value.Kind == DateTimeKind.Utc
-            ? value
-            : value.ToUniversalTime();
-        dbParam.DbType = DbType.DateTime;
-        command.Parameters.Add(dbParam);
-    }
-
     private static string SelectMeetingsSql()
     {
         return @"
@@ -326,5 +158,16 @@ public class ResidentMeetingDbRepository : BaseDbRepository, IResidentMeetingRep
         return status.HasValue
             ? ResidentMeetingStatusMapper.ToDatabaseValue(status.Value)
             : null;
+    }
+
+    private static void AddTimestampParameter(IDbCommand command, string name, DateTime value)
+    {
+        IDbDataParameter dbParam = command.CreateParameter();
+        dbParam.ParameterName = name;
+        dbParam.Value = value.Kind == DateTimeKind.Utc
+            ? value
+            : value.ToUniversalTime();
+        dbParam.DbType = DbType.DateTime;
+        command.Parameters.Add(dbParam);
     }
 }
