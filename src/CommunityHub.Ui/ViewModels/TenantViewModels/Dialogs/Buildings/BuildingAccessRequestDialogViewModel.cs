@@ -1,7 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings;
-using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings;
 
@@ -14,7 +13,9 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
 
     private string _unitNumber = string.Empty;
     private string _warningMessage = string.Empty;
+    private string _validationMessage = string.Empty;
     private bool _hasWarning;
+    private bool _hasValidationError;
 
     public BuildingAccessRequestDialogViewModel(
         BuildingAccessRequestService requestService,
@@ -43,8 +44,11 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
         get => _unitNumber;
         set
         {
-            if (SetProperty(ref _unitNumber, value))
-                UpdateWarning();
+            if (!SetProperty(ref _unitNumber, value))
+                return;
+
+            ClearValidationError();
+            UpdateWarning();
         }
     }
 
@@ -60,16 +64,31 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
         private set => SetProperty(ref _hasWarning, value);
     }
 
-    public string? SubmitRequest()
+    public string ValidationMessage
+    {
+        get => _validationMessage;
+        private set => SetProperty(ref _validationMessage, value);
+    }
+
+    public bool HasValidationError
+    {
+        get => _hasValidationError;
+        private set => SetProperty(ref _hasValidationError, value);
+    }
+
+    public bool SubmitRequest()
     {
         string unitNumber = UnitNumber.Trim();
         string? validationError = ValidateUnitNumber(unitNumber);
 
         if (validationError != null)
-            return validationError;
+        {
+            ShowValidationError(validationError);
+            return false;
+        }
 
         _requestService.CreateForBuilding(_building.Id, _user, unitNumber);
-        return null;
+        return true;
     }
 
     private string? ValidateUnitNumber(string unitNumber)
@@ -84,6 +103,18 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
             return "You already have a request for this apartment.";
 
         return null;
+    }
+
+    private void ShowValidationError(string message)
+    {
+        ValidationMessage = message;
+        HasValidationError = true;
+    }
+
+    private void ClearValidationError()
+    {
+        ValidationMessage = string.Empty;
+        HasValidationError = false;
     }
 
     private void UpdateWarning()
