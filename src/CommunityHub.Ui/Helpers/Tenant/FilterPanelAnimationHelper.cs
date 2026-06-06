@@ -16,6 +16,8 @@ public class FilterPanelAnimationHelper
         _panelTransform = panelTransform;
     }
 
+    public bool IsOpen => _isOpen;
+
     public void Toggle()
     {
         if (_isOpen)
@@ -26,6 +28,9 @@ public class FilterPanelAnimationHelper
 
     public void Open()
     {
+        if (_isOpen)
+            return;
+
         _overlay.Visibility = Visibility.Visible;
         Animate(-300, 0, EasingMode.EaseOut);
         _isOpen = true;
@@ -33,6 +38,9 @@ public class FilterPanelAnimationHelper
 
     public void Close()
     {
+        if (!_isOpen)
+            return;
+
         DoubleAnimation animation = CreateAnimation(0, -300, EasingMode.EaseIn);
         animation.Completed += (_, _) => _overlay.Visibility = Visibility.Collapsed;
 

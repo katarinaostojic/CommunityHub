@@ -34,8 +34,13 @@ public partial class BrowseBuildingsPage : Page
             FilterNeighborhoodTextBox,
             FilterCityTextBox,
             FilterCountryTextBox,
+            SuccessBanner,
+            SuccessTextBlock,
+            ViewRequestsButton,
             _filterPanel,
-            _viewModel);
+            _viewModel,
+            _user,
+            () => Window.GetWindow(this));
 
         DataContext = _viewModel;
 

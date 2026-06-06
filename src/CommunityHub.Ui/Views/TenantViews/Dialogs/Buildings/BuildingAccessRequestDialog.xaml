@@ -160,6 +160,7 @@
                         Click="CancelButton_Click"/>
 
                 <Button Grid.Column="2"
+                        x:Name="SendRequestButton"
                         Content="Send Request"
                         Style="{StaticResource PrimaryButton}"
                         HorizontalAlignment="Stretch"
