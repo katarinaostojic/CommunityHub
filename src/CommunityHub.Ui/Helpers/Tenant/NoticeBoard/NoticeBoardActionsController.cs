@@ -1,4 +1,4 @@
-﻿using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NoticeBoard;
+﻿using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.Ads.NoticeBoard;
 using System.Windows;
 using System.Windows.Controls;
 

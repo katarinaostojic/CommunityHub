@@ -1,12 +1,12 @@
-﻿using CommunityHub.Application.Database.Repositories.Ads;
-using CommunityHub.Application.Database.Repositories.Buildings;
+﻿using CommunityHub.Application.Database.Repositories.Buildings;
+using CommunityHub.Application.Database.Repositories.Buildings.Ads;
 using CommunityHub.Application.Database.Repositories.Buildings.CommonRooms;
 using CommunityHub.Application.Database.Repositories.Buildings.ProblemReports;
 using CommunityHub.Application.Database.Repositories.Buildings.ResidentMeetings;
 using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Services.Entities.Ads;
 using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings.Ads;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Services.Entities.Buildings.ProblemReports;
 using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;

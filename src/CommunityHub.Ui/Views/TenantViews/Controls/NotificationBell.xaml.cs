@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Application.Services.Entities.Buildings.Ads;
 using CommunityHub.Ui.Views.TenantViews.Notifications;
 using System.Windows;
 using System.Windows.Controls;

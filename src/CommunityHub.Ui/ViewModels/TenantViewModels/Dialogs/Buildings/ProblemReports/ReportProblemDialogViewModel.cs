@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.ProblemReports;
-using CommunityHub.Ui.Extensions;
+using CommunityHub.Ui.Extensions.Buildings.ProblemReports;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.ProblemReports;
 

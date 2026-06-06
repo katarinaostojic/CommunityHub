@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Entities.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.Ads;
 
 namespace CommunityHub.Application.Services.Reports;
 
