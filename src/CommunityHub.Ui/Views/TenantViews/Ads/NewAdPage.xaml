@@ -29,6 +29,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
@@ -37,18 +38,26 @@
                 Margin="0,0,10,0"
                 Click="MenuButton_Click"/>
 
-                <controls:NotificationBell Grid.Column="2"
+                <Button Grid.Column="2"
+                    x:Name="DemoButton"
+                    Content="■ Stop"
+                    Style="{StaticResource GhostWhiteOutlinedButton}"
+                    Visibility="Collapsed"
+                    Margin="0,0,10,0"
+                    Click="DemoButton_Click"/>
+
+                <controls:NotificationBell Grid.Column="3"
                            x:Name="NotificationBell"
                            Margin="0,0,8,0"/>
 
-                <TextBlock Grid.Column="3"
+                <TextBlock Grid.Column="4"
                    x:Name="UserNameTextBlock"
                    VerticalAlignment="Center"
                    Foreground="White"
                    FontSize="15"
                    Margin="0,0,8,0"/>
 
-                <TextBlock Grid.Column="4"
+                <TextBlock Grid.Column="5"
                    Text="👤"
                    VerticalAlignment="Center"
                    Foreground="White"

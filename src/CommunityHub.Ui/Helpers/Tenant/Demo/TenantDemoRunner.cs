@@ -37,7 +37,7 @@ public class TenantDemoRunner
         _cancellationTokenSource?.Cancel();
     }
 
-    public async Task DelayAsync(CancellationToken token, int milliseconds = 1200)
+    public async Task DelayAsync(CancellationToken token, int milliseconds)
     {
         await Task.Delay(milliseconds, token);
     }

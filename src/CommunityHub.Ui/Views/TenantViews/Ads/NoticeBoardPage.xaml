@@ -41,10 +41,10 @@
                 Click="MenuButton_Click"/>
 
                 <Button Grid.Column="2"
-                Content="Demo"
-                Style="{StaticResource GhostWhiteOutlinedButton}"
-                IsEnabled="False"
-                Margin="0,0,10,0"/>
+                    x:Name="DemoButton"
+                    Style="{StaticResource GhostWhiteOutlinedButton}"
+                    Margin="0,0,10,0"
+                    Click="DemoButton_Click"/>
 
                 <controls:NotificationBell Grid.Column="3"
                            x:Name="NotificationBell"
@@ -263,7 +263,8 @@
                    Margin="16,0,16,10"/>
 
         <!-- Ad list -->
-        <ScrollViewer Grid.Row="7"
+        <ScrollViewer x:Name="AdsScrollViewer"
+                      Grid.Row="7"
                       VerticalScrollBarVisibility="Auto"
                       Margin="16,0,16,16">
             <ItemsControl ItemsSource="{Binding FilteredAds}">

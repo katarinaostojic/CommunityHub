@@ -2,6 +2,7 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Ads;
+using CommunityHub.Ui.Helpers.Tenant.Demo;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Ads.NewAd;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,19 +14,38 @@ public partial class NewAdPage : Page
     private readonly User _user;
     private readonly BuildingMembershipDto _membership;
     private readonly NewAdViewModel _viewModel;
+    private readonly bool _startDemo;
+    private readonly NewAdDemoController _demoController;
 
-    public NewAdPage(User user, BuildingMembershipDto membership)
+    public NewAdPage(User user, BuildingMembershipDto membership, bool startDemo = false)
     {
         InitializeComponent();
 
         _user = user;
         _membership = membership;
+        _startDemo = startDemo;
 
         AdService adService = Injector.CreateInstance<AdService>();
         _viewModel = new NewAdViewModel(adService, membership, user);
 
         DataContext = _viewModel;
+        InitializePageData();
 
+        _demoController = new NewAdDemoController(
+            DescriptionTextBox,
+            CategoryComboBox,
+            DateFromPicker,
+            DateToPicker,
+            SeekingButton,
+            DemoButton,
+            ReturnToNoticeBoard);
+
+        if (_startDemo)
+            Loaded += StartDemoOnLoaded;
+    }
+
+    private void InitializePageData()
+    {
         UserNameTextBlock.Text = _user.DisplayName;
         NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
@@ -78,9 +98,34 @@ public partial class NewAdPage : Page
             result.Value.matchingAds));
     }
 
-    private void GoBackButton_Click(object sender, RoutedEventArgs e) =>
-        NavigationService.Navigate(new NoticeBoardPage(_user, _membership));
+    private async void StartDemoOnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= StartDemoOnLoaded;
+        await _demoController.StartAsync();
+    }
 
-    private void MenuButton_Click(object sender, RoutedEventArgs e) =>
+    private void DemoButton_Click(object sender, RoutedEventArgs e)
+    {
+        _demoController.Stop();
+    }
+
+    private void GoBackButton_Click(object sender, RoutedEventArgs e)
+    {
+        GoBackToNoticeBoard();
+    }
+
+    private void GoBackToNoticeBoard()
+    {
+        ReturnToNoticeBoard(false);
+    }
+
+    private void ReturnToNoticeBoard(bool restartDemo)
+    {
+        NavigationService?.Navigate(new NoticeBoardPage(_user, _membership, restartDemo));
+    }
+
+    private void MenuButton_Click(object sender, RoutedEventArgs e)
+    {
         AppMenu.Open();
+    }
 }
