@@ -123,8 +123,6 @@ public class NewAdDemoController
         _dateToPicker.SelectedDate = null;
 
         if (_categoryComboBox.Items.Count > 0)
-        {
-            _categoryComboBox.SelectedIndex = 0;
             _categoryComboBox.SelectedIndex = 0;
     }
-}}
+}
