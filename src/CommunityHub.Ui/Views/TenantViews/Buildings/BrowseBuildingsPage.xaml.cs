@@ -6,6 +6,7 @@ using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Ui.Helpers.Tenant.Demo;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -14,6 +15,7 @@ public partial class BrowseBuildingsPage : Page
     private readonly User _user;
     private readonly BrowseBuildingsViewModel _viewModel;
     private readonly FilterPanelAnimationHelper _filterPanel;
+    private readonly BrowseBuildingsDemoController _demoController;
 
     public BrowseBuildingsPage(User user)
     {
@@ -25,6 +27,15 @@ public partial class BrowseBuildingsPage : Page
         _viewModel = new BrowseBuildingsViewModel(buildingService);
 
         _filterPanel = new FilterPanelAnimationHelper(Overlay, FilterPanelTranslate);
+        _demoController = new BrowseBuildingsDemoController(
+            DemoButton,
+            SearchTextBox,
+            FilterStreetTextBox,
+            FilterNeighborhoodTextBox,
+            FilterCityTextBox,
+            FilterCountryTextBox,
+            _filterPanel,
+            _viewModel);
 
         DataContext = _viewModel;
 
@@ -120,4 +131,7 @@ public partial class BrowseBuildingsPage : Page
         string text = textBox.Text.Trim();
         return string.IsNullOrWhiteSpace(text) ? null : text;
     }
+
+    private async void DemoButton_Click(object sender, RoutedEventArgs e) =>
+    await _demoController.ToggleAsync();
 }
