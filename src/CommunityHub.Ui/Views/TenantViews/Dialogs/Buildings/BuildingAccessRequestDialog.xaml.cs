@@ -11,6 +11,7 @@ namespace CommunityHub.Ui.Views.TenantViews;
 public partial class BuildingAccessRequestDialog : Window
 {
     private readonly BuildingAccessRequestDialogViewModel _viewModel;
+    private bool _isDemoSubmit;
 
     public BuildingAccessRequestDialog(BuildingDto building, User user)
     {
@@ -30,28 +31,26 @@ public partial class BuildingAccessRequestDialog : Window
 
     private void SendRequestButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_isDemoSubmit)
+        {
+            if (!_viewModel.CanSubmitRequestForDemo())
+                return;
+
+            TrySetDialogResult(true);
+            Close();
+            return;
+        }
+
         if (!_viewModel.SubmitRequest())
             return;
 
-        TrySetDialogResult();
+        TrySetDialogResult(true);
         Close();
-    }
-
-    private void TrySetDialogResult()
-    {
-        try
-        {
-            DialogResult = true;
-        }
-        catch (InvalidOperationException)
-        {
-            // Demo opens the dialog with Show(), so DialogResult cannot be set.
-        }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = false;
+        TrySetDialogResult(false);
         Close();
     }
 
@@ -65,9 +64,31 @@ public partial class BuildingAccessRequestDialog : Window
         _viewModel.SetUnitNumberForDemo(unitNumber);
     }
 
-    public void ClickSendRequestForDemo()
+    public bool ClickSendRequestForDemo()
     {
-        SendRequestButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        _isDemoSubmit = true;
+
+        try
+        {
+            SendRequestButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            return true;
+        }
+        finally
+        {
+            _isDemoSubmit = false;
+        }
+    }
+
+    private void TrySetDialogResult(bool result)
+    {
+        try
+        {
+            DialogResult = result;
+        }
+        catch (InvalidOperationException)
+        {
+            // Demo opens the dialog with Show(), so DialogResult cannot be set.
+        }
     }
 
 

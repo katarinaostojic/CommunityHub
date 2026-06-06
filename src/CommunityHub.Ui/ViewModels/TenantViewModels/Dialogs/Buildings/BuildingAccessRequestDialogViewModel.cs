@@ -148,4 +148,16 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
     {
         UnitNumber = unitNumber;
     }
+
+    public bool CanSubmitRequestForDemo()
+    {
+        string unitNumber = UnitNumber.Trim();
+        string? validationError = ValidateUnitNumber(unitNumber);
+
+        if (validationError == null)
+            return true;
+
+        ShowValidationError(validationError);
+        return false;
+    }
 }

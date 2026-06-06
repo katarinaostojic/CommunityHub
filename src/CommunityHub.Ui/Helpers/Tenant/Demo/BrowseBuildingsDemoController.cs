@@ -11,9 +11,9 @@ namespace CommunityHub.Ui.Helpers.Tenant.Demo;
 public class BrowseBuildingsDemoController
 {
     private const int ShortPause = 1600;
-    private const int MediumPause = 2400;
-    private const int LongPause = 3600;
-    private const int TypingPause = 650;
+    private const int MediumPause = 1400;
+    private const int LongPause = 2600;
+    private const int TypingPause = 450;
 
     private readonly TenantDemoRunner _demoRunner;
     private readonly TextBox _searchTextBox;
@@ -105,10 +105,11 @@ public class BrowseBuildingsDemoController
         await _demoRunner.DelayAsync(token, MediumPause);
 
         await TypeTextAsync(_streetTextBox, "knez", token);
+        await TypeTextAsync(_neighborhoodTextBox, "ari", token);
 
         _viewModel.Search(
             OptionalText(_streetTextBox),
-            null,
+            OptionalText(_neighborhoodTextBox),
             null,
             null);
 
@@ -142,14 +143,10 @@ public class BrowseBuildingsDemoController
 
             await _demoRunner.DelayAsync(token, MediumPause);
 
-            if (!_hasSubmittedRequestInCurrentDemo)
-            {
-                dialog.ClickSendRequestForDemo();
-                _hasSubmittedRequestInCurrentDemo = true;
+            dialog.ClickSendRequestForDemo();
 
-                ShowRequestSentBanner(building);
-                await _demoRunner.DelayAsync(token, LongPause);
-            }
+            ShowDemoRequestSentBanner(building);
+            await _demoRunner.DelayAsync(token, LongPause);
         }
         finally
         {
@@ -202,12 +199,12 @@ public class BrowseBuildingsDemoController
         }
     }
 
-    private void ShowRequestSentBanner(BuildingDto building)
+    private void ShowDemoRequestSentBanner(BuildingDto building)
     {
         NotificationBanner.ShowSuccess(
             _successBanner,
             _successTextBlock,
-            $"✔ Request Sent Successfully! The administrator of {building.FullAddress} has been notified.");
+            $"✔ Demo: request for {building.FullAddress} was prepared successfully.");
 
         _viewRequestsButton.Visibility = Visibility.Visible;
     }
