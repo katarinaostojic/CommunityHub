@@ -19,14 +19,69 @@ public partial class CommonRoomRequestDialog : Window
 
     private void SendRequestButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!_viewModel.Validate(DateFromPicker.SelectedDate, DateToPicker.SelectedDate)) return;
-        DialogResult = true;
-        Close();
+        TrySubmit();
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = false;
+        TrySetDialogResult(false);
         Close();
+    }
+
+    public void SetDateFromForDemo(DateTime? date)
+    {
+        DateFromPicker.SelectedDate = date;
+    }
+
+    public void SetDateToForDemo(DateTime? date)
+    {
+        DateToPicker.SelectedDate = date;
+    }
+
+    public void OpenDateFromPickerForDemo()
+    {
+        DateFromPicker.IsDropDownOpen = true;
+    }
+
+    public void CloseDateFromPickerForDemo()
+    {
+        DateFromPicker.IsDropDownOpen = false;
+    }
+
+    public void OpenDateToPickerForDemo()
+    {
+        DateToPicker.IsDropDownOpen = true;
+    }
+
+    public void CloseDateToPickerForDemo()
+    {
+        DateToPicker.IsDropDownOpen = false;
+    }
+
+    public bool ClickSendRequestForDemo()
+    {
+        return TrySubmit();
+    }
+
+    private bool TrySubmit()
+    {
+        if (!_viewModel.Validate(DateFromPicker.SelectedDate, DateToPicker.SelectedDate))
+            return false;
+
+        TrySetDialogResult(true);
+        Close();
+        return true;
+    }
+
+    private void TrySetDialogResult(bool result)
+    {
+        try
+        {
+            DialogResult = result;
+        }
+        catch (InvalidOperationException)
+        {
+            // Demo opens the dialog with Show(), so DialogResult cannot be set.
+        }
     }
 }
