@@ -135,4 +135,29 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
             ? $"Warning: Apartment {unitNumber} is already occupied by another user.\nYou can still submit a request."
             : string.Empty;
     }
+
+    public string GetDemoUnitNumber()
+    {
+        string? availableUnitNumber = SortedUnitNumbers
+            .FirstOrDefault(unitNumber => !_buildingService.HasExistingRequest(_building.Id, _user.Id, unitNumber));
+
+        return availableUnitNumber ?? SortedUnitNumbers.FirstOrDefault() ?? "1";
+    }
+
+    public void SetUnitNumberForDemo(string unitNumber)
+    {
+        UnitNumber = unitNumber;
+    }
+
+    public bool CanSubmitRequestForDemo()
+    {
+        string unitNumber = UnitNumber.Trim();
+        string? validationError = ValidateUnitNumber(unitNumber);
+
+        if (validationError == null)
+            return true;
+
+        ShowValidationError(validationError);
+        return false;
+    }
 }

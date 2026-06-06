@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Entities.Ads;
-using CommunityHub.Application.DTOs.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.Ads;
+using CommunityHub.Application.DTOs.Buildings.Ads;
 
 namespace CommunityHub.Application.DTOs.Reports;
 

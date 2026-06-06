@@ -1,6 +1,7 @@
-﻿using CommunityHub.Application.Domain.Entities.Ads;
-using CommunityHub.Application.DTOs.Ads;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.Ads;
+using CommunityHub.Application.DTOs.Buildings.Ads;
 using CommunityHub.Ui.Extensions;
+using CommunityHub.Ui.Extensions.Buildings.Ads;
 using CommunityHub.Ui.ViewModels;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Notifications;

@@ -1,5 +1,4 @@
-﻿using CommunityHub.Application.DTOs.Ads;
-using CommunityHub.Application.Services.Entities.Ads;
+﻿using CommunityHub.Application.Services.Entities.Buildings.Ads;
 using CommunityHub.Ui.ViewModels;
 using System.Collections.ObjectModel;
 

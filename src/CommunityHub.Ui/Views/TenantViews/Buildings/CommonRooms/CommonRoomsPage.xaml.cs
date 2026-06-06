@@ -2,6 +2,7 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
+using CommunityHub.Ui.Helpers.Tenant.Demo;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.CommonRooms;
 using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
@@ -16,10 +17,12 @@ public partial class CommonRoomsPage : Page
     private readonly long _buildingId;
     private readonly string _buildingInfo;
     private readonly CommonRoomsViewModel _viewModel;
+    private readonly CommonRoomsDemoController _demoController;
 
     public CommonRoomsPage(User user, long buildingId, string buildingInfo)
     {
         InitializeComponent();
+
         _user = user;
         _buildingId = buildingId;
         _buildingInfo = buildingInfo;
@@ -29,6 +32,16 @@ public partial class CommonRoomsPage : Page
 
         _viewModel = new CommonRoomsViewModel(commonRoomService, requestService, user.Id, buildingId);
         DataContext = _viewModel;
+
+        _demoController = new CommonRoomsDemoController(
+            DemoButton,
+            _viewModel,
+            _buildingInfo,
+            RoomsScrollViewer,
+            SuccessBanner,
+            SuccessTextBlock,
+            ViewRequestsButton,
+            () => Window.GetWindow(this));
 
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = $"Building: {_buildingInfo}";
@@ -49,10 +62,16 @@ public partial class CommonRoomsPage : Page
         CommonRoomRequestDialog dialog = new CommonRoomRequestDialog(dialogViewModel);
         dialog.Owner = Window.GetWindow(this);
 
-        if (dialog.ShowDialog() != true) return;
+        if (dialog.ShowDialog() != true)
+            return;
 
         _viewModel.SendRequest(room.Id, dialog.SelectedDateFrom!.Value, dialog.SelectedDateTo!.Value);
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Common room request sent successfully!");
+    }
+
+    private async void DemoButton_Click(object sender, RoutedEventArgs e)
+    {
+        await _demoController.ToggleAsync();
     }
 
     private void MyRequestsTab_Click(object sender, RoutedEventArgs e) =>

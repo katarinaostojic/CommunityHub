@@ -166,19 +166,19 @@
                                             <Image Stretch="Fill">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
-                                                        <Setter Property="Source" Value="/images/neighborhoods/liman.jpg"/>
+                                                        <Setter Property="Source" Value="/Images/neighborhoods/liman.jpg"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding NeighborhoodName}" Value="Dorcol">
-                                                                <Setter Property="Source" Value="/images/neighborhoods/dorcol.jpg"/>
+                                                                <Setter Property="Source" Value="/Images/neighborhoods/dorcol.jpg"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding NeighborhoodName}" Value="Liman">
-                                                                <Setter Property="Source" Value="/images/neighborhoods/liman.jpg"/>
+                                                                <Setter Property="Source" Value="/Images/neighborhoods/liman.jpg"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding NeighborhoodName}" Value="Liman 3">
-                                                                <Setter Property="Source" Value="/images/neighborhoods/liman.jpg"/>
+                                                                <Setter Property="Source" Value="/Images/neighborhoods/liman.jpg"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding NeighborhoodName}" Value="Podbara">
-                                                                <Setter Property="Source" Value="/images/neighborhoods/podbara.jpg"/>
+                                                                <Setter Property="Source" Value="/Images/neighborhoods/podbara.jpg"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
