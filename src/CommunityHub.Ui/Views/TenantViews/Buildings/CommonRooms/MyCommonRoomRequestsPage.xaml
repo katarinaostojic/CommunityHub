@@ -169,15 +169,15 @@
                                            FontSize="18"
                                            FontWeight="Bold"
                                            Foreground="{StaticResource TextPrimaryBrush}"/>
-                                
+
                                 <!-- Approved date -->
-                                <Border Grid.Row="2"
+                                <Border Grid.Row="1"
                                         Background="{StaticResource SuccessBrush}"
                                         BorderBrush="{StaticResource SuccessTextBrush}"
                                         BorderThickness="1"
                                         CornerRadius="8"
                                         Padding="10,7"
-                                        Margin="0,0,0,8"
+                                        Margin="0,10,0,10"
                                         Visibility="{Binding ApprovedDateVisible, Converter={StaticResource BoolToVis}}">
                                     <TextBlock Text="{Binding ApprovedDateDisplay}"
                                                FontSize="13"
@@ -215,7 +215,7 @@
 
                                 <!-- Bottom row: request info + actions -->
                                 <Grid Grid.Row="4"
-                                      Margin="0,30,0,0"
+                                      Margin="0,8,0,0"
                                       VerticalAlignment="Bottom">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
