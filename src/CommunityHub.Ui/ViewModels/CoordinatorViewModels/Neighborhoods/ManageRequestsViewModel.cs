@@ -173,7 +173,7 @@ public class ManageRequestsViewModel : BaseViewModel
     private string StatusToString(RequestStatus status) => status switch
     {
         RequestStatus.PendingApproval => "pending approval",
-        RequestStatus.Approved => "accepted",
+        RequestStatus.Approved => "approved",
         RequestStatus.Rejected => "rejected",
         _ => throw new ArgumentException($"Unknown status: {status}")
     };
