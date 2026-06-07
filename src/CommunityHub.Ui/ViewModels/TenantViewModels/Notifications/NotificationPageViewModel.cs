@@ -34,6 +34,8 @@ public class NotificationsPageViewModel : BaseViewModel
 
     public bool HasNotifications => Groups.Any(group => group.Notifications.Any());
 
+    public bool HasNoNotifications => !HasNotifications;
+
     public void MarkAllAsRead()
     {
         if (!HasUnreadNotifications)
@@ -45,6 +47,17 @@ public class NotificationsPageViewModel : BaseViewModel
             notification.MarkAsRead();
 
         HasUnreadNotifications = false;
+    }
+
+    public void ClearAll()
+    {
+        if (!HasNotifications)
+            return;
+
+        _notificationService.ClearAll(_userId);
+        Groups.Clear();
+        HasUnreadNotifications = false;
+        NotifyNotificationAvailabilityChanged();
     }
 
     public void MarkAsRead(long notificationId)
@@ -81,7 +94,13 @@ public class NotificationsPageViewModel : BaseViewModel
                     group)));
 
         HasUnreadNotifications = notifications.Any(notification => notification.IsUnread);
+        NotifyNotificationAvailabilityChanged();
+    }
+
+    private void NotifyNotificationAvailabilityChanged()
+    {
         OnPropertyChanged(nameof(HasNotifications));
+        OnPropertyChanged(nameof(HasNoNotifications));
     }
 
     private static string GetGroupTitle(DateTime date)

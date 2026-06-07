@@ -36,4 +36,9 @@ public class AdNotificationService
     {
         _notificationRepository.MarkAllAsRead(userId);
     }
+
+    public void ClearAll(long userId)
+    {
+        _notificationRepository.ClearAll(userId);
+    }
 }

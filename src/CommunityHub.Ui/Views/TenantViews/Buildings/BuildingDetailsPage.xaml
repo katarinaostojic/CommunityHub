@@ -3,6 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="clr-namespace:CommunityHub.Ui.Controls">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -78,6 +82,30 @@
               Background="{StaticResource SurfaceSoftBrush}">
             <Image x:Name="BuildingImage"
                    Stretch="UniformToFill"/>
+
+            <Border Visibility="{Binding IsHighDemand, Converter={StaticResource BoolToVis}}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="16,10,0,0"
+                    Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource PrimaryBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="10,5">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🔥"
+                       FontFamily="Segoe UI Emoji"
+                       FontSize="13"
+                       VerticalAlignment="Center"
+                       Margin="0,0,6,0"/>
+
+                    <TextBlock Text="High demand"
+                       Foreground="{StaticResource PrimaryBrush}"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
 
             <!-- Success banner -->
             <Border x:Name="SuccessBanner"

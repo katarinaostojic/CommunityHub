@@ -51,6 +51,19 @@ public partial class NotificationsPage : Page
         _viewModel.MarkAllAsRead();
     }
 
+    private void ClearAllButton_Click(object sender, RoutedEventArgs e)
+    {
+        ClearNotificationsDialog dialog = new()
+        {
+            Owner = Window.GetWindow(this)
+        };
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        _viewModel.ClearAll();
+    }
+
     private void ViewSlotsButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not Button button ||

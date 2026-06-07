@@ -82,6 +82,20 @@ public class AdNotificationDbRepository : BaseDbRepository, IAdNotificationRepos
         command.ExecuteNonQuery();
     }
 
+    public void ClearAll(long userId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+
+        command.CommandText = @"
+        DELETE FROM notice_board_notifications
+        WHERE recipient_id = @userId";
+
+        AddParameter(command, "@userId", userId);
+
+        command.ExecuteNonQuery();
+    }
+
     private void Create(long recipientId, long adId, long relatedAdId, AdNotificationType type)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
