@@ -1,9 +1,11 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
+using CommunityHub.Ui.Views.TenantViews.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +15,7 @@ public partial class MyBuildingRequestsPage : Page
 {
     private readonly User _user;
     private readonly MyBuildingRequestsViewModel _viewModel;
+    private readonly BuildingMembershipService _membershipService;
 
     public MyBuildingRequestsPage(User user)
     {
@@ -20,6 +23,8 @@ public partial class MyBuildingRequestsPage : Page
         _user = user;
 
         BuildingAccessRequestService requestService = Injector.CreateInstance<BuildingAccessRequestService>();
+        _membershipService = Injector.CreateInstance<BuildingMembershipService>();
+
         _viewModel = new MyBuildingRequestsViewModel(requestService, user.Id);
         DataContext = _viewModel;
 
@@ -47,6 +52,67 @@ public partial class MyBuildingRequestsPage : Page
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Request cancelled successfully.");
     }
 
+    private void BrowseOtherBuildingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        NavigationService.Navigate(new BrowseBuildingsPage(_user));
+    }
+
+    private void NoticeBoardButton_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingAccessRequestViewModel request = GetSelectedRequest(sender);
+        BuildingMembershipDto? membership = GetMembership(request.BuildingId);
+
+        if (membership == null)
+            return;
+
+        NavigationService.Navigate(new NoticeBoardPage(_user, membership));
+    }
+
+    private void CommonRoomsButton_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingAccessRequestViewModel request = GetSelectedRequest(sender);
+        BuildingMembershipDto? membership = GetMembership(request.BuildingId);
+
+        if (membership == null)
+            return;
+
+        string buildingInfo = $"{membership.BuildingStreet} {membership.BuildingStreetNumber}, {membership.BuildingNeighborhood}";
+        NavigationService.Navigate(new CommonRoomsPage(_user, membership.BuildingId, buildingInfo));
+    }
+
+    private void ResidentsMeetingButton_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingAccessRequestViewModel request = GetSelectedRequest(sender);
+        BuildingMembershipDto? membership = GetMembership(request.BuildingId);
+
+        if (membership == null)
+            return;
+
+        NavigationService.Navigate(new ResidentsMeetingsPage(_user, membership));
+    }
+
+    private void ReportProblemButton_Click(object sender, RoutedEventArgs e)
+    {
+        BuildingAccessRequestViewModel request = GetSelectedRequest(sender);
+        BuildingMembershipDto? membership = GetMembership(request.BuildingId);
+
+        if (membership == null)
+            return;
+
+        NavigationService.Navigate(new ReportedProblemsPage(_user, membership));
+    }
+
+    private BuildingAccessRequestViewModel GetSelectedRequest(object sender)
+    {
+        return (BuildingAccessRequestViewModel)((Button)sender).Tag;
+    }
+
+    private BuildingMembershipDto? GetMembership(long buildingId)
+    {
+        return _membershipService
+            .GetByTenant(_user.Id)
+            .FirstOrDefault(membership => membership.BuildingId == buildingId);
+    }
     private bool ConfirmCancellation(string fullAddress)
     {
         CancelBuildingAccessRequestDialog dialog = new CancelBuildingAccessRequestDialog(fullAddress);
