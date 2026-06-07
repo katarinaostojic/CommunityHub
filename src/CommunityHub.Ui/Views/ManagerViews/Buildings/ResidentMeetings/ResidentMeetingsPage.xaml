@@ -155,8 +155,18 @@
                 </StackPanel>
             </Grid>
 
+            <!-- Poruka kad nije izabrana zgrada -->
+            <TextBlock Grid.Row="3"
+                       x:Name="NoBuildingText"
+                       Text="No building has been selected yet"
+                       FontSize="15" Foreground="#7F8C8D"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
             <!-- Lista skupština -->
-            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="3" x:Name="MeetingsList"
+                          VerticalScrollBarVisibility="Auto"
+                          Visibility="Collapsed">
                 <ItemsControl ItemsSource="{Binding Meetings}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

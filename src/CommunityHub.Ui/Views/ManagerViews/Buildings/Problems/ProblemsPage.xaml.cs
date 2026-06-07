@@ -11,12 +11,23 @@ public partial class ProblemsPage : Page
     private readonly User _currentUser;
     private readonly ProblemsViewModel _viewModel;
 
-    public ProblemsPage(User user)
+    public event Action<BuildingDto>? BuildingSelected;
+
+    public ProblemsPage(User user, BuildingDto? preselectedBuilding = null)
     {
         InitializeComponent();
         _currentUser = user;
         _viewModel = new ProblemsViewModel(_currentUser.Id);
         DataContext = _viewModel;
+
+        if (preselectedBuilding != null)
+        {
+            Loaded += (s, e) =>
+            {
+                BuildingComboBox.SelectedItem = _viewModel.Buildings
+                    .FirstOrDefault(b => b.Id == preselectedBuilding.Id);
+            };
+        }
     }
 
     private void BuildingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -25,10 +36,15 @@ public partial class ProblemsPage : Page
         {
             _viewModel.SelectedBuilding = building;
             BuildingPreview.Visibility = Visibility.Visible;
+            ProblemsTable.Visibility = Visibility.Visible;
+            NoBuildingText.Visibility = Visibility.Collapsed;
+            BuildingSelected?.Invoke(building);
         }
         else
         {
             BuildingPreview.Visibility = Visibility.Collapsed;
+            ProblemsTable.Visibility = Visibility.Collapsed;
+            NoBuildingText.Visibility = Visibility.Visible;
         }
     }
 

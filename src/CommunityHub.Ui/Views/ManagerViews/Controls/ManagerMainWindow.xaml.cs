@@ -1,14 +1,17 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Ui.Helpers.Manager;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using CommunityHub.Ui.Helpers.Manager;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 
 public partial class ManagerMainWindow : Window
 {
     private readonly User _currentUser;
+    private BuildingDto? _lastSelectedBuildingProblems;
+    private BuildingDto? _lastSelectedBuildingMeetings;
 
     public ManagerMainWindow(User user)
     {
@@ -82,12 +85,16 @@ public partial class ManagerMainWindow : Window
     private void ProblemsButton_Click(object sender, RoutedEventArgs e)
     {
         SetActiveNavButton(BtnProblems);
-        MainFrame.Navigate(new Buildings.Problems.ProblemsPage(_currentUser));
+        var page = new Buildings.Problems.ProblemsPage(_currentUser, _lastSelectedBuildingProblems);
+        page.BuildingSelected += building => _lastSelectedBuildingProblems = building;
+        MainFrame.Navigate(page);
     }
 
     private void ResidentMeetingButton_Click(object sender, RoutedEventArgs e)
     {
         SetActiveNavButton(BtnResidentMeeting);
-        MainFrame.Navigate(new Buildings.ResidentMeetings.ResidentMeetingsPage(_currentUser));
+        var page = new Buildings.ResidentMeetings.ResidentMeetingsPage(_currentUser, _lastSelectedBuildingMeetings);
+        page.BuildingSelected += building => _lastSelectedBuildingMeetings = building;
+        MainFrame.Navigate(page);
     }
 }
