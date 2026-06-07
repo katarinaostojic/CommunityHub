@@ -12,18 +12,39 @@ public partial class ResidentMeetingsPage : Page
     private readonly User _currentUser;
     private readonly ResidentMeetingsViewModel _viewModel;
 
-    public ResidentMeetingsPage(User user)
+    public event Action<BuildingDto>? BuildingSelected;
+
+    public ResidentMeetingsPage(User user, BuildingDto? preselectedBuilding = null)
     {
         InitializeComponent();
         _currentUser = user;
         _viewModel = new ResidentMeetingsViewModel(_currentUser.Id);
         DataContext = _viewModel;
+
+        if (preselectedBuilding != null)
+        {
+            Loaded += (s, e) =>
+            {
+                BuildingComboBox.SelectedItem = _viewModel.Buildings
+                    .FirstOrDefault(b => b.Id == preselectedBuilding.Id);
+            };
+        }
     }
 
     private void BuildingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (BuildingComboBox.SelectedItem is BuildingDto building)
+        {
             _viewModel.SelectedBuilding = building;
+            NoBuildingText.Visibility = Visibility.Collapsed;
+            MeetingsList.Visibility = Visibility.Visible;
+            BuildingSelected?.Invoke(building);
+        }
+        else
+        {
+            NoBuildingText.Visibility = Visibility.Visible;
+            MeetingsList.Visibility = Visibility.Collapsed;
+        }
     }
 
     private void ScheduleMeeting_Click(object sender, RoutedEventArgs e)

@@ -122,9 +122,19 @@
                 </StackPanel>
             </Border>
 
+            <!-- Poruka kad nije izabrana zgrada -->
+            <TextBlock Grid.Row="2"
+                       x:Name="NoBuildingText"
+                       Text="No building has been selected yet"
+                       FontSize="15" Foreground="#7F8C8D"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
             <!-- Table -->
-            <Border Grid.Row="2" Background="White" CornerRadius="10"
-                    BorderBrush="#DEDEDE" BorderThickness="1">
+            <Border Grid.Row="2" x:Name="ProblemsTable"
+                    Background="White" CornerRadius="10"
+                    BorderBrush="#DEDEDE" BorderThickness="1"
+                    Visibility="Collapsed">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="8" Opacity="0.08" ShadowDepth="2"/>
                 </Border.Effect>
