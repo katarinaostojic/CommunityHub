@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
-using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.DTOs.Neighborhoods.CityObjects;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 

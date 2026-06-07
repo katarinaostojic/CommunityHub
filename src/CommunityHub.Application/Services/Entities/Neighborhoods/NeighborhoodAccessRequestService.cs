@@ -60,4 +60,7 @@ public class NeighborhoodAccessRequestService
 
     public long? GetMembershipNeighborhoodId(long citizenId)
         => _repository.GetMembershipNeighborhoodId(citizenId);
+
+    public int CountPendingByNeighborhood(long neighborhoodId)
+    => _repository.CountPendingByNeighborhood(neighborhoodId);
 }

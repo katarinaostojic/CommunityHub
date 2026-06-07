@@ -1,6 +1,6 @@
-﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
-using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Neighborhoods.Budget;
+using CommunityHub.Application.DTOs.Neighborhoods.Budget;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Budget;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

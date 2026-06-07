@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.DTOs.Neighborhoods.CityObjects;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;

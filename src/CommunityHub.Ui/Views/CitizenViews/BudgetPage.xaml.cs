@@ -11,10 +11,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
 using CommunityHub.Ui.Views;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Budget;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 

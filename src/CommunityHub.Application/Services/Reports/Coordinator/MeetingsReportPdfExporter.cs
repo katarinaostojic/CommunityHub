@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Neighborhoods.Meetings;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;

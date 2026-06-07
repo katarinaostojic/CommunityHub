@@ -1,6 +1,7 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods.Events;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Events;
 using System.Collections.ObjectModel;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 

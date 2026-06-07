@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CommunityHub.Application.Domain.Entities.Neighborhoods;
-using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Events;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
 namespace CommunityHub.Application.Mappings.Neighborhoods;
 

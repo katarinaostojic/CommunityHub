@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using CommunityHub.Application.Database.Mappers.Users;
-using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Events;
 
 namespace CommunityHub.Application.Database.Mappers;
 

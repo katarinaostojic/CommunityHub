@@ -1,7 +1,7 @@
 ﻿namespace CommunityHub.Application.DTOs.Neighborhoods;
 
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Entities.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Forums;
 
 public class NeighborhoodDto
 {
@@ -97,4 +97,7 @@ public class ForumCommentDto
 
     public string CreatedAtFormatted => $"{CreatedAt:dd.MM.yyyy HH:mm}";
     public string AuthorLabel => IsAuthor ? " [author]" : string.Empty;
+    public int PendingRequestsCount { get; init; }
+    public string PendingRequestsText => PendingRequestsCount > 0 ? $"{PendingRequestsCount} requests pending" : string.Empty;
+    public bool HasPendingRequests => PendingRequestsCount > 0;
 }

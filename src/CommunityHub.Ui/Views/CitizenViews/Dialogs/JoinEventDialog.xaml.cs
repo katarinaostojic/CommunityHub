@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods.Events;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Collections.Generic;
 using System.Linq;
