@@ -168,12 +168,46 @@
                            Style="{StaticResource PageTitle}"
                            VerticalAlignment="Center"/>
 
-                    <Button Grid.Column="3"
-                            Content="Mark all as read"
+                    <StackPanel Grid.Column="3"
+                        Orientation="Horizontal">
+                        <Button Content="Mark all as read"
                             Style="{StaticResource NotificationActionButton}"
                             IsEnabled="{Binding HasUnreadNotifications}"
+                            Margin="0,0,10,0"
                             Click="MarkAllAsReadButton_Click"/>
+                        <Button Content="Clear all"
+                            Style="{StaticResource NotificationActionButton}"
+                            IsEnabled="{Binding HasNotifications}"
+                            Click="ClearAllButton_Click"/>
+                     </StackPanel>
                 </Grid>
+
+                <Border Visibility="{Binding HasNoNotifications, Converter={StaticResource BoolToVis}}"
+                    Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="16"
+                    Padding="28"
+                    Margin="0,0,0,18">
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="🔕"
+                   FontSize="36"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="No notifications"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   HorizontalAlignment="Center"/>
+
+                        <TextBlock Text="New notice board updates will appear here."
+                   FontSize="14"
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   HorizontalAlignment="Center"
+                   Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
 
                 <!-- Groups -->
                 <ItemsControl ItemsSource="{Binding Groups}">

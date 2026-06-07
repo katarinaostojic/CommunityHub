@@ -24,8 +24,16 @@ public class BuildingDetailsViewModel : BaseViewModel
     public int PendingRequestsCount
     {
         get => _pendingRequestsCount;
-        private set => SetProperty(ref _pendingRequestsCount, value);
+        private set
+        {
+            if (SetProperty(ref _pendingRequestsCount, value))
+            {
+                OnPropertyChanged(nameof(IsHighDemand));
+            }
+        }
     }
+
+    public bool IsHighDemand => PendingRequestsCount >= BuildingDto.VacancyCount && PendingRequestsCount >= 3;
 
     public string ImageCounterText
     {

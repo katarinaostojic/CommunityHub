@@ -10,4 +10,5 @@ public interface IAdNotificationRepository
     List<AdNotification> GetUnreadByUser(long userId);
     void MarkAsRead(long notificationId);
     void MarkAllAsRead(long userId);
+    void ClearAll(long userId);
 }

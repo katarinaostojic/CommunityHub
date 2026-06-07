@@ -8,6 +8,23 @@
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Style x:Key="RequestCardLinkButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid Background="{StaticResource BackgroundLightBrush}">
@@ -141,6 +158,7 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
                                 <Grid.ColumnDefinitions>
@@ -250,6 +268,75 @@
                                                FontSize="13"
                                                TextWrapping="Wrap"/>
                                 </Border>
+                                <!-- Next steps -->
+                                <StackPanel Grid.Row="3"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Horizontal"
+                                        Margin="0,12,0,0"
+                                        Visibility="{Binding ShowBrowseOtherBuildingsLink, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="→"
+                                               Foreground="{StaticResource TextSecondaryBrush}"
+                                               FontSize="13"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,5,0"/>
+
+                                    <Button Content="Browse other buildings"
+                                        Style="{StaticResource RequestCardLinkButton}"
+                                        Tag="{Binding}"
+                                        Click="BrowseOtherBuildingsButton_Click"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="3"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Horizontal"
+                                        Margin="0,12,0,0"
+                                        Visibility="{Binding ShowBuildingFeatureLinks, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="→"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,5,0"/>
+
+                                    <Button Content="Notice Board"
+                                            Style="{StaticResource RequestCardLinkButton}"
+                                            Tag="{Binding}"
+                                            Click="NoticeBoardButton_Click"/>
+
+                                    <TextBlock Text=" · "
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0"/>
+
+                                    <Button Content="Common Areas"
+                                            Style="{StaticResource RequestCardLinkButton}"
+                                            Tag="{Binding}"
+                                            Click="CommonRoomsButton_Click"/>
+
+                                    <TextBlock Text=" · "
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0"/>
+
+                                    <Button Content="Residents' Meeting"
+                                            Style="{StaticResource RequestCardLinkButton}"
+                                            Tag="{Binding}"
+                                            Click="ResidentsMeetingButton_Click"/>
+
+                                    <TextBlock Text=" · "
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           Margin="5,0"/>
+
+                                    <Button Content="Report a Problem"
+                                            Style="{StaticResource RequestCardLinkButton}"
+                                            Tag="{Binding}"
+                                            Click="ReportProblemButton_Click"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>

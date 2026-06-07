@@ -13,6 +13,7 @@ public class BuildingAccessRequestViewModel : BaseViewModel
     }
 
     public long Id => _request.Id;
+    public long BuildingId => _request.BuildingId;
     public string BuildingAddress => _request.BuildingFullAddress;
     public string BuildingNeighborhood => _request.BuildingNeighborhood;
     public string BuildingLocation => _request.BuildingLocation;
@@ -33,6 +34,10 @@ public class BuildingAccessRequestViewModel : BaseViewModel
         : string.Empty;
 
     public bool CanCancel => _request.CanBeCancelled;
-
     public bool RejectionReasonVisible => _request.HasRejectionReason;
+
+    public bool ShowBrowseOtherBuildingsLink =>
+        Status == RequestStatus.PendingApproval || Status == RequestStatus.Rejected;
+
+    public bool ShowBuildingFeatureLinks => Status == RequestStatus.Approved;
 }

@@ -156,17 +156,18 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-
                                 <Border Grid.Row="0"
                                         HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
                                         Background="{StaticResource PrimarySoftBrush}"
                                         BorderThickness="0"
                                         CornerRadius="12"
-                                        Padding="12,5">
+                                        Padding="14,8">
                                     <TextBlock Text="{Binding StatusDisplay}"
                                                FontSize="12"
                                                FontWeight="SemiBold"
-                                               Foreground="{StaticResource PrimaryBrush}"/>
+                                               Foreground="{StaticResource PrimaryBrush}"
+                                               VerticalAlignment="Center"/>
                                 </Border>
 
                                 <StackPanel Grid.Row="0"
