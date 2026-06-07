@@ -6,6 +6,7 @@ using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Helpers.Citizen;
 using System.Windows;
 using System.Windows.Media;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 

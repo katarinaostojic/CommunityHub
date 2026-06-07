@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
-using CommunityHub.Application.Services.Entities.Neighborhoods;
 using System.Collections.ObjectModel;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Reviews;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 

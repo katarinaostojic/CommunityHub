@@ -3,7 +3,9 @@ using CommunityHub.Application.Database.Repositories.Shared;
 using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
+using Npgsql;
 using System.Data;
+using System.Data.Common;
 
 namespace CommunityHub.Application.Database.Repositories.Neighborhoods;
 
@@ -22,6 +24,15 @@ public class NeighborhoodAccessRequestDbRepository : BaseDbRepository, INeighbor
         AddParameter(command, "@createdAt", DateTime.UtcNow);
 
         command.ExecuteNonQuery();
+    }
+    public int CountPendingByNeighborhood(long neighborhoodId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"SELECT COUNT(*) FROM neighborhood_access_requests
+                            WHERE neighborhood_id = @neighborhoodId AND status = 'pending approval'";
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        return Convert.ToInt32(command.ExecuteScalar());
     }
 
     public bool HasExistingPendingRequest(long citizenId, long neighborhoodId)

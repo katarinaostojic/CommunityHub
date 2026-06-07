@@ -13,4 +13,5 @@ public interface INeighborhoodAccessRequestRepository
     List<NeighborhoodAccessRequest> GetAllByCoordinator(long coordinatorId, string? status, bool sortDescending);
     long? GetMembershipNeighborhoodId(long citizenId);
     NeighborhoodAccessRequest? GetById(long id);
+    int CountPendingByNeighborhood(long neighborhoodId);
 }

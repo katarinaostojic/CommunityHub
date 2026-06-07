@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Events;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 

@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 using System;
 using System.Collections.Generic;
 using System.Text;

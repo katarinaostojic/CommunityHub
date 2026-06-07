@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods.CityObjects;
+using CommunityHub.Application.Services.Entities.Neighborhoods.CityObjects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

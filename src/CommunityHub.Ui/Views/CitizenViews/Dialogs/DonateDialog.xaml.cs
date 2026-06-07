@@ -9,9 +9,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using CommunityHub.Application.Domain.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Windows;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Budget;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 

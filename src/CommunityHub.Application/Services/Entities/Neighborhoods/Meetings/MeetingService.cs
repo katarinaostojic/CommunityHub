@@ -1,0 +1,80 @@
+﻿using CommunityHub.Application.Database.Repositories.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Meetings;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods.Meetings;
+using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
+using CommunityHub.Application.Mappings.Neighborhoods;
+
+namespace CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
+
+public class MeetingService
+{
+    private readonly IMeetingRepository _repository;
+
+    public MeetingService(IMeetingRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public long CreateMeeting(Meeting meeting)
+        => _repository.Create(meeting);
+
+    public List<Meeting> GetMeetingsByCoordinator(long coordinatorId)
+        => _repository.GetByCoordinator(coordinatorId);
+
+    public void CheckAndFinalizeVoting(long meetingId)
+    {
+        Meeting? meeting = _repository.GetById(meetingId);
+        if (meeting == null) return;
+
+        var voteCounts = _repository.GetVoteCounts(meetingId);
+        meeting.FinalizeVoting(voteCounts); // domain odlučuje
+        _repository.Update(meeting);        // repository čuva
+    }
+
+    public void AddVote(long meetingId, long citizenId, DateOnly votedDate)
+    {
+        var vote = new MeetingVote(meetingId, citizenId, votedDate);
+        _repository.AddVote(vote);
+    }
+
+    public List<MeetingDto> GetByNeighborhoodForCitizen(long neighborhoodId, long citizenId)
+    {
+        var meetings = _repository.GetByNeighborhood(neighborhoodId);
+        return meetings.ToDtoList(
+            canVoteFunc: m => CanVote(m),
+            getVoteFunc: m =>
+            {
+                var vote = _repository.GetVoteForCitizen(m.Id, citizenId);
+                return (vote?.VotedDate, vote?.Id);
+            }
+        );
+    }
+
+    public MeetingVote? GetVoteForCitizen(long meetingId, long citizenId)
+        => _repository.GetVoteForCitizen(meetingId, citizenId);
+
+    public void UpdateVote(long voteId, DateOnly newDate)
+        => _repository.UpdateVote(voteId, newDate);
+
+    public bool CanVote(Meeting meeting) => meeting.CanVote();
+    public bool HasTiedVotes(long meetingId)
+    {
+        var voteCounts = _repository.GetVoteCounts(meetingId);
+        Meeting? meeting = _repository.GetById(meetingId);
+        if (meeting == null) return false;
+        return meeting.HasTiedVotes(voteCounts);
+    }
+
+    public Dictionary<DateOnly, int> GetVoteCounts(long meetingId)
+        => _repository.GetVoteCounts(meetingId);
+
+    public void ScheduleWithDate(long meetingId, DateOnly date)
+    {
+        Meeting? meeting = _repository.GetById(meetingId);
+        if (meeting == null) return;
+        meeting.Schedule(date);
+        _repository.Update(meeting);
+    }
+    public Meeting? GetById(long meetingId)
+    => _repository.GetById(meetingId);
+}

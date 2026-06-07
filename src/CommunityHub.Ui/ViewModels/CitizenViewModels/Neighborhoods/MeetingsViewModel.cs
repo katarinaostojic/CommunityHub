@@ -4,7 +4,7 @@ using System.Text;
 
 using CommunityHub.Application.Domain;
 using System.Collections.ObjectModel;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 

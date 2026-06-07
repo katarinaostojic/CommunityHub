@@ -3,6 +3,7 @@ using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 

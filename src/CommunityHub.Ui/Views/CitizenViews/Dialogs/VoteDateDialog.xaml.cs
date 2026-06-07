@@ -9,8 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using CommunityHub.Application.DTOs.Neighborhoods;
 using System.Collections.Generic;
+using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 

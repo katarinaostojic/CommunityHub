@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Entities.Neighborhoods;
-using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Meetings;
+using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 
 namespace CommunityHub.Application.Mappings.Neighborhoods;
 
