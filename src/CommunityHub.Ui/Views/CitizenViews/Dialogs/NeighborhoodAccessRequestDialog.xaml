@@ -9,10 +9,12 @@
         Width="980"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="#F4F4F4"
+        Background="{DynamicResource BackgroundLightBrush}"
         WindowStyle="SingleBorderWindow">
 
-    <Border Background="White" BorderBrush="Black" BorderThickness="1.5" Margin="10">
+    <Border Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1.5" Margin="10" CornerRadius="12">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="55"/>
@@ -20,22 +22,18 @@
                 <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
 
-            <DockPanel Grid.Row="0" Background="White" LastChildFill="False">
+            <DockPanel Grid.Row="0" Background="{DynamicResource SurfaceBrush}" LastChildFill="False">
                 <TextBlock Text="Request Access"
-                           FontSize="30"
-                           FontWeight="Bold"
+                           FontSize="30" FontWeight="Bold"
                            VerticalAlignment="Center"
-                           Margin="18,0,0,0"/>
+                           Margin="18,0,0,0"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
                 <Button x:Name="CloseButton"
-                        Content="✕"
-                        Width="45"
-                        Height="45"
-                        FontSize="24"
-                        FontWeight="Bold"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        DockPanel.Dock="Right"
+                        Content="✕" Width="45" Height="45"
+                        FontSize="24" FontWeight="Bold"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
+                        Cursor="Hand" DockPanel.Dock="Right"
                         Margin="0,4,10,4"/>
             </DockPanel>
 
@@ -47,78 +45,62 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <Border Width="320"
-                            Height="220"
-                            BorderBrush="Black"
-                            BorderThickness="1.5"
-                            Background="#EAEAEA"
-                            HorizontalAlignment="Center">
-                        <Image x:Name="NeighborhoodImage"
-                               Stretch="Fill"/>
-                    </Border>
-
                     <TextBlock x:Name="NeighborhoodNameText"
-                               FontSize="28"
-                               FontWeight="Bold"
-                               HorizontalAlignment="Center"
-                               Margin="0,14,0,0"/>
+                               FontSize="28" FontWeight="Bold"
+                               HorizontalAlignment="Left"
+                               Width="320"
+                               Foreground="{DynamicResource TextPrimaryBrush}"
+                               Margin="18,0,0,8"/>
+
+                    <Border Width="320" Height="220"
+                            BorderBrush="{DynamicResource BorderBrush}"
+                            BorderThickness="1"
+                            Background="{DynamicResource SurfaceSoftBrush}"
+                            CornerRadius="8"
+                            HorizontalAlignment="Center">
+                        <Image x:Name="NeighborhoodImage" Stretch="Fill"/>
+                    </Border>
                 </StackPanel>
 
-                <StackPanel Grid.Column="2" Margin="0,8,0,0">
+                <StackPanel Grid.Column="2" Margin="0,44,0,0">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <TextBlock Text="🏘️"
-                                   FontSize="30"
-                                   VerticalAlignment="Top"
-                                   Margin="0,0,10,0"/>
+                        <TextBlock Text="🏘️" FontSize="30"
+                                   VerticalAlignment="Top" Margin="0,0,10,0"/>
                         <TextBlock x:Name="AddressText"
-                                   FontSize="24"
-                                   FontWeight="Bold"
-                                   TextWrapping="Wrap"
-                                   Width="480"/>
+                                   FontSize="24" FontWeight="Bold"
+                                   TextWrapping="Wrap" Width="480"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <TextBlock Text="🌍"
-                                   FontSize="30"
-                                   VerticalAlignment="Top"
-                                   Margin="0,0,10,0"/>
+                        <TextBlock Text="🌍" FontSize="30"
+                                   VerticalAlignment="Top" Margin="0,0,10,0"/>
                         <TextBlock x:Name="LocationText"
-                                   FontSize="24"
-                                   FontWeight="Bold"
-                                   TextWrapping="Wrap"
-                                   Width="480"/>
+                                   FontSize="24" FontWeight="Bold"
+                                   TextWrapping="Wrap" Width="480"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="📝"
-                                   FontSize="30"
-                                   VerticalAlignment="Top"
-                                   Margin="0,0,10,0"/>
-                        <TextBlock Text="Description:"
-                                   FontSize="24"
-                                   FontWeight="Bold"/>
+                        <TextBlock Text="📝" FontSize="30"
+                                   VerticalAlignment="Top" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="DescriptionText"
+                                   FontSize="22" FontWeight="Bold"
+                                   TextWrapping="Wrap" Width="480"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
-
-                    <TextBlock x:Name="DescriptionText"
-                               FontSize="22"
-                               FontWeight="Bold"
-                               TextWrapping="Wrap"
-                               Width="520"
-                               Margin="40,0,0,0"/>
                 </StackPanel>
             </Grid>
 
-            <StackPanel Grid.Row="2"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center">
+            <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock Text="Checking your address..."
-                           FontSize="26"
-                           FontWeight="Bold"
+                           FontSize="26" FontWeight="Bold"
                            HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
                            Margin="0,0,0,20"/>
-                <ProgressBar Width="220"
-                             Height="18"
-                             IsIndeterminate="True"/>
+                <ProgressBar Width="220" Height="18"
+                             IsIndeterminate="True"
+                             Foreground="#F9A825"/>
             </StackPanel>
         </Grid>
     </Border>

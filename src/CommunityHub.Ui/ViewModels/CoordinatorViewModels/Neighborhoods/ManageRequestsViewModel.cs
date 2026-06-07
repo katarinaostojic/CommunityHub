@@ -1,6 +1,9 @@
-﻿using CommunityHub.Application.Services.Neighborhoods;
-using System.Collections.ObjectModel;
-using CommunityHub.Application.Domain;
+﻿using System.Collections.ObjectModel;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
+using LiveCharts;
+using LiveCharts.Wpf;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
 
@@ -8,16 +11,48 @@ public class ManageRequestsViewModel : BaseViewModel
 {
     private readonly NeighborhoodAccessRequestService _requestService;
     private readonly long _coordinatorId;
+    private readonly string? _neighborhoodName;
 
     private ObservableCollection<NeighborhoodAccessRequestCoordinatorViewModel> _requests = new();
     private RequestStatus? _currentFilter = null;
     private bool _sortDescending = true;
     private string _sortButtonLabel = "Sort by Date ↓";
+    private SeriesCollection _requestStatusSeriesCollection = new();
+    private int _pendingCount;
+    private int _approvedCount;
+    private int _rejectedCount;
 
-    public ManageRequestsViewModel(NeighborhoodAccessRequestService requestService, long coordinatorId)
+    public SeriesCollection RequestStatusSeriesCollection
+    {
+        get => _requestStatusSeriesCollection;
+        private set => SetProperty(ref _requestStatusSeriesCollection, value);
+    }
+
+    public int PendingCount
+    {
+        get => _pendingCount;
+        private set => SetProperty(ref _pendingCount, value);
+    }
+
+    public int ApprovedCount
+    {
+        get => _approvedCount;
+        private set => SetProperty(ref _approvedCount, value);
+    }
+
+    public int RejectedCount
+    {
+        get => _rejectedCount;
+        private set => SetProperty(ref _rejectedCount, value);
+    }
+
+    public string[] RequestStatusLabels => new[] { "Pending", "Approved", "Rejected" };
+
+    public ManageRequestsViewModel(NeighborhoodAccessRequestService requestService, long coordinatorId, string? neighborhoodName = null)
     {
         _requestService = requestService;
         _coordinatorId = coordinatorId;
+        _neighborhoodName = neighborhoodName;
         LoadRequests();
     }
 
@@ -84,15 +119,61 @@ public class ManageRequestsViewModel : BaseViewModel
     {
         string? statusFilter = _currentFilter == null ? null : StatusToString(_currentFilter.Value);
         var items = _requestService.GetAllByCoordinator(_coordinatorId, statusFilter, _sortDescending)
+            .Where(r => _neighborhoodName == null || r.NeighborhoodName == _neighborhoodName)
             .Select(r => new NeighborhoodAccessRequestCoordinatorViewModel(r))
             .ToList();
         Requests = new ObservableCollection<NeighborhoodAccessRequestCoordinatorViewModel>(items);
+
+        var allRequests = _requestService.GetAllByCoordinator(_coordinatorId, null, true)
+            .Where(r => _neighborhoodName == null || r.NeighborhoodName == _neighborhoodName)
+            .ToList();
+
+        PendingCount = allRequests.Count(r => r.Status == RequestStatus.PendingApproval);
+        ApprovedCount = allRequests.Count(r => r.Status == RequestStatus.Approved);
+        RejectedCount = allRequests.Count(r => r.Status == RequestStatus.Rejected);
+
+        RequestStatusSeriesCollection = new SeriesCollection
+{
+    new ColumnSeries
+    {
+        Title = "Pending",
+        Values = new ChartValues<int> { PendingCount },
+        Fill = new SolidColorBrush(Color.FromRgb(247, 217, 106)),
+        StrokeThickness = 0,
+        DataLabels = true,
+        FontSize = 11,
+        Foreground = new SolidColorBrush(Color.FromRgb(80, 80, 80)),
+        ColumnPadding = 20
+    },
+    new ColumnSeries
+    {
+        Title = "Approved",
+        Values = new ChartValues<int> { ApprovedCount },
+        Fill = new SolidColorBrush(Color.FromRgb(133, 212, 176)),
+        StrokeThickness = 0,
+        DataLabels = true,
+        FontSize = 11,
+        Foreground = new SolidColorBrush(Color.FromRgb(80, 80, 80)),
+        ColumnPadding = 20
+    },
+    new ColumnSeries
+    {
+        Title = "Rejected",
+        Values = new ChartValues<int> { RejectedCount },
+        Fill = new SolidColorBrush(Color.FromRgb(244, 160, 181)),
+        StrokeThickness = 0,
+        DataLabels = true,
+        FontSize = 11,
+        Foreground = new SolidColorBrush(Color.FromRgb(80, 80, 80)),
+        ColumnPadding = 20
+    }
+};
     }
 
     private string StatusToString(RequestStatus status) => status switch
     {
         RequestStatus.PendingApproval => "pending approval",
-        RequestStatus.Approved => "accepted",
+        RequestStatus.Approved => "approved",
         RequestStatus.Rejected => "rejected",
         _ => throw new ArgumentException($"Unknown status: {status}")
     };

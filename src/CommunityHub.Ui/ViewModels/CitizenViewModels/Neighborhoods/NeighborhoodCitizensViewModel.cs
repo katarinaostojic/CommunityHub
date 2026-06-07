@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CommunityHub.Application.Services.Neighborhoods;
 using System.Collections.ObjectModel;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
@@ -40,6 +40,8 @@ public class NeighborhoodCitizensViewModel : BaseViewModel
             .ToList();
 
         Citizens = new ObservableCollection<TrustRecordViewModel>(items);
-        ResultsText = $"Neighborhood Citizens: {items.Count}";
+        string label = System.Windows.Application.Current.Resources["Menu_Citizens"]?.ToString()
+               ?? "Citizens";
+        ResultsText = $"{label}: {items.Count}";
     }
 }

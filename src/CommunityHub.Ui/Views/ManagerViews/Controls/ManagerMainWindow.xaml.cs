@@ -1,4 +1,6 @@
-﻿using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Ui.Helpers.Manager;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,6 +10,8 @@ namespace CommunityHub.Ui.Views.ManagerViews;
 public partial class ManagerMainWindow : Window
 {
     private readonly User _currentUser;
+    private BuildingDto? _lastSelectedBuildingProblems;
+    private BuildingDto? _lastSelectedBuildingMeetings;
 
     public ManagerMainWindow(User user)
     {
@@ -15,6 +19,26 @@ public partial class ManagerMainWindow : Window
         _currentUser = user;
         MainFrame.Navigate(new MyBuildingsPage(_currentUser));
         SetActiveNavButton(BtnBuildings);
+        UpdateTooltips();
+    }
+
+    private void TooltipsButton_Click(object sender, RoutedEventArgs e)
+    {
+        AppSession.IsTooltipsEnabled = !AppSession.IsTooltipsEnabled;
+        TooltipsText.Text = AppSession.IsTooltipsEnabled ? "  Tooltips: ON" : "  Tooltips: OFF";
+        UpdateTooltips();
+    }
+
+    private void UpdateTooltips()
+    {
+        var buttons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems };
+        foreach (var btn in buttons)
+            ToolTipService.SetIsEnabled(btn, AppSession.IsTooltipsEnabled);
+    }
+
+    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        // TODO: navigate to profile
     }
 
     private void BuildingsButton_Click(object sender, RoutedEventArgs e)
@@ -42,7 +66,7 @@ public partial class ManagerMainWindow : Window
 
     private void SetActiveNavButton(Button activeButton)
     {
-        var navButtons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnAssembly, BtnProblems };
+        var navButtons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems };
         foreach (var btn in navButtons)
         {
             btn.Background = Brushes.Transparent;
@@ -56,5 +80,21 @@ public partial class ManagerMainWindow : Window
     {
         SetActiveNavButton(BtnNoticeboard);
         MainFrame.Navigate(new ManagerNoticeBoardPage(_currentUser));
+    }
+
+    private void ProblemsButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveNavButton(BtnProblems);
+        var page = new Buildings.Problems.ProblemsPage(_currentUser, _lastSelectedBuildingProblems);
+        page.BuildingSelected += building => _lastSelectedBuildingProblems = building;
+        MainFrame.Navigate(page);
+    }
+
+    private void ResidentMeetingButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveNavButton(BtnResidentMeeting);
+        var page = new Buildings.ResidentMeetings.ResidentMeetingsPage(_currentUser, _lastSelectedBuildingMeetings);
+        page.BuildingSelected += building => _lastSelectedBuildingMeetings = building;
+        MainFrame.Navigate(page);
     }
 }

@@ -1,11 +1,13 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Buildings;
+using CommunityHub.Application.Services.Entities.Shared;
+using CommunityHub.Ui.Views.ManagerViews.Controls;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -17,6 +19,7 @@ public partial class RegisterBuildingDialog : Window
     private readonly CountryService _countryService;
     private List<string> _selectedImagePaths = new List<string>();
     private bool _updatingFromCity = false;
+    private FloatingKeyboardWindow? _activeFloating;
 
     public RegisterBuildingDialog(User user)
     {
@@ -71,6 +74,9 @@ public partial class RegisterBuildingDialog : Window
 
     private void ConfirmFloors_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         FloorsStackPanel.Children.Clear();
 
         if (!int.TryParse(FloorsTextBox.Text, out int numberOfFloors) || numberOfFloors <= 0)
@@ -81,6 +87,14 @@ public partial class RegisterBuildingDialog : Window
 
         for (int i = 1; i <= numberOfFloors; i++)
             FloorsStackPanel.Children.Add(CreateFloorRow(i));
+
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, () =>
+        {
+            double neededHeight = 650 + (numberOfFloors * 55) + 100;
+            double maxHeight = SystemParameters.WorkArea.Height - 50;
+            Height = Math.Min(neededHeight, maxHeight);
+            Top = (SystemParameters.WorkArea.Height - Height) / 2;
+        });
     }
 
     private Grid CreateFloorRow(int floorNumber)
@@ -103,7 +117,7 @@ public partial class RegisterBuildingDialog : Window
             FontSize = 14,
             Tag = floorNumber
         };
-        textBox.GotFocus += TextBox_GotFocus;
+        textBox.PreviewMouseDown += TextBox_Click;
 
         Grid.SetColumn(label, 0);
         Grid.SetColumn(textBox, 1);
@@ -111,6 +125,17 @@ public partial class RegisterBuildingDialog : Window
         floorGrid.Children.Add(textBox);
 
         return floorGrid;
+    }
+
+    private void TextBox_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is TextBox tb)
+        {
+            _activeFloating?.Close();
+            _activeFloating = new FloatingKeyboardWindow(tb, this);
+            _activeFloating.Closed += (_, _) => _activeFloating = null;
+            _activeFloating.Show();
+        }
     }
 
     private void Register_Click(object sender, RoutedEventArgs e)
@@ -232,9 +257,5 @@ public partial class RegisterBuildingDialog : Window
             ImagesPreview.ItemsSource = null;
             ImagesPreview.ItemsSource = _selectedImagePaths;
         }
-    }
-
-    private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-    {
     }
 }

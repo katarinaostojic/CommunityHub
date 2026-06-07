@@ -1,6 +1,7 @@
 ﻿<Window x:Class="CommunityHub.Ui.Views.ManagerViews.Dialogs.RegisterBuildingDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CommunityHub.Ui.Views.ManagerViews.Controls"
         Title="Register Building" Height="650" Width="750"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
@@ -10,11 +11,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="0"/>
         </Grid.RowDefinitions>
 
         <!-- HEADER -->
         <Border Grid.Row="0" Background="#1A2332">
-            <TextBlock Text="Register New Building" 
+            <TextBlock Text="Register New Building"
                        FontSize="20" FontWeight="Bold"
                        Foreground="White"
                        VerticalAlignment="Center"
@@ -59,7 +61,7 @@
                                          Background="Transparent"
                                          BorderThickness="0" Padding="10,0"
                                          VerticalContentAlignment="Center"
-                                         GotFocus="TextBox_GotFocus"/>
+                                         PreviewMouseDown="TextBox_Click"/>
                             </Border>
                         </Grid>
 
@@ -78,7 +80,7 @@
                                          Background="Transparent"
                                          BorderThickness="0" Padding="10,0"
                                          VerticalContentAlignment="Center"
-                                         GotFocus="TextBox_GotFocus"/>
+                                         PreviewMouseDown="TextBox_Click"/>
                             </Border>
                         </Grid>
 
@@ -97,7 +99,7 @@
                                          Background="Transparent"
                                          BorderThickness="0" Padding="10,0"
                                          VerticalContentAlignment="Center"
-                                         GotFocus="TextBox_GotFocus"/>
+                                         PreviewMouseDown="TextBox_Click"/>
                             </Border>
                         </Grid>
 
@@ -155,7 +157,7 @@
                                          Background="Transparent"
                                          BorderThickness="0" Padding="10,0"
                                          VerticalContentAlignment="Center"
-                                         GotFocus="TextBox_GotFocus"/>
+                                         PreviewMouseDown="TextBox_Click"/>
                             </Border>
                             <Button Grid.Column="2" Content="Confirm"
                                     Height="38" FontSize="13"
@@ -213,8 +215,6 @@
             <!-- TAB 2 - Images -->
             <TabItem Header="🖼️  Building Images">
                 <StackPanel Background="White" Margin="40,20,40,20">
-
-                    <!-- Upload zona -->
                     <Border Height="160" BorderBrush="#DDE1E7"
                             BorderThickness="2" CornerRadius="12"
                             Background="#F8F9FA" Margin="0,0,0,20"
@@ -234,7 +234,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Preview slika -->
                     <ItemsControl x:Name="ImagesPreview">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -243,8 +242,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border CornerRadius="8" Margin="8"
-                                        ClipToBounds="True">
+                                <Border CornerRadius="8" Margin="8" ClipToBounds="True">
                                     <Border.Effect>
                                         <DropShadowEffect BlurRadius="8" Opacity="0.15"/>
                                     </Border.Effect>
@@ -255,7 +253,6 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <!-- Dugmad -->
                     <Grid Margin="0,20,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

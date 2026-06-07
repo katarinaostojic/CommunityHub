@@ -1,0 +1,255 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.ManagerViews.Buildings.ResidentMeetings.ResidentMeetingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:converters="clr-namespace:CommunityHub.Ui.Converters"
+      Title="Resident Meetings"
+      Background="#F4F6F9">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:ImagePathConverter x:Key="ImagePathConverter"/>
+
+        <Style x:Key="FilterButton" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#E8EDF2"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Background="White">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="6" Opacity="0.1" ShadowDepth="2"/>
+            </Border.Effect>
+            <TextBlock Text="Resident Meetings"
+                       FontSize="22" FontWeight="Bold"
+                       Foreground="#2C3E50"
+                       VerticalAlignment="Center"
+                       Margin="30,0,0,0"/>
+        </Border>
+
+        <!-- CONTENT -->
+        <Grid Grid.Row="1" Margin="24,16,24,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Building picker -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                <TextBlock Text="Choose the building where you want to schedule a resident meeting"
+                           VerticalAlignment="Center"
+                           FontSize="13" Foreground="#555" Margin="0,0,12,0"/>
+                <ComboBox x:Name="BuildingComboBox"
+                          Width="320" FontSize="13"
+                          ItemsSource="{Binding Buildings}"
+                          SelectionChanged="BuildingComboBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding FullAddress, Mode=OneWay}"/>
+                                <Run Text=", "/>
+                                <Run Text="{Binding CityName, Mode=OneWay}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Schedule dugme + filteri -->
+            <Grid Grid.Row="1" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="+ Schedule New Meeting"
+                        Height="38" Padding="16,0"
+                        FontSize="13" FontWeight="SemiBold"
+                        Foreground="White" Background="#2980B9"
+                        BorderThickness="0" Cursor="Hand"
+                        Click="ScheduleMeeting_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="8" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#2471a3"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="BtnAll" Style="{StaticResource FilterButton}"
+                            Content="{Binding AllButtonLabel}"
+                            Margin="0,0,6,0" Click="FilterAll_Click"/>
+                    <Button x:Name="BtnScheduled" Style="{StaticResource FilterButton}"
+                            Content="{Binding ScheduledButtonLabel}"
+                            Margin="0,0,6,0" Click="FilterScheduled_Click"/>
+                    <Button x:Name="BtnConfirmed" Style="{StaticResource FilterButton}"
+                            Content="{Binding ConfirmedButtonLabel}"
+                            Margin="0,0,6,0" Click="FilterConfirmed_Click"/>
+                    <Button x:Name="BtnCancelled" Style="{StaticResource FilterButton}"
+                            Content="{Binding CancelledButtonLabel}"
+                            Click="FilterCancelled_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Poruka kad nije izabrana zgrada -->
+            <TextBlock Grid.Row="3"
+                       x:Name="NoBuildingText"
+                       Text="No building has been selected yet"
+                       FontSize="15" Foreground="#7F8C8D"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+
+            <!-- Lista skupština -->
+            <ScrollViewer Grid.Row="3" x:Name="MeetingsList"
+                          VerticalScrollBarVisibility="Auto"
+                          Visibility="Collapsed">
+                <ItemsControl ItemsSource="{Binding Meetings}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" CornerRadius="10"
+                                    BorderBrush="#DEDEDE" BorderThickness="1"
+                                    Margin="0,0,0,12" Padding="20,16">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" Opacity="0.06" ShadowDepth="2"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Info -->
+                                    <StackPanel Grid.Column="0">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                            <TextBlock Text="📅 " FontSize="14"/>
+                                            <TextBlock Text="{Binding DateDisplay}"
+                                                       FontSize="15" FontWeight="Bold"
+                                                       Foreground="#2C3E50"/>
+                                            <TextBlock Text=" at " FontSize="14"
+                                                       Foreground="#7F8C8D"/>
+                                            <TextBlock Text="{Binding TimeDisplay}"
+                                                       FontSize="15" FontWeight="Bold"
+                                                       Foreground="#2C3E50"/>
+                                        </StackPanel>
+
+                                        <TextBlock Text="{Binding AttendanceDisplay}"
+                                                   FontSize="12" Foreground="#7F8C8D"
+                                                   Margin="0,0,0,10"/>
+
+                                        <!-- Teme -->
+                                        <ItemsControl ItemsSource="{Binding Topics}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Margin="0,2">
+                                                        <Run Text="• "/>
+                                                        <Run Text="{Binding Mode=OneWay}"/>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+
+                                    <!-- Status + dugmad -->
+                                    <StackPanel Grid.Column="1"
+                                                VerticalAlignment="Top"
+                                                HorizontalAlignment="Right">
+
+                                        <!-- Status badge -->
+                                        <Border CornerRadius="12" Padding="12,4"
+                                                HorizontalAlignment="Right"
+                                                Background="{Binding StatusBackground}"
+                                                Margin="0,0,0,12">
+                                            <TextBlock Text="{Binding StatusDisplay}"
+                                                       FontSize="12" FontWeight="SemiBold"
+                                                       Foreground="{Binding StatusForeground}"/>
+                                        </Border>
+
+                                        <!-- Akcioni buttoni -->
+                                        <Button Style="{StaticResource ActionButton}"
+                                                Content="View attendance"
+                                                Foreground="White" Background="#2980B9"
+                                                Padding="10,0" Margin="0,0,0,6"
+                                                Tag="{Binding Id}"
+                                                Click="ViewAttendance_Click"/>
+
+                                        <Button Style="{StaticResource ActionButton}"
+                                                Content="View topic suggestions"
+                                                Foreground="White" Background="#8E44AD"
+                                                Padding="10,0"
+                                                Tag="{Binding}"
+                                                Visibility="{Binding CanViewSuggestions, Converter={StaticResource BoolToVis}}"
+                                                Click="ViewSuggestions_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

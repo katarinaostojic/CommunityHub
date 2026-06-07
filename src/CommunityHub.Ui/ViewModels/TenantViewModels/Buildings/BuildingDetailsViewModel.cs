@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 
@@ -7,7 +7,6 @@ public class BuildingDetailsViewModel : BaseViewModel
 {
     private readonly BuildingAccessRequestService _requestService;
     private int _currentImageIndex = 0;
-
     private string _imageCounterText = string.Empty;
     private List<string> _imageDotColors = new();
     private int _pendingRequestsCount;
@@ -25,8 +24,16 @@ public class BuildingDetailsViewModel : BaseViewModel
     public int PendingRequestsCount
     {
         get => _pendingRequestsCount;
-        private set => SetProperty(ref _pendingRequestsCount, value);
+        private set
+        {
+            if (SetProperty(ref _pendingRequestsCount, value))
+            {
+                OnPropertyChanged(nameof(IsHighDemand));
+            }
+        }
     }
+
+    public bool IsHighDemand => PendingRequestsCount >= BuildingDto.VacancyCount && PendingRequestsCount >= 3;
 
     public string ImageCounterText
     {

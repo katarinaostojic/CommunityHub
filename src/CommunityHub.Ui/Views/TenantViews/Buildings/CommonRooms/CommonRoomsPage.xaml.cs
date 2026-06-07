@@ -1,10 +1,10 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Buildings;
-using CommunityHub.Application.Services.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
+using CommunityHub.Ui.Helpers.Tenant.Demo;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.CommonRooms;
+using CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings.CommonRooms;
 using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,10 +17,12 @@ public partial class CommonRoomsPage : Page
     private readonly long _buildingId;
     private readonly string _buildingInfo;
     private readonly CommonRoomsViewModel _viewModel;
+    private readonly CommonRoomsDemoController _demoController;
 
     public CommonRoomsPage(User user, long buildingId, string buildingInfo)
     {
         InitializeComponent();
+
         _user = user;
         _buildingId = buildingId;
         _buildingInfo = buildingInfo;
@@ -31,8 +33,19 @@ public partial class CommonRoomsPage : Page
         _viewModel = new CommonRoomsViewModel(commonRoomService, requestService, user.Id, buildingId);
         DataContext = _viewModel;
 
+        _demoController = new CommonRoomsDemoController(
+            DemoButton,
+            _viewModel,
+            _buildingInfo,
+            RoomsScrollViewer,
+            SuccessBanner,
+            SuccessTextBlock,
+            ViewRequestsButton,
+            () => Window.GetWindow(this));
+
         UserNameTextBlock.Text = _user.DisplayName;
         BuildingInfoTextBlock.Text = $"Building: {_buildingInfo}";
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
     }
 
@@ -44,21 +57,26 @@ public partial class CommonRoomsPage : Page
             _buildingInfo,
             room.Name,
             room.FloorDisplay,
-            room.RentalTypeDisplay);
+            room.RentalType);
 
         CommonRoomRequestDialog dialog = new CommonRoomRequestDialog(dialogViewModel);
         dialog.Owner = Window.GetWindow(this);
 
-        if (dialog.ShowDialog() != true) return;
+        if (dialog.ShowDialog() != true)
+            return;
 
         _viewModel.SendRequest(room.Id, dialog.SelectedDateFrom!.Value, dialog.SelectedDateTo!.Value);
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Common room request sent successfully!");
     }
 
+    private async void DemoButton_Click(object sender, RoutedEventArgs e)
+    {
+        await _demoController.ToggleAsync();
+    }
+
     private void MyRequestsTab_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 
-    //banner button
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
         MainWindow.Instance.NavigateTo(new MyCommonRoomRequestsPage(_user, _buildingId, _buildingInfo));
 

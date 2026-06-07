@@ -1,0 +1,29 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.SelectDatePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Select Meeting Date"
+      Background="{StaticResource BackgroundLightBrush}">
+
+    <ScrollViewer>
+        <StackPanel Margin="16">
+
+            <TextBlock Text="Tied votes — select a date:" Style="{StaticResource PageTitle}" Margin="0,0,0,12"/>
+
+            <Border Style="{StaticResource CardBorder}">
+                <ListBox x:Name="DateOptionsListBox" BorderThickness="0"/>
+            </Border>
+
+            <TextBlock x:Name="DateErrorText" Foreground="{StaticResource DangerBrush}"
+                       FontSize="11" Margin="0,0,0,8" Visibility="Collapsed"/>
+
+            <Button Content="Confirm" HorizontalAlignment="Stretch"
+                    Margin="0,0,0,8" Click="ConfirmButton_Click"
+                    Style="{StaticResource PrimaryButtonLarge}"/>
+
+            <Button Content="Cancel" HorizontalAlignment="Stretch"
+                    Click="CancelButton_Click"
+                    Style="{StaticResource OutlineButtonLarge}"/>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

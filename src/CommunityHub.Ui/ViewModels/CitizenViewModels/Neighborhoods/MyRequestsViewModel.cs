@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain;
-using CommunityHub.Application.Services.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
@@ -92,6 +92,8 @@ public class MyRequestsViewModel : BaseViewModel
             .ToList();
 
         Requests = new ObservableCollection<NeighborhoodAccessRequestViewModel>(items);
-        ResultsText = $"Showing {items.Count} requests";
+        string label = System.Windows.Application.Current.Resources["Requests_Title"]?.ToString()
+               ?? "Requests";
+        ResultsText = $"{label}: {items.Count}";
     }
 }

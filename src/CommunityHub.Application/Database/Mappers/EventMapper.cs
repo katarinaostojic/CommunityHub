@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CommunityHub.Application.Domain.Neighborhoods;
 using System.Data;
 using CommunityHub.Application.Database.Mappers.Users;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Events;
 
 namespace CommunityHub.Application.Database.Mappers;
 

@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Buildings;
-using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Buildings;
+using CommunityHub.Application.Domain.Entities.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Buildings;

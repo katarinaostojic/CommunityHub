@@ -1,0 +1,152 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.RegisterNeighborhoodPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Add New District"
+      Background="{StaticResource BackgroundLightBrush}">
+    <ScrollViewer>
+        <StackPanel Margin="16">
+
+            <!-- Slika + Naziv i Grad -->
+            <Border Style="{StaticResource CardBorder}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Slika -->
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <Border Width="110" Height="110" BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="1" CornerRadius="6" Background="{StaticResource BackgroundLightBrush}">
+                            <Grid>
+                                <Image x:Name="PreviewImage" Width="110" Height="110" Stretch="UniformToFill"/>
+                                <Button x:Name="PrevButton" Content="❮" Click="PrevImage_Click"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Width="22" Height="22" FontSize="12" Padding="0"
+                                        Background="#80000000" Foreground="White" BorderThickness="0"
+                                        Visibility="Collapsed"/>
+                                <Button x:Name="NextButton" Content="❯" Click="NextImage_Click"
+                                        HorizontalAlignment="Right" VerticalAlignment="Center"
+                                        Width="22" Height="22" FontSize="12" Padding="0"
+                                        Background="#80000000" Foreground="White" BorderThickness="0"
+                                        Visibility="Collapsed"/>
+                                <Button x:Name="RemoveImageButton" Content="✕" Click="RemoveImage_Click"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        Width="20" Height="20" FontSize="10" Padding="0"
+                                        Background="{StaticResource DangerBrush}" Foreground="White" BorderThickness="0"
+                                        Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+                        <Button Content="📁 Upload" Click="AddImage_Click"
+                                HorizontalAlignment="Stretch" Margin="0,6,0,0"
+                                Style="{StaticResource OutlineButton}"/>
+                    </StackPanel>
+
+                    <!-- Naziv i Grad -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource SectionTitle}" Margin="0,0,0,6">
+                            <Run Text="District Name"/>
+                            <Run Text=" *" Foreground="{StaticResource DangerBrush}"/>
+                        </TextBlock>
+                        <TextBox x:Name="NameTextBox" Padding="10,8" Margin="0,0,0,4"
+                                 BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                        <TextBlock x:Name="NameErrorText" Foreground="{StaticResource DangerBrush}"
+                                   FontSize="11" Margin="0,0,0,8" Visibility="Collapsed"/>
+                        <TextBlock Style="{StaticResource SectionTitle}" Margin="0,0,0,6">
+                            <Run Text="City"/>
+                        </TextBlock>
+                        <ComboBox x:Name="CityComboBox" HorizontalAlignment="Stretch"
+                                  DisplayMemberPath="Name" Margin="0,0,0,4"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Description -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitle}" Margin="0,0,0,6">
+                        <Run Text="Description"/>
+                        <Run Text=" *" Foreground="{StaticResource DangerBrush}"/>
+                    </TextBlock>
+                    <TextBox x:Name="DescriptionTextBox" Padding="10,8" Height="80"
+                             TextWrapping="Wrap" AcceptsReturn="True"
+                             BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                    <TextBlock x:Name="DescriptionErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,4,0,0" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Streets -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackPanel>
+                    <TextBlock Text="Streets" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Text="Street Name" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                            <TextBox x:Name="StreetNameTextBox" Padding="8,6" Margin="0,0,0,8"
+                                     BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                            <TextBlock Text="Start Number" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                            <TextBox x:Name="StartNumberTextBox" Padding="8,6" Margin="0,0,0,8"
+                                     BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                            <TextBlock Text="End Number" Style="{StaticResource SecondaryText}" Margin="0,0,0,4"/>
+                            <TextBox x:Name="EndNumberTextBox" Padding="8,6" Margin="0,0,0,8"
+                                     BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <ListBox x:Name="StreetsListBox" Height="170"
+                                     BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock x:Name="StreetErrorText" Foreground="{StaticResource DangerBrush}"
+                               FontSize="11" Margin="0,6,0,0" Visibility="Collapsed"/>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Add Street" Click="AddStreet_Click"
+                                Style="{StaticResource OutlineButton}"/>
+                        <Button Grid.Column="2" Content="Remove Street" Click="RemoveStreet_Click"
+                                Style="{StaticResource OutlineButton}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Banneri -->
+            <Border x:Name="ErrorBanner" Background="{StaticResource DangerBrush}"
+                    CornerRadius="8" Padding="12" Margin="0,0,0,8"
+                    Visibility="Collapsed">
+                <TextBlock x:Name="ErrorText" TextWrapping="Wrap"
+                           Foreground="White" FontSize="13"/>
+            </Border>
+
+            <Border x:Name="SuccessBanner" Background="{StaticResource SuccessBrush}"
+                    CornerRadius="8" Padding="12" Margin="0,0,0,8"
+                    Visibility="Collapsed">
+                <TextBlock x:Name="SuccessText" TextWrapping="Wrap"
+                           Foreground="{StaticResource SuccessTextBrush}" FontSize="13"/>
+            </Border>
+
+            <!-- Dugmad -->
+            <Grid Margin="0,4,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Add District" Click="RegisterButton_Click"
+                    Style="{StaticResource PrimaryButtonLarge}" FontSize="14"/>
+                <Button Grid.Column="2" Content="Cancel" Click="CancelButton_Click"
+                    Style="{StaticResource DangerButton}" FontSize="14"/>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Neighborhoods;
 using System.Windows;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 
@@ -46,5 +46,17 @@ public static class CitizenNavigationHelper
         NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
         string name = ns.GetNameById(nId.Value) ?? "";
         new MyProfilePage(user, nId.Value, name).Show(); current.Close();
+    }
+    public static void NavigateToCityObjects(User user, Window current)
+    {
+        long? nId = GetMembershipId(user.Id);
+        if (nId == null) return;
+        new CityObjectsPage(user, nId.Value).Show(); current.Close();
+    }
+    public static void NavigateToBudget(User user, Window current)
+    {
+        long? nId = GetMembershipId(user.Id);
+        if (nId == null) return;
+        new BudgetPage(user, nId.Value).Show(); current.Close();
     }
 }

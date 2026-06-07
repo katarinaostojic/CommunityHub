@@ -1,11 +1,12 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Ui.Helpers.Tenant.Demo;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -14,29 +15,37 @@ public partial class BrowseBuildingsPage : Page
     private readonly User _user;
     private readonly BrowseBuildingsViewModel _viewModel;
     private readonly FilterPanelAnimationHelper _filterPanel;
+    private readonly BrowseBuildingsDemoController _demoController;
 
     public BrowseBuildingsPage(User user)
     {
         InitializeComponent();
 
         _user = user;
-        _viewModel = CreateViewModel();
+
+        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
+        _viewModel = new BrowseBuildingsViewModel(buildingService);
+
         _filterPanel = new FilterPanelAnimationHelper(Overlay, FilterPanelTranslate);
+        _demoController = new BrowseBuildingsDemoController(
+            DemoButton,
+            SearchTextBox,
+            FilterStreetTextBox,
+            FilterNeighborhoodTextBox,
+            FilterCityTextBox,
+            FilterCountryTextBox,
+            SuccessBanner,
+            SuccessTextBlock,
+            ViewRequestsButton,
+            _filterPanel,
+            _viewModel,
+            _user,
+            () => Window.GetWindow(this));
 
         DataContext = _viewModel;
 
-        InitializeHeader();
-    }
-
-    private BrowseBuildingsViewModel CreateViewModel()
-    {
-        BuildingService buildingService = Injector.CreateInstance<BuildingService>();
-        return new BrowseBuildingsViewModel(buildingService);
-    }
-
-    private void InitializeHeader()
-    {
         UserNameTextBlock.Text = _user.DisplayName;
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
     }
 
@@ -59,25 +68,16 @@ public partial class BrowseBuildingsPage : Page
 
     private void RequestAccessButton_Click(object sender, RoutedEventArgs e)
     {
-        BuildingDto building = GetBuildingFromButton(sender);
+        BuildingDto building = (BuildingDto)((Button)sender).Tag;
 
-        if (!ShowBuildingRequestAccessDialog(building)) return;
-
-        ShowRequestSentMessage(building);
-    }
-
-    private bool ShowBuildingRequestAccessDialog(BuildingDto building)
-    {
         BuildingAccessRequestDialog dialog = new BuildingAccessRequestDialog(building, _user)
         {
             Owner = Window.GetWindow(this)
         };
 
-        return dialog.ShowDialog() == true;
-    }
+        if (dialog.ShowDialog() != true)
+            return;
 
-    private void ShowRequestSentMessage(BuildingDto building)
-    {
         NotificationBanner.ShowSuccess(
             SuccessBanner,
             SuccessTextBlock,
@@ -88,7 +88,8 @@ public partial class BrowseBuildingsPage : Page
 
     private void BuildingCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        if (e.OriginalSource is Button) return;
+        if (e.OriginalSource is Button)
+            return;
 
         BuildingDto building = (BuildingDto)((Border)sender).Tag;
         BuildingDto? fullBuilding = _viewModel.GetFullBuildingDto(building.Id);
@@ -100,11 +101,15 @@ public partial class BrowseBuildingsPage : Page
     private void ViewRequestsButton_Click(object sender, RoutedEventArgs e) =>
         NavigationService.Navigate(new MyBuildingRequestsPage(_user));
 
-    private void PrevPageButton_Click(object sender, RoutedEventArgs e) =>
-        _viewModel.PreviousPage();
+    private void PageButton_Click(object sender, RoutedEventArgs e)
+    {
+        string direction = (string)((Button)sender).Tag;
 
-    private void NextPageButton_Click(object sender, RoutedEventArgs e) =>
-        _viewModel.NextPage();
+        if (direction == "Previous")
+            _viewModel.PreviousPage();
+        else
+            _viewModel.NextPage();
+    }
 
     private void MenuButton_Click(object sender, RoutedEventArgs e) =>
         AppMenu.Open();
@@ -115,13 +120,7 @@ public partial class BrowseBuildingsPage : Page
     private void Overlay_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) =>
         _filterPanel.Close();
 
-    private void ResetFiltersButton_Click(object sender, RoutedEventArgs e) =>
-        ResetAll();
-
-    private void ResetButton_Click(object sender, RoutedEventArgs e) =>
-        ResetAll();
-
-    private void ResetAll()
+    private void ResetButton_Click(object sender, RoutedEventArgs e)
     {
         SearchTextBox.Text = string.Empty;
         FilterStreetTextBox.Text = string.Empty;
@@ -138,8 +137,6 @@ public partial class BrowseBuildingsPage : Page
         return string.IsNullOrWhiteSpace(text) ? null : text;
     }
 
-    private static BuildingDto GetBuildingFromButton(object sender)
-    {
-        return (BuildingDto)((Button)sender).Tag;
-    }
+    private async void DemoButton_Click(object sender, RoutedEventArgs e) =>
+    await _demoController.ToggleAsync();
 }

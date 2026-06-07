@@ -1,8 +1,11 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
-using CommunityHub.Application.Domain.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
+using CommunityHub.Ui.Views.ManagerViews.Controls;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -10,16 +13,38 @@ public partial class AddCommonRoomDialog : Window
 {
     private readonly BuildingDto _building;
     private readonly BuildingDetailsViewModel _viewModel;
+    private FloatingKeyboardWindow? _activeFloating;
 
     public AddCommonRoomDialog(User currentUser, BuildingDto building, BuildingDetailsViewModel viewModel)
     {
         InitializeComponent();
         _building = building;
         _viewModel = viewModel;
+
+        Loaded += (s, e) =>
+        {
+            NameTextBox.PreviewMouseDown += TextBox_Click;
+            DescriptionTextBox.PreviewMouseDown += TextBox_Click;
+            FloorTextBox.PreviewMouseDown += TextBox_Click;
+        };
+    }
+
+    private void TextBox_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is TextBox tb)
+        {
+            _activeFloating?.Close();
+            _activeFloating = new FloatingKeyboardWindow(tb, this);
+            _activeFloating.Closed += (_, _) => _activeFloating = null;
+            _activeFloating.Show();
+        }
     }
 
     private void AddButton_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         if (!ValidateFields()) return;
 
         try

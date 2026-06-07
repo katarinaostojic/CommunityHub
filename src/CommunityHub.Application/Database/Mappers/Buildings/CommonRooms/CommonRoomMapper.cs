@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers.Buildings.CommonRooms;
@@ -7,9 +7,8 @@ public static class CommonRoomMapper
 {
     public static CommonRoom Map(IDataReader reader)
     {
-        RentalType rentalType = reader["rental_type"].ToString() == "per_day"
-            ? RentalType.PerDay
-            : RentalType.MultiDay;
+        RentalType rentalType = RentalTypeMapper.FromDatabaseValue(
+            reader["rental_type"].ToString()!);
 
         return new CommonRoom(
             Convert.ToInt64(reader["id"]),

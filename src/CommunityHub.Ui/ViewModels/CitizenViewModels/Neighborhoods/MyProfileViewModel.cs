@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
@@ -39,5 +39,16 @@ public class MyProfileViewModel : BaseViewModel
         string fullName = $"{_user.Name} {_user.Surname}";
         var dto = _service.GetByCitizen(_user.Id, _neighborhoodId, fullName);
         TrustRecord = new TrustRecordViewModel(dto);
+    }
+    public string PieChartData => GeneratePieChart();
+
+    private string GeneratePieChart()
+    {
+        int organized = TrustRecord?.EventsOrganized ?? 0;
+        int volunteered = TrustRecord?.EventsVolunteered ?? 0;
+        int total = organized + volunteered;
+        if (total == 0) return "0,0,0,0,0,0";
+        double angle = (organized / (double)total) * 360.0;
+        return angle.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 }

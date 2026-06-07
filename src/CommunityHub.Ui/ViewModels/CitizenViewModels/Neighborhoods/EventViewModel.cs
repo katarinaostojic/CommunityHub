@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -37,6 +37,14 @@ public class EventViewModel : BaseViewModel
         "cancelled" => "✕ Cancelled",
         "finished" => "✔ Finished",
         _ => _event.Status
+    };
+    public string StatusColor => _event.Status switch
+    {
+        "preparation" => "#F9A825",  // žuta
+        "scheduled" => "#0D47A1",  // plava
+        "cancelled" => "#B54A4A",  // crvena
+        "finished" => "#1A5C2A",  // zelena
+        _ => "#7F8C8D"
     };
 
     public bool CanRegister => _event.CanRegister;

@@ -61,4 +61,20 @@ public abstract class BaseDbRepository
         dbParam.DbType = DbType.Boolean;
         command.Parameters.Add(dbParam);
     }
+    protected void AddParameter(IDbCommand command, string name, int? value)
+    {
+        IDbDataParameter dbParam = command.CreateParameter();
+        dbParam.ParameterName = name;
+        dbParam.Value = value.HasValue ? (object)value.Value : DBNull.Value;
+        dbParam.DbType = DbType.Int32;
+        command.Parameters.Add(dbParam);
+    }
+    protected void AddParameter(IDbCommand command, string name, decimal value)
+    {
+        IDbDataParameter dbParam = command.CreateParameter();
+        dbParam.ParameterName = name;
+        dbParam.Value = value;
+        dbParam.DbType = DbType.Decimal;
+        command.Parameters.Add(dbParam);
+    }
 }

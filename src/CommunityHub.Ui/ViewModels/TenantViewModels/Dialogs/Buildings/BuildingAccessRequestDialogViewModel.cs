@@ -1,0 +1,163 @@
+﻿using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
+
+namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings;
+
+public class BuildingAccessRequestDialogViewModel : BaseViewModel
+{
+    private readonly BuildingAccessRequestService _requestService;
+    private readonly BuildingService _buildingService;
+    private readonly BuildingDto _building;
+    private readonly User _user;
+
+    private string _unitNumber = string.Empty;
+    private string _warningMessage = string.Empty;
+    private string _validationMessage = string.Empty;
+    private bool _hasWarning;
+    private bool _hasValidationError;
+
+    public BuildingAccessRequestDialogViewModel(
+        BuildingAccessRequestService requestService,
+        BuildingService buildingService,
+        BuildingDto building,
+        User user)
+    {
+        _requestService = requestService;
+        _buildingService = buildingService;
+        _building = building;
+        _user = user;
+
+        Title = $"REQUEST ACCESS: {building.FullAddress}";
+        BuildingInfo = $"Building: {building.FullAddress}, {building.CityName}, {building.Neighborhood}";
+        SortedUnitNumbers = _buildingService.GetSortedUnitNumbers(_building.Id);
+    }
+
+    public string Title { get; }
+
+    public string BuildingInfo { get; }
+
+    public List<string> SortedUnitNumbers { get; }
+
+    public string UnitNumber
+    {
+        get => _unitNumber;
+        set
+        {
+            if (!SetProperty(ref _unitNumber, value))
+                return;
+
+            ClearValidationError();
+            UpdateWarning();
+        }
+    }
+
+    public string WarningMessage
+    {
+        get => _warningMessage;
+        private set => SetProperty(ref _warningMessage, value);
+    }
+
+    public bool HasWarning
+    {
+        get => _hasWarning;
+        private set => SetProperty(ref _hasWarning, value);
+    }
+
+    public string ValidationMessage
+    {
+        get => _validationMessage;
+        private set => SetProperty(ref _validationMessage, value);
+    }
+
+    public bool HasValidationError
+    {
+        get => _hasValidationError;
+        private set => SetProperty(ref _hasValidationError, value);
+    }
+
+    public bool SubmitRequest()
+    {
+        string unitNumber = UnitNumber.Trim();
+        string? validationError = ValidateUnitNumber(unitNumber);
+
+        if (validationError != null)
+        {
+            ShowValidationError(validationError);
+            return false;
+        }
+
+        _requestService.CreateForBuilding(_building.Id, _user, unitNumber);
+        return true;
+    }
+
+    private string? ValidateUnitNumber(string unitNumber)
+    {
+        if (string.IsNullOrEmpty(unitNumber))
+            return "Please enter an apartment number.";
+
+        if (!_buildingService.ContainsUnit(_building.Id, unitNumber))
+            return "Please select a valid apartment number from the list.";
+
+        if (_buildingService.HasExistingRequest(_building.Id, _user.Id, unitNumber))
+            return "You already have a request for this apartment.";
+
+        return null;
+    }
+
+    private void ShowValidationError(string message)
+    {
+        ValidationMessage = message;
+        HasValidationError = true;
+    }
+
+    private void ClearValidationError()
+    {
+        ValidationMessage = string.Empty;
+        HasValidationError = false;
+    }
+
+    private void UpdateWarning()
+    {
+        string unitNumber = UnitNumber.Trim();
+
+        if (string.IsNullOrEmpty(unitNumber))
+        {
+            HasWarning = false;
+            WarningMessage = string.Empty;
+            return;
+        }
+
+        bool isOccupied = _buildingService.IsUnitOccupied(_building.Id, unitNumber);
+
+        HasWarning = isOccupied;
+        WarningMessage = isOccupied
+            ? $"Warning: Apartment {unitNumber} is already occupied by another user.\nYou can still submit a request."
+            : string.Empty;
+    }
+
+    public string GetDemoUnitNumber()
+    {
+        string? availableUnitNumber = SortedUnitNumbers
+            .FirstOrDefault(unitNumber => !_buildingService.HasExistingRequest(_building.Id, _user.Id, unitNumber));
+
+        return availableUnitNumber ?? SortedUnitNumbers.FirstOrDefault() ?? "1";
+    }
+
+    public void SetUnitNumberForDemo(string unitNumber)
+    {
+        UnitNumber = unitNumber;
+    }
+
+    public bool CanSubmitRequestForDemo()
+    {
+        string unitNumber = UnitNumber.Trim();
+        string? validationError = ValidateUnitNumber(unitNumber);
+
+        if (validationError == null)
+            return true;
+
+        ShowValidationError(validationError);
+        return false;
+    }
+}

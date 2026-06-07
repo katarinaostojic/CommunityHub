@@ -1,9 +1,9 @@
-﻿using System;
+﻿using CommunityHub.Application.Domain.Entities;
+using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
+using System;
 using System.Collections.Generic;
 using System.Text;
-
-using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Domain;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
@@ -22,7 +22,22 @@ public class TrustRecordViewModel : BaseViewModel
     public int EventsVolunteered => _dto.EventsVolunteered;
     public int TotalEvents => _dto.TotalEvents;
     public string JoinedAt => _dto.JoinedAt;
-    public string LevelDisplay => _dto.LevelDisplay;
+
+    public string LevelDisplay => GetLocalizedLevel();
+
+    private string GetLocalizedLevel()
+    {
+        string key = _dto.Level switch
+        {
+            TrustLevel.New => "TrustLevel_New",
+            TrustLevel.Inactive => "TrustLevel_Inactive",
+            TrustLevel.Active => "TrustLevel_Active",
+            TrustLevel.Distinguished => "TrustLevel_Distinguished",
+            TrustLevel.Trusted => "TrustLevel_Trusted",
+            _ => "TrustLevel_New"
+        };
+        return System.Windows.Application.Current.Resources[key]?.ToString() ?? _dto.LevelDisplay;
+    }
 
     public string LevelColor => _dto.Level switch
     {
@@ -33,4 +48,7 @@ public class TrustRecordViewModel : BaseViewModel
         TrustLevel.Trusted => "#8E44AD",
         _ => "#888888"
     };
+
+    public SolidColorBrush LevelBrush => new SolidColorBrush(
+        (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(LevelColor));
 }

@@ -1,0 +1,98 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.ForumsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Forums"
+      Background="{StaticResource BackgroundLightBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0" Margin="16,12,16,0"
+         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+         Padding="10,8"
+         BorderBrush="{StaticResource BorderBrush}"
+         BorderThickness="1"
+         Tag="Search forums...">
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                        <VisualBrush.Visual>
+                                            <TextBlock Text="🔍  Search forums..." 
+                                               Foreground="Gray" FontSize="13"
+                                               Margin="10,8"/>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <!-- Lista foruma -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Margin="16,8,16,80">
+                <ItemsControl ItemsSource="{Binding Forums}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardBorder}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                        <TextBlock Text="💬" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{Binding Title}"
+                       FontWeight="Bold" FontSize="15"
+                       Foreground="{StaticResource PrimaryBrush}"
+                       VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                        <TextBlock Text="👤" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock FontSize="12" Style="{StaticResource SecondaryText}" VerticalAlignment="Center">
+                <Run Text="{Binding CoordinatorFullName, Mode=OneWay}"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                        <TextBlock Text="📅" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{Binding CreatedAtFormatted}"
+                       FontSize="12" Style="{StaticResource SecondaryText}"
+                       VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding CommentsDisplay}"
+                   FontSize="12" Style="{StaticResource SecondaryText}"
+                   Margin="0,2,0,8"/>
+                                    <Button Content="View" HorizontalAlignment="Left"
+                Tag="{Binding}" Click="OpenForumButton_Click"
+                Style="{StaticResource PrimaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FAB dugme -->
+        <Button Grid.Row="1"
+        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+        Margin="0,0,16,16"
+        Click="NewForumButton_Click"
+        Style="{StaticResource PrimaryButton}"
+        Padding="12,8">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Add New Forum" VerticalAlignment="Center"
+                   Margin="0,0,8,0" FontSize="13"/>
+                <Border Width="28" Height="28" Background="White" CornerRadius="4">
+                    <TextBlock Text="+" FontSize="18" HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource PrimaryBrush}"/>
+                </Border>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>

@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
 using CommunityHub.Ui.Views.CitizenViews.Dialogs;
@@ -69,8 +69,8 @@ public partial class MeetingsPage : Window
             case "Citizens": new NeighborhoodCitizensPage(_user, _neighborhoodId).Show(); Close(); break;
             case "Meetings": break;
             case "Profile": NavigateToProfile(); break;
-            case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
-            case "Budget": MessageBox.Show("Go to Budget page."); break;
+            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
+            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
         }
     }
 

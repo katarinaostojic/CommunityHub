@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
@@ -60,14 +60,18 @@ public class BrowseBuildingsViewModel : BaseViewModel
 
     public void NextPage()
     {
-        if (!HasNextPage) return;
+        if (!HasNextPage)
+            return;
+
         _currentPage++;
         UpdatePage();
     }
 
     public void PreviousPage()
     {
-        if (!HasPreviousPage) return;
+        if (!HasPreviousPage)
+            return;
+
         _currentPage--;
         UpdatePage();
     }

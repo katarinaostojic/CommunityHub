@@ -1,6 +1,7 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Neighborhoods;
+﻿using CommunityHub.Application.DTOs.Neighborhoods.Events;
+using CommunityHub.Application.Services.Entities.Neighborhoods.Events;
 using System.Collections.ObjectModel;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
@@ -41,7 +42,9 @@ public class EventsViewModel : BaseViewModel
             .ToList();
 
         Events = new ObservableCollection<EventViewModel>(items);
-        ResultsText = $"Showing {items.Count} events";
+        string label = System.Windows.Application.Current.Resources["Events_Title"]?.ToString()
+               ?? "Events";
+        ResultsText = $"Showing {items.Count} {label.ToLower()}";
     }
 
     public long CreateEvent(CreateEventRequest req)
@@ -65,4 +68,5 @@ public class EventsViewModel : BaseViewModel
         _service.MarkAttendance(registrationId, attended);
         LoadEvents();
     }
+
 }

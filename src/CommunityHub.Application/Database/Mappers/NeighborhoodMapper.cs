@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.Database.Mappers.Users;
-using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Shared;
 using System.Data;
 
 namespace CommunityHub.Application.Database.Mappers;

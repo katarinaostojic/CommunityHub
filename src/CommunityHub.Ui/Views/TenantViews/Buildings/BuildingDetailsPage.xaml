@@ -3,69 +3,128 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="clr-namespace:CommunityHub.Ui.Controls">
 
-    <Grid>
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="340"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Top bar -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="10,8">
+        <Border Grid.Row="0"
+        Background="{StaticResource PrimaryBrush}"
+        Padding="10,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="☰  Menu"
-                        Style="{StaticResource GhostWhiteButton}"
-                        Margin="0,0,10,0"
-                        Click="MenuButton_Click"/>
-                <TextBlock Grid.Column="2" x:Name="UserNameTextBlock"
-                           VerticalAlignment="Center"
-                           Foreground="White" FontSize="15"
+
+                <Button Grid.Column="0"
+                Content="☰  Menu"
+                Style="{StaticResource GhostWhiteButton}"
+                Margin="0,0,10,0"
+                Click="MenuButton_Click"/>
+                
+                <controls:NotificationBell Grid.Column="2"
+                           x:Name="NotificationBell"
                            Margin="0,0,8,0"/>
-                <TextBlock Grid.Column="3" Text="👤"
-                           VerticalAlignment="Center"
-                           Foreground="White" FontSize="17"/>
+
+                <TextBlock Grid.Column="3"
+                   x:Name="UserNameTextBlock"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="15"
+                   Margin="0,0,8,0"/>
+
+                <TextBlock Grid.Column="4"
+                   Text="👤"
+                   VerticalAlignment="Center"
+                   Foreground="White"
+                   FontSize="17"/>
             </Grid>
         </Border>
 
-        <!-- Header sa back dugmetom -->
-        <Border Grid.Row="1" Background="{StaticResource PrimaryDarkBrush}" Padding="10,8">
+        <!-- Header -->
+        <Border Grid.Row="1"
+                Background="{StaticResource PrimarySoftBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="16,12">
             <Grid>
                 <Button HorizontalAlignment="Left"
                         Content="← Back"
-                        FontSize="16"
-                        Style="{StaticResource GhostWhiteButton}"
+                        Style="{StaticResource OutlineButton}"
                         VerticalAlignment="Center"
                         Click="BackButton_Click"/>
+
                 <TextBlock Text="Building details"
-                           Foreground="White" FontSize="18" FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryBrush}"
+                           FontSize="20"
+                           FontWeight="Bold"
                            HorizontalAlignment="Right"
-                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                           VerticalAlignment="Center"/>
             </Grid>
         </Border>
 
-        <!-- Slider za slike -->
-        <Grid Grid.Row="2" Background="{StaticResource BackgroundLightBrush}">
-            <Image x:Name="BuildingImage" Stretch="UniformToFill"/>
+        <!-- Image slider -->
+        <Grid Grid.Row="2"
+              Background="{StaticResource SurfaceSoftBrush}">
+            <Image x:Name="BuildingImage"
+                   Stretch="UniformToFill"/>
 
-            <!-- Baner kao overlay na vrhu slike -->
+            <Border Visibility="{Binding IsHighDemand, Converter={StaticResource BoolToVis}}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="16,10,0,0"
+                    Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource PrimaryBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="10,5">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🔥"
+                       FontFamily="Segoe UI Emoji"
+                       FontSize="13"
+                       VerticalAlignment="Center"
+                       Margin="0,0,6,0"/>
+
+                    <TextBlock Text="High demand"
+                       Foreground="{StaticResource PrimaryBrush}"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Success banner -->
             <Border x:Name="SuccessBanner"
-                    Background="{StaticResource SuccessBrush}" Padding="12,8"
+                    Background="{StaticResource SuccessBrush}"
+                    BorderBrush="{StaticResource SuccessTextBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12,8"
+                    Margin="16,10,16,0"
                     VerticalAlignment="Top"
                     Visibility="Collapsed">
                 <Grid>
                     <TextBlock x:Name="SuccessTextBlock"
-                               Foreground="{StaticResource SuccessTextBrush}" FontSize="13"
+                               Foreground="{StaticResource SuccessTextBrush}"
+                               FontSize="13"
                                VerticalAlignment="Center"/>
-                    <Button x:Name="ViewRequestsButton" Content="View Requests →"
+
+                    <Button x:Name="ViewRequestsButton"
+                            Content="View Requests →"
                             HorizontalAlignment="Right"
                             Margin="0,0,30,0"
                             Style="{StaticResource GhostButton}"
@@ -76,113 +135,222 @@
                 </Grid>
             </Border>
 
-            <Button Content="❮" HorizontalAlignment="Left"
-                    VerticalAlignment="Center" Margin="10,0"
-                    Width="36" Height="36"
+            <Button Content="❮"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="10,0"
+                    Width="36"
+                    Height="36"
+                    Foreground="{StaticResource PrimaryBrush}"
+                    FontWeight="Bold"
                     Click="PrevImageButton_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="White" CornerRadius="18" Padding="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="18"
+                                Padding="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Button.Template>
             </Button>
 
-            <Button Content="❯" HorizontalAlignment="Right"
-                    VerticalAlignment="Center" Margin="10,0"
-                    Width="36" Height="36"
+            <Button Content="❯"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="10,0"
+                    Width="36"
+                    Height="36"
+                    Foreground="{StaticResource PrimaryBrush}"
+                    FontWeight="Bold"
                     Click="NextImageButton_Click">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="White" CornerRadius="18" Padding="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="18"
+                                Padding="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Button.Template>
             </Button>
 
-            <TextBlock Text="{Binding ImageCounterText}"
-                       HorizontalAlignment="Right" VerticalAlignment="Top"
-                       Margin="0,10,10,0" Foreground="White"
-                       Background="#88000000" Padding="6,3"/>
+            <Border HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,10,10,0"
+                    Background="#88000000"
+                    CornerRadius="8"
+                    Padding="8,4">
+                <TextBlock Text="{Binding ImageCounterText}"
+                           Foreground="White"
+                           FontWeight="SemiBold"
+                           FontSize="12"/>
+            </Border>
 
-            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,8">
-                <TextBlock x:Name="SwipeText" Text="← swipe to browse photos →"
-                           Foreground="White" FontSize="12"
-                           HorizontalAlignment="Center" Margin="0,0,0,6"/>
-                <ItemsControl ItemsSource="{Binding ImageDotColors}" HorizontalAlignment="Center">
+            <StackPanel VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,8">
+                <Border Background="#88000000"
+                        CornerRadius="8"
+                        Padding="10,5"
+                        Margin="0,0,0,6">
+                    <TextBlock x:Name="SwipeText"
+                               Text="← swipe to browse photos →"
+                               Foreground="White"
+                               FontSize="12"
+                               HorizontalAlignment="Center"/>
+                </Border>
+
+                <ItemsControl ItemsSource="{Binding ImageDotColors}"
+                              HorizontalAlignment="Center">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
+
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Ellipse Width="8" Height="8" Margin="3,0" Fill="{Binding}"/>
+                            <Ellipse Width="8"
+                                     Height="8"
+                                     Margin="3,0"
+                                     Fill="{Binding}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
         </Grid>
 
-        <!-- Adresa -->
-        <StackPanel Grid.Row="3" Margin="16,16,16,8">
-            <TextBlock Text="{Binding BuildingDto.FullAddress}" Style="{StaticResource PageTitle}"/>
-            <TextBlock Text="{Binding BuildingDto.Neighborhood}" FontSize="14" Margin="0,4,0,0"/>
-            <TextBlock Text="{Binding BuildingDto.Location}" Style="{StaticResource SecondaryText}"/>
-        </StackPanel>
+        <!-- Address -->
+        <Border Grid.Row="3"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="16,8"
+                Margin="16,10,16,6">
+            <StackPanel>
+                <TextBlock Text="{Binding BuildingDto.FullAddress}"
+                           Style="{StaticResource PageTitle}"/>
 
-        <!-- Building Info label + kartice -->
-        <StackPanel Grid.Row="4" Margin="16,8">
-            <TextBlock Text="BUILDING INFO" Style="{StaticResource SectionTitle}"
-                       Margin="0,0,0,8"/>
+                <TextBlock Text="{Binding BuildingDto.Neighborhood}"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource PrimaryBrush}"
+                           Margin="0,4,0,0"/>
+
+                <TextBlock Text="{Binding BuildingDto.Location}"
+                           Style="{StaticResource SecondaryText}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Building Info -->
+        <StackPanel Grid.Row="4"
+                    Margin="16,4">
+            <TextBlock Text="BUILDING INFO"
+                       Style="{StaticResource SectionTitle}"
+                       Margin="0,0,0,6"/>
+
             <UniformGrid Rows="1">
-                <Border Style="{StaticResource CardBorder}" Margin="4">
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="12,10"
+                        Margin="3">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding BuildingDto.NumberOfFloors}" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding BuildingDto.NumberOfFloors}"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Floors" Style="{StaticResource SecondaryText}"
+
+                        <TextBlock Text="Floors"
+                                   Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}" Margin="4">
+
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="12,10"
+                        Margin="3">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding BuildingDto.TotalUnits}" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding BuildingDto.TotalUnits}"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Total units" Style="{StaticResource SecondaryText}"
+
+                        <TextBlock Text="Total units"
+                                   Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}" Margin="4">
+
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="12,10"
+                        Margin="3">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding BuildingDto.VacancyCount}" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding BuildingDto.VacancyCount}"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Vacancies" Style="{StaticResource SecondaryText}"
+
+                        <TextBlock Text="Vacancies"
+                                   Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource CardBorder}" Margin="4">
+
+                <Border Background="{StaticResource SurfaceBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="12,10"
+                        Margin="3">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding PendingRequestsCount}" FontSize="22" FontWeight="Bold"
+                        <TextBlock Text="{Binding PendingRequestsCount}"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Pending requests" Style="{StaticResource SecondaryText}"
+
+                        <TextBlock Text="Pending requests"
+                                   Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
         </StackPanel>
 
-        <!-- Request Access dugme -->
-        <Border Grid.Row="5" Margin="16,8,16,16">
+        <!-- Request Access button -->
+        <Border Grid.Row="5"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,1,0,0"
+                Margin="0,0,0,0"
+                Padding="16,8">
             <Button Content="Request Access →"
-                Style="{StaticResource OutlineButton}"
-                Padding="20,16"
-                FontSize="15" FontWeight="Bold"
-                HorizontalAlignment="Stretch"
-                Click="RequestAccessButton_Click"/>
+                    Style="{StaticResource PrimaryButtonLarge}"
+                    HorizontalAlignment="Stretch"
+                    Click="RequestAccessButton_Click"/>
         </Border>
 
-        <controls:MenuPanel Grid.Row="0" Grid.RowSpan="6" x:Name="AppMenu"/>
+        <controls:MenuPanel Grid.Row="0"
+                            Grid.RowSpan="6"
+                            x:Name="AppMenu"/>
     </Grid>
 </Page>

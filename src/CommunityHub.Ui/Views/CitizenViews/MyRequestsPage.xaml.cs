@@ -1,6 +1,6 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Shared;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using CommunityHub.Ui.Views;
 using System;
@@ -32,12 +32,12 @@ public partial class MyRequestsPage : Window
     private void Filters_Changed(object sender, EventArgs e)
     {
         if (!IsLoaded) return;
-        string selected = ((ComboBoxItem)StatusFilterComboBox.SelectedItem).Content?.ToString() ?? "All";
-        switch (selected)
+        int selectedIndex = StatusFilterComboBox.SelectedIndex;
+        switch (selectedIndex)
         {
-            case "Pending approval": _viewModel.FilterPending(); break;
-            case "Approved": _viewModel.FilterApproved(); break;
-            case "Rejected": _viewModel.FilterRejected(); break;
+            case 1: _viewModel.FilterPending(); break;
+            case 2: _viewModel.FilterApproved(); break;
+            case 3: _viewModel.FilterRejected(); break;
             default: _viewModel.FilterAll(); break;
         }
     }
@@ -78,8 +78,8 @@ public partial class MyRequestsPage : Window
             case "Citizens": CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
             case "Meetings": CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
             case "Profile": CitizenNavigationHelper.NavigateToProfile(_user, this); break;
-            case "CityObjects": MessageBox.Show("Go to City Objects page."); break;
-            case "Budget": MessageBox.Show("Go to Budget page."); break;
+            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
+            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
         }
     }
 

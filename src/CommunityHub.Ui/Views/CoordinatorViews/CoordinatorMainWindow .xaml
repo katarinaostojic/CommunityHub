@@ -1,0 +1,32 @@
+﻿<Window x:Class="CommunityHub.Ui.Views.CoordinatorViews.CoordinatorMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="KvartAPP" Height="750" Width="430"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Action Bar -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}">
+            <Grid Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="≡" FontSize="22" VerticalAlignment="Center"
+                   Foreground="White" Cursor="Hand" MouseLeftButtonUp="HamburgerButton_Click"/>
+                <TextBlock x:Name="PageTitleTextBlock" Grid.Column="1" Text="KvartApp" FontSize="18" FontWeight="Bold"
+                   VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White"/>
+                <TextBlock Grid.Column="2" Text="←" FontSize="22" VerticalAlignment="Center"
+                   Foreground="White" Cursor="Hand" MouseLeftButtonUp="BackButton_Click"/>
+            </Grid>
+        </Border>
+
+        <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>

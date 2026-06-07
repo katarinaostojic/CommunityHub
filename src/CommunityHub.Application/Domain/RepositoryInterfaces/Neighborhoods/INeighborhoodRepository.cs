@@ -1,4 +1,4 @@
-﻿using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Domain.Entities.Neighborhoods;
 
 namespace CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
 
@@ -11,4 +11,5 @@ public interface INeighborhoodRepository
     void AddImage(long neighborhoodId, string imagePath);
     Neighborhood? GetById(long id);
     string? GetNameById(long id);
+    (long coordinatorId, string coordinatorName) GetCoordinatorInfo(long neighborhoodId);
 }

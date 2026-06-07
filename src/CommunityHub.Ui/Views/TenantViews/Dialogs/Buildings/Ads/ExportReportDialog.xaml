@@ -1,0 +1,195 @@
+﻿<Window x:Class="CommunityHub.Ui.Views.TenantViews.ExportReportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Export report"
+        Width="520"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="{StaticResource BackgroundLightBrush}">
+
+    <Window.Resources>
+        <Style x:Key="DialogDatePicker" TargetType="DatePicker">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SelectedDateFormat" Value="Short"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{StaticResource SurfaceBrush}"
+            BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="12"
+            Margin="18">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0"
+                    Background="{StaticResource PrimarySoftBrush}"
+                    CornerRadius="12,12,0,0"
+                    Padding="22,18"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,0,0,1">
+
+                <Grid>
+                    <TextBlock Text="Export report"
+                               Style="{StaticResource PageTitle}"
+                               Foreground="{StaticResource PrimaryBrush}"
+                               VerticalAlignment="Center"/>
+
+                    <Button Content="×"
+                            Width="30"
+                            Height="30"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="28"
+                            Padding="0,-5,0,0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="{StaticResource PrimaryBrush}"
+                            Cursor="Hand"
+                            Click="CancelButton_Click"/>
+                </Grid>
+            </Border>
+
+            <!-- Body -->
+            <StackPanel Grid.Row="1"
+                        Margin="24,24,24,22">
+
+                <TextBlock Margin="0,0,0,8">
+                    <Run Text="DATE RANGE"
+                         FontStyle="Italic"
+                         FontWeight="SemiBold"
+                         Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <Run Text=" *"
+                         Foreground="{StaticResource DangerBrush}"
+                         FontWeight="Bold"/>
+                </TextBlock>
+
+                <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="34"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- From -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="From"
+                                   Style="{StaticResource SecondaryText}"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Margin="2,0,0,4"/>
+                        <DatePicker x:Name="DateFromPicker"
+                                    Padding="5,8,5,0"
+                                    Style="{StaticResource DialogDatePicker}"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="1"
+                               Text="—"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource PrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Bottom"
+                               Margin="0,0,0,4"/>
+
+                    <!-- To -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="To"
+                                   Style="{StaticResource SecondaryText}"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Margin="2,0,0,4"/>
+                        <DatePicker x:Name="DateToPicker"
+                                    Padding="5,8,5,0"
+                                    Style="{StaticResource DialogDatePicker}"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="Select the period for which you want to generate the report."
+                           Style="{StaticResource SecondaryText}"
+                           FontStyle="Italic"
+                           Margin="2,0,0,8"/>
+
+                <TextBlock x:Name="DateErrorTextBlock"
+                           Text=""
+                           Foreground="{StaticResource DangerBrush}"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Visibility="Collapsed"
+                           Margin="2,0,0,18"/>
+
+                <!-- Info box -->
+                <Border Background="{StaticResource SurfaceSoftBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Padding="16,13"
+                        Margin="0,0,0,0">
+
+                    <StackPanel>
+                        <TextBlock Text="What's included in the report:"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   Margin="0,0,0,7"/>
+
+                        <TextBlock Text="All ads from all tenants in the selected building (active and archived) within the selected date range, including tenant, type, category, date range and status."
+                                   FontSize="12.5"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="18"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Footer -->
+            <Border Grid.Row="2"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,1,0,0"
+                    Padding="24,18"
+                    Background="{StaticResource BackgroundLightBrush}"
+                    CornerRadius="0,0,12,12">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="14"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                            Content="Cancel"
+                            Style="{StaticResource OutlineButton}"
+                            Height="44"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Stretch"
+                            Click="CancelButton_Click"/>
+
+                    <Button Grid.Column="2"
+                            Content="Export PDF  →"
+                            Style="{StaticResource PrimaryButton}"
+                            Height="44"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Stretch"
+                            Click="ExportButton_Click"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

@@ -1,12 +1,12 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Buildings;
 using CommunityHub.Ui.Converters;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Application.Services.Entities.Buildings;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 
@@ -26,6 +26,7 @@ public partial class BuildingDetailsPage : Page
         DataContext = _viewModel;
 
         UserNameTextBlock.Text = _user.DisplayName;
+        NotificationBell.Initialize(_user);
         AppMenu.Initialize(_user);
         RefreshImage();
     }

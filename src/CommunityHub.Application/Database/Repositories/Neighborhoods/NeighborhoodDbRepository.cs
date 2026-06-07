@@ -1,9 +1,7 @@
-﻿using CommunityHub.Application.Database.Mappers;
-using CommunityHub.Application.Database.Repositories.Shared;
-using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+﻿using CommunityHub.Application.Database.Repositories.Shared;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods;
-using CommunityHub.Application.Domain.Shared;
 using System.Data;
 using System.Linq;
 
@@ -298,5 +296,25 @@ public class NeighborhoodDbRepository : BaseDbRepository, INeighborhoodRepositor
         object? result = command.ExecuteScalar();
         return result == null || result == DBNull.Value ? null : result.ToString();
     }
-    
+    public (long coordinatorId, string coordinatorName) GetCoordinatorInfo(long neighborhoodId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT u.id, u.name, u.surname
+        FROM neighborhoods n
+        JOIN users u ON n.coordinator_id = u.id
+        WHERE n.id = @neighborhoodId";
+
+        AddParameter(command, "@neighborhoodId", neighborhoodId);
+        using IDataReader reader = command.ExecuteReader();
+        if (reader.Read())
+        {
+            long id = Convert.ToInt64(reader["id"]);
+            string name = reader["name"].ToString()! + " " + reader["surname"].ToString()!;
+            return (id, name);
+        }
+        return (0, "Unknown");
+    }
+
 }

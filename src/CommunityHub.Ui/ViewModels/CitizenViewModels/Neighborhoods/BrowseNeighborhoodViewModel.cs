@@ -1,5 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using System.Collections.ObjectModel;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
@@ -74,6 +74,8 @@ public class BrowseNeighborhoodViewModel : BaseViewModel
 
     private void UpdateResultsTitle()
     {
-        ResultsTitleText = $"Browse Neighborhood - {FilteredNeighborhoods.Count} results";
+        string label = System.Windows.Application.Current.Resources["Browse_Title"]?.ToString()
+                       ?? "Browse Neighborhoods";
+        ResultsTitleText = $"{label} - {FilteredNeighborhoods.Count} results";
     }
 }

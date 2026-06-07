@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using CommunityHub.Application.DTOs.Neighborhoods;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
@@ -17,4 +17,7 @@ public class AttendanceItemViewModel
     public long RegistrationId => _registration.Id;
     public string CitizenFullName => _registration.CitizenFullName;
     public string AttendanceDisplay => _registration.AttendanceDisplay;
+    public string AttendanceColor => _registration.Attended == true ? "#1A5C2A"
+    : _registration.Attended == false ? "#B54A4A"
+    : "#888888";
 }

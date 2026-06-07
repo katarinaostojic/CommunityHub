@@ -3,6 +3,7 @@ using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
@@ -135,4 +136,8 @@ public partial class CreateEventDialog : Window
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
+    private void NumberOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+    {
+        e.Handled = !e.Text.All(char.IsDigit);
+    }
 }

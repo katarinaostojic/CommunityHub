@@ -1,0 +1,25 @@
+﻿<Page x:Class="CommunityHub.Ui.Views.CoordinatorViews.CoordinatorDashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Dashboard"
+      Background="{StaticResource BackgroundLightBrush}">
+
+    <UniformGrid Columns="2" Margin="15">
+        <Button Content="My Districts" Click="MyDistrictsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="Requests" Click="RequestsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="Forums" Click="ForumsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="Budget" Click="BudgetButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="City Objects" Click="CityObjectsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="Reviews" Click="ReviewsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="City Gifts" Click="CityGiftsButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource PrimaryButton}"/>
+        <Button Content="Log Out" Click="LogoutButton_Click" Margin="5"
+                FontSize="14" Style="{StaticResource DangerButton}"/>
+    </UniformGrid>
+</Page>

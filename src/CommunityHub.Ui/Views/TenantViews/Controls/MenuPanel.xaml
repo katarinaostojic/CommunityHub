@@ -8,16 +8,23 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Padding" Value="20,14"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#D0DCE8"/>
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="{StaticResource PrimarySoftBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -30,16 +37,59 @@
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Padding" Value="20,14"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border x:Name="border" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#D0DCE8"/>
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="{StaticResource PrimarySoftBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="{StaticResource PrimarySoftBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SubMenuButtonStyle" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="32,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border"
+                                        Property="Background"
+                                        Value="{StaticResource PrimarySoftBrush}"/>
+                                <Setter Property="Foreground"
+                                        Value="{StaticResource PrimaryBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -57,74 +107,95 @@
 
         <!-- Menu panel -->
         <Border x:Name="MenuPanelBorder"
-            Width="300"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Stretch"
-            Background="White"
-            BorderBrush="#CCCCCC"
-            BorderThickness="0,0,1,0">
+                Width="300"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,1,0">
             <Border.RenderTransform>
                 <TranslateTransform x:Name="MenuPanelTranslate" X="-300"/>
             </Border.RenderTransform>
 
             <StackPanel>
                 <!-- Header bar -->
-                <Border Background="#2C3E50" Padding="16,12">
+                <Border Background="{StaticResource PrimaryBrush}" Padding="16,12">
                     <Grid>
                         <TextBlock Text="☰  Menu"
-                                   Foreground="White" FontSize="16" FontWeight="Bold"
+                                   Foreground="White"
+                                   FontSize="16"
+                                   FontWeight="Bold"
                                    VerticalAlignment="Center"/>
+
                         <Button Content="✕"
                                 HorizontalAlignment="Right"
-                                Background="Transparent" BorderThickness="0"
-                                Foreground="White" FontSize="16"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="White"
+                                FontSize="16"
+                                Cursor="Hand"
                                 Click="CloseMenuButton_Click"/>
                     </Grid>
                 </Border>
 
                 <!-- Browse Buildings -->
                 <Button Style="{StaticResource MenuButtonStyle}"
-                        Background="#EAF0F6"
                         Click="BrowseBuildingsMenuItem_Click">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🏢" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Browse Buildings" VerticalAlignment="Center"/>
+                        <TextBlock Text="🏢"
+                                   Margin="0,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="Browse Buildings"
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <Separator Margin="0"/>
+                <Separator Margin="0" Background="{StaticResource BorderBrush}"/>
 
                 <!-- My Buildings Toggle -->
                 <ToggleButton x:Name="MyBuildingsToggle"
                               Style="{StaticResource MenuToggleButtonStyle}"
-                              Background="#DDE8F0"
                               Checked="MyBuildingsToggle_Checked"
                               Unchecked="MyBuildingsToggle_Unchecked">
                     <Grid Width="240">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <TextBlock Text="🏠" Margin="-10,0,10,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="My Buildings" VerticalAlignment="Center"/>
+                            <TextBlock Text="🏠"
+                                       Margin="-10,0,10,0"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="My Buildings"
+                                       VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock x:Name="MyBuildingsArrow" Text="∨"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
+                        <TextBlock x:Name="MyBuildingsArrow"
+                                   Text="∨"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"/>
                     </Grid>
                 </ToggleButton>
 
                 <!-- My Buildings lista -->
                 <ScrollViewer x:Name="MyBuildingsScrollViewer"
-                              MaxHeight="447"
+                              MaxHeight="493"
                               VerticalScrollBarVisibility="Auto"
                               Visibility="Collapsed">
-                    <ItemsControl x:Name="MyBuildingsMenuPanel" Margin="0,4,0,4">
+                    <ItemsControl x:Name="MyBuildingsMenuPanel" Margin="0,6,0,6">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,4,0,8">
-                                    <Border Background="#F5F5F5" Margin="16,0,16,4"
-                                            CornerRadius="4" Padding="12,8"
+                                    <Border Background="{StaticResource PrimarySoftBrush}"
+                                            BorderBrush="{StaticResource BorderBrush}"
+                                            BorderThickness="1"
+                                            Margin="16,0,16,4"
+                                            CornerRadius="8"
+                                            Padding="12,8"
                                             Cursor="Hand"
                                             Tag="{Binding}"
                                             MouseLeftButtonDown="BuildingName_Click">
-                                        <TextBlock FontSize="13" FontWeight="SemiBold">
+                                        <TextBlock FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource PrimaryBrush}">
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="{}{0} {1}">
                                                     <Binding Path="BuildingStreet"/>
@@ -133,68 +204,57 @@
                                             </TextBlock.Text>
                                         </TextBlock>
                                     </Border>
+
                                     <Button Content="→ Notice Board"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            Padding="32,8" FontSize="12"
-                                            Background="Transparent" BorderThickness="0"
+                                            Style="{StaticResource SubMenuButtonStyle}"
                                             Tag="{Binding}"
                                             Click="NoticeBoardMenuItem_Click"/>
+
                                     <Button Content="→ Common Rooms"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            Padding="32,8" FontSize="12"
-                                            Background="Transparent" BorderThickness="0"
+                                            Style="{StaticResource SubMenuButtonStyle}"
                                             Tag="{Binding}"
                                             Click="CommonRoomsMenuItem_Click"/>
-                                    <Button Content="→ Residents' Meeting"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            Padding="32,8" FontSize="12"
-                                            Background="Transparent" BorderThickness="0"/>
+
+                                    <Button Content="→ Residents' Meetings"
+                                            Style="{StaticResource SubMenuButtonStyle}"
+                                            Tag="{Binding}"
+                                            Click="ResidentsMeetingsMenuItem_Click"/>
+
                                     <Button Content="→ Reported Problems"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            Padding="32,8" FontSize="12"
-                                            Background="Transparent" BorderThickness="0"/>
+                                            Style="{StaticResource SubMenuButtonStyle}"
+                                            Tag="{Binding}"
+                                            Click="ReportedProblemsMenuItem_Click"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
 
-                <Separator Margin="0"/>
+                <Separator Margin="0" Background="{StaticResource BorderBrush}"/>
 
                 <!-- My Requests -->
                 <Button Style="{StaticResource MenuButtonStyle}"
-                        Background="#D0E3EE"
                         Click="MyRequestsMenuItem_Click">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📋" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="My Requests" VerticalAlignment="Center"/>
+                        <TextBlock Text="📋"
+                                   Margin="0,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="My Requests"
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <Separator Margin="0"/>
-
-                <!-- Notifications -->
-                <Button Style="{StaticResource MenuButtonStyle}"
-                        Background="#C3DCEB">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🔔" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Notifications" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-
-                <Separator Margin="0"/>
+                <Separator Margin="0" Background="{StaticResource BorderBrush}"/>
 
                 <!-- Log out -->
                 <Button Style="{StaticResource MenuButtonStyle}"
-                        Background="#B6D5E8"
                         Click="LogoutButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="↩" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Log out" VerticalAlignment="Center"/>
+                        <TextBlock Text="↩"
+                                   Margin="0,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="Log out"
+                                   VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

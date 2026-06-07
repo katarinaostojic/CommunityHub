@@ -1,10 +1,8 @@
-﻿using CommunityHub.Application.Domain;
-using System.Data;
-
-using CommunityHub.Application.Domain.Neighborhoods.NeighborhoodRepositoryInterfaces;
+﻿using System.Data;
+using CommunityHub.Application.Domain.Entities;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods.Meetings;
 
 namespace CommunityHub.Application.Database.Repositories.Shared;
-
 
 public class TrustRecordDbRepository : BaseDbRepository, ITrustRecordRepository
 {

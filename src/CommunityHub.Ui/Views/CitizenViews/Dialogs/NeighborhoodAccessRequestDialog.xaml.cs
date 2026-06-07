@@ -1,8 +1,8 @@
 ﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Neighborhoods;
-using CommunityHub.Application.Domain.Shared;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Neighborhoods;
-using CommunityHub.Application.Services.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.Converters;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Threading.Tasks;

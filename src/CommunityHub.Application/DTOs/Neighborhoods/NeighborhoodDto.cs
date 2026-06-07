@@ -1,7 +1,7 @@
 ﻿namespace CommunityHub.Application.DTOs.Neighborhoods;
 
 using CommunityHub.Application.Domain;
-using CommunityHub.Application.Domain.Neighborhoods;
+using CommunityHub.Application.Domain.Entities.Neighborhoods.Forums;
 
 public class NeighborhoodDto
 {
@@ -48,31 +48,20 @@ public class StreetDto
 
     public string Display => $"{StreetName} {StartNumber} - {EndNumber}";
 }
+
 public class ForumDto
 {
     public long Id { get; init; }
-    public string Title { get; init; }
-    public string Description { get; init; }
+    public string Title { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
     public long CoordinatorId { get; init; }
-    public string CoordinatorFullName { get; init; }
+    public string CoordinatorFullName { get; init; } = string.Empty;
     public bool IsClosed { get; init; }
     public DateTime CreatedAt { get; init; }
     public bool IsAuthor { get; init; }
+    public int CommentsCount { get; init; }
 
-    public ForumDto(long id, string title, string description, long coordinatorId,
-        string coordinatorFullName, bool isClosed, DateTime createdAt, bool isAuthor)
-    {
-        Id = id;
-        Title = title;
-        Description = description;
-        CoordinatorId = coordinatorId;
-        CoordinatorFullName = coordinatorFullName;
-        IsClosed = isClosed;
-        CreatedAt = createdAt;
-        IsAuthor = isAuthor;
-    }
-
-    public string CreatedAtFormatted => $"{CreatedAt:dd.MM.yyyy HH:mm}";
+    public string CreatedAtFormatted => $"{CreatedAt:dd.MM.yyyy.}";
 }
 
 public class ForumCommentDto
@@ -108,4 +97,7 @@ public class ForumCommentDto
 
     public string CreatedAtFormatted => $"{CreatedAt:dd.MM.yyyy HH:mm}";
     public string AuthorLabel => IsAuthor ? " [author]" : string.Empty;
+    public int PendingRequestsCount { get; init; }
+    public string PendingRequestsText => PendingRequestsCount > 0 ? $"{PendingRequestsCount} requests pending" : string.Empty;
+    public bool HasPendingRequests => PendingRequestsCount > 0;
 }
