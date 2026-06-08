@@ -162,6 +162,13 @@
                        FontSize="15" Foreground="#7F8C8D"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="3"
+                       x:Name="NoMeetingsText"
+                       Text="No meetings have been scheduled for this building."
+                       FontSize="15" Foreground="#7F8C8D"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Visibility="Collapsed"/>
 
             <!-- Lista skupština -->
             <ScrollViewer Grid.Row="3" x:Name="MeetingsList"
