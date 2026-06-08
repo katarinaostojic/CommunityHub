@@ -42,8 +42,18 @@ public partial class ReserveCityObjectPage : Page
     {
         try
         {
+            string objectName = _viewModel.SelectedCityObject.Name;
             _viewModel.ConfirmReservation();
+
+            CoordinatorMainWindow.Instance.Navigated += OnNavigatedBack;
             CoordinatorMainWindow.Instance.GoBack();
+
+            void OnNavigatedBack(object s, System.Windows.Navigation.NavigationEventArgs args)
+            {
+                CoordinatorMainWindow.Instance.Navigated -= OnNavigatedBack;
+                if (args.Content is CityObjectsPage cityObjectsPage)
+                    cityObjectsPage.ShowReservationSuccess(objectName);
+            }
         }
         catch (Exception ex)
         {

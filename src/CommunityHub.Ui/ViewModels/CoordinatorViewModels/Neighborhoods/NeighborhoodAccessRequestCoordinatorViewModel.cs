@@ -41,13 +41,21 @@ public class NeighborhoodAccessRequestCoordinatorViewModel : BaseViewModel
     public bool ShowApproveConfirm
     {
         get => _showApproveConfirm;
-        set => SetProperty(ref _showApproveConfirm, value);
+        set
+        {
+            SetProperty(ref _showApproveConfirm, value);
+            OnPropertyChanged(nameof(ApproveConfirmVisibility));
+        }
     }
 
     public bool ShowDeclineConfirm
     {
         get => _showDeclineConfirm;
-        set => SetProperty(ref _showDeclineConfirm, value);
+        set
+        {
+            SetProperty(ref _showDeclineConfirm, value);
+            OnPropertyChanged(nameof(DeclineConfirmVisibility));
+        }
     }
 
     public Visibility ApproveConfirmVisibility => ShowApproveConfirm ? Visibility.Visible : Visibility.Collapsed;
@@ -57,23 +65,17 @@ public class NeighborhoodAccessRequestCoordinatorViewModel : BaseViewModel
     {
         ShowApproveConfirm = true;
         ShowDeclineConfirm = false;
-        OnPropertyChanged(nameof(ApproveConfirmVisibility));
-        OnPropertyChanged(nameof(DeclineConfirmVisibility));
     }
 
     public void OpenDeclineConfirm()
     {
         ShowDeclineConfirm = true;
         ShowApproveConfirm = false;
-        OnPropertyChanged(nameof(ApproveConfirmVisibility));
-        OnPropertyChanged(nameof(DeclineConfirmVisibility));
     }
 
     public void CloseConfirm()
     {
         ShowApproveConfirm = false;
         ShowDeclineConfirm = false;
-        OnPropertyChanged(nameof(ApproveConfirmVisibility));
-        OnPropertyChanged(nameof(DeclineConfirmVisibility));
     }
 }

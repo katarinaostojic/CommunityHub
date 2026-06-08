@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityHub.Application.Database.Repositories.Shared;
+﻿using CommunityHub.Application.Database.Repositories.Shared;
 using System.Data;
 using CommunityHub.Application.Domain.Entities.Neighborhoods.Reviews;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Neighborhoods.Reviews;
@@ -10,6 +7,13 @@ namespace CommunityHub.Application.Database.Repositories.Neighborhoods.Reviews;
 
 public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorReviewRepository
 {
+    private const string ReviewSelectSql = @"
+        SELECT r.id, r.citizen_id, r.coordinator_id, r.neighborhood_id,
+               r.rating, r.comment, r.created_at, r.report_count, r.is_removed,
+               u.name AS citizen_name, u.surname AS citizen_surname
+        FROM coordinator_reviews r
+        JOIN users u ON r.citizen_id = u.id";
+
     public void Create(long citizenId, long coordinatorId, long neighborhoodId, int rating, string? comment)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -33,12 +37,7 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT r.id, r.citizen_id, r.coordinator_id, r.neighborhood_id,
-               r.rating, r.comment, r.created_at, r.report_count, r.is_removed,
-               u.name AS citizen_name, u.surname AS citizen_surname
-        FROM coordinator_reviews r
-        JOIN users u ON r.citizen_id = u.id
+        command.CommandText = ReviewSelectSql + @"
         WHERE r.neighborhood_id = @neighborhoodId AND r.is_removed = false
         ORDER BY r.created_at DESC";
 
@@ -51,13 +50,7 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-        SELECT r.id, r.citizen_id, r.coordinator_id, r.neighborhood_id,
-               r.rating, r.comment, r.created_at, r.report_count, r.is_removed,
-               u.name AS citizen_name, u.surname AS citizen_surname
-        FROM coordinator_reviews r
-        JOIN users u ON r.citizen_id = u.id
-        WHERE r.id = @id";
+        command.CommandText = ReviewSelectSql + " WHERE r.id = @id";
 
         AddParameter(command, "@id", reviewId);
         using IDataReader reader = command.ExecuteReader();
@@ -140,8 +133,8 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-        SELECT citizen_id FROM coordinator_review_reports
-        WHERE review_id = @reviewId";
+            SELECT citizen_id FROM coordinator_review_reports
+            WHERE review_id = @reviewId";
 
         AddParameter(command, "@reviewId", reviewId);
         using IDataReader reader = command.ExecuteReader();
@@ -151,7 +144,7 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
         return ids;
     }
 
-    private List<CoordinatorReview> ReadReviews(IDataReader reader)
+    private static List<CoordinatorReview> ReadReviews(IDataReader reader)
     {
         List<CoordinatorReview> reviews = new();
         while (reader.Read())
@@ -159,7 +152,7 @@ public class CoordinatorReviewDbRepository : BaseDbRepository, ICoordinatorRevie
         return reviews;
     }
 
-    private CoordinatorReview MapReview(IDataReader reader)
+    private static CoordinatorReview MapReview(IDataReader reader)
     {
         return new CoordinatorReview(
             Convert.ToInt64(reader["id"]),

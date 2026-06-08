@@ -15,8 +15,7 @@ public partial class RegisterNeighborhoodPage : Page
     private readonly NeighborhoodService _neighborhoodService;
     private readonly CityService _cityService;
     private readonly List<Street> _streets = new();
-    private readonly List<string> _imagePaths = new();
-    private int _currentImageIndex = 0;
+    private readonly ImagePreviewController _imagePreview;
 
     public RegisterNeighborhoodPage(long coordinatorId)
     {
@@ -24,6 +23,7 @@ public partial class RegisterNeighborhoodPage : Page
         _coordinatorId = coordinatorId;
         _neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
         _cityService = Injector.CreateInstance<CityService>();
+        _imagePreview = new ImagePreviewController(PreviewImage, RemoveImageButton, PrevButton, NextButton);
         LoadCities();
     }
 
@@ -111,60 +111,22 @@ public partial class RegisterNeighborhoodPage : Page
 
     private void AddImage_Click(object sender, RoutedEventArgs e)
     {
-        OpenFileDialog dialog = new OpenFileDialog();
-        dialog.Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp";
-        dialog.Multiselect = true;
+        OpenFileDialog dialog = new OpenFileDialog
+        {
+            Filter = "Image files|*.jpg;*.jpeg;*.png;*.bmp",
+            Multiselect = true
+        };
 
         if (dialog.ShowDialog() == true)
         {
             foreach (string path in dialog.FileNames)
-            {
-                if (!_imagePaths.Contains(path))
-                    _imagePaths.Add(path);
-            }
-            RefreshImagesPreview();
+                _imagePreview.AddImage(path);
         }
     }
 
-    private void RemoveImage_Click(object sender, RoutedEventArgs e)
-    {
-        if (_imagePaths.Count == 0) return;
-        _imagePaths.RemoveAt(_currentImageIndex);
-        RefreshImagesPreview();
-    }
-
-    private void PrevImage_Click(object sender, RoutedEventArgs e)
-    {
-        if (_imagePaths.Count == 0) return;
-        _currentImageIndex = (_currentImageIndex - 1 + _imagePaths.Count) % _imagePaths.Count;
-        RefreshImagesPreview();
-    }
-
-    private void NextImage_Click(object sender, RoutedEventArgs e)
-    {
-        if (_imagePaths.Count == 0) return;
-        _currentImageIndex = (_currentImageIndex + 1) % _imagePaths.Count;
-        RefreshImagesPreview();
-    }
-
-    private void RefreshImagesPreview()
-    {
-        if (_imagePaths.Count == 0)
-        {
-            PreviewImage.Source = null;
-            RemoveImageButton.Visibility = Visibility.Collapsed;
-            PrevButton.Visibility = Visibility.Collapsed;
-            NextButton.Visibility = Visibility.Collapsed;
-            return;
-        }
-        if (_currentImageIndex >= _imagePaths.Count)
-            _currentImageIndex = _imagePaths.Count - 1;
-        PreviewImage.Source = new System.Windows.Media.Imaging.BitmapImage(
-            new Uri(_imagePaths[_currentImageIndex]));
-        RemoveImageButton.Visibility = Visibility.Visible;
-        PrevButton.Visibility = _imagePaths.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-        NextButton.Visibility = _imagePaths.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
-    }
+    private void RemoveImage_Click(object sender, RoutedEventArgs e) => _imagePreview.RemoveCurrentImage();
+    private void PrevImage_Click(object sender, RoutedEventArgs e) => _imagePreview.PrevImage();
+    private void NextImage_Click(object sender, RoutedEventArgs e) => _imagePreview.NextImage();
 
     private void RegisterButton_Click(object sender, RoutedEventArgs e)
     {
@@ -180,11 +142,10 @@ public partial class RegisterNeighborhoodPage : Page
         foreach (Street street in _streets)
             _neighborhoodService.AddStreet(neighborhoodId, street.StreetName, street.StartNumber, street.EndNumber);
 
-        foreach (string path in _imagePaths)
+        foreach (string path in _imagePreview.ImagePaths)
             _neighborhoodService.AddImage(neighborhoodId, path);
 
         ShowSuccess("Neighborhood registered successfully!");
-
         CoordinatorMainWindow.Instance.NavigateTo(new MyDistrictsPage(_coordinatorId), "My Districts");
     }
 
@@ -223,7 +184,7 @@ public partial class RegisterNeighborhoodPage : Page
             return false;
         }
 
-        if (_imagePaths.Count == 0)
+        if (_imagePreview.ImagePaths.Count == 0)
         {
             ShowError("Please add at least one image.");
             return false;

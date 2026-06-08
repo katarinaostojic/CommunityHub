@@ -9,10 +9,8 @@ public class ReserveCityObjectViewModel : BaseViewModel
     private readonly long _neighborhoodId;
 
     private string _durationDaysText = "1";
-    private DateTime _rangeFrom = DateTime.Today;
-    private DateTime _rangeTo = DateTime.Today.AddDays(30);
-    private bool _rangeFromSelected = false;
-    private bool _rangeToSelected = false;
+    private DateTime? _rangeFrom = null;
+    private DateTime? _rangeTo = null;
     private SlotSuggestion? _foundSlot;
     private List<SlotSuggestion> _alternativeSlots = new();
     private SlotSuggestion? _selectedSlot;
@@ -37,24 +35,16 @@ public class ReserveCityObjectViewModel : BaseViewModel
         set => SetProperty(ref _durationDaysText, value);
     }
 
-    public DateTime RangeFrom
+    public DateTime? RangeFrom
     {
         get => _rangeFrom;
-        set
-        {
-            SetProperty(ref _rangeFrom, value);
-            _rangeFromSelected = true;
-        }
+        set => SetProperty(ref _rangeFrom, value);
     }
 
-    public DateTime RangeTo
+    public DateTime? RangeTo
     {
         get => _rangeTo;
-        set
-        {
-            SetProperty(ref _rangeTo, value);
-            _rangeToSelected = true;
-        }
+        set => SetProperty(ref _rangeTo, value);
     }
 
     public SlotSuggestion? FoundSlot
@@ -105,45 +95,14 @@ public class ReserveCityObjectViewModel : BaseViewModel
 
     public string? SearchForSlot()
     {
-        if (!int.TryParse(DurationDaysText, out int duration) || duration < 1)
-            return "Duration must be a positive whole number.";
+        string? validationError = ValidateInputs(out int duration, out DateOnly rangeFrom, out DateOnly rangeTo);
+        if (validationError != null)
+            return validationError;
 
-        if (!_rangeFromSelected)
-            return "Please select a start date.";
-
-        if (!_rangeToSelected)
-            return "Please select an end date.";
-
-        DateOnly rangeFrom = DateOnly.FromDateTime(RangeFrom);
-        DateOnly rangeTo = DateOnly.FromDateTime(RangeTo);
-
-        if (rangeFrom >= rangeTo)
-            return "Start date must be before end date.";
-
-        if (duration > rangeTo.DayNumber - rangeFrom.DayNumber + 1)
-            return "Duration cannot exceed the selected date range.";
-
-        ReserveRequest request = new(
-            SelectedCityObject.Id, _neighborhoodId,
-            duration, rangeFrom, rangeTo);
-
+        ReserveRequest request = new(SelectedCityObject.Id, _neighborhoodId, duration, rangeFrom, rangeTo);
         SlotSuggestion? slot = _cityObjectService.FindSlot(request);
 
-        FoundSlot = slot;
-        HasFoundSlot = slot != null;
-        ShowNoSlotWarning = false;
-        AlternativeSlots = new List<SlotSuggestion>();
-        HasAlternatives = false;
-        SelectedSlot = slot;
-
-        if (slot != null)
-            return null;
-
-        List<SlotSuggestion> alternatives = _cityObjectService.FindAlternativeSlots(request);
-        AlternativeSlots = alternatives;
-        HasAlternatives = alternatives.Count > 0;
-        ShowNoSlotWarning = true;
-        CanConfirm = false;
+        ApplySlotResult(slot, request);
         return null;
     }
 
@@ -153,5 +112,50 @@ public class ReserveCityObjectViewModel : BaseViewModel
         _cityObjectService.Reserve(
             SelectedCityObject.Id, _neighborhoodId,
             SelectedSlot.DateFrom, SelectedSlot.DateTo);
+    }
+
+    private string? ValidateInputs(out int duration, out DateOnly rangeFrom, out DateOnly rangeTo)
+    {
+        duration = 0;
+        rangeFrom = default;
+        rangeTo = default;
+
+        if (!int.TryParse(DurationDaysText, out duration) || duration < 1)
+            return "Duration must be a positive whole number.";
+
+        if (RangeFrom == null)
+            return "Please select a start date.";
+
+        if (RangeTo == null)
+            return "Please select an end date.";
+
+        rangeFrom = DateOnly.FromDateTime(RangeFrom.Value);
+        rangeTo = DateOnly.FromDateTime(RangeTo.Value);
+
+        if (rangeFrom >= rangeTo)
+            return "Start date must be before end date.";
+
+        if (duration > rangeTo.DayNumber - rangeFrom.DayNumber + 1)
+            return "Duration cannot exceed the selected date range.";
+
+        return null;
+    }
+
+    private void ApplySlotResult(SlotSuggestion? slot, ReserveRequest request)
+    {
+        FoundSlot = slot;
+        HasFoundSlot = slot != null;
+        ShowNoSlotWarning = false;
+        AlternativeSlots = new List<SlotSuggestion>();
+        HasAlternatives = false;
+        SelectedSlot = slot;
+
+        if (slot != null) return;
+
+        List<SlotSuggestion> alternatives = _cityObjectService.FindAlternativeSlots(request);
+        AlternativeSlots = alternatives;
+        HasAlternatives = alternatives.Count > 0;
+        ShowNoSlotWarning = true;
+        CanConfirm = false;
     }
 }
