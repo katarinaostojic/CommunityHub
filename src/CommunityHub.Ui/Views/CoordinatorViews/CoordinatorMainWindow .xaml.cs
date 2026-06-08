@@ -54,4 +54,10 @@ public partial class CoordinatorMainWindow : Window
         if (MainFrame.CanGoBack)
             MainFrame.GoBack();
     }
+    public Page? CurrentPage => MainFrame.Content as Page;
+    public event System.Windows.Navigation.NavigatedEventHandler? Navigated
+    {
+        add => MainFrame.Navigated += value;
+        remove => MainFrame.Navigated -= value;
+    }
 }

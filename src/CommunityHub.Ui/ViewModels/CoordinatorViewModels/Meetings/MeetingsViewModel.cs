@@ -97,29 +97,10 @@ public class MeetingsViewModel : BaseViewModel
         private set => SetProperty(ref _trustStats, value);
     }
 
-    public void FilterAll()
-    {
-        _currentFilter = null;
-        LoadMeetings();
-    }
-
-    public void FilterScheduled()
-    {
-        _currentFilter = MeetingStatus.Scheduled;
-        LoadMeetings();
-    }
-
-    public void FilterCancelled()
-    {
-        _currentFilter = MeetingStatus.Cancelled;
-        LoadMeetings();
-    }
-
-    public void FilterInPreparation()
-    {
-        _currentFilter = MeetingStatus.InPreparation;
-        LoadMeetings();
-    }
+    public void FilterAll() { _currentFilter = null; LoadMeetings(); }
+    public void FilterScheduled() { _currentFilter = MeetingStatus.Scheduled; LoadMeetings(); }
+    public void FilterCancelled() { _currentFilter = MeetingStatus.Cancelled; LoadMeetings(); }
+    public void FilterInPreparation() { _currentFilter = MeetingStatus.InPreparation; LoadMeetings(); }
 
     public void FinalizeVoting(long meetingId)
     {
@@ -157,33 +138,37 @@ public class MeetingsViewModel : BaseViewModel
         DistinguishedCount = trustStatistics.GetValueOrDefault(TrustLevel.Distinguished, 0);
         TrustedCount = trustStatistics.GetValueOrDefault(TrustLevel.Trusted, 0);
 
-        var meetingThemeSuggestion = _statisticsService.SuggestMeetingTheme(_neighborhoodId);
-        SuggestionText = meetingThemeSuggestion == MeetingTheme.Welcome
-            ? "Suggestion: Organize a welcome meeting"
-            : meetingThemeSuggestion == MeetingTheme.Motivation
-                ? "Suggestion: Organize a motivation meeting"
-                : "No suggestion at this time.";
-
+        SuggestionText = BuildSuggestionText(_statisticsService.SuggestMeetingTheme(_neighborhoodId));
         OnPropertyChanged(nameof(SuggestionLinkVisibility));
 
-        TrustSeriesCollection = new SeriesCollection
-        {
-            new PieSeries { Title = "Nov u kvartu",            Values = new ChartValues<int> { NewCount },           Fill = new SolidColorBrush(Color.FromRgb(126, 200, 227)),  StrokeThickness = 0 },
-            new PieSeries { Title = "Neaktivan gradjanin",     Values = new ChartValues<int> { InactiveCount },      Fill = new SolidColorBrush(Color.FromRgb(244, 169, 106)),  StrokeThickness = 0 },
-            new PieSeries { Title = "Aktivan gradjanin",       Values = new ChartValues<int> { ActiveCount },        Fill = new SolidColorBrush(Color.FromRgb(133, 212, 176)),  StrokeThickness = 0 },
-            new PieSeries { Title = "Istaknut gradjanin",      Values = new ChartValues<int> { DistinguishedCount }, Fill = new SolidColorBrush(Color.FromRgb(244, 160, 181)),  StrokeThickness = 0 },
-            new PieSeries { Title = "Gradjanin od povjerenja", Values = new ChartValues<int> { TrustedCount },       Fill = new SolidColorBrush(Color.FromRgb(247, 217, 106)),  StrokeThickness = 0 },
-        };
-
-        TrustStats = new List<TrustStatItem>
-        {
-            new("Nov u kvartu",            NewCount,           new SolidColorBrush(Color.FromRgb(126, 200, 227))),
-            new("Neaktivan gradjanin",     InactiveCount,      new SolidColorBrush(Color.FromRgb(244, 169, 106))),
-            new("Aktivan gradjanin",       ActiveCount,        new SolidColorBrush(Color.FromRgb(133, 212, 176))),
-            new("Istaknut gradjanin",      DistinguishedCount, new SolidColorBrush(Color.FromRgb(244, 160, 181))),
-            new("Gradjanin od povjerenja", TrustedCount,       new SolidColorBrush(Color.FromRgb(247, 217, 106))),
-        };
+        TrustSeriesCollection = BuildTrustSeries();
+        TrustStats = BuildTrustStats();
     }
+
+    private static string BuildSuggestionText(MeetingTheme? theme) => theme switch
+    {
+        MeetingTheme.Welcome => "Suggestion: Organize a welcome meeting",
+        MeetingTheme.Motivation => "Suggestion: Organize a motivation meeting",
+        _ => "No suggestion at this time."
+    };
+
+    private SeriesCollection BuildTrustSeries() => new()
+    {
+        new PieSeries { Title = "Nov u kvartu",            Values = new ChartValues<int> { NewCount },           Fill = new SolidColorBrush(Color.FromRgb(126, 200, 227)), StrokeThickness = 0 },
+        new PieSeries { Title = "Neaktivan gradjanin",     Values = new ChartValues<int> { InactiveCount },      Fill = new SolidColorBrush(Color.FromRgb(244, 169, 106)), StrokeThickness = 0 },
+        new PieSeries { Title = "Aktivan gradjanin",       Values = new ChartValues<int> { ActiveCount },        Fill = new SolidColorBrush(Color.FromRgb(133, 212, 176)), StrokeThickness = 0 },
+        new PieSeries { Title = "Istaknut gradjanin",      Values = new ChartValues<int> { DistinguishedCount }, Fill = new SolidColorBrush(Color.FromRgb(244, 160, 181)), StrokeThickness = 0 },
+        new PieSeries { Title = "Gradjanin od povjerenja", Values = new ChartValues<int> { TrustedCount },       Fill = new SolidColorBrush(Color.FromRgb(247, 217, 106)), StrokeThickness = 0 },
+    };
+
+    private List<TrustStatItem> BuildTrustStats() => new()
+    {
+        new("Nov u kvartu",            NewCount,           new SolidColorBrush(Color.FromRgb(126, 200, 227))),
+        new("Neaktivan gradjanin",     InactiveCount,      new SolidColorBrush(Color.FromRgb(244, 169, 106))),
+        new("Aktivan gradjanin",       ActiveCount,        new SolidColorBrush(Color.FromRgb(133, 212, 176))),
+        new("Istaknut gradjanin",      DistinguishedCount, new SolidColorBrush(Color.FromRgb(244, 160, 181))),
+        new("Gradjanin od povjerenja", TrustedCount,       new SolidColorBrush(Color.FromRgb(247, 217, 106))),
+    };
 
     private void LoadMeetings()
     {
@@ -191,11 +176,8 @@ public class MeetingsViewModel : BaseViewModel
 
         foreach (var meeting in meetings.Where(m => m.Status == MeetingStatus.InPreparation))
         {
-            if (!_meetingService.CanVote(meeting))
-            {
-                if (!_meetingService.HasTiedVotes(meeting.Id))
-                    _meetingService.CheckAndFinalizeVoting(meeting.Id);
-            }
+            if (!_meetingService.CanVote(meeting) && !_meetingService.HasTiedVotes(meeting.Id))
+                _meetingService.CheckAndFinalizeVoting(meeting.Id);
         }
 
         meetings = _meetingService.GetMeetingsByCoordinator(_coordinatorId);
@@ -209,19 +191,5 @@ public class MeetingsViewModel : BaseViewModel
                 HasTiedVotes = m.Status == MeetingStatus.InPreparation && _meetingService.HasTiedVotes(m.Id),
                 VoteCounts = m.Status == MeetingStatus.InPreparation ? _meetingService.GetVoteCounts(m.Id) : new()
             }).ToList());
-    }
-}
-
-public class TrustStatItem
-{
-    public string Label { get; }
-    public int Count { get; }
-    public SolidColorBrush Color { get; }
-
-    public TrustStatItem(string label, int count, SolidColorBrush color)
-    {
-        Label = label;
-        Count = count;
-        Color = color;
     }
 }

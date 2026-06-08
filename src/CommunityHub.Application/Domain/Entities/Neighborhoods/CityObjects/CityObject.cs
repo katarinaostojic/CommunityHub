@@ -28,9 +28,10 @@ public class CityObject
     public void Reserve(long neighborhoodId, DateOnly dateFrom, DateOnly dateTo)
     {
         Reservations.Add(new CityObjectReservation(0, Id, neighborhoodId, dateFrom, dateTo));
+        VoteCount = 0;
+
     }
 
-    // Traži slobodan termin unutar zadanog opsega
     public DateOnlyRange? FindFreeSlotInRange(DateOnly rangeFrom, DateOnly rangeTo, int durationDays)
     {
         DateOnly candidate = rangeFrom;
@@ -48,7 +49,6 @@ public class CityObject
         return null;
     }
 
-    // Traži slobodne termine van zadanog opsega (alternativni prijedlozi)
     public List<DateOnlyRange> FindAlternativeSlots(DateOnly rangeFrom, DateOnly rangeTo,
         int durationDays, int maxSuggestions = 3)
     {

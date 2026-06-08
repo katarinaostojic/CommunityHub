@@ -34,35 +34,43 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardBorder}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Name}"
-                                                   FontWeight="Bold" FontSize="15"
-                                                   Foreground="{StaticResource PrimaryBrush}"/>
-                                        <TextBlock Text="{Binding Description}"
-                                                   FontSize="12" TextWrapping="Wrap"
-                                                   Style="{StaticResource SecondaryText}"
-                                                   Margin="0,2,0,4"/>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="🗳" FontSize="13" VerticalAlignment="Center" Margin="0,0,4,0"/>
-                                            <TextBlock Text="{Binding VoteDisplay}"
-                                                       FontSize="12" Foreground="Gray"
-                                                       VerticalAlignment="Center"/>
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontWeight="Bold" FontSize="15"
+                                                       Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Text="{Binding Description}"
+                                                       FontSize="12" TextWrapping="Wrap"
+                                                       Style="{StaticResource SecondaryText}"
+                                                       Margin="0,2,0,4"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="🗳" FontSize="13" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                <TextBlock Text="{Binding VoteDisplay}"
+                                                           FontSize="12" Foreground="Gray"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
                                         </StackPanel>
-                                    </StackPanel>
-                                    <Button Grid.Column="1"
-                                            Content="Reserve"
-                                            Tag="{Binding}"
-                                            Click="ReserveButton_Click"
-                                            Style="{StaticResource PrimaryButton}"
-                                            VerticalAlignment="Center"
-                                            Padding="12,6"
-                                            Margin="12,0,0,0"/>
-                                </Grid>
+                                        <Button Grid.Column="1"
+                                                Content="Reserve"
+                                                Tag="{Binding}"
+                                                Click="ReserveButton_Click"
+                                                Style="{StaticResource PrimaryButton}"
+                                                VerticalAlignment="Center"
+                                                Padding="12,6"
+                                                Margin="12,0,0,0"/>
+                                    </Grid>
+                                    <!-- Success poruka u kartici -->
+                                    <TextBlock Text="{Binding SuccessMessage}"
+                                               Foreground="{StaticResource SuccessTextBrush}"
+                                               FontSize="12" FontWeight="SemiBold"
+                                               Margin="0,6,0,0"
+                                               Visibility="{Binding HasSuccessMessage, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
