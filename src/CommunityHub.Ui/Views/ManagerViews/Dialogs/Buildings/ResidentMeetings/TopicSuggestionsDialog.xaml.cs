@@ -38,17 +38,24 @@ public partial class TopicSuggestionsDialog : Window
     {
         if (sender is Button btn && btn.Tag is string topic)
         {
-            _onAddTopic(topic);
-            _addedAtLeastOne = true;
-
-            var item = _suggestions.FirstOrDefault(s => s.Topic == topic);
-            if (item != null)
-                _suggestions.Remove(item);
-
-            if (_suggestions.Count == 0)
+            try
             {
-                EmptyText.Visibility = Visibility.Visible;
-                SuggestionsList.Visibility = Visibility.Collapsed;
+                _onAddTopic(topic);
+                _addedAtLeastOne = true;
+
+                var item = _suggestions.FirstOrDefault(s => s.Topic == topic);
+                if (item != null)
+                    _suggestions.Remove(item);
+
+                if (_suggestions.Count == 0)
+                {
+                    EmptyText.Visibility = Visibility.Visible;
+                    SuggestionsList.Visibility = Visibility.Collapsed;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
             }
         }
     }
