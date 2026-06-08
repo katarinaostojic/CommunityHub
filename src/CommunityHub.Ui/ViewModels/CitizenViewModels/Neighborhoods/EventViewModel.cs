@@ -9,6 +9,22 @@ public class EventViewModel : BaseViewModel
 {
     private readonly EventDto _event;
 
+    private static readonly Dictionary<string, string> StatusDisplayMap = new()
+    {
+        ["preparation"] = "⏳ Preparation",
+        ["scheduled"] = "✔ Scheduled",
+        ["cancelled"] = "✕ Cancelled",
+        ["finished"] = "✔ Finished"
+    };
+
+    private static readonly Dictionary<string, string> StatusColorMap = new()
+    {
+        ["preparation"] = "#F9A825",
+        ["scheduled"] = "#0D47A1",
+        ["cancelled"] = "#B54A4A",
+        ["finished"] = "#1A5C2A"
+    };
+
     public EventViewModel(EventDto ev)
     {
         _event = ev;
@@ -30,22 +46,11 @@ public class EventViewModel : BaseViewModel
     public List<AttendanceItemViewModel> AttendanceItems =>
         _event.Registrations.Select(r => new AttendanceItemViewModel(r)).ToList();
 
-    public string StatusDisplay => _event.Status switch
-    {
-        "preparation" => "⏳ Preparation",
-        "scheduled" => "✔ Scheduled",
-        "cancelled" => "✕ Cancelled",
-        "finished" => "✔ Finished",
-        _ => _event.Status
-    };
-    public string StatusColor => _event.Status switch
-    {
-        "preparation" => "#F9A825",  // žuta
-        "scheduled" => "#0D47A1",  // plava
-        "cancelled" => "#B54A4A",  // crvena
-        "finished" => "#1A5C2A",  // zelena
-        _ => "#7F8C8D"
-    };
+    public string StatusDisplay =>
+        StatusDisplayMap.TryGetValue(_event.Status, out var display) ? display : _event.Status;
+
+    public string StatusColor =>
+        StatusColorMap.TryGetValue(_event.Status, out var color) ? color : "#7F8C8D";
 
     public bool CanRegister => _event.CanRegister;
     public bool IsOrganizer => _event.IsOrganizer;

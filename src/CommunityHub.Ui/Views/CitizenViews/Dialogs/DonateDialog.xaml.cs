@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
-using System.Windows;
 using CommunityHub.Application.Domain.Entities.Neighborhoods.Budget;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
@@ -36,26 +35,38 @@ public partial class DonateDialog : Window
             CategoryComboBox.SelectedIndex = 0;
     }
 
+    private bool TryParseAmount(out decimal amount)
+    {
+        if (decimal.TryParse(AmountTextBox.Text.Replace(",", "."),
+            System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture, out amount))
+            return true;
+
+        MessageBox.Show("Unesite ispravan iznos.", "Greška",
+            MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool TryGetSelectedCategoryId(out long categoryId)
+    {
+        categoryId = 0;
+        int selectedIndex = CategoryComboBox.SelectedIndex;
+        if (selectedIndex >= 0)
+        {
+            categoryId = _categories[selectedIndex].Id;
+            return true;
+        }
+
+        MessageBox.Show("Odaberite kategoriju.", "Greška",
+            MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
     private void DonateButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!decimal.TryParse(AmountTextBox.Text.Replace(",", "."),
-            System.Globalization.NumberStyles.Any,
-            System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
-        {
-            MessageBox.Show("Unesite ispravan iznos.", "Greška",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        if (!TryParseAmount(out decimal amount)) return;
+        if (!TryGetSelectedCategoryId(out long categoryId)) return;
 
-        int selectedIndex = CategoryComboBox.SelectedIndex;
-        if (selectedIndex < 0)
-        {
-            MessageBox.Show("Odaberite kategoriju.", "Greška",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
-        long categoryId = _categories[selectedIndex].Id;
         var (success, error) = _viewModel.Donate(categoryId, amount);
 
         if (!success)

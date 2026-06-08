@@ -39,34 +39,45 @@ public partial class RateCoordinatorDialog : Window
 
     private int? GetSelectedRating()
     {
-        if (Radio1.IsChecked == true) return 1;
-        if (Radio2.IsChecked == true) return 2;
-        if (Radio3.IsChecked == true) return 3;
-        if (Radio4.IsChecked == true) return 4;
-        if (Radio5.IsChecked == true) return 5;
+        RadioButton[] radios = { Radio1, Radio2, Radio3, Radio4, Radio5 };
+        for (int i = 0; i < radios.Length; i++)
+        {
+            if (radios[i].IsChecked == true)
+                return i + 1;
+        }
         return null;
+    }
+
+    private string? GetTrimmedComment()
+    {
+        return string.IsNullOrWhiteSpace(CommentTextBox.Text)
+            ? null : CommentTextBox.Text.Trim();
+    }
+
+    private bool ValidateRating(int? rating)
+    {
+        if (rating != null) return true;
+        MessageBox.Show("Molimo odaberite ocenu.", "Greška",
+            MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
+    }
+
+    private bool ValidateComment(int rating, string? comment)
+    {
+        if (rating >= 3 || comment != null) return true;
+        CommentRequiredText.Visibility = Visibility.Visible;
+        MessageBox.Show("Za ocenu nižu od 3 morate ostaviti komentar.", "Greška",
+            MessageBoxButton.OK, MessageBoxImage.Warning);
+        return false;
     }
 
     private void SubmitButton_Click(object sender, RoutedEventArgs e)
     {
         int? rating = GetSelectedRating();
-        if (rating == null)
-        {
-            MessageBox.Show("Molimo odaberite ocenu.", "Greška",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        if (!ValidateRating(rating)) return;
 
-        string? comment = string.IsNullOrWhiteSpace(CommentTextBox.Text)
-            ? null : CommentTextBox.Text.Trim();
-
-        if (rating < 3 && comment == null)
-        {
-            CommentRequiredText.Visibility = Visibility.Visible;
-            MessageBox.Show("Za ocenu nižu od 3 morate ostaviti komentar.", "Greška",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        string? comment = GetTrimmedComment();
+        if (!ValidateComment(rating!.Value, comment)) return;
 
         var (success, error) = _service.CreateReview(
             _citizenId, _coordinatorId, _neighborhoodId, rating.Value, comment);
@@ -85,3 +96,4 @@ public partial class RateCoordinatorDialog : Window
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
 }
+
