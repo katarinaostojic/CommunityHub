@@ -39,11 +39,27 @@ public partial class ResidentMeetingsPage : Page
             NoBuildingText.Visibility = Visibility.Collapsed;
             MeetingsList.Visibility = Visibility.Visible;
             BuildingSelected?.Invoke(building);
+            RefreshEmptyState();
         }
         else
         {
             NoBuildingText.Visibility = Visibility.Visible;
             MeetingsList.Visibility = Visibility.Collapsed;
+            NoMeetingsText.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void RefreshEmptyState()
+    {
+        if (_viewModel.Meetings.Count == 0)
+        {
+            NoMeetingsText.Visibility = Visibility.Visible;
+            MeetingsList.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            NoMeetingsText.Visibility = Visibility.Collapsed;
+            MeetingsList.Visibility = Visibility.Visible;
         }
     }
 
@@ -65,6 +81,7 @@ public partial class ResidentMeetingsPage : Page
                 dialog.SelectedDate!.Value,
                 dialog.SelectedTime!.Value,
                 dialog.Topics);
+            RefreshEmptyState();
         }
         catch (Exception ex)
         {
@@ -106,10 +123,26 @@ public partial class ResidentMeetingsPage : Page
         }
     }
 
-    private void FilterAll_Click(object sender, RoutedEventArgs e) => _viewModel.FilterAll();
-    private void FilterScheduled_Click(object sender, RoutedEventArgs e) => _viewModel.FilterScheduled();
-    private void FilterConfirmed_Click(object sender, RoutedEventArgs e) => _viewModel.FilterConfirmed();
-    private void FilterCancelled_Click(object sender, RoutedEventArgs e) => _viewModel.FilterCancelled();
+    private void FilterAll_Click(object sender, RoutedEventArgs e)
+    {
+        _viewModel.FilterAll();
+        RefreshEmptyState();
+    }
+    private void FilterScheduled_Click(object sender, RoutedEventArgs e) 
+    {   
+        _viewModel.FilterScheduled();
+        RefreshEmptyState();
+    }
+    private void FilterConfirmed_Click(object sender, RoutedEventArgs e)
+    {
+        _viewModel.FilterConfirmed();
+        RefreshEmptyState();
+    }
+    private void FilterCancelled_Click(object sender, RoutedEventArgs e)
+    {
+        _viewModel.FilterCancelled();
+        RefreshEmptyState();
+    }
 
     private void ShowConfirmation(string message)
     {

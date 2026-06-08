@@ -39,6 +39,7 @@ public partial class ProblemsPage : Page
             ProblemsTable.Visibility = Visibility.Visible;
             NoBuildingText.Visibility = Visibility.Collapsed;
             BuildingSelected?.Invoke(building);
+            RefreshEmptyState();
         }
         else
         {
@@ -53,6 +54,14 @@ public partial class ProblemsPage : Page
         if (sender is Button btn && btn.Tag is long id)
         {
             _viewModel.MarkAsResolved(id);
+            RefreshEmptyState();
         }
+    }
+
+    private void RefreshEmptyState()
+    {
+        NoProblemsText.Visibility = _viewModel.Problems.Count == 0
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 }
