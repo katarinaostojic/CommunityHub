@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -10,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
 using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
@@ -43,22 +43,23 @@ public partial class VoteDateDialog : Window
         DatesListControl.ItemsSource = _dates;
     }
 
-    private void VoteButton_Click(object sender, RoutedEventArgs e)
+    private string? FindSelectedDateString()
     {
-        string? selectedDateStr = null;
-
         foreach (var item in DatesListControl.Items)
         {
             var container = DatesListControl.ItemContainerGenerator.ContainerFromItem(item) as FrameworkElement;
             if (container == null) continue;
 
             var radioButton = FindVisualChild<RadioButton>(container);
-            if (radioButton != null && radioButton.IsChecked == true)
-            {
-                selectedDateStr = item.ToString();
-                break;
-            }
+            if (radioButton?.IsChecked == true)
+                return item.ToString();
         }
+        return null;
+    }
+
+    private void VoteButton_Click(object sender, RoutedEventArgs e)
+    {
+        string? selectedDateStr = FindSelectedDateString();
 
         if (selectedDateStr == null)
         {

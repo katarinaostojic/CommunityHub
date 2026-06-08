@@ -34,7 +34,6 @@ public partial class MyProfilePage : Window
         CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
         CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
         ThemeToggleButton.IsChecked = ThemeManager.IsDark;
-        ThemeToggleButton.IsChecked = ThemeManager.IsDark;
         LanguageToggleButton.IsChecked = !LanguageManager.IsSerbianActive;
         Loaded += (s, e) =>
         {
@@ -102,60 +101,71 @@ public partial class MyProfilePage : Window
         if (nId == null) MessageBox.Show("You are not a member of any neighborhood.");
         return nId;
     }
+
     private void DrawPieChart(int organized, int volunteered)
     {
         PieCanvas.Children.Clear();
         int total = organized + volunteered;
         if (total == 0) return;
 
-        double radius = 100;
-        double cx = 110, cy = 110;
         double angle = (organized / (double)total) * 360.0;
-        double rad = angle * Math.PI / 180.0;
-
-        double x = cx + radius * Math.Sin(rad);
-        double y = cy - radius * Math.Cos(rad);
-
+        var (x, y) = CalculateArcEndPoint(angle);
         bool isLarge = angle > 180;
 
-        var organizedPath = new System.Windows.Shapes.Path
+        PieCanvas.Children.Add(BuildVolunteeredSlice(x, y, isLarge));
+        PieCanvas.Children.Add(BuildOrganizedSlice(x, y, isLarge));
+    }
+
+    private static (double x, double y) CalculateArcEndPoint(double angle)
+    {
+        const double radius = 100, cx = 110, cy = 110;
+        double rad = angle * Math.PI / 180.0;
+        return (cx + radius * Math.Sin(rad), cy - radius * Math.Cos(rad));
+    }
+
+    private static System.Windows.Shapes.Path BuildOrganizedSlice(double x, double y, bool isLarge)
+    {
+        const double radius = 100, cx = 110, cy = 110;
+        return new System.Windows.Shapes.Path
         {
             Fill = new SolidColorBrush(Color.FromRgb(26, 58, 92)),
             Data = new PathGeometry(new[]
             {
-            new PathFigure(new Point(cx, cy), new PathSegment[]
-            {
-                new LineSegment(new Point(cx, cy - radius), true),
-                new ArcSegment(new Point(x, y), new Size(radius, radius), 0, isLarge,
-                    SweepDirection.Clockwise, true),
-                new LineSegment(new Point(cx, cy), true)
-            }, true)
-        })
+                new PathFigure(new Point(cx, cy), new PathSegment[]
+                {
+                    new LineSegment(new Point(cx, cy - radius), true),
+                    new ArcSegment(new Point(x, y), new Size(radius, radius), 0, isLarge,
+                        SweepDirection.Clockwise, true),
+                    new LineSegment(new Point(cx, cy), true)
+                }, true)
+            })
         };
+    }
 
-        var volunteeredPath = new System.Windows.Shapes.Path
+    private static System.Windows.Shapes.Path BuildVolunteeredSlice(double x, double y, bool isLarge)
+    {
+        const double radius = 100, cx = 110, cy = 110;
+        return new System.Windows.Shapes.Path
         {
             Fill = new SolidColorBrush(Color.FromRgb(214, 228, 240)),
             Data = new PathGeometry(new[]
             {
-            new PathFigure(new Point(cx, cy), new PathSegment[]
-            {
-                new LineSegment(new Point(x, y), true),
-                new ArcSegment(new Point(cx, cy - radius), new Size(radius, radius), 0,
-                    !isLarge, SweepDirection.Clockwise, true),
-                new LineSegment(new Point(cx, cy), true)
-            }, true)
-        })
+                new PathFigure(new Point(cx, cy), new PathSegment[]
+                {
+                    new LineSegment(new Point(x, y), true),
+                    new ArcSegment(new Point(cx, cy - radius), new Size(radius, radius), 0,
+                        !isLarge, SweepDirection.Clockwise, true),
+                    new LineSegment(new Point(cx, cy), true)
+                }, true)
+            })
         };
-
-        PieCanvas.Children.Add(volunteeredPath);
-        PieCanvas.Children.Add(organizedPath);
     }
 
     private void ThemeToggle_Click(object sender, RoutedEventArgs e)
     {
         ThemeManager.ToggleTheme();
     }
+
     private void LanguageToggle_Click(object sender, RoutedEventArgs e)
     {
         LanguageManager.ToggleLanguage();

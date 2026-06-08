@@ -1,7 +1,5 @@
 ﻿using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -10,6 +8,13 @@ namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 public class MeetingViewModel : BaseViewModel
 {
     private readonly MeetingDto _dto;
+
+    private static readonly Dictionary<string, string> StatusColorMap = new()
+    {
+        ["in_preparation"] = "#F39C12",
+        ["scheduled"] = "#27AE60",
+        ["cancelled"] = "#C0392B"
+    };
 
     public MeetingViewModel(MeetingDto dto)
     {
@@ -43,13 +48,14 @@ public class MeetingViewModel : BaseViewModel
 
     public Visibility VotedDateVisibility => HasVoted
         ? Visibility.Visible : Visibility.Collapsed;
-    public SolidColorBrush StatusBrush => new SolidColorBrush(
-    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(
-        _dto.Status switch
+
+    public SolidColorBrush StatusBrush
+    {
+        get
         {
-            "in_preparation" => "#F39C12",
-            "scheduled" => "#27AE60",
-            "cancelled" => "#C0392B",
-            _ => "#7F8C8D"
-        }));
+            string hex = StatusColorMap.TryGetValue(_dto.Status, out var color) ? color : "#7F8C8D";
+            return new SolidColorBrush(
+                (Color)ColorConverter.ConvertFromString(hex));
+        }
+    }
 }

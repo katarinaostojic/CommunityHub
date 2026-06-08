@@ -23,6 +23,15 @@ public partial class CreateEventDialog : Window
         ItemsListControl.ItemsSource = _items;
     }
 
+    private static void ShowValidationError(string message)
+        => MessageBox.Show(message, "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+    private void RefreshItemsList()
+    {
+        ItemsListControl.ItemsSource = null;
+        ItemsListControl.ItemsSource = _items;
+    }
+
     private void AddItemButton_Click(object sender, RoutedEventArgs e)
     {
         AddItemDialog dialog = new AddItemDialog();
@@ -30,8 +39,7 @@ public partial class CreateEventDialog : Window
         if (dialog.ShowDialog() == true)
         {
             _items.Add(dialog.ItemName);
-            ItemsListControl.ItemsSource = null;
-            ItemsListControl.ItemsSource = _items;
+            RefreshItemsList();
         }
     }
 
@@ -39,8 +47,7 @@ public partial class CreateEventDialog : Window
     {
         string item = (string)((Button)sender).Tag;
         _items.Remove(item);
-        ItemsListControl.ItemsSource = null;
-        ItemsListControl.ItemsSource = _items;
+        RefreshItemsList();
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -81,14 +88,14 @@ public partial class CreateEventDialog : Window
     private bool ValidateTitle()
     {
         if (!string.IsNullOrWhiteSpace(TitleTextBox.Text)) return true;
-        MessageBox.Show("Please enter a title.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        ShowValidationError("Please enter a title.");
         return false;
     }
 
     private bool ValidateDescription()
     {
         if (!string.IsNullOrWhiteSpace(DescriptionTextBox.Text)) return true;
-        MessageBox.Show("Please enter a description.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        ShowValidationError("Please enter a description.");
         return false;
     }
 
@@ -96,12 +103,12 @@ public partial class CreateEventDialog : Window
     {
         if (!EventDatePicker.SelectedDate.HasValue)
         {
-            MessageBox.Show("Please select a date.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowValidationError("Please select a date.");
             return false;
         }
         if (EventDatePicker.SelectedDate.Value.Date < DateTime.Today)
         {
-            MessageBox.Show("Date cannot be in the past.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            ShowValidationError("Date cannot be in the past.");
             return false;
         }
         return true;
@@ -110,32 +117,33 @@ public partial class CreateEventDialog : Window
     private bool ValidateTime()
     {
         if (TimeOnly.TryParse(StartTimeTextBox.Text.Trim(), out _)) return true;
-        MessageBox.Show("Please enter valid start time (HH:mm).", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        ShowValidationError("Please enter valid start time (HH:mm).");
         return false;
     }
 
     private bool ValidateDuration()
     {
         if (int.TryParse(DurationTextBox.Text.Trim(), out int dur) && dur > 0) return true;
-        MessageBox.Show("Please enter valid duration.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        ShowValidationError("Please enter valid duration.");
         return false;
     }
 
     private bool ValidateMinVolunteers()
     {
         if (int.TryParse(MinVolunteersTextBox.Text.Trim(), out int min) && min > 0) return true;
-        MessageBox.Show("Please enter valid minimum volunteers.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        ShowValidationError("Please enter valid minimum volunteers.");
         return false;
     }
 
     private bool ValidateItems()
     {
         if (_items.Count > 0) return true;
-        MessageBox.Show("Please add at least one item.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+        ShowValidationError("Please add at least one item.");
         return false;
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
+
     private void NumberOnly_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
         e.Handled = !e.Text.All(char.IsDigit);
