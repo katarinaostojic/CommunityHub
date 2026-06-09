@@ -6,7 +6,7 @@ using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Ui.Helpers.Tenant.Demo;
+using CommunityHub.Ui.Helpers.Tenant.Demo.Buildings;
 
 namespace CommunityHub.Ui.Views.TenantViews;
 

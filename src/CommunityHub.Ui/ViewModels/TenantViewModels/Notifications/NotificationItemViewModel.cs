@@ -1,7 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.Ads;
 using CommunityHub.Application.DTOs.Buildings.Ads;
-using CommunityHub.Ui.Extensions;
-using CommunityHub.Ui.Extensions.Buildings.Ads;
 using CommunityHub.Ui.ViewModels;
 
 namespace CommunityHub.Ui.ViewModels.TenantViewModels.Notifications;
@@ -19,19 +17,18 @@ public class NotificationItemViewModel : BaseViewModel
         CreatedAt = notification.CreatedAt;
         _isRead = notification.IsRead;
 
-        CategoryDisplay = notification.Ad.Category.ToDisplayString();
-        RelatedAdTypeDisplay = notification.RelatedAd.Type.ToDisplayString().Replace("↑ ", "").Replace("↓ ", "");
-        DateRangeDisplay = FormatDateRange(notification.RelatedAd.DateFrom, notification.RelatedAd.DateTo);
-        TimeDisplay = FormatTime(notification.CreatedAt);
+        string categoryDisplay = NotificationItemTextBuilder.GetCategoryDisplay(notification);
+        string relatedAdTypeDisplay = NotificationItemTextBuilder.GetRelatedAdTypeDisplay(notification);
+        string dateRangeDisplay = NotificationItemTextBuilder.GetDateRangeDisplay(notification);
 
-        IconGlyph = Type == AdNotificationType.Booking ? "🔔" : "✦";
-        Title = Type == AdNotificationType.Booking
-            ? "New booking on your ad"
-            : "New matching ad found";
-
-        Body = Type == AdNotificationType.Booking
-            ? $"{notification.RelatedAd.AuthorName} booked slots for your \"{CategoryDisplay}\" ad · {DateRangeDisplay}"
-            : $"A new \"{CategoryDisplay}\" ad appeared that matches your ad · {RelatedAdTypeDisplay} · {DateRangeDisplay}";
+        TimeDisplay = NotificationItemTextBuilder.GetTimeDisplay(notification);
+        IconGlyph = NotificationItemTextBuilder.GetIconGlyph(notification);
+        Title = NotificationItemTextBuilder.GetTitle(notification);
+        Body = NotificationItemTextBuilder.GetBody(
+            notification,
+            categoryDisplay,
+            relatedAdTypeDisplay,
+            dateRangeDisplay);
 
         ActionText = "View Slots →";
     }
@@ -47,9 +44,6 @@ public class NotificationItemViewModel : BaseViewModel
     public string Body { get; }
     public string TimeDisplay { get; }
     public string ActionText { get; }
-    public string CategoryDisplay { get; }
-    public string RelatedAdTypeDisplay { get; }
-    public string DateRangeDisplay { get; }
 
     public bool IsRead
     {
@@ -68,26 +62,5 @@ public class NotificationItemViewModel : BaseViewModel
     public void MarkAsRead()
     {
         IsRead = true;
-    }
-
-    private static string FormatDateRange(DateOnly dateFrom, DateOnly dateTo)
-    {
-        if (dateFrom == dateTo)
-            return $"{dateFrom:dd.MM.}";
-
-        return $"{dateFrom:dd.MM.} – {dateTo:dd.MM.}";
-    }
-
-    private static string FormatTime(DateTime createdAt)
-    {
-        DateTime today = DateTime.Today;
-
-        if (createdAt.Date == today)
-            return $"Today, {createdAt:HH:mm}";
-
-        if (createdAt.Date == today.AddDays(-1))
-            return $"Yesterday, {createdAt:HH:mm}";
-
-        return $"{createdAt:dd.MM.yyyy}, {createdAt:HH:mm}";
     }
 }

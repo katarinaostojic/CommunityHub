@@ -2,7 +2,7 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.Ads;
-using CommunityHub.Ui.Helpers.Tenant.Demo;
+using CommunityHub.Ui.Helpers.Tenant.Demo.Building.Ads;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.Ads.NewAd;
 using System.Windows;
 using System.Windows.Controls;

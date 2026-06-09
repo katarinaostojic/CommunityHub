@@ -5,77 +5,39 @@ using CommunityHub.Ui.Views.TenantViews.Dialogs.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace CommunityHub.Ui.Helpers.Tenant.Demo;
+namespace CommunityHub.Ui.Helpers.Tenant.Demo.Buildings.CommonRooms;
 
-public class CommonRoomsDemoController
+public class CommonRoomRequestDemoPlayer
 {
     private const int ShortPause = 1400;
     private const int MediumPause = 1800;
     private const int LongPause = 2800;
 
     private readonly TenantDemoRunner _demoRunner;
-    private readonly CommonRoomsViewModel _viewModel;
     private readonly string _buildingInfo;
-    private readonly ScrollViewer _roomsScrollViewer;
     private readonly Border _successBanner;
     private readonly TextBlock _successTextBlock;
     private readonly Button _viewRequestsButton;
     private readonly Func<Window?> _getOwner;
 
-    private CommonRoomsDemoState? _state;
-
-    public CommonRoomsDemoController(
-        Button demoButton,
-        CommonRoomsViewModel viewModel,
+    public CommonRoomRequestDemoPlayer(
+        TenantDemoRunner demoRunner,
         string buildingInfo,
-        ScrollViewer roomsScrollViewer,
         Border successBanner,
         TextBlock successTextBlock,
         Button viewRequestsButton,
         Func<Window?> getOwner)
     {
-        _demoRunner = new TenantDemoRunner(demoButton);
-        _viewModel = viewModel;
+        _demoRunner = demoRunner;
         _buildingInfo = buildingInfo;
-        _roomsScrollViewer = roomsScrollViewer;
         _successBanner = successBanner;
         _successTextBlock = successTextBlock;
         _viewRequestsButton = viewRequestsButton;
         _getOwner = getOwner;
     }
 
-    public async Task ToggleAsync()
+    public async Task ShowAsync(CommonRoomCardViewModel? room, CancellationToken token)
     {
-        if (!_demoRunner.IsRunning)
-            _state = CaptureState();
-
-        await _demoRunner.ToggleAsync(RunCycleAsync, RestoreState);
-    }
-
-    private async Task RunCycleAsync(CancellationToken token)
-    {
-        ResetDemoView();
-        await _demoRunner.DelayAsync(token, MediumPause);
-
-        await ShowCommonRoomsListAsync(token);
-        await ShowRequestRentalAsync(token);
-
-        await _demoRunner.DelayAsync(token, MediumPause);
-    }
-
-    private async Task ShowCommonRoomsListAsync(CancellationToken token)
-    {
-        _roomsScrollViewer.ScrollToEnd();
-        await _demoRunner.DelayAsync(token, MediumPause);
-
-        _roomsScrollViewer.ScrollToHome();
-        await _demoRunner.DelayAsync(token, MediumPause);
-    }
-
-    private async Task ShowRequestRentalAsync(CancellationToken token)
-    {
-        CommonRoomCardViewModel? room = _viewModel.Rooms.FirstOrDefault();
-
         if (room == null)
             return;
 
@@ -110,7 +72,7 @@ public class CommonRoomsDemoController
 
     private CommonRoomRequestDialog CreateDialog(CommonRoomCardViewModel room)
     {
-        CommonRoomRequestDialogViewModel dialogViewModel = new CommonRoomRequestDialogViewModel(
+        CommonRoomRequestDialogViewModel dialogViewModel = new(
             _buildingInfo,
             room.Name,
             room.FloorDisplay,
@@ -163,38 +125,4 @@ public class CommonRoomsDemoController
         _successBanner.Visibility = Visibility.Visible;
         _viewRequestsButton.Visibility = Visibility.Visible;
     }
-
-    private void ResetDemoView()
-    {
-        _roomsScrollViewer.ScrollToHome();
-        _successBanner.Visibility = Visibility.Collapsed;
-    }
-
-    private CommonRoomsDemoState CaptureState()
-    {
-        return new CommonRoomsDemoState(
-            _successBanner.Visibility,
-            _successTextBlock.Text,
-            _viewRequestsButton.Visibility,
-            _roomsScrollViewer.VerticalOffset);
-    }
-
-    private void RestoreState()
-    {
-        if (_state == null)
-            return;
-
-        _successBanner.Visibility = _state.SuccessBannerVisibility;
-        _successTextBlock.Text = _state.SuccessText;
-        _viewRequestsButton.Visibility = _state.ViewRequestsButtonVisibility;
-        _roomsScrollViewer.ScrollToVerticalOffset(_state.ScrollOffset);
-
-        _state = null;
-    }
-
-    private sealed record CommonRoomsDemoState(
-        Visibility SuccessBannerVisibility,
-        string SuccessText,
-        Visibility ViewRequestsButtonVisibility,
-        double ScrollOffset);
 }

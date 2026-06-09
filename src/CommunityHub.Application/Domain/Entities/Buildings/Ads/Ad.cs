@@ -15,8 +15,16 @@ public class Ad
     public AdStatus Status { get; private set; }
     public List<AdSlot> Slots { get; private set; }
 
-    public Ad(long id, long buildingId, User author, AdType type, AdCategory category,
-        string description, DateOnly dateFrom, DateOnly dateTo, AdStatus status)
+    public Ad(
+        long id,
+        long buildingId,
+        User author,
+        AdType type,
+        AdCategory category,
+        string description,
+        DateOnly dateFrom,
+        DateOnly dateTo,
+        AdStatus status)
     {
         Id = id;
         BuildingId = buildingId;
@@ -30,8 +38,14 @@ public class Ad
         Slots = new List<AdSlot>();
     }
 
-    public Ad(long buildingId, User author, AdType type, AdCategory category,
-        string description, DateOnly dateFrom, DateOnly dateTo)
+    public Ad(
+        long buildingId,
+        User author,
+        AdType type,
+        AdCategory category,
+        string description,
+        DateOnly dateFrom,
+        DateOnly dateTo)
     {
         Id = 0;
         BuildingId = buildingId;
@@ -45,27 +59,38 @@ public class Ad
         Slots = new List<AdSlot>();
     }
 
-    public void Archive() => Status = AdStatus.Archived;
+    public void Archive()
+    {
+        Status = AdStatus.Archived;
+    }
 
-    public void Restore() => Status = AdStatus.Active;
+    public void Restore()
+    {
+        Status = AdStatus.Active;
+    }
 
-    public bool IsActive => Status == AdStatus.Active;
+    public bool IsActive => AdRules.IsActive(Status);
 
-    public bool IsExpired(DateOnly today) => IsActive && DateTo < today;
+    public bool IsExpired(DateOnly today)
+    {
+        return AdRules.IsExpired(Status, DateTo, today);
+    }
 
     public bool OverlapsWith(DateOnly otherFrom, DateOnly otherTo)
-        => DateFrom <= otherTo && DateTo >= otherFrom;
+    {
+        return AdRules.OverlapsWith(DateFrom, DateTo, otherFrom, otherTo);
+    }
 
-    public AdType OppositeType => Type == AdType.Offering ? AdType.Seeking : AdType.Offering;
+    public AdType OppositeType => AdRules.GetOppositeType(Type);
 
     public bool IsEligibleMatchFor(Ad other)
     {
-        return IsActive
-            && other.IsActive
-            && Author.Id != other.Author.Id
-            && Type == other.OppositeType
-            && Category == other.Category
-            && OverlapsWith(other.DateFrom, other.DateTo);
+        return AdRules.IsEligibleMatchFor(this, other);
+    }
+
+    public static string? ValidateDescription(string description)
+    {
+        return AdRules.ValidateDescription(description);
     }
 
     public static string? ValidateDescription(string description)
@@ -78,12 +103,6 @@ public class Ad
 
     public static string? ValidateDateRange(DateOnly dateFrom, DateOnly dateTo)
     {
-        if (dateFrom < DateOnly.FromDateTime(DateTime.Today))
-            return "Dates cannot be in the past.";
-
-        if (dateFrom > dateTo)
-            return "Start date must be before end date.";
-
-        return null;
+        return AdRules.ValidateDateRange(dateFrom, dateTo);
     }
 }

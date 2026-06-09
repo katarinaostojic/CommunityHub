@@ -7,6 +7,7 @@ using CommunityHub.Application.Database.Repositories.Neighborhoods;
 using CommunityHub.Application.Database.Repositories.Neighborhoods.Budget;
 using CommunityHub.Application.Database.Repositories.Neighborhoods.Reviews;
 using CommunityHub.Application.Database.Repositories.Shared;
+using CommunityHub.Application.Domain.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.Ads;
 using CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
@@ -56,14 +57,18 @@ public static class Injector
     private static readonly CoordinatorReviewDbRepository _coordinatorReviewRepository = new();
     private static readonly TrustRecordDbRepository _trustRecordRepository = new();
 
+    private static readonly BuildingAccessRequestValidator _buildingAccessRequestValidator = new();
+
     private static readonly BuildingService _buildingService = new(
         _buildingRepository,
-        _imageRepository);
+        _imageRepository,
+        _buildingAccessRequestValidator);
 
     private static readonly BuildingAccessRequestService _buildingAccessRequestService = new(
         _buildingAccessRequestRepository,
         _buildingMembershipRepository,
-        _buildingRepository);
+        _buildingRepository,
+        _buildingAccessRequestValidator);
 
     private static readonly BuildingMembershipService _buildingMembershipService = new(
         _buildingMembershipRepository);
