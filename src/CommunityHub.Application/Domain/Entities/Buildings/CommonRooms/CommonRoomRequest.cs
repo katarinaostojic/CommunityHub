@@ -39,26 +39,27 @@ public class CommonRoomRequest
     }
 
     public bool CanBeCancelled
-        => Status == CommonRoomRequestStatus.Pending ||
-           Status == CommonRoomRequestStatus.PendingDateChange;
+        => CommonRoomRequestRules.CanBeCancelled(Status);
 
     public bool CanAcceptProposedDateChange
-        => Status == CommonRoomRequestStatus.PendingDateChange &&
-           ProposedDateFrom != null &&
-           ProposedDateTo != null;
+        => CommonRoomRequestRules.CanAcceptProposedDateChange(
+            Status,
+            ProposedDateFrom,
+            ProposedDateTo);
+
+    public int RequestedDays => (int)(DateTo - DateFrom).TotalDays + 1;
 
     public void EnsureCanBeCancelled()
     {
-        if (!CanBeCancelled)
-            throw new InvalidOperationException("Only pending requests can be cancelled.");
+        CommonRoomRequestRules.EnsureCanBeCancelled(Status);
     }
 
     public bool CanBeAutoApproved(bool isRequestedRangeFree)
     {
-        return CommonRoom.IsMultiDayRental && isRequestedRangeFree;
+        return CommonRoomRequestRules.CanBeAutoApproved(
+            CommonRoom.IsMultiDayRental,
+            isRequestedRangeFree);
     }
-
-    public int RequestedDays => (int)(DateTo - DateFrom).TotalDays + 1;
 
     public void AutoApprove()
     {
@@ -85,8 +86,10 @@ public class CommonRoomRequest
 
     public void AcceptProposedDates()
     {
-        if (!CanAcceptProposedDateChange)
-            throw new InvalidOperationException("Only requests with proposed date changes can be accepted.");
+        CommonRoomRequestRules.EnsureCanAcceptProposedDateChange(
+            Status,
+            ProposedDateFrom,
+            ProposedDateTo);
 
         DateFrom = ProposedDateFrom!.Value;
         DateTo = ProposedDateTo!.Value;
@@ -97,15 +100,6 @@ public class CommonRoomRequest
 
     public static string? ValidateDateRange(DateTime dateFrom, DateTime dateTo)
     {
-        if (dateFrom.Date < DateTime.Today)
-            return "Start date cannot be in the past.";
-
-        if (dateTo.Date < DateTime.Today)
-            return "End date cannot be in the past.";
-
-        if (dateTo.Date < dateFrom.Date)
-            return "End date must be after start date.";
-
-        return null;
+        return CommonRoomRequestRules.ValidateDateRange(dateFrom, dateTo);
     }
 }
