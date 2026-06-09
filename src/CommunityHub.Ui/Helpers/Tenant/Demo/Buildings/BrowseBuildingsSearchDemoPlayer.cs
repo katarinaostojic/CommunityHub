@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CommunityHub.Ui.Helpers.Tenant.Demo;
+namespace CommunityHub.Ui.Helpers.Tenant.Demo.Buildings;
 
 public class BrowseBuildingsSearchDemoPlayer
 {

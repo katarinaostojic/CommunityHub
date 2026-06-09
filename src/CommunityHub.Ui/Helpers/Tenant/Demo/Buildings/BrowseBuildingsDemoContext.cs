@@ -5,7 +5,7 @@ using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace CommunityHub.Ui.Helpers.Tenant.Demo;
+namespace CommunityHub.Ui.Helpers.Tenant.Demo.Buildings;
 
 public class BrowseBuildingsDemoContext
 {

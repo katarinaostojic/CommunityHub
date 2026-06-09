@@ -48,13 +48,17 @@ public partial class NoticeBoardPage : Page
                                                       AppMenu, CategoryComboBox, _filterController);
 
         if (_startDemo)
-            Loaded += StartDemoOnLoaded;
-    }
+        {
+            RoutedEventHandler? startDemoHandler = null;
 
-    private async void StartDemoOnLoaded(object sender, RoutedEventArgs e)
-    {
-        Loaded -= StartDemoOnLoaded;
-        await _demoController.ToggleAsync();
+            startDemoHandler = async (_, _) =>
+            {
+                Loaded -= startDemoHandler;
+                await _demoController.ToggleAsync();
+            };
+
+            Loaded += startDemoHandler;
+        }
     }
 
     public void ShowBookingSuccess()

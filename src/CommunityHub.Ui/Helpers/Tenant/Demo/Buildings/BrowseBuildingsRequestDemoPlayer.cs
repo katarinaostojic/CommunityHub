@@ -1,7 +1,7 @@
 ﻿using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.Views.TenantViews;
 
-namespace CommunityHub.Ui.Helpers.Tenant.Demo;
+namespace CommunityHub.Ui.Helpers.Tenant.Demo.Buildings;
 
 public class BrowseBuildingsRequestDemoPlayer
 {

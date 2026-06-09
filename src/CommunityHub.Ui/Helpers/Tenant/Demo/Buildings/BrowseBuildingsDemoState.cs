@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CommunityHub.Ui.Helpers.Tenant.Demo;
+namespace CommunityHub.Ui.Helpers.Tenant.Demo.Buildings;
 
 public sealed record BrowseBuildingsDemoState(
     string SearchText,

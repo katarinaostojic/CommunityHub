@@ -17,17 +17,19 @@ public class NotificationItemViewModel : BaseViewModel
         CreatedAt = notification.CreatedAt;
         _isRead = notification.IsRead;
 
-        CategoryDisplay = NotificationItemTextBuilder.GetCategoryDisplay(notification);
-        RelatedAdTypeDisplay = NotificationItemTextBuilder.GetRelatedAdTypeDisplay(notification);
-        DateRangeDisplay = NotificationItemTextBuilder.GetDateRangeDisplay(notification);
+        string categoryDisplay = NotificationItemTextBuilder.GetCategoryDisplay(notification);
+        string relatedAdTypeDisplay = NotificationItemTextBuilder.GetRelatedAdTypeDisplay(notification);
+        string dateRangeDisplay = NotificationItemTextBuilder.GetDateRangeDisplay(notification);
+
         TimeDisplay = NotificationItemTextBuilder.GetTimeDisplay(notification);
         IconGlyph = NotificationItemTextBuilder.GetIconGlyph(notification);
         Title = NotificationItemTextBuilder.GetTitle(notification);
         Body = NotificationItemTextBuilder.GetBody(
             notification,
-            CategoryDisplay,
-            RelatedAdTypeDisplay,
-            DateRangeDisplay);
+            categoryDisplay,
+            relatedAdTypeDisplay,
+            dateRangeDisplay);
+
         ActionText = "View Slots →";
     }
 
@@ -42,9 +44,6 @@ public class NotificationItemViewModel : BaseViewModel
     public string Body { get; }
     public string TimeDisplay { get; }
     public string ActionText { get; }
-    public string CategoryDisplay { get; }
-    public string RelatedAdTypeDisplay { get; }
-    public string DateRangeDisplay { get; }
 
     public bool IsRead
     {
