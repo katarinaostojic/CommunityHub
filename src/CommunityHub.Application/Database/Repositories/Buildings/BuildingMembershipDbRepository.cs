@@ -32,6 +32,24 @@ public class BuildingMembershipDbRepository : BaseDbRepository, IBuildingMembers
         return BuildingMembershipReader.ReadMembershipsWithBuilding(reader);
     }
 
+    public bool Exists(long tenantId, long buildingId)
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = @"
+        SELECT EXISTS (
+            SELECT 1
+            FROM building_memberships
+            WHERE user_id = @tenantId
+              AND building_id = @buildingId
+        )";
+
+        AddParameter(command, "@tenantId", tenantId);
+        AddParameter(command, "@buildingId", buildingId);
+
+        return Convert.ToBoolean(command.ExecuteScalar());
+    }
+
     public void Create(BuildingAccessRequest request)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();

@@ -1,23 +1,32 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 
 namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 
 public class CommonRoomRequestCommandService
 {
+    private readonly ICommonRoomRepository _commonRoomRepository;
     private readonly ICommonRoomRequestRepository _requestRepository;
+    private readonly IBuildingMembershipRepository _membershipRepository;
     private readonly CommonRoomRequestApprovalService _approvalService;
 
     public CommonRoomRequestCommandService(
+        ICommonRoomRepository commonRoomRepository,
         ICommonRoomRequestRepository requestRepository,
+        IBuildingMembershipRepository membershipRepository,
         CommonRoomRequestApprovalService approvalService)
     {
+        _commonRoomRepository = commonRoomRepository;
         _requestRepository = requestRepository;
+        _membershipRepository = membershipRepository;
         _approvalService = approvalService;
     }
 
     public void CreateRequest(long commonRoomId, long tenantId, DateTime dateFrom, DateTime dateTo)
     {
+        CommonRoom room = GetRequiredCommonRoom(commonRoomId);
+        EnsureTenantHasBuildingMembership(tenantId, room.BuildingId);
         ValidateDateRange(dateFrom, dateTo);
 
         long requestId = _requestRepository.Create(commonRoomId, tenantId, dateFrom, dateTo);
@@ -48,7 +57,6 @@ public class CommonRoomRequestCommandService
             return;
 
         request.EnsureCanBeCancelled();
-
         _requestRepository.Delete(request.Id);
     }
 
@@ -61,7 +69,6 @@ public class CommonRoomRequestCommandService
 
         request.AcceptProposedDates();
         _requestRepository.Update(request);
-
         _approvalService.TryAutoApproveMultiDay(request);
     }
 
@@ -74,6 +81,18 @@ public class CommonRoomRequestCommandService
         }
 
         _approvalService.TryAutoApproveMultiDay(request);
+    }
+
+    private CommonRoom GetRequiredCommonRoom(long commonRoomId)
+    {
+        return _commonRoomRepository.GetById(commonRoomId)
+            ?? throw new InvalidOperationException("Common room was not found.");
+    }
+
+    private void EnsureTenantHasBuildingMembership(long tenantId, long buildingId)
+    {
+        if (!_membershipRepository.Exists(tenantId, buildingId))
+            throw new InvalidOperationException("Tenant is not a member of this building.");
     }
 
     private static void ValidateDateRange(DateTime dateFrom, DateTime dateTo)

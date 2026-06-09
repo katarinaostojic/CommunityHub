@@ -11,35 +11,29 @@ public class AdService
     private readonly AdSlotBookingService _slotBookingService;
     private readonly AdExpirationService _expirationService;
     private readonly IAdNotificationRepository _notificationRepository;
+    private readonly AdCreationValidator _creationValidator;
 
     public AdService(
         IAdRepository adRepository,
         IAdNotificationRepository notificationRepository,
         AdSlotBookingService slotBookingService,
-        AdExpirationService expirationService)
+        AdExpirationService expirationService,
+        AdCreationValidator creationValidator)
     {
         _adRepository = adRepository;
         _notificationRepository = notificationRepository;
         _slotBookingService = slotBookingService;
         _expirationService = expirationService;
+        _creationValidator = creationValidator;
     }
 
-    public List<AdDto> GetFilteredActiveByBuilding(
-        long buildingId,
-        AdType? type,
-        AdCategory? category)
+    public List<AdDto> GetFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category)
     {
         _expirationService.RefreshExpiredAds(buildingId);
-
-        return _adRepository
-            .GetFilteredActiveByBuilding(buildingId, type, category)
-            .ToAdDtoList();
+        return _adRepository.GetFilteredActiveByBuilding(buildingId, type, category).ToAdDtoList();
     }
 
-    public int CountFilteredActiveByBuilding(
-        long buildingId,
-        AdType? type,
-        AdCategory? category)
+    public int CountFilteredActiveByBuilding(long buildingId, AdType? type, AdCategory? category)
     {
         _expirationService.RefreshExpiredAds(buildingId);
         return _adRepository.CountFilteredActiveByBuilding(buildingId, type, category);
@@ -58,13 +52,9 @@ public class AdService
         return _adRepository.GetById(adId)?.ToAdDto();
     }
 
-    public List<AdDto> GetReportAds(
-        long buildingId,
-        DateOnly dateFrom,
-        DateOnly dateTo)
+    public List<AdDto> GetReportAds(long buildingId, DateOnly dateFrom, DateOnly dateTo)
     {
         _expirationService.RefreshExpiredAds(buildingId);
-
         return _adRepository
             .GetAllByBuilding(buildingId)
             .Where(ad => ad.OverlapsWith(dateFrom, dateTo))
@@ -76,6 +66,8 @@ public class AdService
 
     public (AdDto newAd, List<AdDto> matchingAds) Create(CreateAdDto request)
     {
+        _creationValidator.Validate(request);
+
         Ad ad = new(
             request.BuildingId,
             request.Author,
@@ -88,14 +80,12 @@ public class AdService
         Ad newAd = CreateAdWithSlots(ad);
         List<Ad> matchingAds = FindMatchingAds(newAd);
         NotifyAdsWaitingForMatch(newAd, matchingAds);
-
         return (newAd.ToAdDto(), matchingAds.ToAdDtoList());
     }
 
     public void Archive(long adId)
     {
         Ad ad = GetRequiredAd(adId);
-
         ad.Archive();
         _adRepository.Update(ad);
     }
@@ -103,7 +93,6 @@ public class AdService
     public void Restore(long adId)
     {
         Ad ad = GetRequiredAd(adId);
-
         ad.Restore();
         _adRepository.Update(ad);
     }
@@ -111,9 +100,7 @@ public class AdService
     private Ad CreateAdWithSlots(Ad ad)
     {
         long adId = _adRepository.Create(ad);
-
         _slotBookingService.CreateSlotsForAd(adId, ad.DateFrom, ad.DateTo);
-
         return GetRequiredAd(adId);
     }
 
@@ -126,7 +113,6 @@ public class AdService
     private List<Ad> FindMatchingAds(Ad newAd)
     {
         _expirationService.RefreshExpiredAds(newAd.BuildingId);
-
         return _adRepository
             .GetFilteredActiveByBuilding(newAd.BuildingId, newAd.OppositeType, newAd.Category)
             .Where(ad => ad.IsEligibleMatchFor(newAd))

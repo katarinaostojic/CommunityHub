@@ -79,11 +79,15 @@ public static class Injector
     private static readonly AdNotificationService _adNotificationService = new(
         _adNotificationRepository);
 
+    private static readonly AdCreationValidator _adCreationValidator = new(
+    _buildingMembershipRepository);
+
     private static readonly AdService _adService = new(
         _adRepository,
         _adNotificationRepository,
         _adSlotBookingService,
-        _adExpirationService);
+        _adExpirationService,
+        _adCreationValidator);
 
     private static readonly AdsReportService _tenantAdsReportService = new(
         _adService);
@@ -103,11 +107,14 @@ public static class Injector
         _commonRoomRequestAvailabilityService);
 
     private static readonly CommonRoomRequestCommandService _commonRoomRequestCommandService = new(
+        _commonRoomRepository,
         _commonRoomRequestRepository,
+        _buildingMembershipRepository,
         _commonRoomRequestApprovalService);
 
     private static readonly CommonRoomRequestService _commonRoomRequestService = new(
         _commonRoomRequestRepository,
+        _buildingMembershipRepository,
         _commonRoomRequestApprovalService,
         _commonRoomRequestCommandService);
 

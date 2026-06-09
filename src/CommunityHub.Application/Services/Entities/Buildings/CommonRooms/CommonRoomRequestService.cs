@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
+﻿using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings;
+using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.CommonRooms;
 using CommunityHub.Application.DTOs.Buildings.CommonRooms;
 using CommunityHub.Application.Mappings.Buildings.CommonRooms;
 
@@ -7,15 +8,18 @@ namespace CommunityHub.Application.Services.Entities.Buildings.CommonRooms;
 public class CommonRoomRequestService
 {
     private readonly ICommonRoomRequestRepository _requestRepository;
+    private readonly IBuildingMembershipRepository _membershipRepository;
     private readonly CommonRoomRequestApprovalService _approvalService;
     private readonly CommonRoomRequestCommandService _commandService;
 
     public CommonRoomRequestService(
         ICommonRoomRequestRepository requestRepository,
+        IBuildingMembershipRepository membershipRepository,
         CommonRoomRequestApprovalService approvalService,
         CommonRoomRequestCommandService commandService)
     {
         _requestRepository = requestRepository;
+        _membershipRepository = membershipRepository;
         _approvalService = approvalService;
         _commandService = commandService;
     }
@@ -57,6 +61,7 @@ public class CommonRoomRequestService
 
     public List<CommonRoomRequestDto> GetByTenantAndBuilding(long tenantId, long buildingId)
     {
+        EnsureTenantHasBuildingMembership(tenantId, buildingId);
         return _requestRepository.GetByTenantAndBuilding(tenantId, buildingId).ToDtoList();
     }
 
@@ -73,5 +78,11 @@ public class CommonRoomRequestService
     public void AcceptProposedDateChange(long requestId)
     {
         _commandService.AcceptProposedDateChange(requestId);
+    }
+
+    private void EnsureTenantHasBuildingMembership(long tenantId, long buildingId)
+    {
+        if (!_membershipRepository.Exists(tenantId, buildingId))
+            throw new InvalidOperationException("Tenant is not a member of this building.");
     }
 }

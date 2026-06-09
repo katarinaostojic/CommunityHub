@@ -68,6 +68,14 @@ public class Ad
             && OverlapsWith(other.DateFrom, other.DateTo);
     }
 
+    public static string? ValidateDescription(string description)
+    {
+        if (string.IsNullOrWhiteSpace(description))
+            return "Description is required.";
+
+        return null;
+    }
+
     public static string? ValidateDateRange(DateOnly dateFrom, DateOnly dateTo)
     {
         if (dateFrom < DateOnly.FromDateTime(DateTime.Today))
