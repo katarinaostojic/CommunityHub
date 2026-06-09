@@ -7,7 +7,7 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Dialogs.Buildings;
 public class BuildingAccessRequestDialogViewModel : BaseViewModel
 {
     private readonly BuildingAccessRequestService _requestService;
-    private readonly BuildingService _buildingService;
+    private readonly BuildingAccessRequestDialogValidator _validator;
     private readonly BuildingDto _building;
     private readonly User _user;
 
@@ -24,13 +24,13 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
         User user)
     {
         _requestService = requestService;
-        _buildingService = buildingService;
         _building = building;
         _user = user;
+        _validator = new BuildingAccessRequestDialogValidator(buildingService, building, user);
 
         Title = $"REQUEST ACCESS: {building.FullAddress}";
         BuildingInfo = $"Building: {building.FullAddress}, {building.CityName}, {building.Neighborhood}";
-        SortedUnitNumbers = _buildingService.GetSortedUnitNumbers(_building.Id);
+        SortedUnitNumbers = buildingService.GetSortedUnitNumbers(_building.Id);
     }
 
     public string Title { get; }
@@ -79,30 +79,38 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
     public bool SubmitRequest()
     {
         string unitNumber = UnitNumber.Trim();
-        string? validationError = ValidateUnitNumber(unitNumber);
 
-        if (validationError != null)
-        {
-            ShowValidationError(validationError);
+        if (!CanSubmit(unitNumber))
             return false;
-        }
 
         _requestService.CreateForBuilding(_building.Id, _user, unitNumber);
         return true;
     }
 
-    private string? ValidateUnitNumber(string unitNumber)
+    public string GetDemoUnitNumber()
     {
-        if (string.IsNullOrEmpty(unitNumber))
-            return "Please enter an apartment number.";
+        return _validator.GetDemoUnitNumber(SortedUnitNumbers);
+    }
 
-        if (!_buildingService.ContainsUnit(_building.Id, unitNumber))
-            return "Please select a valid apartment number from the list.";
+    public void SetUnitNumberForDemo(string unitNumber)
+    {
+        UnitNumber = unitNumber;
+    }
 
-        if (_buildingService.HasExistingRequest(_building.Id, _user.Id, unitNumber))
-            return "You already have a request for this apartment.";
+    public bool CanSubmitRequestForDemo()
+    {
+        return CanSubmit(UnitNumber.Trim());
+    }
 
-        return null;
+    private bool CanSubmit(string unitNumber)
+    {
+        string? validationError = _validator.ValidateUnitNumber(unitNumber);
+
+        if (validationError == null)
+            return true;
+
+        ShowValidationError(validationError);
+        return false;
     }
 
     private void ShowValidationError(string message)
@@ -120,44 +128,9 @@ public class BuildingAccessRequestDialogViewModel : BaseViewModel
     private void UpdateWarning()
     {
         string unitNumber = UnitNumber.Trim();
+        bool hasWarning = _validator.HasOccupiedUnitWarning(unitNumber);
 
-        if (string.IsNullOrEmpty(unitNumber))
-        {
-            HasWarning = false;
-            WarningMessage = string.Empty;
-            return;
-        }
-
-        bool isOccupied = _buildingService.IsUnitOccupied(_building.Id, unitNumber);
-
-        HasWarning = isOccupied;
-        WarningMessage = isOccupied
-            ? $"Warning: Apartment {unitNumber} is already occupied by another user.\nYou can still submit a request."
-            : string.Empty;
-    }
-
-    public string GetDemoUnitNumber()
-    {
-        string? availableUnitNumber = SortedUnitNumbers
-            .FirstOrDefault(unitNumber => !_buildingService.HasExistingRequest(_building.Id, _user.Id, unitNumber));
-
-        return availableUnitNumber ?? SortedUnitNumbers.FirstOrDefault() ?? "1";
-    }
-
-    public void SetUnitNumberForDemo(string unitNumber)
-    {
-        UnitNumber = unitNumber;
-    }
-
-    public bool CanSubmitRequestForDemo()
-    {
-        string unitNumber = UnitNumber.Trim();
-        string? validationError = ValidateUnitNumber(unitNumber);
-
-        if (validationError == null)
-            return true;
-
-        ShowValidationError(validationError);
-        return false;
+        HasWarning = hasWarning;
+        WarningMessage = _validator.GetWarningMessage(unitNumber, hasWarning);
     }
 }
