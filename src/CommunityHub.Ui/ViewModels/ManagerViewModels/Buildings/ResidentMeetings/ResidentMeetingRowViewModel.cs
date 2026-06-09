@@ -17,7 +17,7 @@ public class ResidentMeetingRowViewModel
     public List<string> Topics => _dto.Topics;
     public int AttendanceCount => _dto.AttendanceCount;
     public int UnitCount => _dto.UnitCount;
-
+    public DateTime DeadlineAt => _dto.DeadlineAt;
     public string DateDisplay => _dto.MeetingDate.ToString("dd.MM.yyyy.");
     public string TimeDisplay => _dto.MeetingTime.ToString(@"hh\:mm");
     public string AttendanceDisplay => $"{_dto.AttendanceCount}/{_dto.UnitCount} apartments confirmed";

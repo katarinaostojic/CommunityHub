@@ -101,7 +101,7 @@ public class ResidentMeetingService
         _scheduleService.CreateMeeting(buildingId, date, time, topics);
     }
 
-    public List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId)
+    public List<ResidentMeetingTopicSuggestionDto> GetTopicSuggestions(long meetingId)
     {
         return _topicService.GetTopicSuggestions(meetingId);
     }

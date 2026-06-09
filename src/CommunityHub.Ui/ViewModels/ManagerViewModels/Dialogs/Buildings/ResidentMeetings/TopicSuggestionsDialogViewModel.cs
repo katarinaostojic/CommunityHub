@@ -1,5 +1,5 @@
-﻿using CommunityHub.Application.Domain.Entities.Buildings.ResidentMeetings;
-using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.ResidentMeetings;
+﻿using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.ResidentMeetings;
+using CommunityHub.Application.DTOs.Buildings.ResidentMeetings;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -11,8 +11,8 @@ public class TopicSuggestionsDialogViewModel : BaseViewModel
     private readonly long _meetingId;
     private bool _addedAtLeastOne;
 
-    private ObservableCollection<ResidentMeetingTopicSuggestion> _suggestions = new();
-    public ObservableCollection<ResidentMeetingTopicSuggestion> Suggestions
+    private ObservableCollection<ResidentMeetingTopicSuggestionDto> _suggestions = new();
+    public ObservableCollection<ResidentMeetingTopicSuggestionDto> Suggestions
     {
         get => _suggestions;
         private set => SetProperty(ref _suggestions, value);
@@ -24,12 +24,15 @@ public class TopicSuggestionsDialogViewModel : BaseViewModel
 
     public bool CanClose => !HadSuggestionsAtStart || _addedAtLeastOne;
 
+    private readonly bool _canChangTopics;
+
     public TopicSuggestionsDialogViewModel(
         ResidentMeetingsViewModel parentViewModel,
         ResidentMeetingRowViewModel meeting)
     {
         _parentViewModel = parentViewModel;
         _meetingId = meeting.Id;
+        _canChangTopics = DateTime.Now < meeting.DeadlineAt;
 
         var allSuggestions = parentViewModel.GetTopicSuggestions(meeting.Id);
 
@@ -37,9 +40,9 @@ public class TopicSuggestionsDialogViewModel : BaseViewModel
             .Where(s => !meeting.Topics.Contains(s.Topic))
             .ToList();
 
-        HadSuggestionsAtStart = filtered.Count > 0;
+        HadSuggestionsAtStart = filtered.Count > 0 && _canChangTopics;
         _addedAtLeastOne = allSuggestions.Any(s => meeting.Topics.Contains(s.Topic));
-        Suggestions = new ObservableCollection<ResidentMeetingTopicSuggestion>(filtered);
+        Suggestions = new ObservableCollection<ResidentMeetingTopicSuggestionDto>(filtered);
     }
 
     public void AddTopic(string topic)
