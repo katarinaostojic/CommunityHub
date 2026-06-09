@@ -66,25 +66,6 @@ public class Building
             .Any(u => u.UnitNumber == unitNumber);
     }
 
-    public bool HasExistingRequest(long userId, string unitNumber)
-    {
-        return AccessRequests.Any(r => r.Tenant.Id == userId
-            && r.UnitNumber == unitNumber
-            && r.Status == RequestStatus.PendingApproval);
-    }
-
-    public void EnsureAccessRequestCanBeCreated(long tenantId, string unitNumber)
-    {
-        if (string.IsNullOrWhiteSpace(unitNumber))
-            throw new InvalidOperationException("Apartment number is required.");
-
-        if (!ContainsUnit(unitNumber))
-            throw new InvalidOperationException("Apartment does not exist in this building.");
-
-        if (HasExistingRequest(tenantId, unitNumber))
-            throw new InvalidOperationException("You already have a pending request for this apartment.");
-    }
-
     public List<string> GetSortedUnitNumbers()
     {
         return Floors

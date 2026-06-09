@@ -10,11 +10,16 @@ public class BuildingService
 {
     private readonly IBuildingRepository _repository;
     private readonly IImageRepository _imageRepository;
+    private readonly BuildingAccessRequestValidator _requestValidator;
 
-    public BuildingService(IBuildingRepository repository, IImageRepository imageRepository)
+    public BuildingService(
+        IBuildingRepository repository,
+        IImageRepository imageRepository,
+        BuildingAccessRequestValidator requestValidator)
     {
         _repository = repository;
         _imageRepository = imageRepository;
+        _requestValidator = requestValidator;
     }
 
     public List<BuildingDto> Search(string? street, string? neighborhood, string? city, string? country)
@@ -84,6 +89,10 @@ public class BuildingService
     public bool HasExistingRequest(long buildingId, long userId, string unitNumber)
     {
         Building? building = _repository.GetById(buildingId);
-        return building?.HasExistingRequest(userId, unitNumber) ?? false;
+
+        if (building == null)
+            return false;
+
+        return _requestValidator.HasPendingRequest(building, userId, unitNumber);
     }
 }
