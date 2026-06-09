@@ -36,6 +36,19 @@ public class ResidentMeetingAccessService
             ?? throw new InvalidOperationException("Tenant is not a member of this building.");
     }
 
+    public BuildingMembership GetTenantMembershipForUnit(
+        long tenantId,
+        long buildingId,
+        string unitNumber)
+    {
+        return _membershipRepository
+            .GetByTenant(tenantId)
+            .FirstOrDefault(m =>
+                m.Building.Id == buildingId
+                && m.UnitNumber == unitNumber)
+            ?? throw new InvalidOperationException("Tenant is not a member of this apartment.");
+    }
+
     public void EnsureTenantHasBuildingMembership(long tenantId, long buildingId)
     {
         _ = GetTenantMembership(tenantId, buildingId);

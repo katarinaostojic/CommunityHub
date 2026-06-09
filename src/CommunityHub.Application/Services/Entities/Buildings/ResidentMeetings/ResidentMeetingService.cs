@@ -33,15 +33,16 @@ public class ResidentMeetingService
     public List<ResidentMeetingDto> GetByTenantAndBuilding(
         long tenantId,
         long buildingId,
+        string unitNumber,
         ResidentMeetingStatus? status = null)
     {
         DateTime now = CurrentTime;
 
-        _accessService.EnsureTenantHasBuildingMembership(tenantId, buildingId);
+        _accessService.GetTenantMembershipForUnit(tenantId, buildingId, unitNumber);
         _statusService.RefreshBuildingMeetings(buildingId, now);
 
         return _meetingRepository
-            .GetByTenantAndBuilding(tenantId, buildingId, status)
+            .GetByTenantAndBuilding(tenantId, buildingId, unitNumber, status)
             .ToDtoList(now);
     }
 
@@ -56,14 +57,14 @@ public class ResidentMeetingService
         return _meetingRepository.CountByBuilding(buildingId, status);
     }
 
-    public void Attend(long meetingId, long tenantId)
+    public void Attend(long meetingId, long tenantId, string unitNumber)
     {
-        _attendanceService.Attend(meetingId, tenantId, CurrentTime);
+        _attendanceService.Attend(meetingId, tenantId, unitNumber, CurrentTime);
     }
 
-    public void CancelAttendance(long meetingId, long tenantId)
+    public void CancelAttendance(long meetingId, long tenantId, string unitNumber)
     {
-        _attendanceService.CancelAttendance(meetingId, tenantId, CurrentTime);
+        _attendanceService.CancelAttendance(meetingId, tenantId, unitNumber, CurrentTime);
     }
 
     public void SuggestTopic(CreateResidentMeetingTopicSuggestionDto request)

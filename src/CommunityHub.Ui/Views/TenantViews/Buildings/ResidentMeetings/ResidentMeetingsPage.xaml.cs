@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.DependencyInjection;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.ResidentMeetings;
@@ -25,11 +26,26 @@ public partial class ResidentsMeetingsPage : Page
         _membership = membership;
 
         ResidentMeetingService meetingService = Injector.CreateInstance<ResidentMeetingService>();
+        BuildingMembershipService membershipService = Injector.CreateInstance<BuildingMembershipService>();
+
+        List<BuildingMembershipDto> buildingMemberships = membershipService
+            .GetByTenant(user.Id)
+            .Where(m => m.BuildingId == membership.BuildingId)
+            .ToList();
+
+        if (!buildingMemberships.Any(m => m.Id == membership.Id))
+            buildingMemberships.Insert(0, membership);
+
+        BuildingMembershipDto selectedMembership = buildingMemberships
+            .FirstOrDefault(m => m.Id == membership.Id)
+            ?? buildingMemberships.First();
 
         _viewModel = new ResidentsMeetingsViewModel(
             meetingService,
             user.Id,
-            membership.BuildingId);
+            membership.BuildingId,
+            buildingMemberships,
+            selectedMembership);
 
         DataContext = _viewModel;
 

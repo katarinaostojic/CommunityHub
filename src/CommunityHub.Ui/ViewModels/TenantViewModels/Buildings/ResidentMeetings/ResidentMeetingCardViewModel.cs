@@ -6,10 +6,12 @@ namespace CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.ResidentMeetings
 public class ResidentMeetingCardViewModel : BaseViewModel
 {
     private readonly ResidentMeetingDto _meeting;
+    private readonly string _selectedUnitNumber;
 
-    public ResidentMeetingCardViewModel(ResidentMeetingDto meeting)
+    public ResidentMeetingCardViewModel(ResidentMeetingDto meeting, string selectedUnitNumber)
     {
         _meeting = meeting;
+        _selectedUnitNumber = selectedUnitNumber;
     }
 
     public long Id => _meeting.Id;
@@ -37,6 +39,6 @@ public class ResidentMeetingCardViewModel : BaseViewModel
     };
 
     public string AttendanceActionText => _meeting.IsTenantAttending
-        ? "You confirmed attendance for your apartment."
-        : "Your apartment has not confirmed attendance yet.";
+        ? $"You confirmed attendance for apartment {_selectedUnitNumber}."
+        : $"Apartment {_selectedUnitNumber} has not confirmed attendance yet.";
 }

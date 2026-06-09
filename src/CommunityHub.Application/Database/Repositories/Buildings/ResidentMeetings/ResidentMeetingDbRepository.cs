@@ -12,6 +12,7 @@ public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMe
     public List<ResidentMeeting> GetByTenantAndBuilding(
         long tenantId,
         long buildingId,
+        string unitNumber,
         ResidentMeetingStatus? status)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
@@ -24,6 +25,7 @@ public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMe
         ORDER BY rm.meeting_date, rm.meeting_time";
 
         AddParameter(command, "@tenantId", tenantId);
+        AddParameter(command, "@unitNumber", unitNumber);
         AddParameter(command, "@buildingId", buildingId);
         AddParameter(command, "@status", GetStatusParameterValue(status));
 
@@ -43,6 +45,7 @@ public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMe
         ORDER BY rm.meeting_date, rm.meeting_time";
 
         AddParameter(command, "@tenantId", 0L);
+        AddParameter(command, "@unitNumber", string.Empty);
         AddParameter(command, "@buildingId", buildingId);
 
         using IDataReader reader = command.ExecuteReader();
@@ -59,6 +62,7 @@ public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMe
         WHERE rm.id = @meetingId";
 
         AddParameter(command, "@tenantId", tenantId);
+        AddParameter(command, "@unitNumber", string.Empty);
         AddParameter(command, "@meetingId", meetingId);
 
         using IDataReader reader = command.ExecuteReader();
@@ -93,6 +97,7 @@ public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMe
         ORDER BY rm.meeting_date, rm.meeting_time";
 
         AddParameter(command, "@tenantId", 0L);
+        AddParameter(command, "@unitNumber", string.Empty);
         AddParameter(command, "@buildingId", buildingId);
         AddParameter(command, "@status", GetStatusParameterValue(status));
 
@@ -142,13 +147,10 @@ public partial class ResidentMeetingDbRepository : BaseDbRepository, IResidentMe
                    WHERE rma.meeting_id = rm.id
                ) AS attendance_count,
                EXISTS(
-                   SELECT 1
-                   FROM resident_meeting_attendances rma
-                   JOIN building_memberships bm
-                     ON bm.building_id = rm.building_id
-                    AND bm.user_id = @tenantId
-                    AND bm.unit_number = rma.unit_number
-                   WHERE rma.meeting_id = rm.id
+                    SELECT 1
+                    FROM resident_meeting_attendances rma
+                    WHERE rma.meeting_id = rm.id
+                    AND rma.unit_number = @unitNumber
                ) AS is_tenant_attending
         FROM resident_meetings rm";
     }

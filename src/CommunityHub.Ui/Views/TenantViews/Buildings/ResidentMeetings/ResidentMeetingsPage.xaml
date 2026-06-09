@@ -105,6 +105,35 @@
                                TextWrapping="Wrap"/>
                 </Grid>
             </Border>
+            <Border Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="16,10"
+                    Margin="0,8,0,0"
+                    Visibility="{Binding ApartmentSelector.ShowSelector, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0"
+                                   Text="Acting for apartment:"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,0,0"/>
+
+                    <ComboBox Grid.Column="1"
+                              ItemsSource="{Binding ApartmentSelector.UnitNumbers}"
+                              SelectedItem="{Binding ApartmentSelector.SelectedUnitNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{StaticResource TenantComboBox}"
+                              MinWidth="20"
+                              Height="42"/>
+                </Grid>
+            </Border>
         </StackPanel>
 
         <StackPanel Grid.Row="3"
