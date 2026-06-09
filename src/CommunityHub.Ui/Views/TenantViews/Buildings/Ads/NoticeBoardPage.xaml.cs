@@ -4,7 +4,7 @@ using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.Services.Entities.Buildings.Ads;
 using CommunityHub.Application.Services.Reports;
 using CommunityHub.Ui.Helpers;
-using CommunityHub.Ui.Helpers.Tenant.Demo;
+using CommunityHub.Ui.Helpers.Tenant.Demo.Building.Ads;
 using CommunityHub.Ui.Helpers.Tenant.NoticeBoard;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.Ads.NoticeBoard;
 using System.Windows;

@@ -7,7 +7,7 @@ using CommunityHub.Ui.Views.TenantViews;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace CommunityHub.Ui.Helpers.Tenant.Demo;
+namespace CommunityHub.Ui.Helpers.Tenant.Demo.Building.Ads;
 
 public class NoticeBoardDemoController
 {
