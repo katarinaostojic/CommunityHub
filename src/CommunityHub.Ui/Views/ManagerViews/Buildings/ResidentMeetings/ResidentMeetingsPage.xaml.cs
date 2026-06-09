@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings.ResidentMeetings;
+using CommunityHub.Ui.ViewModels.ManagerViewModels.Dialogs.Buildings.ResidentMeetings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs.Buildings.ResidentMeetings;
 using System.Windows;
 using System.Windows.Controls;
@@ -104,20 +105,8 @@ public partial class ResidentMeetingsPage : Page
     {
         if (sender is Button btn && btn.Tag is ResidentMeetingRowViewModel vm)
         {
-            var suggestions = _viewModel.GetTopicSuggestions(vm.Id);
-
-            // Filtriraj one koje su vec dodate
-            var filteredSuggestions = suggestions
-                .Where(s => !vm.Topics.Contains(s.Topic))
-                .ToList();
-
-            // Ako su sve vec dodate ili nema sugestija — slobodno otvori
-            bool alreadyAddedOne = suggestions.Any(s => vm.Topics.Contains(s.Topic));
-
-            var dialog = new TopicSuggestionsDialog(
-                filteredSuggestions,
-                alreadyAddedOne,
-                topic => _viewModel.AddTopicFromSuggestion(vm.Id, topic));
+            var dialogVm = new TopicSuggestionsDialogViewModel(_viewModel, vm);
+            var dialog = new TopicSuggestionsDialog(dialogVm);
             dialog.Owner = Window.GetWindow(this);
             dialog.ShowDialog();
         }

@@ -93,14 +93,6 @@ public class Ad
         return AdRules.ValidateDescription(description);
     }
 
-    public static string? ValidateDescription(string description)
-    {
-        if (string.IsNullOrWhiteSpace(description))
-            return "Description is required.";
-
-        return null;
-    }
-
     public static string? ValidateDateRange(DateOnly dateFrom, DateOnly dateTo)
     {
         return AdRules.ValidateDateRange(dateFrom, dateTo);
