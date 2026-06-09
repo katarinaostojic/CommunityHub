@@ -54,7 +54,6 @@ public class CityObject
     {
         List<DateOnlyRange> alternatives = new();
 
-        // Traži unazad od rangeFrom
         DateOnly beforeTo = rangeFrom.AddDays(-1);
         DateOnly beforeFrom = beforeTo.AddDays(-(durationDays - 1));
 
@@ -67,7 +66,6 @@ public class CityObject
             beforeFrom = beforeTo.AddDays(-(durationDays - 1));
         }
 
-        // Traži unaprijed od rangeTo
         DateOnly afterFrom = rangeTo.AddDays(1);
         DateOnly afterTo = afterFrom.AddDays(durationDays - 1);
 

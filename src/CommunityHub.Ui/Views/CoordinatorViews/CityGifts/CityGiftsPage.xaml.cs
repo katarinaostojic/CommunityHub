@@ -18,6 +18,8 @@ public partial class CityGiftsPage : Page
         var neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
         _viewModel = new CityGiftsViewModel(cityGiftService, neighborhoodService, coordinatorId);
         DataContext = _viewModel;
+        cityGiftService.ProcessExpiredGifts();
+
     }
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)

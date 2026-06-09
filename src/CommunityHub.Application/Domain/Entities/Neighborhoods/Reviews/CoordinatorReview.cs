@@ -42,4 +42,6 @@ public class CoordinatorReview
 
     public void AddReport() => ReportCount++;
     public void Remove() => IsRemoved = true;
+
+    
 }
