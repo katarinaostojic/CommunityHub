@@ -73,6 +73,7 @@ public partial class EventsPage : Window
         new MeetingsPage(_user, _neighborhoodId).Show();
         Close();
     }
+
     private void CoordinatorReviewsButton_Click(object sender, RoutedEventArgs e)
     {
         NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
@@ -82,12 +83,7 @@ public partial class EventsPage : Window
     }
 
     private void ProfileButton_Click(object sender, RoutedEventArgs e)
-    {
-        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
-        string neighborhoodName = ns.GetNameById(_neighborhoodId) ?? "";
-        new MyProfilePage(_user, _neighborhoodId, neighborhoodName).Show();
-        Close();
-    }
+        => NavigateToProfile();
 
     private void MarkAttendedButton_Click(object sender, RoutedEventArgs e)
     {

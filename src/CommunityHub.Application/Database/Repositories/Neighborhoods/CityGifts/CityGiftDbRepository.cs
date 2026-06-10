@@ -91,16 +91,17 @@ public class CityGiftDbRepository : BaseDbRepository, ICityGiftRepository
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
         command.CommandText = @"
-            UPDATE neighborhoods SET budget = budget + @total WHERE id = @neighborhoodId;
+        UPDATE neighborhoods SET budget = budget + @total WHERE id = @neighborhoodId;
 
-            INSERT INTO donations (citizen_id, neighborhood_id, category_id, amount, created_at)
-            SELECT
-                (SELECT id FROM users WHERE role = 'admin' LIMIT 1),
-                @neighborhoodId,
-                dc.id,
-                @amountPerCategory,
-                CURRENT_DATE
-            FROM donation_categories dc";
+        INSERT INTO donations (citizen_id, neighborhood_id, category_id, amount, created_at)
+        SELECT
+            (SELECT coordinator_id FROM city_gift_applications 
+             WHERE neighborhood_id = @neighborhoodId LIMIT 1),
+            @neighborhoodId,
+            dc.id,
+            @amountPerCategory,
+            CURRENT_DATE
+        FROM donation_categories dc";
         AddParameter(command, "@neighborhoodId", neighborhoodId);
         AddParameter(command, "@amountPerCategory", amountPerCategory);
         AddParameter(command, "@total", amountPerCategory * 6);

@@ -1,10 +1,8 @@
-﻿using CommunityHub.Application.DependencyInjection;
-using CommunityHub.Application.Domain.Entities.Shared;
+﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
-using CommunityHub.Application.Services.Entities.Buildings.Ads;
-using CommunityHub.Application.Services.Reports;
 using CommunityHub.Ui.Helpers;
 using CommunityHub.Ui.Helpers.Tenant.Demo;
+using CommunityHub.Ui.Helpers.Tenant.Demo.Building.Ads;
 using CommunityHub.Ui.Helpers.Tenant.NoticeBoard;
 using CommunityHub.Ui.ViewModels.TenantViewModels.Buildings.Ads.NoticeBoard;
 using System.Windows;
@@ -30,88 +28,42 @@ public partial class NoticeBoardPage : Page
         _user = user;
         _membership = membership;
         _startDemo = startDemo;
-        _viewModel = CreateViewModel();
+        _viewModel = NoticeBoardPageInitializer.CreateViewModel(_user, _membership);
 
         NoticeBoardNavigationHelper navigationHelper =
             new NoticeBoardNavigationHelper(_user, _membership, _viewModel, this);
 
-        _filterController = new NoticeBoardFilterController(
-            _viewModel,
-            CategoryComboBox,
-            FilterAllButton,
-            FilterOfferingButton,
-            FilterSeekingButton,
-            this);
+        _filterController = new NoticeBoardFilterController(_viewModel, CategoryComboBox, FilterAllButton, FilterOfferingButton, FilterSeekingButton, this);
 
-        _actionsController = new NoticeBoardActionsController(
-            _viewModel,
-            navigationHelper,
-            this,
-            SuccessBanner,
-            SuccessTextBlock,
-            RestoreAdButton);
+        _actionsController = new NoticeBoardActionsController(_viewModel, navigationHelper, this, SuccessBanner, SuccessTextBlock, RestoreAdButton);
 
-        _reportController = new NoticeBoardReportController(
-            _viewModel,
-            this,
-            ExportSuccessBanner,
-            ExportSuccessTextBlock);
+        _reportController = new NoticeBoardReportController(_viewModel, this, ExportSuccessBanner, ExportSuccessTextBlock);
 
-        _demoController = new NoticeBoardDemoController(
-            DemoButton,
-            _viewModel,
-            _filterController,
-            _user,
-            _membership,
-            this,
-            CategoryComboBox,
-            AdsScrollViewer,
-            RestoreAdButton);
+        _demoController = new NoticeBoardDemoController(DemoButton, _viewModel, _filterController, _user, _membership, this,
+                                                        CategoryComboBox, AdsScrollViewer, RestoreAdButton);
 
         DataContext = _viewModel;
-        InitializePageData();
+
+        NoticeBoardPageInitializer.InitializePageData(_user, _viewModel, UserNameTextBlock, NotificationBell, 
+                                                      AppMenu, CategoryComboBox, _filterController);
 
         if (_startDemo)
-            Loaded += StartDemoOnLoaded;
-    }
+        {
+            RoutedEventHandler? startDemoHandler = null;
 
-    private async void StartDemoOnLoaded(object sender, RoutedEventArgs e)
-    {
-        Loaded -= StartDemoOnLoaded;
-        await _demoController.ToggleAsync();
+            startDemoHandler = async (_, _) =>
+            {
+                Loaded -= startDemoHandler;
+                await _demoController.ToggleAsync();
+            };
+
+            Loaded += startDemoHandler;
+        }
     }
 
     public void ShowBookingSuccess()
     {
         NotificationBanner.ShowSuccess(SuccessBanner, SuccessTextBlock, "✔ Slots booked successfully!");
-    }
-
-    private NoticeBoardViewModel CreateViewModel()
-    {
-        AdService adService = Injector.CreateInstance<AdService>();
-        AdNotificationService notificationService = Injector.CreateInstance<AdNotificationService>();
-        AdsReportService reportService = Injector.CreateInstance<AdsReportService>();
-        AdsPdfExporter pdfExporter = Injector.CreateInstance<AdsPdfExporter>();
-
-        return new NoticeBoardViewModel(
-            adService,
-            notificationService,
-            reportService,
-            pdfExporter,
-            _membership,
-            _user.Id,
-            _user.DisplayName);
-    }
-
-    private void InitializePageData()
-    {
-        UserNameTextBlock.Text = _user.DisplayName;
-        NotificationBell.Initialize(_user);
-        AppMenu.Initialize(_user);
-
-        CategoryComboBox.ItemsSource = _viewModel.CategoryOptions;
-        CategoryComboBox.SelectedIndex = 0;
-        _filterController.ApplyTypeFilter("All");
     }
 
     private void FilterTypeButton_Click(object sender, RoutedEventArgs e)

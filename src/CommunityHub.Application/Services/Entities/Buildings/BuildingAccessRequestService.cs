@@ -11,15 +11,18 @@ public class BuildingAccessRequestService
     private readonly IBuildingAccessRequestRepository _repository;
     private readonly IBuildingMembershipRepository _membershipRepository;
     private readonly IBuildingRepository _buildingRepository;
+    private readonly BuildingAccessRequestValidator _requestValidator;
 
     public BuildingAccessRequestService(
         IBuildingAccessRequestRepository repository,
         IBuildingMembershipRepository membershipRepository,
-        IBuildingRepository buildingRepository)
+        IBuildingRepository buildingRepository,
+        BuildingAccessRequestValidator requestValidator)
     {
         _repository = repository;
         _membershipRepository = membershipRepository;
         _buildingRepository = buildingRepository;
+        _requestValidator = requestValidator;
     }
 
     public void CreateForBuilding(long buildingId, User tenant, string unitNumber)
@@ -27,7 +30,7 @@ public class BuildingAccessRequestService
         Building building = _buildingRepository.GetById(buildingId)
             ?? throw new InvalidOperationException("Building not found.");
 
-        building.EnsureAccessRequestCanBeCreated(tenant.Id, unitNumber);
+        _requestValidator.EnsureCanBeCreated(building, tenant.Id, unitNumber);
 
         BuildingAccessRequest request = new BuildingAccessRequest(tenant, building, unitNumber);
         _repository.Create(request);

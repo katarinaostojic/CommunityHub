@@ -7,6 +7,7 @@ public interface IResidentMeetingRepository
     List<ResidentMeeting> GetByTenantAndBuilding(
         long tenantId,
         long buildingId,
+        string unitNumber,
         ResidentMeetingStatus? status);
 
     List<ResidentMeeting> GetActiveByBuilding(long buildingId);

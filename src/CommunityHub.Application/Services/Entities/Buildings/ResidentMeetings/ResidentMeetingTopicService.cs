@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.ResidentMeetings;
 using CommunityHub.Application.Domain.RepositoryInterfaces.Buildings.ResidentMeetings;
 using CommunityHub.Application.DTOs.Buildings.ResidentMeetings;
+using CommunityHub.Application.Mappings.Buildings.ResidentMeetings;
 
 namespace CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 
@@ -34,9 +35,11 @@ public class ResidentMeetingTopicService
         _meetingRepository.CreateTopicSuggestion(suggestion);
     }
 
-    public List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId)
+    public List<ResidentMeetingTopicSuggestionDto> GetTopicSuggestions(long meetingId)
     {
-        return _meetingRepository.GetTopicSuggestions(meetingId);
+        return _meetingRepository
+            .GetTopicSuggestions(meetingId)
+            .ToDtoList();
     }
 
     public void AddTopicFromSuggestion(long meetingId, string topic, DateTime now)

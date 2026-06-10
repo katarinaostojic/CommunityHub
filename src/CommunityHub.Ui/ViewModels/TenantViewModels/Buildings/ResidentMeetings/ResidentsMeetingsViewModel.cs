@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.ResidentMeetings;
+using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Application.DTOs.Buildings.ResidentMeetings;
 using CommunityHub.Application.Services.Entities.Buildings.ResidentMeetings;
 using System.Collections.ObjectModel;
@@ -22,13 +23,24 @@ public class ResidentsMeetingsViewModel : BaseViewModel
     public ResidentsMeetingsViewModel(
         ResidentMeetingService meetingService,
         long tenantId,
-        long buildingId)
+        long buildingId,
+        List<BuildingMembershipDto> buildingMemberships,
+        BuildingMembershipDto selectedMembership)
     {
         _meetingService = meetingService;
         _tenantId = tenantId;
         _buildingId = buildingId;
+
+        ApartmentSelector = new ResidentMeetingApartmentSelector(
+            buildingMemberships,
+            selectedMembership);
+
+        ApartmentSelector.SelectedApartmentChanged += Refresh;
+
         Refresh();
     }
+
+    public ResidentMeetingApartmentSelector ApartmentSelector { get; }
 
     public ObservableCollection<ResidentMeetingCardViewModel> Meetings
     {
@@ -60,13 +72,13 @@ public class ResidentsMeetingsViewModel : BaseViewModel
 
     public void Attend(long meetingId)
     {
-        _meetingService.Attend(meetingId, _tenantId);
+        _meetingService.Attend(meetingId, _tenantId, ApartmentSelector.SelectedUnitNumber);
         Refresh();
     }
 
     public void CancelAttendance(long meetingId)
     {
-        _meetingService.CancelAttendance(meetingId, _tenantId);
+        _meetingService.CancelAttendance(meetingId, _tenantId, ApartmentSelector.SelectedUnitNumber);
         Refresh();
     }
 
@@ -96,8 +108,14 @@ public class ResidentsMeetingsViewModel : BaseViewModel
     private void UpdateMeetings()
     {
         List<ResidentMeetingCardViewModel> meetings = _meetingService
-            .GetByTenantAndBuilding(_tenantId, _buildingId, _currentFilter)
-            .Select(m => new ResidentMeetingCardViewModel(m))
+            .GetByTenantAndBuilding(
+                _tenantId,
+                _buildingId,
+                ApartmentSelector.SelectedUnitNumber,
+                _currentFilter)
+            .Select(m => new ResidentMeetingCardViewModel(
+                m,
+                ApartmentSelector.SelectedUnitNumber))
             .ToList();
 
         Meetings = new ObservableCollection<ResidentMeetingCardViewModel>(meetings);

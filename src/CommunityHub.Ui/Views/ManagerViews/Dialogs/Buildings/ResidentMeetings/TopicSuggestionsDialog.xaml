@@ -9,6 +9,10 @@
         AllowsTransparency="True"
         Background="Transparent">
 
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
     <Border Background="White" CornerRadius="12" Padding="32,28,32,28">
         <Border.Effect>
             <DropShadowEffect BlurRadius="24" Opacity="0.2" ShadowDepth="4"/>
@@ -29,16 +33,26 @@
             </Grid>
 
             <!-- Ako nema predloga -->
-            <TextBlock x:Name="EmptyText"
-                       Text="No topics have been suggested by tenants yet."
+            <TextBlock Text="No topics have been suggested by tenants yet."
                        FontSize="13" Foreground="#7F8C8D"
                        HorizontalAlignment="Center"
-                       Margin="0,8,0,8"
-                       Visibility="Collapsed"/>
+                       Margin="0,8,0,8">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasSuggestions}" Value="False">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
 
             <!-- Lista predloga -->
-            <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="SuggestionsList">
+            <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
+                          Visibility="{Binding HasSuggestions, Converter={StaticResource BoolToVis}}">
+                <ItemsControl ItemsSource="{Binding Suggestions}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderBrush="#EFEFEF" BorderThickness="0,0,0,1"

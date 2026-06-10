@@ -9,27 +9,30 @@ namespace CommunityHub.Application.Database.Repositories.Buildings;
 
 public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
 {
+    private const string BuildingWithFloorsAndUnitsQuery = @"
+        SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
+               c.id AS city_id, c.name AS city_name,
+               co.id AS country_id, co.name AS country_name, co.code AS country_code,
+               f.id AS floor_id, f.floor_number,
+               u.id AS unit_id, u.unit_number
+        FROM buildings b
+        JOIN cities c ON b.city_id = c.id
+        JOIN countries co ON c.country_id = co.id
+        LEFT JOIN floors f ON f.building_id = b.id
+        LEFT JOIN units u ON u.floor_id = f.id";
+
     private readonly BuildingDetailsDbRepository _detailsRepository;
 
     public BuildingDbRepository(BuildingDetailsDbRepository detailsRepository)
     {
         _detailsRepository = detailsRepository;
     }
+
     public List<Building> Search(string? street, string? neighborhood, string? city, string? country)
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   f.id AS floor_id, f.floor_number,
-                   u.id AS unit_id, u.unit_number
-            FROM buildings b
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            LEFT JOIN floors f ON f.building_id = b.id
-            LEFT JOIN units u ON u.floor_id = f.id
+        command.CommandText = BuildingWithFloorsAndUnitsQuery + @"
             WHERE (@street IS NULL OR b.street ILIKE '%' || @street || '%'
                    OR b.street_number ILIKE '%' || @street || '%')
               AND (@neighborhood IS NULL OR b.neighborhood ILIKE '%' || @neighborhood || '%')
@@ -53,17 +56,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   f.id AS floor_id, f.floor_number,
-                   u.id AS unit_id, u.unit_number
-            FROM buildings b
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            LEFT JOIN floors f ON f.building_id = b.id
-            LEFT JOIN units u ON u.floor_id = f.id
+        command.CommandText = BuildingWithFloorsAndUnitsQuery + @"
             WHERE b.id = @buildingId
             ORDER BY f.floor_number, u.unit_number";
 
@@ -90,17 +83,7 @@ public class BuildingDbRepository : BaseDbRepository, IBuildingRepository
     {
         using IDbConnection connection = PostgresConnection.CreateConnection();
         IDbCommand command = connection.CreateCommand();
-        command.CommandText = @"
-            SELECT b.id, b.street, b.street_number, b.neighborhood, b.number_of_floors,
-                   c.id AS city_id, c.name AS city_name,
-                   co.id AS country_id, co.name AS country_name, co.code AS country_code,
-                   f.id AS floor_id, f.floor_number,
-                   u.id AS unit_id, u.unit_number
-            FROM buildings b
-            JOIN cities c ON b.city_id = c.id
-            JOIN countries co ON c.country_id = co.id
-            LEFT JOIN floors f ON f.building_id = b.id
-            LEFT JOIN units u ON u.floor_id = f.id
+        command.CommandText = BuildingWithFloorsAndUnitsQuery + @"
             WHERE b.manager_id = @managerId
             ORDER BY b.id, f.floor_number, u.unit_number";
 

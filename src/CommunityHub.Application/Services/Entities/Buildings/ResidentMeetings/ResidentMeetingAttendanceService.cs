@@ -20,12 +20,13 @@ public class ResidentMeetingAttendanceService
         _statusService = statusService;
     }
 
-    public void Attend(long meetingId, long tenantId, DateTime now)
+    public void Attend(long meetingId, long tenantId, string unitNumber, DateTime now)
     {
         ResidentMeeting meeting = _accessService.GetMeetingForTenant(meetingId, tenantId);
-        BuildingMembership membership = _accessService.GetTenantMembership(
+        BuildingMembership membership = _accessService.GetTenantMembershipForUnit(
             tenantId,
-            meeting.BuildingId);
+            meeting.BuildingId,
+            unitNumber);
 
         meeting.EnsureAttendanceCanBeChanged(now);
 
@@ -41,12 +42,13 @@ public class ResidentMeetingAttendanceService
         _statusService.RefreshMeetingForTenant(meetingId, tenantId, now);
     }
 
-    public void CancelAttendance(long meetingId, long tenantId, DateTime now)
+    public void CancelAttendance(long meetingId, long tenantId, string unitNumber, DateTime now)
     {
         ResidentMeeting meeting = _accessService.GetMeetingForTenant(meetingId, tenantId);
-        BuildingMembership membership = _accessService.GetTenantMembership(
+        BuildingMembership membership = _accessService.GetTenantMembershipForUnit(
             tenantId,
-            meeting.BuildingId);
+            meeting.BuildingId,
+            unitNumber);
 
         meeting.EnsureAttendanceCanBeChanged(now);
 

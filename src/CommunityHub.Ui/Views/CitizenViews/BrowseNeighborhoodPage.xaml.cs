@@ -38,13 +38,16 @@ public partial class BrowseNeighborhoodPage : Window
 
     private void ApplyFiltersButton_Click(object sender, RoutedEventArgs e)
     {
-        string? name = string.IsNullOrWhiteSpace(FilterNameTextBox.Text) ? null : FilterNameTextBox.Text.Trim();
-        string? address = string.IsNullOrWhiteSpace(FilterAddressTextBox.Text) ? null : FilterAddressTextBox.Text.Trim();
-        string? city = string.IsNullOrWhiteSpace(FilterCityTextBox.Text) ? null : FilterCityTextBox.Text.Trim();
-        string? country = string.IsNullOrWhiteSpace(FilterCountryTextBox.Text) ? null : FilterCountryTextBox.Text.Trim();
+        string? name = NullIfBlank(FilterNameTextBox.Text);
+        string? address = NullIfBlank(FilterAddressTextBox.Text);
+        string? city = NullIfBlank(FilterCityTextBox.Text);
+        string? country = NullIfBlank(FilterCountryTextBox.Text);
         _viewModel.ApplyFilters(name, address, city, country);
         CloseFilterPanel();
     }
+
+    private static string? NullIfBlank(string value)
+        => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private void ResetAll()
     {
@@ -70,7 +73,8 @@ public partial class BrowseNeighborhoodPage : Window
         Close();
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e) => CitizenNavigationHelper.NavigateToProfile(_user, this);
+    private void ProfileButton_Click(object sender, RoutedEventArgs e)
+        => CitizenNavigationHelper.NavigateToProfile(_user, this);
 
     private void FilterButton_Click(object sender, RoutedEventArgs e)
     {
@@ -81,14 +85,14 @@ public partial class BrowseNeighborhoodPage : Window
     private void OpenFilterPanel()
     {
         Overlay.Visibility = Visibility.Visible;
-        DoubleAnimation animation = new DoubleAnimation { From = -320, To = 0, Duration = TimeSpan.FromMilliseconds(250) };
+        var animation = new DoubleAnimation { From = -320, To = 0, Duration = TimeSpan.FromMilliseconds(250) };
         FilterPanelTranslate.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty, animation);
         _filterPanelOpen = true;
     }
 
     private void CloseFilterPanel()
     {
-        DoubleAnimation animation = new DoubleAnimation { From = 0, To = -320, Duration = TimeSpan.FromMilliseconds(250) };
+        var animation = new DoubleAnimation { From = 0, To = -320, Duration = TimeSpan.FromMilliseconds(250) };
         animation.Completed += (s, e) => Overlay.Visibility = Visibility.Collapsed;
         FilterPanelTranslate.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty, animation);
         _filterPanelOpen = false;

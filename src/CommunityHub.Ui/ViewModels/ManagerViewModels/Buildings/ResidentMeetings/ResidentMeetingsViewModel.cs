@@ -108,7 +108,7 @@ public class ResidentMeetingsViewModel : BaseViewModel
         LoadMeetings();
     }
 
-    public List<ResidentMeetingTopicSuggestion> GetTopicSuggestions(long meetingId)
+    public List<ResidentMeetingTopicSuggestionDto> GetTopicSuggestions(long meetingId)
     {
         return _meetingService.GetTopicSuggestions(meetingId);
     }
