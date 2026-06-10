@@ -11,4 +11,7 @@ public interface ICityGiftRepository
     void Award(long cityGiftId, long neighborhoodId);
     void AddDonationToCategories(long neighborhoodId, decimal amountPerCategory);
     List<(long NeighborhoodId, decimal Budget)> GetBudgetsForNeighborhoods(List<long> neighborhoodIds);
+
+    int GetCategoryCount();
+
 }
