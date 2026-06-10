@@ -91,8 +91,7 @@ public class CityGiftService
             gift.Award(winnerId.Value);
             _repository.Award(gift.Id, winnerId.Value);
 
-            int categoryCount = 6;
-            decimal amountPerCategory = gift.AmountPerCategory(categoryCount);
+            int categoryCount = _repository.GetCategoryCount(); decimal amountPerCategory = gift.AmountPerCategory(categoryCount);
             _repository.AddDonationToCategories(winnerId.Value, amountPerCategory);
         }
     }
