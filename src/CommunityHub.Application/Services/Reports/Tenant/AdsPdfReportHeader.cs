@@ -13,6 +13,7 @@ internal static class AdsPdfReportHeader
             .Padding(14)
             .Row(row =>
             {
+                AddLogo(row);
                 AddApplicationInfo(row);
                 AddTenantInfo(row, report.TenantName);
             });
@@ -28,7 +29,7 @@ internal static class AdsPdfReportHeader
             .Column(header =>
             {
                 header.Item().Text("Tenant Ads Report")
-                    .FontSize(24)
+                    .FontSize(20)
                     .Bold()
                     .FontColor(AdsPdfReportStyles.Primary);
 
@@ -44,9 +45,22 @@ internal static class AdsPdfReportHeader
             });
     }
 
+    private static void AddLogo(RowDescriptor row)
+    {
+        var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+        using var stream = assembly.GetManifestResourceStream(
+            "CommunityHub.Application.Resources.AppLogo.communityhubLogo.png");
+
+        if (stream == null)
+            return;
+
+        row.ConstantItem(100).Height(60).AlignMiddle().Image(stream).FitArea();
+    }
+
     private static void AddApplicationInfo(RowDescriptor row)
     {
-        row.RelativeItem().Column(left =>
+        row.RelativeItem().PaddingLeft(10).Column(left =>
         {
             left.Item().Text("CommunityHub")
                 .FontSize(18)
@@ -54,7 +68,7 @@ internal static class AdsPdfReportHeader
                 .FontColor(Colors.White);
 
             left.Item().PaddingTop(2)
-                .Text("Tenant module / Notice board")
+                .Text("Notice board")
                 .FontSize(9)
                 .FontColor(AdsPdfReportStyles.PrimarySoft);
         });
@@ -62,7 +76,7 @@ internal static class AdsPdfReportHeader
 
     private static void AddTenantInfo(RowDescriptor row, string tenantName)
     {
-        row.ConstantItem(260).AlignRight().Column(right =>
+        row.ConstantItem(160).AlignRight().Column(right =>
         {
             right.Item().AlignRight()
                 .Text("Generated for")
