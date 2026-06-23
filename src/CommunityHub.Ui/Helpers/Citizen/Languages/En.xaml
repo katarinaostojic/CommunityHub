@@ -204,4 +204,16 @@
     <system:String x:Key="Validate_PastDate">⚠ Date cannot be in the past.</system:String>
     <system:String x:Key="Validate_TimeFormat">⚠ Enter valid time (HH:mm), e.g. 14:30.</system:String>
     <system:String x:Key="Validate_PositiveNumber">⚠ Enter a positive number.</system:String>
+    <system:String x:Key="Request_Title">Request Access</system:String>
+    <system:String x:Key="Request_CheckingAddress">Checking your address...</system:String>
+    <system:String x:Key="Request_Address">Address:</system:String>
+    <system:String x:Key="Request_Location">Location:</system:String>
+    <system:String x:Key="Request_CreatedTitle">Request Created</system:String>
+    <system:String x:Key="Request_Submitted">Your request has been successfully submitted.</system:String>
+    <system:String x:Key="Request_ReviewSoon">A coordinator will review your request shortly.</system:String>
+    <system:String x:Key="Request_Neighborhood">Neighborhood:</system:String>
+    <system:String x:Key="Request_Citizen">Citizen:</system:String>
+    <system:String x:Key="Request_CreatedOn">Created on:</system:String>
+    <system:String x:Key="Request_Status">Status:</system:String>
+    <system:String x:Key="Request_NoStreets">No street information available</system:String>
 </ResourceDictionary>

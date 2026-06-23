@@ -204,4 +204,16 @@
     <system:String x:Key="Validate_PastDate">⚠ Datum ne može biti u prošlosti.</system:String>
     <system:String x:Key="Validate_TimeFormat">⚠ Unesite ispravno vreme (HH:mm), npr. 14:30.</system:String>
     <system:String x:Key="Validate_PositiveNumber">⚠ Unesite pozitivan broj.</system:String>
+    <system:String x:Key="Request_Title">Zatraži pristup</system:String>
+    <system:String x:Key="Request_CheckingAddress">Proveravanje vaše adrese...</system:String>
+    <system:String x:Key="Request_Address">Adresa:</system:String>
+    <system:String x:Key="Request_Location">Lokacija:</system:String>
+    <system:String x:Key="Request_CreatedTitle">Zahtev kreiran</system:String>
+    <system:String x:Key="Request_Submitted">Vaš zahtev je uspešno podnet.</system:String>
+    <system:String x:Key="Request_ReviewSoon">Koordinator će uskoro pregledati vaš zahtev.</system:String>
+    <system:String x:Key="Request_Neighborhood">Kvart:</system:String>
+    <system:String x:Key="Request_Citizen">Građanin:</system:String>
+    <system:String x:Key="Request_CreatedOn">Datum podnošenja:</system:String>
+    <system:String x:Key="Request_Status">Status:</system:String>
+    <system:String x:Key="Request_NoStreets">Nema informacija o ulicama</system:String>
 </ResourceDictionary>
