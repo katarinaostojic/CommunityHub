@@ -199,7 +199,8 @@
                                                 <Border Grid.Column="2"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
                                                         CornerRadius="12" Padding="10,4"
-                                                        Background="{Binding PriorityBackground}">
+                                                        Background="{Binding PriorityBackground}"
+                                                        ToolTip="How urgently this problem needs to be addressed">
                                                     <TextBlock Text="{Binding PriorityDisplay}"
                                                                FontSize="11" FontWeight="SemiBold"
                                                                Foreground="{Binding PriorityForeground}"
@@ -214,7 +215,8 @@
                                                 <Border Grid.Column="4"
                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
                                                         CornerRadius="12" Padding="10,4"
-                                                        Background="{Binding StatusBackground}">
+                                                        Background="{Binding StatusBackground}"
+                                                        ToolTip="Resolved problems need tenant confirmation before closing">
                                                     <TextBlock Text="{Binding StatusDisplay}"
                                                                FontSize="12" FontWeight="SemiBold"
                                                                Foreground="{Binding StatusForeground}"/>

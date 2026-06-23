@@ -121,10 +121,10 @@
                 <!-- Help i Logout dole -->
                 <StackPanel DockPanel.Dock="Bottom" Margin="10,0,10,25">
                     <Border Height="1" Background="#2C3E50" Margin="5,0,5,15"/>
-                    <Button Height="44" Background="Transparent"
+                    <Button x:Name="BtnHelp" Height="44" Background="Transparent"
                             BorderThickness="0" Foreground="#7F8C8D" FontSize="13"
                             HorizontalContentAlignment="Left" Padding="20,0,0,0"
-                            Cursor="Hand">
+                            Cursor="Hand" Click="HelpButton_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="❓" FontSize="16" VerticalAlignment="Center"/>
                             <TextBlock Text="  Help" VerticalAlignment="Center"/>

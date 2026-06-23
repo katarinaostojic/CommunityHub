@@ -8,6 +8,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -28,6 +29,18 @@
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"/>
+                <Button Content="Export Report" HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Width="130" Height="34"
+                        Background="#2980B9" Foreground="White"
+                        BorderThickness="0" FontSize="13" FontWeight="SemiBold"
+                        Cursor="Hand" Click="ExportReportButton_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
             </Grid>
         </Border>
 
@@ -49,8 +62,17 @@
             </StackPanel>
         </Border>
 
+        <!-- BANNER ZA USPESNI EXPORT -->
+        <Border x:Name="ExportSuccessBanner" Grid.Row="2"
+                Background="#E6F4EA" BorderBrush="#27AE60" BorderThickness="0,0,0,1"
+                Padding="20,10" Visibility="Collapsed">
+            <TextBlock x:Name="ExportSuccessText"
+                       Foreground="#27AE60" FontSize="13" FontWeight="SemiBold"
+                       TextWrapping="Wrap"/>
+        </Border>
+
         <!-- SADRZAJ -->
-        <ScrollViewer Grid.Row="2" Margin="25">
+        <ScrollViewer Grid.Row="3" Margin="25">
             <Grid>
 
                 <!-- ADS panel -->
@@ -202,6 +224,7 @@
                             <TextBlock Text="{Binding ArchivedText}" FontSize="13"
                                        Foreground="#2C3E50" Margin="0,0,0,12"/>
                             <TextBlock Text="Active by category:" FontSize="13"
+                                       ToolTip="Currently active ads, grouped by category"
                                        FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,8"/>
                             <ItemsControl ItemsSource="{Binding ActiveByCategoryItems}">
                                 <ItemsControl.ItemTemplate>
@@ -221,6 +244,7 @@
                         </Border.Effect>
                         <StackPanel>
                             <TextBlock Text="Top helper" FontSize="15" FontWeight="Bold"
+                                       ToolTip="The tenant with the most booked time slots on ads where they offered help"
                                        Foreground="#2C3E50" Margin="0,0,0,12"/>
                             <TextBlock Text="{Binding TopHelperText}" FontSize="13"
                                        Foreground="#2C3E50"/>

@@ -229,7 +229,8 @@
                                         <Border CornerRadius="12" Padding="12,4"
                                                 HorizontalAlignment="Right"
                                                 Background="{Binding StatusBackground}"
-                                                Margin="0,0,0,12">
+                                                Margin="0,0,0,12"
+                                                ToolTip="Confirmed once over half of the units report attendance">
                                             <TextBlock Text="{Binding StatusDisplay}"
                                                        FontSize="12" FontWeight="SemiBold"
                                                        Foreground="{Binding StatusForeground}"/>

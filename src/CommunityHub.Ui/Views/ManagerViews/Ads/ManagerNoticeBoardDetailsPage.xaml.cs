@@ -1,4 +1,6 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Ui.Helpers;
+using CommunityHub.Ui.Helpers.Manager.NoticeBoard;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Ads;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +12,7 @@ public partial class ManagerNoticeBoardDetailsPage : Page
 {
     private readonly User _currentUser;
     private readonly ManagerNoticeBoardDetailsViewModel _viewModel;
+    private readonly ManagerNoticeBoardReportController _reportController;
     private bool _isYearMode = true;
     private int _selectedYear = DateTime.Now.Year;
     private int _selectedMonth = 1;
@@ -19,8 +22,22 @@ public partial class ManagerNoticeBoardDetailsPage : Page
         InitializeComponent();
         _currentUser = user;
         _viewModel = new ManagerNoticeBoardDetailsViewModel(buildingId, buildingTitle);
+        _reportController = new ManagerNoticeBoardReportController();
         DataContext = _viewModel;
         PopulatePeriodComboBox();
+    }
+
+    private void ExportReportButton_Click(object sender, RoutedEventArgs e)
+    {
+        Window owner = Window.GetWindow(this)!;
+        string managerName = $"{_currentUser.Name} {_currentUser.Surname}";
+
+        _reportController.ExportReport(
+            owner,
+            _viewModel.BuildingId,
+            _viewModel.BuildingTitle,
+            managerName,
+            message => NotificationBanner.ShowSuccess(ExportSuccessBanner, ExportSuccessText, message));
     }
 
     private void PopulatePeriodComboBox()

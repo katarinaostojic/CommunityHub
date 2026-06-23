@@ -29,7 +29,7 @@ public class ManagerNoticeBoardDetailsViewModel : BaseViewModel
         _statisticsService = Injector.CreateInstance<AdStatisticsService>();
         LoadAds();
     }
-
+    public long BuildingId => _buildingId;
     public string BuildingTitle { get; }
 
     public ObservableCollection<ManagerAdRowViewModel> Ads

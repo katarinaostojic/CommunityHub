@@ -58,7 +58,8 @@
                                 <!-- Status bedz -->
                                 <Border CornerRadius="6" Margin="0,8,0,12"
                                         Background="{Binding StatusBadgeColor}"
-                                        Padding="10,4" HorizontalAlignment="Left">
+                                        Padding="10,4" HorizontalAlignment="Left"
+                                        ToolTip="Current status of this rental request">
                                     <TextBlock Text="{Binding StatusDisplay}"
                                                Foreground="White" FontSize="12"
                                                FontWeight="SemiBold"/>

@@ -14,8 +14,15 @@
     <Border Background="#ECF0F1" CornerRadius="12,12,0,0"
             BorderBrush="#BDC3C7" BorderThickness="1,1,1,0">
         <StackPanel>
+            <!-- Naziv polja koje se trenutno uredjuje -->
+            <TextBlock x:Name="FieldNameTextBlock"
+                       Margin="16,10,16,0"
+                       FontSize="13" FontWeight="SemiBold"
+                       Foreground="#7F8C8D"
+                       Visibility="Collapsed"/>
+
             <!-- Floating TextBox -->
-            <Border Background="White" CornerRadius="8" Margin="12,12,12,6"
+            <Border Background="White" CornerRadius="8" Margin="12,8,12,6"
                     BorderBrush="#2980B9" BorderThickness="2">
                 <Grid>
                     <Grid.ColumnDefinitions>

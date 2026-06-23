@@ -2,12 +2,12 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Shared;
+using CommunityHub.Ui.Helpers.Manager;
 using CommunityHub.Ui.Views.ManagerViews.Controls;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -30,6 +30,21 @@ public partial class RegisterBuildingDialog : Window
         _countryService = Injector.CreateInstance<CountryService>();
         LoadCountries();
         LoadCities();
+
+        StreetTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(StreetTextBox, "Street");
+        NumberTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(NumberTextBox, "Number");
+        SettlementTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(SettlementTextBox, "Settlement");
+        FloorsTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(FloorsTextBox, "Number of Floors");
+
+        TooltipsManager.Apply(this);
+    }
+
+    private void OpenKeyboard(TextBox textBox, string fieldName)
+    {
+        _activeFloating?.Close();
+        _activeFloating = new FloatingKeyboardWindow(textBox, this, fieldName);
+        _activeFloating.Closed += (_, _) => _activeFloating = null;
+        _activeFloating.Show();
     }
 
     private void LoadCountries()
@@ -88,6 +103,8 @@ public partial class RegisterBuildingDialog : Window
         for (int i = 1; i <= numberOfFloors; i++)
             FloorsStackPanel.Children.Add(CreateFloorRow(i));
 
+        TooltipsManager.Apply(this);
+
         Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, () =>
         {
             double neededHeight = 650 + (numberOfFloors * 55) + 100;
@@ -115,9 +132,10 @@ public partial class RegisterBuildingDialog : Window
         {
             Height = 35,
             FontSize = 14,
-            Tag = floorNumber
+            Tag = floorNumber,
+            ToolTip = "List unit numbers separated by commas, e.g. 1,2,3"
         };
-        textBox.PreviewMouseDown += TextBox_Click;
+        textBox.PreviewMouseDown += (s, e) => OpenKeyboard(textBox, $"Floor {floorNumber} units");
 
         Grid.SetColumn(label, 0);
         Grid.SetColumn(textBox, 1);
@@ -127,19 +145,11 @@ public partial class RegisterBuildingDialog : Window
         return floorGrid;
     }
 
-    private void TextBox_Click(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is TextBox tb)
-        {
-            _activeFloating?.Close();
-            _activeFloating = new FloatingKeyboardWindow(tb, this);
-            _activeFloating.Closed += (_, _) => _activeFloating = null;
-            _activeFloating.Show();
-        }
-    }
-
     private void Register_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         if (!ValidateFields()) return;
         if (!ValidateFloors()) return;
 
@@ -240,6 +250,8 @@ public partial class RegisterBuildingDialog : Window
 
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
         Close();
     }
 

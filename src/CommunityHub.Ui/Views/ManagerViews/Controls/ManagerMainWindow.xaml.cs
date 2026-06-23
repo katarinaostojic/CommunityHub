@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.Helpers.Manager;
+using CommunityHub.Ui.Helpers.Manager.Onboarding;
+using CommunityHub.Ui.Views.ManagerViews.Controls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -20,6 +22,21 @@ public partial class ManagerMainWindow : Window
         MainFrame.Navigate(new MyBuildingsPage(_currentUser));
         SetActiveNavButton(BtnBuildings);
         UpdateTooltips();
+
+        MainFrame.Navigated += (s, e) => UpdateTooltips();
+
+        if (!OnboardingState.HasSeenWizard())
+        {
+            Loaded += ShowOnboardingWizard;
+        }
+    }
+
+    private void ShowOnboardingWizard(object sender, RoutedEventArgs e)
+    {
+        Loaded -= ShowOnboardingWizard;
+
+        ManagerOnboardingWizard wizard = new ManagerOnboardingWizard { Owner = this };
+        wizard.ShowDialog();
     }
 
     private void TooltipsButton_Click(object sender, RoutedEventArgs e)
@@ -31,9 +48,7 @@ public partial class ManagerMainWindow : Window
 
     private void UpdateTooltips()
     {
-        var buttons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems };
-        foreach (var btn in buttons)
-            ToolTipService.SetIsEnabled(btn, AppSession.IsTooltipsEnabled);
+        TooltipsManager.Apply(this);
     }
 
     private void ProfileButton_Click(object sender, RoutedEventArgs e)
@@ -66,7 +81,7 @@ public partial class ManagerMainWindow : Window
 
     private void SetActiveNavButton(Button activeButton)
     {
-        var navButtons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems };
+        var navButtons = new[] { BtnBuildings, BtnAccessRequests, BtnNoticeboard, BtnResidentMeeting, BtnProblems, BtnHelp };
         foreach (var btn in navButtons)
         {
             btn.Background = Brushes.Transparent;
@@ -80,6 +95,12 @@ public partial class ManagerMainWindow : Window
     {
         SetActiveNavButton(BtnNoticeboard);
         MainFrame.Navigate(new ManagerNoticeBoardPage(_currentUser));
+    }
+
+    private void HelpButton_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveNavButton(BtnHelp);
+        MainFrame.Navigate(new ManagerHelpPage());
     }
 
     private void ProblemsButton_Click(object sender, RoutedEventArgs e)

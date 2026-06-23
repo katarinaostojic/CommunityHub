@@ -1,9 +1,14 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using CommunityHub.Ui.Views.ManagerViews.Controls;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs.Buildings.ResidentMeetings;
 
 public partial class ScheduleMeetingDialog : Window
 {
+    private FloatingKeyboardWindow? _activeFloating;
+
     public DateTime? SelectedDate { get; private set; }
     public TimeSpan? SelectedTime { get; private set; }
     public List<string> Topics { get; private set; } = new();
@@ -12,20 +17,34 @@ public partial class ScheduleMeetingDialog : Window
     {
         InitializeComponent();
 
-        // Popuni sate 0-23
         for (int h = 0; h < 24; h++)
             HourComboBox.Items.Add(h.ToString("00"));
 
-        // Popuni minute 00 i 30
         MinuteComboBox.Items.Add("00");
         MinuteComboBox.Items.Add("30");
 
-        HourComboBox.SelectedIndex = 18; // default 18h
+        HourComboBox.SelectedIndex = 18;
         MinuteComboBox.SelectedIndex = 0;
+
+        TopicsTextBox.PreviewMouseDown += TextBox_Click;
+    }
+
+    private void TextBox_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is TextBox tb)
+        {
+            _activeFloating?.Close();
+            _activeFloating = new FloatingKeyboardWindow(tb, this, "Topics");
+            _activeFloating.Closed += (_, _) => _activeFloating = null;
+            _activeFloating.Show();
+        }
     }
 
     private void ScheduleButton_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         if (!ValidateFields()) return;
 
         SelectedDate = DatePicker.SelectedDate!.Value;
@@ -86,6 +105,9 @@ public partial class ScheduleMeetingDialog : Window
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         DialogResult = false;
         Close();
     }
