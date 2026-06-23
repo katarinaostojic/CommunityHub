@@ -62,12 +62,30 @@ public class CoordinatorBudgetViewModel : BaseViewModel
     private string _totalBudgetDisplay = "0.00 RSD";
 
     public CoordinatorBudgetViewModel(DonationService donationService,
-        NeighborhoodService neighborhoodService, long coordinatorId)
+    NeighborhoodService neighborhoodService, long coordinatorId, long? preselectedNeighborhoodId = null)
     {
         _donationService = donationService;
         _neighborhoodService = neighborhoodService;
         _coordinatorId = coordinatorId;
-        LoadNeighborhoods();
+        LoadNeighborhoods(preselectedNeighborhoodId);
+    }
+
+    private void LoadNeighborhoods(long? preselectedNeighborhoodId = null)
+    {
+        var neighborhoods = _neighborhoodService.GetByCoordinator(_coordinatorId);
+        Neighborhoods = new ObservableCollection<NeighborhoodDto>(neighborhoods);
+
+        System.Diagnostics.Debug.WriteLine($"Preselected ID: {preselectedNeighborhoodId}");
+        foreach (var n in Neighborhoods)
+            System.Diagnostics.Debug.WriteLine($"Neighborhood: {n.Id} - {n.Name}");
+
+
+        if (Neighborhoods.Count > 0)
+        {
+            SelectedNeighborhood = preselectedNeighborhoodId.HasValue
+                ? Neighborhoods.FirstOrDefault(n => n.Id == preselectedNeighborhoodId.Value) ?? Neighborhoods[0]
+                : Neighborhoods[0];
+        }
     }
 
     public ObservableCollection<NeighborhoodDto> Neighborhoods
@@ -98,13 +116,7 @@ public class CoordinatorBudgetViewModel : BaseViewModel
         private set => SetProperty(ref _totalBudgetDisplay, value);
     }
 
-    private void LoadNeighborhoods()
-    {
-        var neighborhoods = _neighborhoodService.GetByCoordinator(_coordinatorId);
-        Neighborhoods = new ObservableCollection<NeighborhoodDto>(neighborhoods);
-        if (Neighborhoods.Count > 0)
-            SelectedNeighborhood = Neighborhoods[0];
-    }
+   
 
     private void LoadBudget(long neighborhoodId)
     {

@@ -44,15 +44,13 @@ public partial class ManageRequestsPage : Page
         {
             _viewModel.Approve(vm);
             vm.CloseConfirm();
-            SuccessText.Text = "Request approved successfully!";
-            SuccessBanner.Visibility = Visibility.Visible;
-            ErrorBanner.Visibility = Visibility.Collapsed;
+            vm.MarkAsApproved();
+            vm.SuccessMessage = "Request approved successfully!";
         }
         catch (Exception ex)
         {
             ErrorText.Text = ex.Message;
             ErrorBanner.Visibility = Visibility.Visible;
-            SuccessBanner.Visibility = Visibility.Collapsed;
         }
     }
 
@@ -72,15 +70,14 @@ public partial class ManageRequestsPage : Page
         {
             _viewModel.Reject(vm, reason);
             vm.CloseConfirm();
-            SuccessText.Text = "Request rejected.";
-            SuccessBanner.Visibility = Visibility.Visible;
-            ErrorBanner.Visibility = Visibility.Collapsed;
+            vm.MarkAsRejected();
+
+            vm.SuccessMessage = "Request rejected.";
         }
         catch (Exception ex)
         {
             ErrorText.Text = ex.Message;
             ErrorBanner.Visibility = Visibility.Visible;
-            SuccessBanner.Visibility = Visibility.Collapsed;
         }
     }
 

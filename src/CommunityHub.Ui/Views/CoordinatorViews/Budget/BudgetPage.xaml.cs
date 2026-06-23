@@ -11,12 +11,12 @@ public partial class BudgetPage : Page
 {
     private readonly CoordinatorBudgetViewModel _viewModel;
 
-    public BudgetPage(long coordinatorId)
+    public BudgetPage(long coordinatorId, long? neighborhoodId = null)
     {
         InitializeComponent();
         var donationService = Injector.CreateInstance<DonationService>();
         var neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
-        _viewModel = new CoordinatorBudgetViewModel(donationService, neighborhoodService, coordinatorId);
+        _viewModel = new CoordinatorBudgetViewModel(donationService, neighborhoodService, coordinatorId, neighborhoodId);
         DataContext = _viewModel;
     }
 
