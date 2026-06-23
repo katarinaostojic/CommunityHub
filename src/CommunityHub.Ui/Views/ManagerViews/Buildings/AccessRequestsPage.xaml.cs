@@ -4,6 +4,7 @@ using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.Views.ManagerViews;
 
@@ -18,17 +19,44 @@ public partial class AccessRequestsPage : Page
         _currentUser = user;
         _viewModel = new AccessRequestsViewModel(_currentUser.Id);
         DataContext = _viewModel;
+        SetActiveFilterButton(BtnAll);
     }
 
-    private void StatusFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void FilterAll_Click(object sender, RoutedEventArgs e)
     {
-        if (_viewModel == null) return;
+        SetActiveFilterButton(BtnAll);
+        _viewModel.SetStatusFilter(null);
+    }
 
-        if (StatusFilterCombo.SelectedItem is ComboBoxItem item)
+    private void FilterPending_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveFilterButton(BtnPending);
+        _viewModel.SetStatusFilter("pending approval");
+    }
+
+    private void FilterApproved_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveFilterButton(BtnApproved);
+        _viewModel.SetStatusFilter("approved");
+    }
+
+    private void FilterRejected_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveFilterButton(BtnRejected);
+        _viewModel.SetStatusFilter("rejected");
+    }
+
+    private void SetActiveFilterButton(Button activeButton)
+    {
+        var filterButtons = new[] { BtnAll, BtnPending, BtnApproved, BtnRejected };
+        foreach (var btn in filterButtons)
         {
-            string tag = item.Tag?.ToString() ?? "";
-            _viewModel.SetStatusFilter(string.IsNullOrEmpty(tag) ? null : tag);
+            btn.Background = new SolidColorBrush(Color.FromRgb(0xE8, 0xED, 0xF2));
+            btn.Foreground = new SolidColorBrush(Color.FromRgb(0x2C, 0x3E, 0x50));
         }
+
+        activeButton.Background = new SolidColorBrush(Color.FromRgb(0x29, 0x80, 0xB9));
+        activeButton.Foreground = Brushes.White;
     }
 
     private void SortDateButton_Click(object sender, RoutedEventArgs e)

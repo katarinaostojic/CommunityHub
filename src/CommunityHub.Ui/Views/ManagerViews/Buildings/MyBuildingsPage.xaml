@@ -32,6 +32,7 @@
                         FontSize="13" FontWeight="SemiBold"
                         Foreground="White" Background="#2980B9"
                         BorderThickness="0"
+                        Cursor="Hand"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Click="RegisterBuilding_Click">

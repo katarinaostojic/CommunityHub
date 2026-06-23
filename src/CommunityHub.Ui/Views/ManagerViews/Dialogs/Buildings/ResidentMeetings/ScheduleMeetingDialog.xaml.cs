@@ -49,8 +49,8 @@ public partial class ScheduleMeetingDialog : Window
 
         SelectedDate = DatePicker.SelectedDate!.Value;
         SelectedTime = new TimeSpan(
-            int.Parse(HourComboBox.SelectedItem.ToString()!),
-            int.Parse(MinuteComboBox.SelectedItem.ToString()!),
+            int.Parse(HourComboBox.SelectedItem!.ToString()!),
+            int.Parse(MinuteComboBox.SelectedItem!.ToString()!),
             0);
 
         Topics = TopicsTextBox.Text
@@ -65,28 +65,19 @@ public partial class ScheduleMeetingDialog : Window
 
     private bool ValidateFields()
     {
+        ClearFieldErrors();
+        bool isValid = true;
+
         if (DatePicker.SelectedDate == null)
         {
-            MessageBox.Show("Please select a date.", "Error");
-            return false;
+            ShowFieldError(DateErrorText, "Please select a date.");
+            isValid = false;
         }
 
         if (HourComboBox.SelectedItem == null || MinuteComboBox.SelectedItem == null)
         {
-            MessageBox.Show("Please select a time.", "Error");
-            return false;
-        }
-
-        var selectedDateTime = DatePicker.SelectedDate.Value.Date.Add(
-            new TimeSpan(
-                int.Parse(HourComboBox.SelectedItem.ToString()!),
-                int.Parse(MinuteComboBox.SelectedItem.ToString()!),
-                0));
-
-        if (selectedDateTime <= DateTime.Now.AddHours(24))
-        {
-            MessageBox.Show("Meeting must be scheduled at least 24 hours in advance.", "Error");
-            return false;
+            ShowFieldError(TimeErrorText, "Please select a time.");
+            isValid = false;
         }
 
         var topics = TopicsTextBox.Text
@@ -96,11 +87,44 @@ public partial class ScheduleMeetingDialog : Window
 
         if (topics.Count == 0)
         {
-            MessageBox.Show("Please enter at least one topic.", "Error");
+            ShowFieldError(TopicsErrorText, "Please enter at least one topic.");
+            isValid = false;
+        }
+
+        if (!isValid)
+            return false;
+
+        var selectedDateTime = DatePicker.SelectedDate!.Value.Date.Add(
+            new TimeSpan(
+                int.Parse(HourComboBox.SelectedItem!.ToString()!),
+                int.Parse(MinuteComboBox.SelectedItem!.ToString()!),
+                0));
+
+        if (selectedDateTime <= DateTime.Now.AddHours(24))
+        {
+            ShowFieldError(TimeErrorText, "Meeting must be scheduled at least 24 hours in advance.");
             return false;
         }
 
         return true;
+    }
+
+    private void ShowFieldError(TextBlock errorText, string message)
+    {
+        errorText.Text = message;
+        errorText.Visibility = Visibility.Visible;
+    }
+
+    private void HideFieldError(TextBlock errorText)
+    {
+        errorText.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearFieldErrors()
+    {
+        HideFieldError(DateErrorText);
+        HideFieldError(TimeErrorText);
+        HideFieldError(TopicsErrorText);
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)

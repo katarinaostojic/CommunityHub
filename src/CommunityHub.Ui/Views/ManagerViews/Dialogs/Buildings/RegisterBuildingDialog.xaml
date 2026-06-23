@@ -31,6 +31,7 @@
                     <Setter Property="Padding" Value="20,10"/>
                     <Setter Property="Background" Value="#E8EDF2"/>
                     <Setter Property="Foreground" Value="#7F8C8D"/>
+                    <Setter Property="Cursor" Value="Hand"/>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="White"/>
@@ -47,119 +48,150 @@
                     <StackPanel>
 
                         <!-- Street -->
-                        <Grid Margin="0,10,0,10">
+                        <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="* Street"
+                            <TextBlock Grid.Column="0" Text="Street *"
                                        VerticalAlignment="Center" FontSize="14"/>
-                            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8"
-                                    BorderBrush="#DDE1E7" BorderThickness="1">
-                                <TextBox x:Name="StreetTextBox"
-                                         Height="38" FontSize="14"
-                                         Background="Transparent"
-                                         BorderThickness="0" Padding="10,0"
-                                         VerticalContentAlignment="Center"/>
-                            </Border>
+                            <StackPanel Grid.Column="1">
+                                <Border Background="#F8F9FA" CornerRadius="8"
+                                        BorderBrush="#DDE1E7" BorderThickness="1">
+                                    <TextBox x:Name="StreetTextBox"
+                                             Height="38" FontSize="14"
+                                             Background="Transparent"
+                                             BorderThickness="0" Padding="10,0"
+                                             VerticalContentAlignment="Center"/>
+                                </Border>
+                                <TextBlock x:Name="StreetErrorText"
+                                           Foreground="#E74C3C" FontSize="11"
+                                           Margin="2,3,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
 
                         <!-- Number -->
-                        <Grid Margin="0,10,0,10">
+                        <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="* Number"
+                            <TextBlock Grid.Column="0" Text="Number *"
                                        VerticalAlignment="Center" FontSize="14"/>
-                            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8"
-                                    BorderBrush="#DDE1E7" BorderThickness="1">
-                                <TextBox x:Name="NumberTextBox"
-                                         Height="38" FontSize="14"
-                                         Background="Transparent"
-                                         BorderThickness="0" Padding="10,0"
-                                         VerticalContentAlignment="Center"/>
-                            </Border>
+                            <StackPanel Grid.Column="1">
+                                <Border Background="#F8F9FA" CornerRadius="8"
+                                        BorderBrush="#DDE1E7" BorderThickness="1">
+                                    <TextBox x:Name="NumberTextBox"
+                                             Height="38" FontSize="14"
+                                             Background="Transparent"
+                                             BorderThickness="0" Padding="10,0"
+                                             VerticalContentAlignment="Center"/>
+                                </Border>
+                                <TextBlock x:Name="NumberErrorText"
+                                           Foreground="#E74C3C" FontSize="11"
+                                           Margin="2,3,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
 
                         <!-- Settlement -->
-                        <Grid Margin="0,10,0,10">
+                        <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="* Settlement"
+                            <TextBlock Grid.Column="0" Text="Settlement *"
                                        VerticalAlignment="Center" FontSize="14"/>
-                            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8"
-                                    BorderBrush="#DDE1E7" BorderThickness="1">
-                                <TextBox x:Name="SettlementTextBox"
-                                         Height="38" FontSize="14"
-                                         Background="Transparent"
-                                         BorderThickness="0" Padding="10,0"
-                                         VerticalContentAlignment="Center"/>
-                            </Border>
+                            <StackPanel Grid.Column="1">
+                                <Border Background="#F8F9FA" CornerRadius="8"
+                                        BorderBrush="#DDE1E7" BorderThickness="1">
+                                    <TextBox x:Name="SettlementTextBox"
+                                             Height="38" FontSize="14"
+                                             Background="Transparent"
+                                             BorderThickness="0" Padding="10,0"
+                                             VerticalContentAlignment="Center"/>
+                                </Border>
+                                <TextBlock x:Name="SettlementErrorText"
+                                           Foreground="#E74C3C" FontSize="11"
+                                           Margin="2,3,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
 
                         <!-- Country -->
-                        <Grid Margin="0,10,0,10">
+                        <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="* Country"
+                            <TextBlock Grid.Column="0" Text="Country *"
                                        VerticalAlignment="Center" FontSize="14"/>
-                            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8"
-                                    BorderBrush="#DDE1E7" BorderThickness="1">
-                                <ComboBox x:Name="CountryComboBox"
-                                          Height="38" FontSize="14"
-                                          Background="Transparent"
-                                          BorderThickness="0" Padding="10,0"
-                                          VerticalContentAlignment="Center"
-                                          SelectionChanged="CountryComboBox_SelectionChanged"/>
-                            </Border>
+                            <StackPanel Grid.Column="1">
+                                <Border Background="#F8F9FA" CornerRadius="8"
+                                        BorderBrush="#DDE1E7" BorderThickness="1">
+                                    <ComboBox x:Name="CountryComboBox"
+                                              Height="38" FontSize="14"
+                                              Background="Transparent"
+                                              BorderThickness="0" Padding="10,0"
+                                              VerticalContentAlignment="Center"
+                                              SelectionChanged="CountryComboBox_SelectionChanged"/>
+                                </Border>
+                                <TextBlock x:Name="CountryErrorText"
+                                           Foreground="#E74C3C" FontSize="11"
+                                           Margin="2,3,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
 
                         <!-- City -->
-                        <Grid Margin="0,10,0,10">
+                        <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="* City"
+                            <TextBlock Grid.Column="0" Text="City *"
                                        VerticalAlignment="Center" FontSize="14"/>
-                            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8"
-                                    BorderBrush="#DDE1E7" BorderThickness="1">
-                                <ComboBox x:Name="CityComboBox"
-                                          Height="38" FontSize="14"
-                                          Background="Transparent"
-                                          BorderThickness="0" Padding="10,0"
-                                          VerticalContentAlignment="Center"
-                                          SelectionChanged="CityComboBox_SelectionChanged"/>
-                            </Border>
+                            <StackPanel Grid.Column="1">
+                                <Border Background="#F8F9FA" CornerRadius="8"
+                                        BorderBrush="#DDE1E7" BorderThickness="1">
+                                    <ComboBox x:Name="CityComboBox"
+                                              Height="38" FontSize="14"
+                                              Background="Transparent"
+                                              BorderThickness="0" Padding="10,0"
+                                              VerticalContentAlignment="Center"
+                                              SelectionChanged="CityComboBox_SelectionChanged"/>
+                                </Border>
+                                <TextBlock x:Name="CityErrorText"
+                                           Foreground="#E74C3C" FontSize="11"
+                                           Margin="2,3,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
 
                         <!-- Floors -->
-                        <Grid Margin="0,10,0,10">
+                        <Grid Margin="0,10,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="180"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="110"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="* Number of Floors"
+                            <TextBlock Grid.Column="0" Text="Number of Floors *"
                                        VerticalAlignment="Center" FontSize="14"/>
-                            <Border Grid.Column="1" Background="#F8F9FA" CornerRadius="8"
-                                    BorderBrush="#DDE1E7" BorderThickness="1" Margin="0,0,10,0">
-                                <TextBox x:Name="FloorsTextBox"
-                                         Height="38" FontSize="14"
-                                         Background="Transparent"
-                                         BorderThickness="0" Padding="10,0"
-                                         VerticalContentAlignment="Center"/>
-                            </Border>
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <Border Background="#F8F9FA" CornerRadius="8"
+                                        BorderBrush="#DDE1E7" BorderThickness="1">
+                                    <TextBox x:Name="FloorsTextBox"
+                                             Height="38" FontSize="14"
+                                             Background="Transparent"
+                                             BorderThickness="0" Padding="10,0"
+                                             VerticalContentAlignment="Center"/>
+                                </Border>
+                                <TextBlock x:Name="FloorsErrorText"
+                                           Foreground="#E74C3C" FontSize="11"
+                                           Margin="2,3,0,0" Visibility="Collapsed"/>
+                            </StackPanel>
                             <Button Grid.Column="2" Content="Confirm"
                                     ToolTip="Generates a unit input field for each floor below"
                                     Height="38" FontSize="13"
                                     Background="#2980B9" Foreground="White"
                                     BorderThickness="0"
+                                    VerticalAlignment="Top"
                                     Click="ConfirmFloors_Click">
                                 <Button.Resources>
                                     <Style TargetType="Border">
@@ -178,22 +210,24 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Content="Register"
+                            <Button Grid.Column="0" Content="Cancel"
                                     Height="45" FontSize="14" FontWeight="SemiBold"
-                                    Margin="0,0,8,0" Foreground="White"
-                                    Background="#27AE60" BorderThickness="0"
-                                    Click="Register_Click">
+                                    Margin="0,0,8,0" Foreground="#2C3E50"
+                                    Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+                                    Cursor="Hand"
+                                    Click="Cancel_Click">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="8"/>
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Grid.Column="1" Content="Cancel"
+                            <Button Grid.Column="1" Content="Register"
                                     Height="45" FontSize="14" FontWeight="SemiBold"
                                     Margin="8,0,0,0" Foreground="White"
-                                    Background="#E74C3C" BorderThickness="0"
-                                    Click="Cancel_Click">
+                                    Background="#2980B9" BorderThickness="0"
+                                    Cursor="Hand"
+                                    Click="Register_Click">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="8"/>
@@ -239,13 +273,32 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border CornerRadius="8" Margin="8" ClipToBounds="True">
-                                    <Border.Effect>
-                                        <DropShadowEffect BlurRadius="8" Opacity="0.15"/>
-                                    </Border.Effect>
-                                    <Image Source="{Binding}" Width="150" Height="110"
-                                           Stretch="UniformToFill"/>
-                                </Border>
+                                <Grid Margin="8">
+                                    <Border CornerRadius="8" ClipToBounds="True">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="8" Opacity="0.15"/>
+                                        </Border.Effect>
+                                        <Image Source="{Binding}" Width="150" Height="110"
+                                               Stretch="UniformToFill"/>
+                                    </Border>
+                                    <Button Content="✕"
+                                            Tag="{Binding}"
+                                            Click="RemoveImage_Click"
+                                            ToolTip="Remove this image"
+                                            Width="22" Height="22"
+                                            FontSize="11" FontWeight="Bold"
+                                            Foreground="White" Background="#E74C3C"
+                                            BorderThickness="0" Cursor="Hand"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Margin="0,-4,-4,0">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="11"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -255,22 +308,24 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Register"
+                        <Button Grid.Column="0" Content="Cancel"
                                 Height="45" FontSize="14" FontWeight="SemiBold"
-                                Margin="0,0,8,0" Foreground="White"
-                                Background="#27AE60" BorderThickness="0"
-                                Click="Register_Click">
+                                Margin="0,0,8,0" Foreground="#2C3E50"
+                                Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+                                Cursor="Hand"
+                                Click="Cancel_Click">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="8"/>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Grid.Column="1" Content="Cancel"
+                        <Button Grid.Column="1" Content="Register"
                                 Height="45" FontSize="14" FontWeight="SemiBold"
                                 Margin="8,0,0,0" Foreground="White"
-                                Background="#E74C3C" BorderThickness="0"
-                                Click="Cancel_Click">
+                                Background="#2980B9" BorderThickness="0"
+                                Cursor="Hand"
+                                Click="Register_Click">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="8"/>

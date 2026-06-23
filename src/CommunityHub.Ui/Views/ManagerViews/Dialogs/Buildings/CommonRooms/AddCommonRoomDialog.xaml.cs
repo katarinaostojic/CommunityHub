@@ -1,6 +1,7 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Ui.Helpers.Manager;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Controls;
 using System.Windows;
@@ -26,6 +27,8 @@ public partial class AddCommonRoomDialog : Window
             DescriptionTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(DescriptionTextBox, "Description");
             FloorTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(FloorTextBox, "Floor");
         };
+
+        TooltipsManager.Apply(this);
     }
 
     private void OpenKeyboard(TextBox textBox, string fieldName)
@@ -64,41 +67,59 @@ public partial class AddCommonRoomDialog : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ShowFieldError(NameErrorText, ex.Message);
         }
     }
 
     private bool ValidateFields()
     {
+        ClearFieldErrors();
+        bool isValid = true;
+
         if (string.IsNullOrWhiteSpace(NameTextBox.Text))
         {
-            MessageBox.Show("Please enter a name for the common room.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(NameErrorText, "Name is required.");
+            isValid = false;
         }
 
         if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text))
         {
-            MessageBox.Show("Please enter a description.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(DescriptionErrorText, "Description is required.");
+            isValid = false;
         }
 
         if (!int.TryParse(FloorTextBox.Text.Trim(), out _))
         {
-            MessageBox.Show("Please enter a valid floor number.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(FloorErrorText, "Please enter a valid floor number.");
+            isValid = false;
         }
 
         if (RentalTypeComboBox.SelectedItem == null)
         {
-            MessageBox.Show("Please select a rental type.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(RentalTypeErrorText, "Please select a rental type.");
+            isValid = false;
         }
 
-        return true;
+        return isValid;
+    }
+
+    private void ShowFieldError(TextBlock errorText, string message)
+    {
+        errorText.Text = message;
+        errorText.Visibility = Visibility.Visible;
+    }
+
+    private void HideFieldError(TextBlock errorText)
+    {
+        errorText.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearFieldErrors()
+    {
+        HideFieldError(NameErrorText);
+        HideFieldError(DescriptionErrorText);
+        HideFieldError(FloorErrorText);
+        HideFieldError(RentalTypeErrorText);
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)

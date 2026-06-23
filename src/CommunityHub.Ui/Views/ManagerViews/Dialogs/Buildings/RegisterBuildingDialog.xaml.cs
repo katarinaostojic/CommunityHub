@@ -96,9 +96,11 @@ public partial class RegisterBuildingDialog : Window
 
         if (!int.TryParse(FloorsTextBox.Text, out int numberOfFloors) || numberOfFloors <= 0)
         {
-            MessageBox.Show("Please enter a valid number of floors.", "Error");
+            ShowFieldError(FloorsErrorText, "Please enter a valid number of floors.");
             return;
         }
+
+        HideFieldError(FloorsErrorText);
 
         for (int i = 1; i <= numberOfFloors; i++)
             FloorsStackPanel.Children.Add(CreateFloorRow(i));
@@ -123,7 +125,7 @@ public partial class RegisterBuildingDialog : Window
 
         TextBlock label = new TextBlock
         {
-            Text = $"* Floor {floorNumber} units (e.g. 1,2,3)",
+            Text = $"Floor {floorNumber} units (e.g. 1,2,3) *",
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = 14
         };
@@ -174,40 +176,87 @@ public partial class RegisterBuildingDialog : Window
 
     private bool ValidateFields()
     {
-        if (!AreRequiredFieldsFilled())
+        ClearFieldErrors();
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(StreetTextBox.Text))
         {
-            MessageBox.Show("Please fill in all required fields.", "Error");
-            return false;
+            ShowFieldError(StreetErrorText, "Street is required.");
+            isValid = false;
         }
 
-        City selectedCity = (City)CityComboBox.SelectedItem;
-        if (_buildingService.BuildingExists(StreetTextBox.Text, NumberTextBox.Text, selectedCity.Id))
+        if (string.IsNullOrWhiteSpace(NumberTextBox.Text))
         {
-            MessageBox.Show("A building at this address already exists.", "Error");
+            ShowFieldError(NumberErrorText, "Number is required.");
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(SettlementTextBox.Text))
+        {
+            ShowFieldError(SettlementErrorText, "Settlement is required.");
+            isValid = false;
+        }
+
+        if (CountryComboBox.SelectedItem == null)
+        {
+            ShowFieldError(CountryErrorText, "Please select a country.");
+            isValid = false;
+        }
+
+        if (CityComboBox.SelectedItem == null)
+        {
+            ShowFieldError(CityErrorText, "Please select a city.");
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(FloorsTextBox.Text))
+        {
+            ShowFieldError(FloorsErrorText, "Number of floors is required.");
+            isValid = false;
+        }
+
+        if (!isValid)
+            return false;
+
+        City city = (City)CityComboBox.SelectedItem;
+        if (_buildingService.BuildingExists(StreetTextBox.Text, NumberTextBox.Text, city.Id))
+        {
+            ShowFieldError(StreetErrorText, "A building at this address already exists.");
             return false;
         }
 
         return true;
-    }
-
-    private bool AreRequiredFieldsFilled()
-    {
-        return !string.IsNullOrWhiteSpace(StreetTextBox.Text) &&
-               !string.IsNullOrWhiteSpace(NumberTextBox.Text) &&
-               !string.IsNullOrWhiteSpace(SettlementTextBox.Text) &&
-               CityComboBox.SelectedItem != null &&
-               CountryComboBox.SelectedItem != null &&
-               !string.IsNullOrWhiteSpace(FloorsTextBox.Text);
     }
 
     private bool ValidateFloors()
     {
         if (FloorsStackPanel.Children.Count == 0)
         {
-            MessageBox.Show("Please confirm the number of floors first.", "Error");
+            ShowFieldError(FloorsErrorText, "Please confirm the number of floors first.");
             return false;
         }
         return true;
+    }
+
+    private void ShowFieldError(TextBlock errorText, string message)
+    {
+        errorText.Text = message;
+        errorText.Visibility = Visibility.Visible;
+    }
+
+    private void HideFieldError(TextBlock errorText)
+    {
+        errorText.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearFieldErrors()
+    {
+        HideFieldError(StreetErrorText);
+        HideFieldError(NumberErrorText);
+        HideFieldError(SettlementErrorText);
+        HideFieldError(CountryErrorText);
+        HideFieldError(CityErrorText);
+        HideFieldError(FloorsErrorText);
     }
 
     private void CreateFloorsAndUnits(long buildingId)
@@ -266,8 +315,22 @@ public partial class RegisterBuildingDialog : Window
         if (dialog.ShowDialog() == true)
         {
             _selectedImagePaths.AddRange(dialog.FileNames);
-            ImagesPreview.ItemsSource = null;
-            ImagesPreview.ItemsSource = _selectedImagePaths;
+            RefreshImagesPreview();
         }
+    }
+
+    private void RemoveImage_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is string imagePath)
+        {
+            _selectedImagePaths.Remove(imagePath);
+            RefreshImagesPreview();
+        }
+    }
+
+    private void RefreshImagesPreview()
+    {
+        ImagesPreview.ItemsSource = null;
+        ImagesPreview.ItemsSource = _selectedImagePaths;
     }
 }
