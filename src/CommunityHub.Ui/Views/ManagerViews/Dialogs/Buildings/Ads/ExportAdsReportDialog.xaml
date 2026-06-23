@@ -30,11 +30,13 @@
                          FontSize="14"
                          GroupName="AdTypeGroup"
                          IsChecked="True"
-                         Margin="0,0,0,12"/>
+                         Margin="0,0,0,12"
+                         ToolTip="Only includes ads that are currently active"/>
             <RadioButton x:Name="SeekingRadioButton"
                          Content="Seeking help"
                          FontSize="14"
-                         GroupName="AdTypeGroup"/>
+                         GroupName="AdTypeGroup"
+                         ToolTip="Only includes ads that are currently active"/>
         </StackPanel>
 
         <Grid Grid.Row="3" Margin="0,20,0,0">

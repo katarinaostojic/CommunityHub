@@ -156,6 +156,7 @@
                                          VerticalContentAlignment="Center"/>
                             </Border>
                             <Button Grid.Column="2" Content="Confirm"
+                                    ToolTip="Generates a unit input field for each floor below"
                                     Height="38" FontSize="13"
                                     Background="#2980B9" Foreground="White"
                                     BorderThickness="0"
