@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.Entities.Shared;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using System.Collections.ObjectModel;
 
@@ -20,6 +21,8 @@ public class MyRequestsViewModel : BaseViewModel
         _service = service;
         _citizenId = citizenId;
         LoadRequests();
+
+        LanguageManager.LanguageChanged += () => { foreach (var r in Requests) r.RefreshStatus(); FilterAll(); };
     }
 
     public ObservableCollection<NeighborhoodAccessRequestViewModel> Requests

@@ -31,26 +31,26 @@
                            Margin="0,0,0,16"/>
 
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                    <TextBlock Text="📅 Date: " FontSize="20" FontWeight="Bold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="Date: " FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBlock x:Name="EventDateText" FontSize="20" FontWeight="Bold"
                                Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,20,0"/>
-                    <TextBlock Text="🕐 Time: " FontSize="20" FontWeight="Bold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="Time: " FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBlock x:Name="EventTimeText" FontSize="20" FontWeight="Bold"
                                Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,20,0"/>
-                    <TextBlock Text="⏱ Duration: " FontSize="20" FontWeight="Bold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="&#xE916;" FontFamily="Segoe MDL2 Assets" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="Duration: " FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <TextBlock x:Name="EventDurationText" FontSize="20" FontWeight="Bold"
                                Foreground="{DynamicResource TextSecondaryBrush}"/>
                     <TextBlock Text=" min" FontSize="20" FontWeight="Bold"
                                Foreground="{DynamicResource TextSecondaryBrush}"/>
                 </StackPanel>
 
-                <TextBlock Text="🎒 Items to bring:"
-                           FontSize="20" FontWeight="Bold"
-                           Margin="0,12,0,6"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,6">
+                    <TextBlock Text="&#xE7BF;" FontFamily="Segoe MDL2 Assets" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="Items to bring:" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
 
                 <TextBlock Text="Select items you can bring (optional)"
                            FontSize="16"

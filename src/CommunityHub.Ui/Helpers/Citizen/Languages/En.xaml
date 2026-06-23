@@ -9,6 +9,7 @@
     <system:String x:Key="Menu_Citizens">Citizens</system:String>
     <system:String x:Key="Menu_Meetings">Meetings</system:String>
     <system:String x:Key="Menu_CityObjects">City Objects</system:String>
+    <system:String x:Key="Menu_CoordinatorReviews">Coordinator Reviews</system:String>
     <system:String x:Key="Menu_Budget">Budget</system:String>
     <system:String x:Key="Menu_Logout">Logout</system:String>
 
@@ -80,6 +81,8 @@
     <system:String x:Key="Meetings_Status_Cancelled">✕ Cancelled</system:String>
 
     <!-- Citizens -->
+    <system:String x:Key="Citizens_Organized">Organized:</system:String>
+    <system:String x:Key="Citizens_Volunteered">Volunteered:</system:String>
     <system:String x:Key="Citizens_TrustLevel">⭐ Trust level:</system:String>
 
     <!-- Buttons -->
@@ -98,7 +101,6 @@
     <system:String x:Key="Reviews_Comment">💬 Comment:</system:String>
     <system:String x:Key="Reviews_Reports">🚩 Reports:</system:String>
     <system:String x:Key="Reviews_ReportButton">🚩 Report</system:String>
-    <system:String x:Key="Menu_CoordinatorReviews">Coordinator Reviews</system:String>
     <system:String x:Key="Events_CoordinatorReviews">⭐ Coordinator Reviews</system:String>
     <system:String x:Key="Reviews_Reported">✔ Reported</system:String>
     <system:String x:Key="CityObjects_Title">Neighborhood City Objects</system:String>
@@ -126,11 +128,80 @@
     <system:String x:Key="Donate_Title">Donate to Neighborhood</system:String>
     <system:String x:Key="Donate_Amount">Amount:</system:String>
     <system:String x:Key="Donate_Category">Category:</system:String>
+    <system:String x:Key="Donate_Date">📅 Date:</system:String>
     <system:String x:Key="Donate_Button">💰 Donate</system:String>
     <system:String x:Key="Spending_Title">Spending History</system:String>
     <system:String x:Key="Spending_Amount">💰 Amount:</system:String>
     <system:String x:Key="Spending_Description">📋 Description:</system:String>
     <system:String x:Key="Spending_Date">📅 Date:</system:String>
+    <system:String x:Key="Spending_ExportPdf">Export to PDF</system:String>
     <system:String x:Key="Spending_Category">🏷️ Category:</system:String>
 
+
+    <!-- MessageBox poruke -->
+    <system:String x:Key="Msg_AlreadyRegistered">You are already registered for this event.</system:String>
+    <system:String x:Key="Msg_AlreadyRegisteredTitle">Already Registered</system:String>
+    <system:String x:Key="Msg_RegistrationsClosed">This event is no longer accepting registrations.</system:String>
+    <system:String x:Key="Msg_RegistrationsClosedTitle">Cannot Join</system:String>
+    <system:String x:Key="Msg_SelectDate">Please select a date.</system:String>
+    <system:String x:Key="Msg_Validation">Validation</system:String>
+    <system:String x:Key="Msg_PendingRequest">You already have a pending request for this neighborhood.</system:String>
+    <system:String x:Key="Msg_PendingRequestTitle">Request already exists</system:String>
+    <system:String x:Key="Msg_AlreadyMember">You are already a member of a neighborhood.</system:String>
+    <system:String x:Key="Msg_AlreadyMemberTitle">Already a member</system:String>
+    <system:String x:Key="Msg_DonationSuccess">Donation successfully recorded.</system:String>
+    <system:String x:Key="Msg_EventCreated">Event created successfully!</system:String>
+    <system:String x:Key="Msg_JoinedEvent">You have successfully joined the event!</system:String>
+    <system:String x:Key="Msg_EnterItemName">Please enter item name.</system:String>
+    <system:String x:Key="Msg_SelectRating">Please select a rating.</system:String>
+    <system:String x:Key="Msg_CommentRequired">For a rating below 3 you must leave a comment.</system:String>
+    <system:String x:Key="Msg_ReviewAdded">Review successfully added.</system:String>
+    <system:String x:Key="Msg_PdfSuccess">PDF successfully generated and saved to Desktop.</system:String>
+    <system:String x:Key="Msg_PdfSuccessTitle">PDF Export</system:String>
+    <system:String x:Key="Msg_PdfError">Error generating PDF:</system:String>
+    <system:String x:Key="Msg_DeleteConfirm">Are you sure you want to delete this request?</system:String>
+    <system:String x:Key="Msg_DeleteTitle">Confirm Delete</system:String>
+    <system:String x:Key="Msg_NotMember">You are not a member of any neighborhood.</system:String>
+    <system:String x:Key="Msg_Success">Success</system:String>
+    <system:String x:Key="Msg_Error">Error</system:String>
+
+    <!-- Status stringovi -->
+    <system:String x:Key="Event_Status_Preparation">⏳ Preparation</system:String>
+    <system:String x:Key="Event_Status_Scheduled">✔ Scheduled</system:String>
+    <system:String x:Key="Event_Status_Cancelled">✕ Cancelled</system:String>
+    <system:String x:Key="Event_Status_Finished">✔ Finished</system:String>
+    <system:String x:Key="Meeting_Status_InPreparation">⏳ In Preparation</system:String>
+    <system:String x:Key="Meeting_Status_Scheduled">✔ Scheduled</system:String>
+    <system:String x:Key="Meeting_Status_Cancelled">✕ Cancelled</system:String>
+    <system:String x:Key="Request_Status_Pending">Pending approval</system:String>
+    <system:String x:Key="Request_Status_Approved">Approved</system:String>
+    <system:String x:Key="Request_Status_Rejected">Rejected</system:String>
+
+    <!-- Labels za ResultsText -->
+    <system:String x:Key="Lbl_Showing">Showing</system:String>
+    <system:String x:Key="Lbl_Results">results</system:String>
+    <system:String x:Key="Lbl_Events">neighborhood events</system:String>
+    <system:String x:Key="Lbl_Meetings">meetings</system:String>
+    <system:String x:Key="Lbl_Objects">objects</system:String>
+    <system:String x:Key="Lbl_Reviews">reviews</system:String>
+    <system:String x:Key="Citizens_Title">Neighborhood Citizens</system:String>
+    <system:String x:Key="Attendance_Attended">&#x2714; Attended</system:String>
+    <system:String x:Key="Attendance_NotAttended">&#x2715; Did not attend</system:String>
+    <system:String x:Key="Attendance_NotMarked">Not marked</system:String>
+    <system:String x:Key="Event_ThingsToBring">🎒 Things to Bring:</system:String>
+    <system:String x:Key="Event_AddItemPlaceholder">Item name...</system:String>
+    <system:String x:Key="Event_AddItemButton">+ Add</system:String>
+    <system:String x:Key="Event_RemoveItem">✕ Remove</system:String>
+    <system:String x:Key="Event_AddAtLeastOne">⚠ Add at least one item.</system:String>
+    <system:String x:Key="Event_Title">Title:</system:String>
+    <system:String x:Key="Event_Description">Description:</system:String>
+    <system:String x:Key="Event_Date">Date:</system:String>
+    <system:String x:Key="Event_StartTime">Start Time (HH:mm):</system:String>
+    <system:String x:Key="Event_Duration">Duration (minutes):</system:String>
+    <system:String x:Key="Event_MinVolunteers">Minimum Volunteers:</system:String>
+    <system:String x:Key="Validate_Required">⚠ Cannot be empty.</system:String>
+    <system:String x:Key="Validate_SelectDate">⚠ Please select a date.</system:String>
+    <system:String x:Key="Validate_PastDate">⚠ Date cannot be in the past.</system:String>
+    <system:String x:Key="Validate_TimeFormat">⚠ Enter valid time (HH:mm), e.g. 14:30.</system:String>
+    <system:String x:Key="Validate_PositiveNumber">⚠ Enter a positive number.</system:String>
 </ResourceDictionary>

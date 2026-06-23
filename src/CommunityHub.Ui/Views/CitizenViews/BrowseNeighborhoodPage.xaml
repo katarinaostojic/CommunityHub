@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:CommunityHub.Ui.Converters"
         xmlns:local="clr-namespace:CommunityHub.Ui.Views.CitizenViews"
+        xmlns:views="clr-namespace:CommunityHub.Ui.Views.CitizenViews"
         mc:Ignorable="d"
         Title="Browse Neighborhoods"
         Height="760"
@@ -18,65 +19,27 @@
 
     <Grid Background="{DynamicResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="42"/>
-            <RowDefinition Height="54"/>
-            <RowDefinition Height="78"/>
+            <RowDefinition Height="174"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource PrimarySoftBrush}"
+        <!-- Shared NavBar sa back/forward, language, theme -->
+        <views:CitizenNavBar x:Name="NavBar" Grid.Row="0"/>
+
+        <!-- Page-specifična traka: search + reset + filter (ostaje odvojena jer ima search box) -->
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
-            <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1" CornerRadius="8">
-                <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-            </Border>
-        </Border>
-
-        <Grid Grid.Row="1" Background="{DynamicResource SurfaceSoftBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-            </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="18">
-                <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="16,0,0,0"
-                           Foreground="{DynamicResource TextSecondaryBrush}"/>
-            </Border>
-        </Grid>
-
-        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,1">
-            <Grid Margin="18,0,18,0">
+            <Grid Margin="18,8,18,8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90"/>
-                    <ColumnDefinition Width="520"/>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="170"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="170"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="☰" Click="BurgerButton_Click"
-                        FontSize="36" FontWeight="Bold" Background="Transparent"
-                        BorderThickness="0" Width="70" Height="70"
-                        VerticalAlignment="Center" HorizontalAlignment="Left"
-                        Foreground="#0D47A1"/>
-
-                <Border Grid.Column="1" Height="46" VerticalAlignment="Center"
-                        Margin="22,0,28,0" Background="{DynamicResource SurfaceBrush}"
+                <Border Grid.Column="0" Height="46" VerticalAlignment="Center"
+                        Margin="0,0,16,0" Background="{DynamicResource SurfaceBrush}"
                         BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="18">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -94,38 +57,26 @@
                     </Grid>
                 </Border>
 
-                <Button Grid.Column="2" Content="{DynamicResource Browse_Reset}"
+                <Button Grid.Column="1" Content="{DynamicResource Browse_Reset}"
                         Click="ResetButton_Click"
-                        FontSize="20" FontWeight="Bold"
+                        FontSize="18" FontWeight="Bold"
                         Background="{DynamicResource SurfaceBrush}"
                         Foreground="{DynamicResource TextPrimaryBrush}"
                         BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="2" Height="54" Margin="0,0,26,0"/>
+                        BorderThickness="2" Height="46"/>
 
                 <Button Grid.Column="3" Content="{DynamicResource Browse_Filter}"
                         Click="FilterButton_Click"
-                        FontSize="20" FontWeight="Bold"
+                        FontSize="18" FontWeight="Bold"
                         Background="{DynamicResource SurfaceBrush}"
                         Foreground="{DynamicResource TextPrimaryBrush}"
                         BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="2" Height="54" Margin="0,0,24,0"/>
-
-                <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Click="ProfileButton_Click"
-                            Background="Transparent"
-                            BorderThickness="0" Padding="0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="👤" FontSize="32" Margin="0,0,6,0"/>
-                            <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
-                                       FontWeight="Bold" VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                        BorderThickness="2" Height="46"/>
             </Grid>
         </Border>
 
-        <Grid Grid.Row="3" Margin="24,14,24,14">
+        <!-- Sadržaj -->
+        <Grid Grid.Row="2" Margin="24,14,24,14">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -154,11 +105,9 @@
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="{Binding Name, Mode=OneWay}"
                                                    FontSize="26" FontWeight="Bold"
-                                                   HorizontalAlignment="Left"
-                                                   Width="300"
+                                                   HorizontalAlignment="Left" Width="300"
                                                    Foreground="{DynamicResource TextPrimaryBrush}"
                                                    Margin="0,0,0,8"/>
-
                                         <Border Width="300" Height="200"
                                                 BorderBrush="{DynamicResource BorderBrush}"
                                                 BorderThickness="1"
@@ -207,10 +156,8 @@
                                         </StackPanel>
 
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
-                                            <TextBlock Text="🌍" FontSize="28"
-                                                       Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                            <TextBlock FontSize="22" FontWeight="Bold"
-                                                       VerticalAlignment="Center"
+                                            <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                                            <TextBlock FontSize="22" FontWeight="Bold" VerticalAlignment="Center"
                                                        Foreground="{DynamicResource TextPrimaryBrush}">
                                                 <Run Text="{Binding CityName, Mode=OneWay}"/>
                                                 <Run Text=", "/>
@@ -219,12 +166,10 @@
                                         </StackPanel>
 
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="📝" FontSize="28"
-                                                       Margin="0,0,10,0" VerticalAlignment="Top"/>
+                                            <TextBlock Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Top" Foreground="{DynamicResource IconForegroundBrush}"/>
                                             <TextBlock Text="{Binding Description, Mode=OneWay}"
                                                        FontSize="20" FontWeight="Bold"
-                                                       Width="440" TextWrapping="Wrap"
-                                                       VerticalAlignment="Top"
+                                                       Width="440" TextWrapping="Wrap" VerticalAlignment="Top"
                                                        Foreground="{DynamicResource TextSecondaryBrush}"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -235,11 +180,8 @@
                                             Click="RequestAccessButton_Click"
                                             FontSize="20" FontWeight="Bold"
                                             Width="180" Height="70"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Right"
-                                            Background="#0D47A1"
-                                            Foreground="White"
-                                            BorderThickness="0"/>
+                                            VerticalAlignment="Center" HorizontalAlignment="Right"
+                                            Background="#0D47A1" Foreground="White" BorderThickness="0"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -248,14 +190,15 @@
             </ScrollViewer>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.RowSpan="4"
+        <!-- Filter overlay -->
+        <Grid Grid.Row="0" Grid.RowSpan="3"
               x:Name="Overlay"
               Background="#66000000"
               Visibility="Collapsed"
               MouseLeftButtonDown="Overlay_MouseLeftButtonDown"
               Panel.ZIndex="20"/>
 
-        <Border Grid.Row="0" Grid.RowSpan="4"
+        <Border Grid.Row="0" Grid.RowSpan="3"
                 Width="320" HorizontalAlignment="Left"
                 Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderBrush}"
@@ -263,7 +206,6 @@
             <Border.RenderTransform>
                 <TranslateTransform x:Name="FilterPanelTranslate" X="-320"/>
             </Border.RenderTransform>
-
             <StackPanel Margin="22">
                 <Grid Margin="0,0,0,20">
                     <TextBlock Text="{DynamicResource Browse_FilterTitle}" FontSize="26" FontWeight="Bold"
@@ -275,61 +217,44 @@
                             Foreground="{DynamicResource TextPrimaryBrush}"
                             Click="FilterButton_Click"/>
                 </Grid>
-
-                <TextBlock Text="{DynamicResource Browse_NeighborhoodName}" FontSize="18"
-                           FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBox x:Name="FilterNameTextBox" Padding="8,8"
-                         FontSize="18" FontWeight="Bold" Margin="0,0,0,16"
-                         BorderBrush="{DynamicResource BorderBrush}"/>
-
-                <TextBlock Text="{DynamicResource Browse_Address}" FontSize="18"
-                           FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBox x:Name="FilterAddressTextBox" Padding="8,8"
-                         FontSize="18" FontWeight="Bold" Margin="0,0,0,16"
-                         BorderBrush="{DynamicResource BorderBrush}"/>
-
-                <TextBlock Text="{DynamicResource Browse_City}" FontSize="18"
-                           FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBox x:Name="FilterCityTextBox" Padding="8,8"
-                         FontSize="18" FontWeight="Bold" Margin="0,0,0,16"
-                         BorderBrush="{DynamicResource BorderBrush}"/>
-
-                <TextBlock Text="{DynamicResource Browse_Country}" FontSize="18"
-                           FontWeight="Bold" Margin="0,0,0,6"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBox x:Name="FilterCountryTextBox" Padding="8,8"
-                         FontSize="18" FontWeight="Bold" Margin="0,0,0,24"
-                         BorderBrush="{DynamicResource BorderBrush}"/>
-
+                <TextBlock Text="{DynamicResource Browse_NeighborhoodName}" FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,6" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBox x:Name="FilterNameTextBox" Padding="8,8" FontSize="18" FontWeight="Bold"
+                         Margin="0,0,0,16" BorderBrush="{DynamicResource BorderBrush}"/>
+                <TextBlock Text="{DynamicResource Browse_Address}" FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,6" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBox x:Name="FilterAddressTextBox" Padding="8,8" FontSize="18" FontWeight="Bold"
+                         Margin="0,0,0,16" BorderBrush="{DynamicResource BorderBrush}"/>
+                <TextBlock Text="{DynamicResource Browse_City}" FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,6" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBox x:Name="FilterCityTextBox" Padding="8,8" FontSize="18" FontWeight="Bold"
+                         Margin="0,0,0,16" BorderBrush="{DynamicResource BorderBrush}"/>
+                <TextBlock Text="{DynamicResource Browse_Country}" FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,6" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBox x:Name="FilterCountryTextBox" Padding="8,8" FontSize="18" FontWeight="Bold"
+                         Margin="0,0,0,24" BorderBrush="{DynamicResource BorderBrush}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
                     <Button Grid.Column="0" Content="{DynamicResource Browse_ResetFilters}"
                             Padding="0,12" FontSize="16" FontWeight="Bold"
                             Background="{DynamicResource SurfaceBrush}"
                             Foreground="{DynamicResource TextPrimaryBrush}"
-                            BorderBrush="{DynamicResource BorderBrush}"
-                            BorderThickness="1"
+                            BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                             Click="ResetFiltersButton_Click"/>
-
                     <Button Grid.Column="2" Content="{DynamicResource Browse_ApplyFilters}"
                             Padding="0,12" FontSize="16" FontWeight="Bold"
-                            Background="#0D47A1"
-                            Foreground="White" BorderThickness="0"
+                            Background="#0D47A1" Foreground="White" BorderThickness="0"
                             Click="ApplyFiltersButton_Click"/>
                 </Grid>
             </StackPanel>
         </Border>
 
         <local:CitizenMenuView x:Name="CitizenMenu"
-                               Grid.Row="0" Grid.RowSpan="4"
+                               Grid.Row="0" Grid.RowSpan="3"
                                Visibility="Collapsed"
                                Panel.ZIndex="100"/>
     </Grid>

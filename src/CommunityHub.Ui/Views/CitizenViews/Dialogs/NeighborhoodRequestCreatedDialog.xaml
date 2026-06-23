@@ -68,40 +68,56 @@
                     <RowDefinition Height="48"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0"
-                           Text="🏘️ Neighborhood:" FontSize="22" FontWeight="Bold"
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock
+                           Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text=" Neighborhood:" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
                 <TextBlock x:Name="NeighborhoodNameText"
                            Grid.Row="0" Grid.Column="1"
                            FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0"
-                           Text="👤 Citizen:" FontSize="22" FontWeight="Bold"
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock
+                           Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text=" Citizen:" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
                 <TextBlock x:Name="CitizenNameText"
                            Grid.Row="1" Grid.Column="1"
                            FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0"
-                           Text="📅 Created on:" FontSize="22" FontWeight="Bold"
+                <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock
+                           Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text=" Created on:" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
                 <TextBlock x:Name="CreatedOnText"
                            Grid.Row="2" Grid.Column="1"
                            FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <TextBlock Grid.Row="3" Grid.Column="0"
-                           Text="📌 Status:" FontSize="22" FontWeight="Bold"
+                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock
+                           Text="&#xE734;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text=" Status:" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
                 <Border Grid.Row="3" Grid.Column="1"
                         CornerRadius="12"
                         Background="#F9A825"

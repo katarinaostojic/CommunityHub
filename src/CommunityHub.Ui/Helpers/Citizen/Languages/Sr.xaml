@@ -9,6 +9,7 @@
     <system:String x:Key="Menu_Citizens">Građani</system:String>
     <system:String x:Key="Menu_Meetings">Sastanci</system:String>
     <system:String x:Key="Menu_CityObjects">Gradski objekti</system:String>
+    <system:String x:Key="Menu_CoordinatorReviews">Recenzije koordinatora</system:String>
     <system:String x:Key="Menu_Budget">Budžet</system:String>
     <system:String x:Key="Menu_Logout">Odjava</system:String>
 
@@ -80,6 +81,8 @@
     <system:String x:Key="Meetings_Status_Cancelled">✕ Otkazano</system:String>
 
     <!-- Citizens -->
+    <system:String x:Key="Citizens_Organized">Organizovano:</system:String>
+    <system:String x:Key="Citizens_Volunteered">Volontirano:</system:String>
     <system:String x:Key="Citizens_TrustLevel">⭐ Nivo poverenja:</system:String>
 
     <!-- Dugmad -->
@@ -98,7 +101,6 @@
     <system:String x:Key="Reviews_Comment">💬 Komentar:</system:String>
     <system:String x:Key="Reviews_Reports">🚩 Prijave:</system:String>
     <system:String x:Key="Reviews_ReportButton">🚩 Prijavi</system:String>
-    <system:String x:Key="Menu_CoordinatorReviews">Recenzije koordinatora</system:String>
     <system:String x:Key="Events_CoordinatorReviews">⭐ Recenzije koordinatora</system:String>
     <system:String x:Key="Reviews_Reported">✔ Prijavljeno</system:String>
     <system:String x:Key="CityObjects_Title">Gradski objekti kvarta</system:String>
@@ -126,11 +128,80 @@
     <system:String x:Key="Donate_Title">Donacija kvartu</system:String>
     <system:String x:Key="Donate_Amount">Iznos:</system:String>
     <system:String x:Key="Donate_Category">Kategorija:</system:String>
+    <system:String x:Key="Donate_Date">📅 Datum:</system:String>
     <system:String x:Key="Donate_Button">💰 Doniraj</system:String>
     <system:String x:Key="Spending_Title">Istorija troškova</system:String>
     <system:String x:Key="Spending_Amount">💰 Iznos:</system:String>
     <system:String x:Key="Spending_Description">📋 Opis:</system:String>
     <system:String x:Key="Spending_Date">📅 Datum:</system:String>
+    <system:String x:Key="Spending_ExportPdf">Izvezi u PDF</system:String>
     <system:String x:Key="Spending_Category">🏷️ Kategorija:</system:String>
 
+
+    <!-- MessageBox poruke -->
+    <system:String x:Key="Msg_AlreadyRegistered">Već ste prijavljeni za ovaj događaj.</system:String>
+    <system:String x:Key="Msg_AlreadyRegisteredTitle">Već prijavljeni</system:String>
+    <system:String x:Key="Msg_RegistrationsClosed">Ovaj događaj više ne prima prijave.</system:String>
+    <system:String x:Key="Msg_RegistrationsClosedTitle">Nije moguće pridružiti se</system:String>
+    <system:String x:Key="Msg_SelectDate">Molimo odaberite datum.</system:String>
+    <system:String x:Key="Msg_Validation">Validacija</system:String>
+    <system:String x:Key="Msg_PendingRequest">Već imate zahev na čekanju za ovaj kvart.</system:String>
+    <system:String x:Key="Msg_PendingRequestTitle">Zahtev već postoji</system:String>
+    <system:String x:Key="Msg_AlreadyMember">Već ste član nekog kvarta.</system:String>
+    <system:String x:Key="Msg_AlreadyMemberTitle">Već član</system:String>
+    <system:String x:Key="Msg_DonationSuccess">Donacija je uspešno evidentirana.</system:String>
+    <system:String x:Key="Msg_EventCreated">Događaj je uspešno kreiran!</system:String>
+    <system:String x:Key="Msg_JoinedEvent">Uspešno ste se pridružili događaju!</system:String>
+    <system:String x:Key="Msg_EnterItemName">Molimo unesite naziv stavke.</system:String>
+    <system:String x:Key="Msg_SelectRating">Molimo odaberite ocenu.</system:String>
+    <system:String x:Key="Msg_CommentRequired">Za ocenu nižu od 3 morate ostaviti komentar.</system:String>
+    <system:String x:Key="Msg_ReviewAdded">Recenzija je uspešno dodata.</system:String>
+    <system:String x:Key="Msg_PdfSuccess">PDF je uspešno generisan i sačuvan na Desktopu.</system:String>
+    <system:String x:Key="Msg_PdfSuccessTitle">PDF eksport</system:String>
+    <system:String x:Key="Msg_PdfError">Greška pri generisanju PDF-a:</system:String>
+    <system:String x:Key="Msg_DeleteConfirm">Da li ste sigurni da želite da obrišete ovaj zahtev?</system:String>
+    <system:String x:Key="Msg_DeleteTitle">Potvrda brisanja</system:String>
+    <system:String x:Key="Msg_NotMember">Niste član nijednog kvarta.</system:String>
+    <system:String x:Key="Msg_Success">Uspeh</system:String>
+    <system:String x:Key="Msg_Error">Greška</system:String>
+
+    <!-- Status stringovi -->
+    <system:String x:Key="Event_Status_Preparation">⏳ Priprema</system:String>
+    <system:String x:Key="Event_Status_Scheduled">✔ Zakazano</system:String>
+    <system:String x:Key="Event_Status_Cancelled">✕ Otkazano</system:String>
+    <system:String x:Key="Event_Status_Finished">✔ Završeno</system:String>
+    <system:String x:Key="Meeting_Status_InPreparation">⏳ U pripremi</system:String>
+    <system:String x:Key="Meeting_Status_Scheduled">✔ Zakazano</system:String>
+    <system:String x:Key="Meeting_Status_Cancelled">✕ Otkazano</system:String>
+    <system:String x:Key="Request_Status_Pending">Na čekanju</system:String>
+    <system:String x:Key="Request_Status_Approved">Odobreno</system:String>
+    <system:String x:Key="Request_Status_Rejected">Odbijeno</system:String>
+
+    <!-- Labels za ResultsText -->
+    <system:String x:Key="Lbl_Showing">Prikazuje se</system:String>
+    <system:String x:Key="Lbl_Results">rezultata</system:String>
+    <system:String x:Key="Lbl_Events">događaji kvarta</system:String>
+    <system:String x:Key="Lbl_Meetings">sastanaka</system:String>
+    <system:String x:Key="Lbl_Objects">objekata</system:String>
+    <system:String x:Key="Lbl_Reviews">recenzija</system:String>
+    <system:String x:Key="Citizens_Title">Građani kvarta</system:String>
+    <system:String x:Key="Attendance_Attended">&#x2714; Prisustvovao</system:String>
+    <system:String x:Key="Attendance_NotAttended">&#x2715; Nije prisustvovao</system:String>
+    <system:String x:Key="Attendance_NotMarked">Nije označeno</system:String>
+    <system:String x:Key="Event_ThingsToBring">🎒 Potrebne stvari:</system:String>
+    <system:String x:Key="Event_AddItemPlaceholder">Naziv stavke...</system:String>
+    <system:String x:Key="Event_AddItemButton">+ Dodaj</system:String>
+    <system:String x:Key="Event_RemoveItem">✕ Ukloni</system:String>
+    <system:String x:Key="Event_AddAtLeastOne">⚠ Dodajte bar jednu stavku.</system:String>
+    <system:String x:Key="Event_Title">Naziv:</system:String>
+    <system:String x:Key="Event_Description">Opis:</system:String>
+    <system:String x:Key="Event_Date">Datum:</system:String>
+    <system:String x:Key="Event_StartTime">Vreme početka (HH:mm):</system:String>
+    <system:String x:Key="Event_Duration">Trajanje (minuta):</system:String>
+    <system:String x:Key="Event_MinVolunteers">Minimalan broj volontera:</system:String>
+    <system:String x:Key="Validate_Required">⚠ Ne sme biti prazno.</system:String>
+    <system:String x:Key="Validate_SelectDate">⚠ Molimo odaberite datum.</system:String>
+    <system:String x:Key="Validate_PastDate">⚠ Datum ne može biti u prošlosti.</system:String>
+    <system:String x:Key="Validate_TimeFormat">⚠ Unesite ispravno vreme (HH:mm), npr. 14:30.</system:String>
+    <system:String x:Key="Validate_PositiveNumber">⚠ Unesite pozitivan broj.</system:String>
 </ResourceDictionary>

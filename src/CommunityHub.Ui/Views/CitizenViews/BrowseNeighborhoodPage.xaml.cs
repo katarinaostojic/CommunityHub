@@ -10,6 +10,8 @@ using System.Windows.Media.Animation;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 
+using CommunityHub.Ui.Helpers.Citizen;
+
 namespace CommunityHub.Ui.Views.CitizenViews;
 
 public partial class BrowseNeighborhoodPage : Window
@@ -18,7 +20,7 @@ public partial class BrowseNeighborhoodPage : Window
     private readonly BrowseNeighborhoodViewModel _viewModel;
     private bool _filterPanelOpen = false;
 
-    public BrowseNeighborhoodPage(User user)
+    public BrowseNeighborhoodPage(User user, bool openMenuOnLoad = false)
     {
         InitializeComponent();
         _user = user;
@@ -27,10 +29,23 @@ public partial class BrowseNeighborhoodPage : Window
         _viewModel = new BrowseNeighborhoodViewModel(neighborhoodService);
         DataContext = _viewModel;
 
-        LoggedInUserTextBlock.Text = _user.Username;
+        NavBar.SetTitle(TryFindResource("Browse_Title") as string ?? "Neighborhoods");
+        LanguageManager.LanguageChanged += () => NavBar.SetTitle(TryFindResource("Browse_Title") as string ?? "Neighborhoods");
+        NavBar.SetUrl("communityhub://neighborhoods");
+        NavBar.SetUsername(_user.Username);
+        NavBar.UpdateNavButtons();
+
+        NavBar.BurgerClicked += () => CitizenMenu.Visibility = Visibility.Visible;
+        NavBar.ProfileClicked += () => NavigateToProfile();
+        NavBar.BackNavigated += HandleNavBack;
+        NavBar.ForwardNavigated += HandleNavForward;
+        NavBar.ReloadRequested += () => _viewModel.Reset();
         CitizenMenu.CloseRequested += CitizenMenu_CloseRequested;
         CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
         CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
+
+        if (openMenuOnLoad)
+            CitizenMenu.Visibility = Visibility.Visible;
     }
 
     private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -73,8 +88,6 @@ public partial class BrowseNeighborhoodPage : Window
         Close();
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e)
-        => CitizenNavigationHelper.NavigateToProfile(_user, this);
 
     private void FilterButton_Click(object sender, RoutedEventArgs e)
     {
@@ -115,17 +128,33 @@ public partial class BrowseNeighborhoodPage : Window
 
     private void CitizenMenu_NavigationRequested(string destination)
     {
-        CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods": break;
-            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
-            case "Events": CitizenNavigationHelper.NavigateToEvents(_user, this); break;
-            case "Citizens": CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
-            case "Meetings": CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
-            case "Profile": CitizenNavigationHelper.NavigateToProfile(_user, this); break;
-            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
-            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "MyRequests":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                new MyRequestsPage(_user, openMenuOnLoad: true).Show(); Close(); break;
+            case "Events":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                CitizenNavigationHelper.NavigateToEvents(_user, this); break;
+            case "Citizens":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
+            case "Meetings":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
+            case "Profile":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                NavigateToProfile(); break;
+            case "CityObjects":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
+            case "CoordinatorReviews":
+                NavigationHistory.NavigateTo(new NavigationEntry("BrowseNeighborhood", _user));
+                CitizenNavigationHelper.NavigateToCoordinatorReviews(_user, CitizenNavigationHelper.GetMembershipId(_user.Id) ?? 0, this); break;
+            case "Budget":
+                NavigationHistory.NavigateTo(new NavigationEntry("Neighborhoods", _user));
+                CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "Neighborhoods": CitizenMenu.Visibility = Visibility.Collapsed; break;
         }
     }
 
@@ -135,4 +164,20 @@ public partial class BrowseNeighborhoodPage : Window
         new LogInForm().Show();
         Close();
     }
+    private void HandleNavBack()
+    {
+        var target = NavigationHistory.GoBack(new NavigationEntry("Neighborhoods", _user));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
+    }
+
+    private void HandleNavForward()
+    {
+        var target = NavigationHistory.GoForward(new NavigationEntry("Neighborhoods", _user));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
+    }
+    private void NavigateToProfile()
+        => CitizenNavigationHelper.NavigateToProfile(_user, this);
+
 }

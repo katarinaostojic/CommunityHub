@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
@@ -19,6 +20,7 @@ public class NeighborhoodCitizensViewModel : BaseViewModel
         _service = service;
         _neighborhoodId = neighborhoodId;
         LoadCitizens();
+        LanguageManager.LanguageChanged += LoadCitizens;
     }
 
     public ObservableCollection<TrustRecordViewModel> Citizens
@@ -40,8 +42,6 @@ public class NeighborhoodCitizensViewModel : BaseViewModel
             .ToList();
 
         Citizens = new ObservableCollection<TrustRecordViewModel>(items);
-        string label = System.Windows.Application.Current.Resources["Menu_Citizens"]?.ToString()
-               ?? "Citizens";
-        ResultsText = $"{label}: {items.Count}";
+        ResultsText = $"{ResourceHelper.Get("Citizens_Title", "Citizens")}: {items.Count}";
     }
 }

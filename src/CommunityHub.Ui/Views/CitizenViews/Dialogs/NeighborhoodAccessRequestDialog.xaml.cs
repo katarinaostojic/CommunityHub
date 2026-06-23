@@ -8,6 +8,8 @@ using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 using System.Threading.Tasks;
 using System.Windows;
 
+using CommunityHub.Ui.Helpers.Citizen;
+
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
 public partial class NeighborhoodAccessRequestDialog : Window
@@ -51,12 +53,10 @@ public partial class NeighborhoodAccessRequestDialog : Window
                 new NeighborhoodRequestCreatedDialog(_user, _viewModel.NeighborhoodName).ShowDialog();
                 break;
             case AccessRequestResult.AlreadyPending:
-                MessageBox.Show("You already have a pending request for this neighborhood.", "Request already exists",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MsgHelper.Warn("Msg_PendingRequest", "Msg_PendingRequestTitle");
                 break;
             case AccessRequestResult.AlreadyMember:
-                MessageBox.Show("You are already a member of a neighborhood.", "Already a member",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MsgHelper.Warn("Msg_AlreadyMember", "Msg_AlreadyMemberTitle");
                 break;
         }
     }

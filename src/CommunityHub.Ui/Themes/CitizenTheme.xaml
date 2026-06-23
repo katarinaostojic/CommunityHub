@@ -270,4 +270,8 @@
         <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
     </Style>
 
+    <!-- Ikonice su tamne u light modu -->
+    <SolidColorBrush x:Key="IconForegroundBrush" Color="#1A237E"/>
+    <SolidColorBrush x:Key="IconSecondaryBrush" Color="#455A64"/>
+
 </ResourceDictionary>

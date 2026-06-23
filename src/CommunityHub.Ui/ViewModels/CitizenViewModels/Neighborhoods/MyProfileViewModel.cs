@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Ui.Helpers.Citizen;
 using CommunityHub.Application.Services.Entities.Neighborhoods.Meetings;
 
 namespace CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
@@ -23,6 +24,7 @@ public class MyProfileViewModel : BaseViewModel
         _neighborhoodId = neighborhoodId;
         _neighborhoodName = neighborhoodName;
         LoadProfile();
+        LanguageManager.LanguageChanged += LoadProfile;
     }
 
     public TrustRecordViewModel? TrustRecord

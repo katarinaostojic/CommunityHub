@@ -16,7 +16,7 @@ public partial class MyProfilePage : Window
     private readonly long _neighborhoodId;
     private readonly MyProfileViewModel _viewModel;
 
-    public MyProfilePage(User user, long neighborhoodId, string neighborhoodName)
+    public MyProfilePage(User user, long neighborhoodId, string neighborhoodName, bool openMenuOnLoad = false)
     {
         InitializeComponent();
         _user = user;
@@ -26,15 +26,25 @@ public partial class MyProfilePage : Window
         _viewModel = new MyProfileViewModel(service, user, neighborhoodId, neighborhoodName);
         DataContext = _viewModel;
 
-        LoggedInUserTextBlock.Text = _user.Username;
+        NavBar.SetTitle(TryFindResource("Profile_Title") as string ?? "Profile");
+        LanguageManager.LanguageChanged += () => NavBar.SetTitle(TryFindResource("Profile_Title") as string ?? "Profile");
+        NavBar.SetUrl("communityhub://profile");
+        NavBar.SetUsername(_user.Username);
+        NavBar.UpdateNavButtons();
+
+        NavBar.BurgerClicked += () => CitizenMenu.Visibility = Visibility.Visible;
+        NavBar.ProfileClicked += () => { /* vec smo na profilu */ };
+        NavBar.BackNavigated += HandleNavBack;
+        NavBar.ForwardNavigated += HandleNavForward;
         UsernameText.Text = _user.Username;
         NeighborhoodNameText.Text = neighborhoodName;
 
         CitizenMenu.CloseRequested += CitizenMenu_CloseRequested;
         CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
         CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
-        ThemeToggleButton.IsChecked = ThemeManager.IsDark;
-        LanguageToggleButton.IsChecked = !LanguageManager.IsSerbianActive;
+
+        if (openMenuOnLoad)
+            CitizenMenu.Visibility = Visibility.Visible;
         Loaded += (s, e) =>
         {
             var dto = _viewModel.TrustRecord;
@@ -43,25 +53,39 @@ public partial class MyProfilePage : Window
         };
     }
 
-    private void BurgerButton_Click(object sender, RoutedEventArgs e)
-        => CitizenMenu.Visibility = Visibility.Visible;
 
     private void CitizenMenu_CloseRequested()
         => CitizenMenu.Visibility = Visibility.Collapsed;
 
     private void CitizenMenu_NavigationRequested(string destination)
     {
-        CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
-            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
-            case "Events": NavigateToEvents(); break;
-            case "Citizens": NavigateToCitizens(); break;
-            case "Meetings": NavigateToMeetings(); break;
-            case "Profile": break;
-            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
-            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "Neighborhoods":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                new BrowseNeighborhoodPage(_user, openMenuOnLoad: true).Show(); Close(); break;
+            case "MyRequests":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                new MyRequestsPage(_user, openMenuOnLoad: true).Show(); Close(); break;
+            case "Events":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToEvents(_user, this); break;
+            case "Citizens":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
+            case "Meetings":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
+            case "CityObjects":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
+            case "CoordinatorReviews":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyProfile", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToCoordinatorReviews(_user, _neighborhoodId, this); break;
+            case "Budget":
+                NavigationHistory.NavigateTo(new NavigationEntry("Profile", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "Profile": CitizenMenu.Visibility = Visibility.Collapsed; break;
         }
     }
 
@@ -98,7 +122,7 @@ public partial class MyProfilePage : Window
     {
         NeighborhoodAccessRequestService s = Injector.CreateInstance<NeighborhoodAccessRequestService>();
         long? nId = s.GetMembershipNeighborhoodId(_user.Id);
-        if (nId == null) MessageBox.Show("You are not a member of any neighborhood.");
+        if (nId == null) { MsgHelper.Warn("Msg_NotMember", "Msg_Error"); return null; }
         return nId;
     }
 
@@ -169,5 +193,18 @@ public partial class MyProfilePage : Window
     private void LanguageToggle_Click(object sender, RoutedEventArgs e)
     {
         LanguageManager.ToggleLanguage();
+    }
+    private void HandleNavBack()
+    {
+        var target = NavigationHistory.GoBack(new NavigationEntry("Profile", _user, _neighborhoodId));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
+    }
+
+    private void HandleNavForward()
+    {
+        var target = NavigationHistory.GoForward(new NavigationEntry("Profile", _user, _neighborhoodId));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CommunityHub.Application.DTOs.Neighborhoods.Events;
 using CommunityHub.Application.Services.Entities.Neighborhoods.Events;
+using CommunityHub.Ui.Helpers.Citizen;
 using System.Collections.ObjectModel;
 using CommunityHub.Application.DTOs.Neighborhoods.Events;
 
@@ -21,6 +22,7 @@ public class EventsViewModel : BaseViewModel
         _currentUserId = currentUserId;
         _service.CheckAndUpdateStatuses();
         LoadEvents();
+        LanguageManager.LanguageChanged += () => { foreach (var e in Events) e.RefreshStatus(); LoadEvents(); };
     }
 
     public ObservableCollection<EventViewModel> Events
@@ -42,9 +44,7 @@ public class EventsViewModel : BaseViewModel
             .ToList();
 
         Events = new ObservableCollection<EventViewModel>(items);
-        string label = System.Windows.Application.Current.Resources["Events_Title"]?.ToString()
-               ?? "Events";
-        ResultsText = $"Showing {items.Count} {label.ToLower()}";
+        ResultsText = $"{ResourceHelper.Get("Lbl_Showing", "Showing")} {items.Count} {ResourceHelper.Get("Lbl_Events", "neighborhood events")}";
     }
 
     public long CreateEvent(CreateEventRequest req)

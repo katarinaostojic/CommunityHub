@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
@@ -29,6 +30,7 @@ public class CoordinatorReviewsViewModel : BaseViewModel
         _coordinatorId = coordinatorId;
         _coordinatorName = coordinatorName;
         LoadReviews();
+        LanguageManager.LanguageChanged += LoadReviews;
     }
 
     public ObservableCollection<CoordinatorReviewItemViewModel> Reviews
@@ -51,7 +53,7 @@ public class CoordinatorReviewsViewModel : BaseViewModel
             .Select(dto => new CoordinatorReviewItemViewModel(dto))
             .ToList();
         Reviews = new ObservableCollection<CoordinatorReviewItemViewModel>(items);
-        ResultsText = $"Showing {items.Count} reviews";
+        ResultsText = ResultsText = $"{ResourceHelper.Get("Lbl_Showing", "Showing")} {items.Count} {ResourceHelper.Get("Lbl_Reviews", "reviews")}"; ;
     }
 
     public (bool success, string? error) ReportReview(long reviewId)

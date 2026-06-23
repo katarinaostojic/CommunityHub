@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities;
+using CommunityHub.Ui.Helpers.Citizen;
 using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ public class TrustRecordViewModel : BaseViewModel
     public TrustRecordViewModel(TrustRecordDto dto)
     {
         _dto = dto;
+        LanguageManager.LanguageChanged += () => OnPropertyChanged(nameof(LevelDisplay));
     }
 
     public long CitizenId => _dto.CitizenId;
@@ -36,7 +38,7 @@ public class TrustRecordViewModel : BaseViewModel
             TrustLevel.Trusted => "TrustLevel_Trusted",
             _ => "TrustLevel_New"
         };
-        return System.Windows.Application.Current.Resources[key]?.ToString() ?? _dto.LevelDisplay;
+        return ResourceHelper.Get(key, _dto.LevelDisplay);
     }
 
     public string LevelColor => _dto.Level switch
