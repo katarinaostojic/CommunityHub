@@ -1,6 +1,8 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
 using CommunityHub.Ui.Helpers.Manager;
+using CommunityHub.Ui.Helpers.Manager.Onboarding;
+using CommunityHub.Ui.Views.ManagerViews.Controls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -20,6 +22,19 @@ public partial class ManagerMainWindow : Window
         MainFrame.Navigate(new MyBuildingsPage(_currentUser));
         SetActiveNavButton(BtnBuildings);
         UpdateTooltips();
+
+        if (!OnboardingState.HasSeenWizard())
+        {
+            Loaded += ShowOnboardingWizard;
+        }
+    }
+
+    private void ShowOnboardingWizard(object sender, RoutedEventArgs e)
+    {
+        Loaded -= ShowOnboardingWizard;
+
+        ManagerOnboardingWizard wizard = new ManagerOnboardingWizard { Owner = this };
+        wizard.ShowDialog();
     }
 
     private void TooltipsButton_Click(object sender, RoutedEventArgs e)
