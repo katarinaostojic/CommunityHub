@@ -16,12 +16,13 @@ public class CityObjectsViewModel : BaseViewModel
     private ObservableCollection<CityObjectItemViewModel> _cityObjects = new();
 
     public CityObjectsViewModel(CityObjectService cityObjectService,
-        NeighborhoodService neighborhoodService, long coordinatorId)
+     NeighborhoodService neighborhoodService, long coordinatorId, long? preselectedNeighborhoodId = null)
     {
         _cityObjectService = cityObjectService;
         _neighborhoodService = neighborhoodService;
         _coordinatorId = coordinatorId;
-        LoadNeighborhoods();
+        LoadNeighborhoods(preselectedNeighborhoodId);
+
     }
 
     public ObservableCollection<NeighborhoodDto> Neighborhoods
@@ -48,12 +49,16 @@ public class CityObjectsViewModel : BaseViewModel
 
     public long? CurrentNeighborhoodId => _selectedNeighborhood?.Id;
 
-    private void LoadNeighborhoods()
+    private void LoadNeighborhoods(long? preselectedNeighborhoodId = null)
     {
         var neighborhoods = _neighborhoodService.GetByCoordinator(_coordinatorId);
         Neighborhoods = new ObservableCollection<NeighborhoodDto>(neighborhoods);
         if (Neighborhoods.Count > 0)
-            SelectedNeighborhood = Neighborhoods[0];
+        {
+            SelectedNeighborhood = preselectedNeighborhoodId.HasValue
+                ? Neighborhoods.FirstOrDefault(n => n.Id == preselectedNeighborhoodId.Value) ?? Neighborhoods[0]
+                : Neighborhoods[0];
+        }
     }
 
     public void LoadCityObjects()

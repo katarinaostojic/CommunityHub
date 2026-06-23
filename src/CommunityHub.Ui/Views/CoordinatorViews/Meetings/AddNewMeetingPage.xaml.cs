@@ -19,6 +19,10 @@ public partial class AddNewMeetingPage : Page
         _neighborhoodId = neighborhoodId;
         _viewModel = new AddNewMeetingViewModel(
             Injector.CreateInstance<MeetingService>(), neighborhoodId);
+        StartCalendar.BlackoutDates.Add(
+        new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
+        EndCalendar.BlackoutDates.Add(
+            new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
     }
 
     private void StartCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e) { }

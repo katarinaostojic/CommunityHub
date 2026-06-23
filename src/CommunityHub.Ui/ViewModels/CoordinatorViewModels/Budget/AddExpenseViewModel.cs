@@ -50,9 +50,28 @@ public class AddExpenseViewModel : BaseViewModel
         set => SetProperty(ref _selectedDate, value);
     }
 
+    public Dictionary<string, string> Validate()
+    {
+        var errors = new Dictionary<string, string>();
+
+        if (SelectedCategory == null)
+            errors["Category"] = "Please select a category.";
+
+        if (!decimal.TryParse(AmountText.Replace(",", "."),
+            System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture, out _))
+            errors["Amount"] = "Please enter a valid amount.";
+
+        if (string.IsNullOrWhiteSpace(Description))
+            errors["Description"] = "Please enter a description.";
+
+        return errors;
+    }
+
     public string? Save()
     {
-        if (SelectedCategory == null) return "Please select a category.";
+        var errors = Validate();
+        if (errors.Count > 0) return errors.Values.First();
 
         if (!decimal.TryParse(AmountText.Replace(",", "."),
             System.Globalization.NumberStyles.Any,
@@ -60,7 +79,7 @@ public class AddExpenseViewModel : BaseViewModel
             return "Please enter a valid amount.";
 
         var (success, error) = _donationService.AddExpense(
-            _neighborhoodId, SelectedCategory.CategoryId, amount, Description);
+            _neighborhoodId, SelectedCategory!.CategoryId, amount, Description);
 
         return success ? null : error;
     }
