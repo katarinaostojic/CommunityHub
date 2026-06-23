@@ -1,0 +1,69 @@
+﻿<Window x:Class="CommunityHub.Ui.Views.ManagerViews.Dialogs.ExportAdsReportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Export Notice Board Report"
+        Height="340" Width="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F4F6F9">
+
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Notice Board Status Report"
+                   FontSize="18" FontWeight="Bold"
+                   Foreground="#1A2332"/>
+
+        <TextBlock Grid.Row="1" Margin="0,6,0,16"
+                   Text="Choose which currently active ads to include in the PDF report."
+                   FontSize="13" Foreground="#7F8C8D"
+                   TextWrapping="Wrap"/>
+
+        <StackPanel Grid.Row="2">
+            <RadioButton x:Name="OfferingRadioButton"
+                         Content="Offering help"
+                         FontSize="14"
+                         GroupName="AdTypeGroup"
+                         IsChecked="True"
+                         Margin="0,0,0,12"/>
+            <RadioButton x:Name="SeekingRadioButton"
+                         Content="Seeking help"
+                         FontSize="14"
+                         GroupName="AdTypeGroup"/>
+        </StackPanel>
+
+        <Grid Grid.Row="3" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Export"
+                    Height="42" FontSize="14" FontWeight="SemiBold"
+                    Margin="0,0,8,0" Foreground="White"
+                    Background="#2980B9" BorderThickness="0"
+                    Click="ExportButton_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Grid.Column="1" Content="Cancel"
+                    Height="42" FontSize="14" FontWeight="SemiBold"
+                    Margin="8,0,0,0" Foreground="White"
+                    Background="#E74C3C" BorderThickness="0"
+                    Click="CancelButton_Click">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>
