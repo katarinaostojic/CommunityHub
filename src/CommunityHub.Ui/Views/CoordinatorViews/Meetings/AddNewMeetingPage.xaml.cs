@@ -20,7 +20,7 @@ public partial class AddNewMeetingPage : Page
         _viewModel = new AddNewMeetingViewModel(
             Injector.CreateInstance<MeetingService>(), neighborhoodId);
         StartCalendar.BlackoutDates.Add(
-        new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
+            new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
         EndCalendar.BlackoutDates.Add(
             new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
     }
@@ -81,7 +81,7 @@ public partial class AddNewMeetingPage : Page
         {
             _viewModel.CreateMeeting(themeInput, meetingTime, start, end);
             CoordinatorMainWindow.Instance.NavigateTo(
-                new MeetingsPage(_coordinatorId, _neighborhoodId), "Meetings");
+                new MeetingsPage(_coordinatorId, _neighborhoodId, "Meeting scheduled successfully!"), "Meetings");
         }
         catch (Exception ex)
         {

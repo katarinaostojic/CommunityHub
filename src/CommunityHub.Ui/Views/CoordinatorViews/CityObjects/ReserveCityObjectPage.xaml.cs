@@ -32,10 +32,10 @@ public partial class ReserveCityObjectPage : Page
         if (error != null)
         {
             ErrorText.Text = error;
-            ErrorBanner.Visibility = Visibility.Visible;
+            ErrorText.Visibility = Visibility.Visible;
             return;
         }
-        ErrorBanner.Visibility = Visibility.Collapsed;
+        ErrorText.Visibility = Visibility.Collapsed;
     }
 
     private void AlternativeSlot_Checked(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ public partial class ReserveCityObjectPage : Page
         catch (Exception ex)
         {
             ErrorText.Text = ex.Message;
-            ErrorBanner.Visibility = Visibility.Visible;
+            ErrorText.Visibility = Visibility.Visible;
         }
     }
 

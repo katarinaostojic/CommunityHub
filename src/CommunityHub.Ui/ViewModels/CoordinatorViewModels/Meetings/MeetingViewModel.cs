@@ -15,6 +15,7 @@ public class MeetingViewModel
     public bool IsInPreparation => _meeting.Status == MeetingStatus.InPreparation;
     public bool HasTiedVotes { get; set; }
     public Dictionary<DateOnly, int> VoteCounts { get; set; } = new();
+    public bool CanFinalize => _meeting.Status == MeetingStatus.InPreparation;
 
     public string TopicDisplay => _meeting.Theme switch
     {

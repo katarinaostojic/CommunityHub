@@ -11,8 +11,9 @@ public partial class MeetingsPage : Page
     private readonly long _coordinatorId;
     private readonly long _neighborhoodId;
     private readonly MeetingsViewModel _viewModel;
+    private string? _pendingSuccessMessage = null;
 
-    public MeetingsPage(long coordinatorId, long neighborhoodId)
+    public MeetingsPage(long coordinatorId, long neighborhoodId, string? successMessage = null)
     {
         InitializeComponent();
         _coordinatorId = coordinatorId;
@@ -21,6 +22,16 @@ public partial class MeetingsPage : Page
         StatisticsService statisticsService = Injector.CreateInstance<StatisticsService>();
         _viewModel = new MeetingsViewModel(meetingService, statisticsService, coordinatorId, neighborhoodId);
         DataContext = _viewModel;
+
+        if (successMessage != null)
+        {
+            SuccessText.Text = successMessage;
+            SuccessBanner.Visibility = Visibility.Visible;
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(3);
+            timer.Tick += (ts, te) => { timer.Stop(); SuccessBanner.Visibility = Visibility.Collapsed; };
+            timer.Start();
+        }
     }
 
     private void FilterAllButton_Click(object sender, RoutedEventArgs e) => _viewModel.FilterAll();
@@ -60,16 +71,19 @@ public partial class MeetingsPage : Page
             ErrorBanner.Visibility = Visibility.Collapsed;
         }
     }
+
     private void GenerateReportButton_Click(object sender, RoutedEventArgs e)
     {
         CoordinatorMainWindow.Instance.NavigateTo(
             new GenerateReportPage(_coordinatorId), "Generate Report");
     }
+
     private void SuggestionLink_Click(object sender, RoutedEventArgs e)
     {
         CoordinatorMainWindow.Instance.NavigateTo(
             new AddNewMeetingPage(_coordinatorId, _neighborhoodId), "Add New Meeting");
     }
+
     private void ViewDetailsButton_Click(object sender, RoutedEventArgs e)
     {
         MeetingViewModel meetingViewModel = (MeetingViewModel)((Button)sender).Tag;
