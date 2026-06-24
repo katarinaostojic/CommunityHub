@@ -167,6 +167,8 @@
                                                 Grid.Column="2"
                                                 Tag="{Binding}"
                                                 Style="{StaticResource PrimaryButton}"
+                                                IsEnabled="{Binding CanFinalize}"
+
                                                 Click="FinalizeVotingButton_Click"/>
                                     </Grid>
                                 </StackPanel>
