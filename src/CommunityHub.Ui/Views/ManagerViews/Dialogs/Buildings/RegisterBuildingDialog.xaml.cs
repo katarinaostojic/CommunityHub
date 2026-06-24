@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -121,6 +122,8 @@ public partial class RegisterBuildingDialog : Window
         Grid floorGrid = new Grid();
         floorGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(180) });
         floorGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        floorGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        floorGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         floorGrid.Margin = new Thickness(0, 10, 0, 10);
 
         TextBlock label = new TextBlock
@@ -139,10 +142,24 @@ public partial class RegisterBuildingDialog : Window
         };
         textBox.PreviewMouseDown += (s, e) => OpenKeyboard(textBox, $"Floor {floorNumber} units");
 
+        TextBlock errorText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromRgb(0xE7, 0x4C, 0x3C)),
+            FontSize = 11,
+            Margin = new Thickness(2, 3, 0, 0),
+            Visibility = Visibility.Collapsed
+        };
+
+        Grid.SetRow(label, 0);
         Grid.SetColumn(label, 0);
+        Grid.SetRow(textBox, 0);
         Grid.SetColumn(textBox, 1);
+        Grid.SetRow(errorText, 1);
+        Grid.SetColumn(errorText, 1);
+
         floorGrid.Children.Add(label);
         floorGrid.Children.Add(textBox);
+        floorGrid.Children.Add(errorText);
 
         return floorGrid;
     }
@@ -218,7 +235,7 @@ public partial class RegisterBuildingDialog : Window
         if (!isValid)
             return false;
 
-        City city = (City)CityComboBox.SelectedItem;
+        City city = (City)CityComboBox.SelectedItem!;
         if (_buildingService.BuildingExists(StreetTextBox.Text, NumberTextBox.Text, city.Id))
         {
             ShowFieldError(StreetErrorText, "A building at this address already exists.");
@@ -235,7 +252,26 @@ public partial class RegisterBuildingDialog : Window
             ShowFieldError(FloorsErrorText, "Please confirm the number of floors first.");
             return false;
         }
-        return true;
+
+        bool isValid = true;
+
+        foreach (Grid floorGrid in FloorsStackPanel.Children.OfType<Grid>())
+        {
+            TextBox unitTextBox = (TextBox)floorGrid.Children[1];
+            TextBlock rowErrorText = (TextBlock)floorGrid.Children[2];
+
+            if (string.IsNullOrWhiteSpace(unitTextBox.Text))
+            {
+                ShowFieldError(rowErrorText, "Please enter at least one unit number for this floor.");
+                isValid = false;
+            }
+            else
+            {
+                HideFieldError(rowErrorText);
+            }
+        }
+
+        return isValid;
     }
 
     private void ShowFieldError(TextBlock errorText, string message)

@@ -53,10 +53,10 @@
             <TextBlock Text="Floor *" FontSize="13" Foreground="#2C3E50"
                        FontWeight="SemiBold" Margin="0,0,0,6"/>
             <Border Background="White" CornerRadius="8"
-                    BorderBrush="#E0E0E0" BorderThickness="1">
-                <TextBox x:Name="FloorTextBox" Height="38" Padding="12,0"
-                         BorderThickness="0" Background="Transparent"
-                         VerticalContentAlignment="Center" FontSize="13"/>
+                       BorderBrush="#E0E0E0" BorderThickness="1">
+                <ComboBox x:Name="FloorComboBox" Height="38" Padding="8,0"
+                          BorderThickness="0" Background="Transparent"
+                          VerticalContentAlignment="Center" FontSize="13"/>
             </Border>
             <TextBlock x:Name="FloorErrorText"
                        Foreground="#E74C3C" FontSize="11"

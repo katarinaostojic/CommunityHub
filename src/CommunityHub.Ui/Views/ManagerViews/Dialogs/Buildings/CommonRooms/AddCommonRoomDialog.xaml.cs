@@ -21,11 +21,13 @@ public partial class AddCommonRoomDialog : Window
         _building = building;
         _viewModel = viewModel;
 
+        for (int floor = 1; floor <= building.NumberOfFloors; floor++)
+            FloorComboBox.Items.Add(floor);
+
         Loaded += (s, e) =>
         {
             NameTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(NameTextBox, "Name");
             DescriptionTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(DescriptionTextBox, "Description");
-            FloorTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(FloorTextBox, "Floor");
         };
 
         TooltipsManager.Apply(this);
@@ -48,7 +50,7 @@ public partial class AddCommonRoomDialog : Window
 
         try
         {
-            int floorNumber = int.Parse(FloorTextBox.Text.Trim());
+            int floorNumber = (int)FloorComboBox.SelectedItem;
             RentalType rentalType = RentalTypeComboBox.SelectedIndex == 0
                 ? RentalType.PerDay
                 : RentalType.MultiDay;
@@ -88,9 +90,9 @@ public partial class AddCommonRoomDialog : Window
             isValid = false;
         }
 
-        if (!int.TryParse(FloorTextBox.Text.Trim(), out _))
+        if (FloorComboBox.SelectedItem == null)
         {
-            ShowFieldError(FloorErrorText, "Please enter a valid floor number.");
+            ShowFieldError(FloorErrorText, "Please select a floor.");
             isValid = false;
         }
 

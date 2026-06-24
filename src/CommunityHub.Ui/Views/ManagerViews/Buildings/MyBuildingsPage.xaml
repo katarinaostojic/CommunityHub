@@ -46,98 +46,10 @@
         </Border>
 
         <!-- BUILDINGS GRID -->
-        <ItemsControl Grid.Row="1" Margin="16,12" ItemsSource="{Binding Buildings}"
-              HorizontalAlignment="Center">
+        <ItemsControl Grid.Row="1" Margin="16,12" ItemsSource="{Binding Buildings}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Center"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border Width="300" Height="230" Margin="10"
-                    Background="White"
-                    CornerRadius="12"
-                    Cursor="Hand"
-                    Tag="{Binding}"
-                    MouseLeftButtonUp="BuildingCard_Click">
-                        <Border.Effect>
-                            <DropShadowEffect BlurRadius="12" Opacity="0.15" ShadowDepth="3"/>
-                        </Border.Effect>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="145"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- Slika -->
-                            <Border Grid.Row="0" CornerRadius="12,12,0,0" 
-                            Background="#E8EDF2" ClipToBounds="True">
-                                <Grid>
-                                    <TextBlock Text="🏢" FontSize="50"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
-                                    <Image Stretch="UniformToFill"
-                                   Source="{Binding ImagePaths, Converter={StaticResource ImagePathConverter}}"/>
-                                </Grid>
-                            </Border>
-
-                            <!-- Info -->
-                            <StackPanel Grid.Row="1" Margin="15,8,15,8">
-                                <TextBlock FontSize="14" FontWeight="Bold"
-                                Foreground="#2C3E50" TextTrimming="CharacterEllipsis"
-                                Text="{Binding FullAddress}"/>
-                                <TextBlock FontSize="12" Foreground="#7F8C8D" 
-                                   Margin="0,4,0,0"
-                                   Text="{Binding Location}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-        <!-- FOOTER -->
-        <Border Grid.Row="2" Background="White">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="6" Opacity="0.1" ShadowDepth="-2"/>
-            </Border.Effect>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
-        VerticalAlignment="Center">
-                <Button Content="←" Width="36" Height="36"
-                FontSize="16" Foreground="#2C3E50" Background="White"
-                BorderBrush="#CCCCCC" BorderThickness="1"
-                IsEnabled="{Binding HasPreviousPage}"
-                Cursor="Hand" Margin="0,0,8,0"
-                Click="PrevButton_Click">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="6"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-                <TextBlock Text="{Binding PageIndicator}" FontSize="13"
-                   Foreground="#2C3E50" VerticalAlignment="Center"/>
-                <Button Content="→" Width="36" Height="36"
-                FontSize="16" Foreground="#2C3E50" Background="White"
-                BorderBrush="#CCCCCC" BorderThickness="1"
-                IsEnabled="{Binding HasNextPage}"
-                Cursor="Hand" Margin="8,0,0,0"
-                Click="NextButton_Click">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="6"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-            </StackPanel>
-        </Border>
-        <!-- BUILDINGS GRID -->
-        <ItemsControl Grid.Row="1" Margin="16,12" ItemsSource="{Binding Buildings}"
-              HorizontalAlignment="Center">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Center"/>
+                    <WrapPanel HorizontalAlignment="Left"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
