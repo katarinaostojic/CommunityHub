@@ -80,7 +80,7 @@ public partial class RegisterNeighborhoodPage : Page
 
         if (!int.TryParse(startText, out startNumber) || !int.TryParse(endText, out endNumber))
         {
-            StreetErrorText.Text = "Start and end numbers must be integers.";
+            StreetErrorText.Text = "Please enter valid numbers for start and end.";
             StreetErrorText.Visibility = Visibility.Visible;
             return false;
         }

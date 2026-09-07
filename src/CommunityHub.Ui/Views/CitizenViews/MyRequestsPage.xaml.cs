@@ -7,6 +7,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
+using CommunityHub.Ui.Helpers.Citizen;
+
 namespace CommunityHub.Ui.Views.CitizenViews;
 
 public partial class MyRequestsPage : Window
@@ -14,7 +16,7 @@ public partial class MyRequestsPage : Window
     private readonly User _user;
     private readonly MyRequestsViewModel _viewModel;
 
-    public MyRequestsPage(User user)
+    public MyRequestsPage(User user, bool openMenuOnLoad = false)
     {
         InitializeComponent();
         _user = user;
@@ -23,10 +25,26 @@ public partial class MyRequestsPage : Window
         _viewModel = new MyRequestsViewModel(service, user.Id);
         DataContext = _viewModel;
 
-        LoggedInUserTextBlock.Text = _user.Username;
+        NavBar.SetTitle(TryFindResource("Requests_Title") as string ?? "MyRequests");
+        LanguageManager.LanguageChanged += () => NavBar.SetTitle(TryFindResource("Requests_Title") as string ?? "MyRequests");
+        NavBar.SetUrl("communityhub://my-requests");
+        NavBar.SetUsername(_user.Username);
+        NavBar.UpdateNavButtons();
+
+        NavBar.BurgerClicked += () => CitizenMenu.Visibility = Visibility.Visible;
+        NavBar.ProfileClicked += () => NavigateToProfile();
+        NavBar.BackNavigated += HandleNavBack;
+        NavBar.ForwardNavigated += HandleNavForward;
+
+        // Refresh ComboBox labela kada se jezik promeni
+        LanguageManager.LanguageChanged += RefreshFilterComboBox;
+        NavBar.ReloadRequested += () => _viewModel.FilterAll();
         CitizenMenu.CloseRequested += CitizenMenu_CloseRequested;
         CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
         CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
+
+        if (openMenuOnLoad)
+            CitizenMenu.Visibility = Visibility.Visible;
     }
 
     private void Filters_Changed(object sender, EventArgs e)
@@ -53,33 +71,46 @@ public partial class MyRequestsPage : Window
     private void DeleteRequestButton_Click(object sender, RoutedEventArgs e)
     {
         NeighborhoodAccessRequestViewModel item = (NeighborhoodAccessRequestViewModel)((Button)sender).Tag;
-        MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this request?",
-            "Delete request", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        MessageBoxResult result = MsgHelper.Confirm("Msg_DeleteConfirm", "Msg_DeleteTitle");
         if (result != MessageBoxResult.Yes) return;
         _viewModel.DeleteRequest(item.Id);
     }
 
     private void ProfileButton_Click(object sender, RoutedEventArgs e) => CitizenNavigationHelper.NavigateToProfile(_user, this);
 
-    private void BurgerButton_Click(object sender, RoutedEventArgs e)
-        => CitizenMenu.Visibility = Visibility.Visible;
 
     private void CitizenMenu_CloseRequested()
         => CitizenMenu.Visibility = Visibility.Collapsed;
 
     private void CitizenMenu_NavigationRequested(string destination)
     {
-        CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
-            case "MyRequests": break;
-            case "Events": CitizenNavigationHelper.NavigateToEvents(_user, this); break;
-            case "Citizens": CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
-            case "Meetings": CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
-            case "Profile": CitizenNavigationHelper.NavigateToProfile(_user, this); break;
-            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
-            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "Neighborhoods":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                new BrowseNeighborhoodPage(_user, openMenuOnLoad: true).Show(); Close(); break;
+            case "Events":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                CitizenNavigationHelper.NavigateToEvents(_user, this); break;
+            case "Citizens":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
+            case "Meetings":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
+            case "Profile":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                NavigateToProfile(); break;
+            case "CityObjects":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
+            case "CoordinatorReviews":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                CitizenNavigationHelper.NavigateToCoordinatorReviews(_user, CitizenNavigationHelper.GetMembershipId(_user.Id) ?? 0, this); break;
+            case "Budget":
+                NavigationHistory.NavigateTo(new NavigationEntry("MyRequests", _user));
+                CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "MyRequests": CitizenMenu.Visibility = Visibility.Collapsed; break;
         }
     }
 
@@ -89,4 +120,36 @@ public partial class MyRequestsPage : Window
         new LogInForm().Show();
         Close();
     }
+    private void HandleNavBack()
+    {
+        var target = NavigationHistory.GoBack(new NavigationEntry("MyRequests", _user));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
+    }
+
+    private void HandleNavForward()
+    {
+        var target = NavigationHistory.GoForward(new NavigationEntry("MyRequests", _user));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
+    }
+    private void NavigateToProfile()
+        => CitizenNavigationHelper.NavigateToProfile(_user, this);
+
+    private void RefreshFilterComboBox()
+    {
+        int idx = StatusFilterComboBox.SelectedIndex;
+        StatusFilterComboBox.Items.Clear();
+        var items = new[]
+        {
+            TryFindResource("Requests_All")      as string ?? "Svi",
+            TryFindResource("Requests_Pending")  as string ?? "Na čekanju",
+            TryFindResource("Requests_Approved") as string ?? "Odobreni",
+            TryFindResource("Requests_Rejected") as string ?? "Odbijeni",
+        };
+        foreach (var item in items)
+            StatusFilterComboBox.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = item });
+        StatusFilterComboBox.SelectedIndex = idx >= 0 ? idx : 0;
+    }
+
 }

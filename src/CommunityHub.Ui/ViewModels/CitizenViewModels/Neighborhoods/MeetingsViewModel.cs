@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,6 +24,7 @@ public class MeetingsViewModel : BaseViewModel
         _neighborhoodId = neighborhoodId;
         _citizenId = citizenId;
         LoadMeetings();
+        LanguageManager.LanguageChanged += () => { foreach (var m in Meetings) m.RefreshStatus(); LoadMeetings(); };
     }
 
     public ObservableCollection<MeetingViewModel> Meetings
@@ -44,7 +46,7 @@ public class MeetingsViewModel : BaseViewModel
             .ToList();
 
         Meetings = new ObservableCollection<MeetingViewModel>(items);
-        ResultsText = $"Showing {items.Count} meetings";
+        ResultsText = ResultsText = $"{ResourceHelper.Get("Lbl_Showing", "Showing")} {items.Count} {ResourceHelper.Get("Lbl_Meetings", "meetings")}"; ;
     }
 
     public void Vote(long meetingId, DateOnly votedDate)

@@ -11,12 +11,14 @@
 
                     <!-- Kategorija -->
                     <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
-                        Category <Run Foreground="Red">*</Run>
+                        Category <Run Foreground="Red"></Run>
                     </TextBlock>
                     <ComboBox ItemsSource="{Binding Categories}"
                               SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                               DisplayMemberPath="CategoryName"
-                              FontSize="13" Padding="8,6" Margin="0,0,0,14"/>
+                              FontSize="13" Padding="8,6" Margin="0,0,0,2"/>
+                    <TextBlock x:Name="CategoryErrorText" Foreground="#C62828" FontSize="11"
+                               Margin="0,0,0,12" Visibility="Collapsed"/>
 
                     <!-- Iznos -->
                     <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
@@ -25,7 +27,9 @@
                     <TextBox Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}"
                              Padding="8,6" FontSize="13"
                              BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
-                             Margin="0,0,0,14"/>
+                             Margin="0,0,0,2"/>
+                    <TextBlock x:Name="AmountErrorText" Foreground="#C62828" FontSize="11"
+                               Margin="0,0,0,12" Visibility="Collapsed"/>
 
                     <!-- Opis -->
                     <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
@@ -35,21 +39,21 @@
                              Padding="8,6" FontSize="13"
                              BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
                              TextWrapping="Wrap" AcceptsReturn="True" Height="80"
-                             Margin="0,0,0,14"/>
+                             Margin="0,0,0,2"/>
+                    <TextBlock x:Name="DescriptionErrorText" Foreground="#C62828" FontSize="11"
+                               Margin="0,0,0,12" Visibility="Collapsed"/>
 
                     <!-- Datum -->
                     <TextBlock FontSize="12" Foreground="Gray" Margin="0,0,0,4">
                         Date <Run Foreground="Red">*</Run>
                     </TextBlock>
                     <DatePicker SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
-                                FontSize="13" Margin="0,0,0,14"/>
+                                FontSize="13" Margin="0,0,0,2"/>
+                    <TextBlock x:Name="DateErrorText" Foreground="#C62828" FontSize="11"
+                               Margin="0,0,0,12" Visibility="Collapsed"/>
 
-                    <!-- Error baner -->
-                    <Border x:Name="ErrorBanner" Padding="10,8" CornerRadius="6"
-                            Background="#FFEBEE" BorderBrush="#EF5350" BorderThickness="1"
-                            Margin="0,0,0,10" Visibility="Collapsed">
-                        <TextBlock x:Name="ErrorText" Foreground="#C62828" FontSize="13"/>
-                    </Border>
+                    <!-- Required field objasnjenje -->
+                    <TextBlock Text="* Required field" FontSize="11" Foreground="Gray" Margin="0,0,0,12"/>
 
                     <!-- Dugmad -->
                     <Grid>

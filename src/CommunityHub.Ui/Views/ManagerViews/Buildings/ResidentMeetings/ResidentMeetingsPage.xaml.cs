@@ -5,6 +5,7 @@ using CommunityHub.Ui.ViewModels.ManagerViewModels.Dialogs.Buildings.ResidentMee
 using CommunityHub.Ui.Views.ManagerViews.Dialogs.Buildings.ResidentMeetings;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Buildings.ResidentMeetings;
 
@@ -21,6 +22,7 @@ public partial class ResidentMeetingsPage : Page
         _currentUser = user;
         _viewModel = new ResidentMeetingsViewModel(_currentUser.Id);
         DataContext = _viewModel;
+        SetActiveFilterButton(BtnAll);
 
         if (preselectedBuilding != null)
         {
@@ -37,21 +39,28 @@ public partial class ResidentMeetingsPage : Page
         if (BuildingComboBox.SelectedItem is BuildingDto building)
         {
             _viewModel.SelectedBuilding = building;
-            NoBuildingText.Visibility = Visibility.Collapsed;
-            MeetingsList.Visibility = Visibility.Visible;
             BuildingSelected?.Invoke(building);
-            RefreshEmptyState();
         }
         else
         {
-            NoBuildingText.Visibility = Visibility.Visible;
-            MeetingsList.Visibility = Visibility.Collapsed;
-            NoMeetingsText.Visibility = Visibility.Collapsed;
+            _viewModel.SelectedBuilding = null;
         }
+
+        RefreshEmptyState();
     }
 
     private void RefreshEmptyState()
     {
+        if (_viewModel.SelectedBuilding == null)
+        {
+            NoBuildingText.Visibility = Visibility.Visible;
+            NoMeetingsText.Visibility = Visibility.Collapsed;
+            MeetingsList.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        NoBuildingText.Visibility = Visibility.Collapsed;
+
         if (_viewModel.Meetings.Count == 0)
         {
             NoMeetingsText.Visibility = Visibility.Visible;
@@ -114,23 +123,40 @@ public partial class ResidentMeetingsPage : Page
 
     private void FilterAll_Click(object sender, RoutedEventArgs e)
     {
+        SetActiveFilterButton(BtnAll);
         _viewModel.FilterAll();
         RefreshEmptyState();
     }
-    private void FilterScheduled_Click(object sender, RoutedEventArgs e) 
-    {   
+    private void FilterScheduled_Click(object sender, RoutedEventArgs e)
+    {
+        SetActiveFilterButton(BtnScheduled);
         _viewModel.FilterScheduled();
         RefreshEmptyState();
     }
     private void FilterConfirmed_Click(object sender, RoutedEventArgs e)
     {
+        SetActiveFilterButton(BtnConfirmed);
         _viewModel.FilterConfirmed();
         RefreshEmptyState();
     }
     private void FilterCancelled_Click(object sender, RoutedEventArgs e)
     {
+        SetActiveFilterButton(BtnCancelled);
         _viewModel.FilterCancelled();
         RefreshEmptyState();
+    }
+
+    private void SetActiveFilterButton(Button activeButton)
+    {
+        var filterButtons = new[] { BtnAll, BtnScheduled, BtnConfirmed, BtnCancelled };
+        foreach (var btn in filterButtons)
+        {
+            btn.Background = new SolidColorBrush(Color.FromRgb(0xE8, 0xED, 0xF2));
+            btn.Foreground = new SolidColorBrush(Color.FromRgb(0x2C, 0x3E, 0x50));
+        }
+
+        activeButton.Background = new SolidColorBrush(Color.FromRgb(0x29, 0x80, 0xB9));
+        activeButton.Foreground = Brushes.White;
     }
 
     private void ShowConfirmation(string message)

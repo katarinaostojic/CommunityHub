@@ -153,10 +153,10 @@
 
                                     <!-- Decline Confirmation Panel -->
                                     <Border Visibility="{Binding DeclineConfirmVisibility}"
-        Background="#FFF3F3"
-        CornerRadius="8" Padding="12" Margin="0,8,0,0"
-        BorderBrush="{StaticResource DangerBrush}"
-        BorderThickness="1">
+                                        Background="#FFF3F3"
+                                        CornerRadius="8" Padding="12" Margin="0,8,0,0"
+                                        BorderBrush="{StaticResource DangerBrush}"
+                                        BorderThickness="1">
                                         <StackPanel>
                                             <TextBlock FontSize="13" Foreground="{StaticResource DangerBrush}"
                    TextWrapping="Wrap" Margin="0,0,0,8">
@@ -177,6 +177,12 @@
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>
+                                    <!-- Success poruka -->
+                                    <TextBlock Text="{Binding SuccessMessage}"
+           Foreground="{StaticResource SuccessTextBrush}"
+           FontSize="13" FontWeight="SemiBold"
+           Margin="0,8,0,0"
+           Visibility="{Binding SuccessMessageVisibility}"/>
 
                                 </StackPanel>
                             </Border>

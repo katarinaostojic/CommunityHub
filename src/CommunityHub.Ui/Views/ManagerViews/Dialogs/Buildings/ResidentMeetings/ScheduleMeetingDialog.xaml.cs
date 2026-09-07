@@ -1,9 +1,14 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using CommunityHub.Ui.Views.ManagerViews.Controls;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs.Buildings.ResidentMeetings;
 
 public partial class ScheduleMeetingDialog : Window
 {
+    private FloatingKeyboardWindow? _activeFloating;
+
     public DateTime? SelectedDate { get; private set; }
     public TimeSpan? SelectedTime { get; private set; }
     public List<string> Topics { get; private set; } = new();
@@ -12,26 +17,40 @@ public partial class ScheduleMeetingDialog : Window
     {
         InitializeComponent();
 
-        // Popuni sate 0-23
         for (int h = 0; h < 24; h++)
             HourComboBox.Items.Add(h.ToString("00"));
 
-        // Popuni minute 00 i 30
         MinuteComboBox.Items.Add("00");
         MinuteComboBox.Items.Add("30");
 
-        HourComboBox.SelectedIndex = 18; // default 18h
+        HourComboBox.SelectedIndex = 18;
         MinuteComboBox.SelectedIndex = 0;
+
+        TopicsTextBox.PreviewMouseDown += TextBox_Click;
+    }
+
+    private void TextBox_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is TextBox tb)
+        {
+            _activeFloating?.Close();
+            _activeFloating = new FloatingKeyboardWindow(tb, this, "Topics");
+            _activeFloating.Closed += (_, _) => _activeFloating = null;
+            _activeFloating.Show();
+        }
     }
 
     private void ScheduleButton_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         if (!ValidateFields()) return;
 
         SelectedDate = DatePicker.SelectedDate!.Value;
         SelectedTime = new TimeSpan(
-            int.Parse(HourComboBox.SelectedItem.ToString()!),
-            int.Parse(MinuteComboBox.SelectedItem.ToString()!),
+            int.Parse(HourComboBox.SelectedItem!.ToString()!),
+            int.Parse(MinuteComboBox.SelectedItem!.ToString()!),
             0);
 
         Topics = TopicsTextBox.Text
@@ -46,28 +65,19 @@ public partial class ScheduleMeetingDialog : Window
 
     private bool ValidateFields()
     {
+        ClearFieldErrors();
+        bool isValid = true;
+
         if (DatePicker.SelectedDate == null)
         {
-            MessageBox.Show("Please select a date.", "Error");
-            return false;
+            ShowFieldError(DateErrorText, "Please select a date.");
+            isValid = false;
         }
 
         if (HourComboBox.SelectedItem == null || MinuteComboBox.SelectedItem == null)
         {
-            MessageBox.Show("Please select a time.", "Error");
-            return false;
-        }
-
-        var selectedDateTime = DatePicker.SelectedDate.Value.Date.Add(
-            new TimeSpan(
-                int.Parse(HourComboBox.SelectedItem.ToString()!),
-                int.Parse(MinuteComboBox.SelectedItem.ToString()!),
-                0));
-
-        if (selectedDateTime <= DateTime.Now.AddHours(24))
-        {
-            MessageBox.Show("Meeting must be scheduled at least 24 hours in advance.", "Error");
-            return false;
+            ShowFieldError(TimeErrorText, "Please select a time.");
+            isValid = false;
         }
 
         var topics = TopicsTextBox.Text
@@ -77,15 +87,51 @@ public partial class ScheduleMeetingDialog : Window
 
         if (topics.Count == 0)
         {
-            MessageBox.Show("Please enter at least one topic.", "Error");
+            ShowFieldError(TopicsErrorText, "Please enter at least one topic.");
+            isValid = false;
+        }
+
+        if (!isValid)
+            return false;
+
+        var selectedDateTime = DatePicker.SelectedDate!.Value.Date.Add(
+            new TimeSpan(
+                int.Parse(HourComboBox.SelectedItem!.ToString()!),
+                int.Parse(MinuteComboBox.SelectedItem!.ToString()!),
+                0));
+
+        if (selectedDateTime <= DateTime.Now.AddHours(24))
+        {
+            ShowFieldError(TimeErrorText, "Meeting must be scheduled at least 24 hours in advance.");
             return false;
         }
 
         return true;
     }
 
+    private void ShowFieldError(TextBlock errorText, string message)
+    {
+        errorText.Text = message;
+        errorText.Visibility = Visibility.Visible;
+    }
+
+    private void HideFieldError(TextBlock errorText)
+    {
+        errorText.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearFieldErrors()
+    {
+        HideFieldError(DateErrorText);
+        HideFieldError(TimeErrorText);
+        HideFieldError(TopicsErrorText);
+    }
+
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         DialogResult = false;
         Close();
     }

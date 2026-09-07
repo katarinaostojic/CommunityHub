@@ -103,6 +103,16 @@ public static class Injector
         _commonRoomRepository,
         _buildingRepository);
 
+    private static readonly AdStatisticsService _adStatisticsService = new(
+        _adRepository,
+        _adSlotRepository,
+        _adExpirationService);
+
+    private static readonly ManagerAdsReportService _managerAdsReportService = new(
+        _adStatisticsService);
+
+    private static readonly ManagerAdsPdfExporter _managerAdsPdfExporter = new();
+
     private static readonly CommonRoomRequestAvailabilityService _commonRoomRequestAvailabilityService = new(
         _commonRoomRepository);
 
@@ -194,10 +204,7 @@ public static class Injector
         },
         {
             typeof(AdStatisticsService),
-            new AdStatisticsService(
-                _adRepository,
-                _adSlotRepository,
-                _adExpirationService)
+            _adStatisticsService    
         },
         {
             typeof(AdService),
@@ -210,6 +217,14 @@ public static class Injector
         {
             typeof(AdsPdfExporter),
             _tenantAdsPdfExporter
+        },
+        {
+            typeof(ManagerAdsReportService),
+            _managerAdsReportService
+        },
+        {
+            typeof(ManagerAdsPdfExporter),
+            _managerAdsPdfExporter
         },
         {
             typeof(CommonRoomService),

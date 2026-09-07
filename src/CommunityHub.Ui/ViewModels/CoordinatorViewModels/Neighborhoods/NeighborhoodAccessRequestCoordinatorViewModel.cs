@@ -9,10 +9,13 @@ public class NeighborhoodAccessRequestCoordinatorViewModel : BaseViewModel
     private readonly NeighborhoodAccessRequestDto _request;
     private bool _showApproveConfirm = false;
     private bool _showDeclineConfirm = false;
+    private RequestStatus _currentStatus;
+    private string _successMessage = string.Empty;
 
     public NeighborhoodAccessRequestCoordinatorViewModel(NeighborhoodAccessRequestDto request)
     {
         _request = request;
+        _currentStatus = request.Status;
     }
 
     public long Id => _request.Id;
@@ -20,22 +23,22 @@ public class NeighborhoodAccessRequestCoordinatorViewModel : BaseViewModel
     public string CitizenAddress => _request.Address;
     public string NeighborhoodName => _request.NeighborhoodName;
     public DateTime CreatedAt => _request.CreatedAt;
-    public RequestStatus Status => _request.Status;
+    public RequestStatus Status => _currentStatus;
 
-    public string StatusDisplay => _request.Status switch
+    public string StatusDisplay => _currentStatus switch
     {
         RequestStatus.PendingApproval => "⏳ Pending approval",
         RequestStatus.Approved => "✔ Approved",
         RequestStatus.Rejected => "✕ Rejected",
-        _ => _request.Status.ToString()
+        _ => _currentStatus.ToString()
     };
 
-    public string RejectionReasonDisplay => _request.Status == RequestStatus.Rejected && _request.RejectionReason != null
+    public string RejectionReasonDisplay => _currentStatus == RequestStatus.Rejected && _request.RejectionReason != null
         ? $"Note: {_request.RejectionReason}"
         : string.Empty;
 
-    public bool ApproveRejectVisible => _request.Status == RequestStatus.PendingApproval;
-    public bool RejectionReasonVisible => _request.Status == RequestStatus.Rejected
+    public bool ApproveRejectVisible => _currentStatus == RequestStatus.PendingApproval;
+    public bool RejectionReasonVisible => _currentStatus == RequestStatus.Rejected
                                        && _request.RejectionReason != null;
 
     public bool ShowApproveConfirm
@@ -77,5 +80,35 @@ public class NeighborhoodAccessRequestCoordinatorViewModel : BaseViewModel
     {
         ShowApproveConfirm = false;
         ShowDeclineConfirm = false;
+    }
+
+    public string SuccessMessage
+    {
+        get => _successMessage;
+        set
+        {
+            SetProperty(ref _successMessage, value);
+            OnPropertyChanged(nameof(SuccessMessageVisibility));
+        }
+    }
+
+    public Visibility SuccessMessageVisibility => string.IsNullOrEmpty(_successMessage)
+        ? Visibility.Collapsed
+        : Visibility.Visible;
+
+    public void MarkAsApproved()
+    {
+        _currentStatus = RequestStatus.Approved;
+        OnPropertyChanged(nameof(StatusDisplay));
+        OnPropertyChanged(nameof(ApproveRejectVisible));
+        OnPropertyChanged(nameof(RejectionReasonDisplay));
+    }
+
+    public void MarkAsRejected()
+    {
+        _currentStatus = RequestStatus.Rejected;
+        OnPropertyChanged(nameof(StatusDisplay));
+        OnPropertyChanged(nameof(ApproveRejectVisible));
+        OnPropertyChanged(nameof(RejectionReasonDisplay));
     }
 }

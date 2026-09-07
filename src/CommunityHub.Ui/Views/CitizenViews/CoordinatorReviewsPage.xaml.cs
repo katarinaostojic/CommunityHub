@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.Services.Entities.Neighborhoods.Reviews;
 
+using CommunityHub.Ui.Helpers.Citizen;
+
 namespace CommunityHub.Ui.Views.CitizenViews;
 
 public partial class CoordinatorReviewsPage : Window
@@ -18,7 +20,7 @@ public partial class CoordinatorReviewsPage : Window
     private readonly string _coordinatorName;
     private readonly CoordinatorReviewsViewModel _viewModel;
 
-    public CoordinatorReviewsPage(User user, long neighborhoodId, long coordinatorId, string coordinatorName)
+    public CoordinatorReviewsPage(User user, long neighborhoodId, long coordinatorId, string coordinatorName, bool openMenuOnLoad = false)
     {
         InitializeComponent();
         _user = user;
@@ -30,10 +32,23 @@ public partial class CoordinatorReviewsPage : Window
         _viewModel = new CoordinatorReviewsViewModel(service, neighborhoodId, user.Id, coordinatorId, coordinatorName);
         DataContext = _viewModel;
 
-        LoggedInUserTextBlock.Text = _user.Username;
+        NavBar.SetTitle(TryFindResource("Reviews_Title") as string ?? "CoordinatorReviews");
+        LanguageManager.LanguageChanged += () => NavBar.SetTitle(TryFindResource("Reviews_Title") as string ?? "CoordinatorReviews");
+        NavBar.SetUrl("communityhub://coordinator-reviews");
+        NavBar.SetUsername(_user.Username);
+        NavBar.UpdateNavButtons();
+
+        NavBar.BurgerClicked += () => CitizenMenu.Visibility = Visibility.Visible;
+        NavBar.ProfileClicked += () => NavigateToProfile();
+        NavBar.BackNavigated += HandleNavBack;
+        NavBar.ForwardNavigated += HandleNavForward;
+        NavBar.ReloadRequested += () => _viewModel.LoadReviews();
         CitizenMenu.CloseRequested += CitizenMenu_CloseRequested;
         CitizenMenu.NavigationRequested += CitizenMenu_NavigationRequested;
         CitizenMenu.LogoutRequested += CitizenMenu_LogoutRequested;
+
+        if (openMenuOnLoad)
+            CitizenMenu.Visibility = Visibility.Visible;
     }
 
     private void RateCoordinatorButton_Click(object sender, RoutedEventArgs e)
@@ -50,36 +65,43 @@ public partial class CoordinatorReviewsPage : Window
         CoordinatorReviewItemViewModel item = (CoordinatorReviewItemViewModel)((Button)sender).Tag;
         var (success, error) = _viewModel.ReportReview(item.Id);
         if (!success)
-            MessageBox.Show(error, "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(error, MsgHelper.Get("Msg_Error", "Greška"), MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 
-    private void ProfileButton_Click(object sender, RoutedEventArgs e)
-    {
-        NeighborhoodService ns = Injector.CreateInstance<NeighborhoodService>();
-        string name = ns.GetNameById(_neighborhoodId) ?? "";
-        new MyProfilePage(_user, _neighborhoodId, name).Show();
-        Close();
-    }
 
-    private void BurgerButton_Click(object sender, RoutedEventArgs e)
-        => CitizenMenu.Visibility = Visibility.Visible;
 
     private void CitizenMenu_CloseRequested()
         => CitizenMenu.Visibility = Visibility.Collapsed;
 
     private void CitizenMenu_NavigationRequested(string destination)
     {
-        CitizenMenu.Visibility = Visibility.Collapsed;
         switch (destination)
         {
-            case "Neighborhoods": new BrowseNeighborhoodPage(_user).Show(); Close(); break;
-            case "MyRequests": new MyRequestsPage(_user).Show(); Close(); break;
-            case "Events": new EventsPage(_user, _neighborhoodId).Show(); Close(); break;
-            case "Citizens": new NeighborhoodCitizensPage(_user, _neighborhoodId).Show(); Close(); break;
-            case "Meetings": new MeetingsPage(_user, _neighborhoodId).Show(); Close(); break;
-            case "Profile": NavigateToProfile(); break;
-            case "CityObjects": CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
-            case "Budget": CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "Neighborhoods":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                new BrowseNeighborhoodPage(_user, openMenuOnLoad: true).Show(); Close(); break;
+            case "MyRequests":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                new MyRequestsPage(_user, openMenuOnLoad: true).Show(); Close(); break;
+            case "Events":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToEvents(_user, this); break;
+            case "Citizens":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToCitizens(_user, this); break;
+            case "Meetings":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToMeetings(_user, this); break;
+            case "Profile":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                NavigateToProfile(); break;
+            case "CityObjects":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToCityObjects(_user, this); break;
+            case "Budget":
+                NavigationHistory.NavigateTo(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+                CitizenNavigationHelper.NavigateToBudget(_user, this); break;
+            case "CoordinatorReviews": CitizenMenu.Visibility = Visibility.Collapsed; break;
         }
     }
 
@@ -95,5 +117,18 @@ public partial class CoordinatorReviewsPage : Window
         string name = ns.GetNameById(_neighborhoodId) ?? "";
         new MyProfilePage(_user, _neighborhoodId, name).Show();
         Close();
+    }
+    private void HandleNavBack()
+    {
+        var target = NavigationHistory.GoBack(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
+    }
+
+    private void HandleNavForward()
+    {
+        var target = NavigationHistory.GoForward(new NavigationEntry("CoordinatorReviews", _user, _neighborhoodId));
+        if (target != null) CitizenNavigationHelper.NavigateToEntry(target, this);
+        NavBar.UpdateNavButtons();
     }
 }

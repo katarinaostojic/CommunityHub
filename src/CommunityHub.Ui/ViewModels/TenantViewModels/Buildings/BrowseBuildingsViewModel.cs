@@ -15,6 +15,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
     private string _pageLabelText = string.Empty;
     private bool _hasPreviousPage;
     private bool _hasNextPage;
+    public bool HasNoResults => _allBuildings.Count == 0;
 
     public BrowseBuildingsViewModel(BuildingService buildingService)
     {
@@ -88,5 +89,7 @@ public class BrowseBuildingsViewModel : BaseViewModel
             _allBuildings
                 .Skip((_currentPage - 1) * BuildingsPerPage)
                 .Take(BuildingsPerPage));
+
+        OnPropertyChanged(nameof(HasNoResults));
     }
 }

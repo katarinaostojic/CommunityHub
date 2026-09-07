@@ -1,8 +1,9 @@
-﻿using CommunityHub.Application.DependencyInjection;
+﻿using CommunityHub.Application.Database.Repositories.Neighborhoods.CityObjects;
+using CommunityHub.Application.DependencyInjection;
+using CommunityHub.Application.Domain.Entities.Neighborhoods;
+using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Neighborhoods.CityObjects;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
-using CommunityHub.Application.Services.Entities.Neighborhoods;
-using CommunityHub.Application.Database.Repositories.Neighborhoods.CityObjects;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,12 +14,12 @@ public partial class CityObjectsPage : Page
     private readonly CityObjectsViewModel _viewModel;
     private string? _pendingSuccessMessage = null;
 
-    public CityObjectsPage(long coordinatorId)
+    public CityObjectsPage(long coordinatorId, long? neighborhoodId = null)
     {
         InitializeComponent();
         var cityObjectService = new CityObjectService(new CityObjectDbRepository());
         var neighborhoodService = Injector.CreateInstance<NeighborhoodService>();
-        _viewModel = new CityObjectsViewModel(cityObjectService, neighborhoodService, coordinatorId);
+        _viewModel = new CityObjectsViewModel(cityObjectService, neighborhoodService, coordinatorId, neighborhoodId);
         DataContext = _viewModel;
         this.IsVisibleChanged += (s, e) =>
         {

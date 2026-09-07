@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods.CityObjects;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Application.DTOs.Neighborhoods.CityObjects;
 using CommunityHub.Application.Services.Entities.Neighborhoods.CityObjects;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ public class CityObjectsViewModel : BaseViewModel
         _neighborhoodId = neighborhoodId;
         _citizenId = citizenId;
         LoadCityObjects();
+        LanguageManager.LanguageChanged += LoadCityObjects;
     }
 
     public ObservableCollection<CityObjectItemViewModel> CityObjects
@@ -41,7 +43,7 @@ public class CityObjectsViewModel : BaseViewModel
             .Select(dto => new CityObjectItemViewModel(dto))
             .ToList();
         CityObjects = new ObservableCollection<CityObjectItemViewModel>(items);
-        ResultsText = $"Showing {items.Count} objects";
+        ResultsText = ResultsText = $"{ResourceHelper.Get("Lbl_Showing", "Showing")} {items.Count} {ResourceHelper.Get("Lbl_Objects", "objects")}"; ;
     }
 
     public void ToggleVote(long cityObjectId)

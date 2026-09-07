@@ -40,6 +40,17 @@ public partial class NeighborhoodDetailsPage : Page
         CoordinatorMainWindow.Instance.NavigateTo(
             new MeetingsPage(_neighborhood.CoordinatorId, _neighborhood.Id), "Meetings");
     }
+    private void BudgetButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new BudgetPage(_neighborhood.CoordinatorId, _neighborhood.Id), "Budget");
+    }
 
-    
+    private void CityObjectsButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        CoordinatorMainWindow.Instance.NavigateTo(
+            new CityObjectsPage(_neighborhood.CoordinatorId, _neighborhood.Id), "City Objects");
+    }
+
+
 }

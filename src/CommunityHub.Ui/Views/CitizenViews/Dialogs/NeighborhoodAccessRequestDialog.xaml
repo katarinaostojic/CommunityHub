@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Background="{DynamicResource SurfaceBrush}" LastChildFill="False">
-                <TextBlock Text="Request Access"
+                <TextBlock Text="{DynamicResource Request_Title}"
                            FontSize="30" FontWeight="Bold"
                            VerticalAlignment="Center"
                            Margin="18,0,0,0"
@@ -51,7 +51,6 @@
                                Width="320"
                                Foreground="{DynamicResource TextPrimaryBrush}"
                                Margin="18,0,0,8"/>
-
                     <Border Width="320" Height="220"
                             BorderBrush="{DynamicResource BorderBrush}"
                             BorderThickness="1"
@@ -64,8 +63,9 @@
 
                 <StackPanel Grid.Column="2" Margin="0,44,0,0">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <TextBlock Text="🏘️" FontSize="30"
-                                   VerticalAlignment="Top" Margin="0,0,10,0"/>
+                        <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                   Margin="0,0,10,0" VerticalAlignment="Top"
+                                   Foreground="{DynamicResource IconForegroundBrush}"/>
                         <TextBlock x:Name="AddressText"
                                    FontSize="24" FontWeight="Bold"
                                    TextWrapping="Wrap" Width="480"
@@ -73,8 +73,9 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <TextBlock Text="🌍" FontSize="30"
-                                   VerticalAlignment="Top" Margin="0,0,10,0"/>
+                        <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                   Margin="0,0,10,0" VerticalAlignment="Top"
+                                   Foreground="{DynamicResource IconForegroundBrush}"/>
                         <TextBlock x:Name="LocationText"
                                    FontSize="24" FontWeight="Bold"
                                    TextWrapping="Wrap" Width="480"
@@ -82,8 +83,9 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="📝" FontSize="30"
-                                   VerticalAlignment="Top" Margin="0,0,10,0"/>
+                        <TextBlock Text="&#xE8D4;" FontFamily="Segoe MDL2 Assets" FontSize="24"
+                                   Margin="0,0,10,0" VerticalAlignment="Top"
+                                   Foreground="{DynamicResource IconForegroundBrush}"/>
                         <TextBlock x:Name="DescriptionText"
                                    FontSize="22" FontWeight="Bold"
                                    TextWrapping="Wrap" Width="480"
@@ -93,7 +95,7 @@
             </Grid>
 
             <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Checking your address..."
+                <TextBlock Text="{DynamicResource Request_CheckingAddress}"
                            FontSize="26" FontWeight="Bold"
                            HorizontalAlignment="Center"
                            Foreground="{DynamicResource TextPrimaryBrush}"

@@ -6,6 +6,32 @@
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <Style x:Key="FilterButton" TargetType="Button">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#E8EDF2"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="HeaderCell" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="13"/>
@@ -103,15 +129,14 @@
             <!-- Filter bar -->
             <StackPanel Grid.Row="0" Orientation="Horizontal"
                         HorizontalAlignment="Right" Margin="0,0,0,12">
-                <TextBlock Text="Filter by status:" VerticalAlignment="Center"
-                           FontSize="13" Foreground="#555" Margin="0,0,8,0"/>
-                <ComboBox x:Name="StatusFilterCombo" Width="160" FontSize="13"
-                          SelectionChanged="StatusFilterCombo_SelectionChanged">
-                    <ComboBoxItem Content="All" IsSelected="True" Tag=""/>
-                    <ComboBoxItem Content="Pending" Tag="pending approval"/>
-                    <ComboBoxItem Content="Approved" Tag="approved"/>
-                    <ComboBoxItem Content="Rejected" Tag="rejected"/>
-                </ComboBox>
+                <Button x:Name="BtnAll" Style="{StaticResource FilterButton}"
+                        Content="{Binding AllButtonLabel}" Margin="0,0,6,0" Click="FilterAll_Click"/>
+                <Button x:Name="BtnPending" Style="{StaticResource FilterButton}"
+                        Content="{Binding PendingButtonLabel}" Margin="0,0,6,0" Click="FilterPending_Click"/>
+                <Button x:Name="BtnApproved" Style="{StaticResource FilterButton}"
+                        Content="{Binding ApprovedButtonLabel}" Margin="0,0,6,0" Click="FilterApproved_Click"/>
+                <Button x:Name="BtnRejected" Style="{StaticResource FilterButton}"
+                        Content="{Binding RejectedButtonLabel}" Click="FilterRejected_Click"/>
             </StackPanel>
 
             <!-- Table -->

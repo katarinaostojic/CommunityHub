@@ -9,6 +9,7 @@
 
     <Page.Resources>
         <converters:ImagePathConverter x:Key="ImageConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Page.Resources>
 
     <Grid Background="{StaticResource BackgroundLightBrush}">
@@ -234,6 +235,30 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+
+        <!-- No results -->
+        <Border Grid.Row="3"
+        Margin="16,0,16,0"
+        Visibility="{Binding HasNoResults, Converter={StaticResource BoolToVis}}">
+            <StackPanel HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="0,60,0,0">
+                <TextBlock Text="🏢"
+                   FontSize="40"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,12"/>
+                <TextBlock Text="No buildings found"
+                   FontSize="16"
+                   FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimaryBrush}"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,6"/>
+                <TextBlock Text="Try adjusting your search or filters."
+                   FontSize="13"
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
 
         <!-- Pagination -->
         <StackPanel Grid.Row="4"

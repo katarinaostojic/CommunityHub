@@ -10,137 +10,17 @@
 
     <Grid Background="{DynamicResource BackgroundLightBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="42"/>
-            <RowDefinition Height="54"/>
-            <RowDefinition Height="78"/>
+            <RowDefinition Height="174"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{DynamicResource PrimarySoftBrush}"
-                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
-            <Border Width="130" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center"
-                    Margin="14,0,0,0" Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1" CornerRadius="8">
-                <TextBlock Text="A Web Page" FontSize="18" FontWeight="Bold"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-            </Border>
-        </Border>
+        <!-- Shared NavBar — već ima language + theme toggle ugrađen -->
+        <views:CitizenNavBar x:Name="NavBar" Grid.Row="0"/>
 
-        <Grid Grid.Row="1" Background="{DynamicResource SurfaceSoftBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                <TextBlock Text="←" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock Text="→" FontSize="24" FontWeight="Bold" Margin="0,0,18,0"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock Text="⟳" FontSize="24" FontWeight="Bold"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-            </StackPanel>
-            <Border Grid.Column="1" Margin="10,6,18,6" Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="18">
-                <TextBlock Text="https://" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" Margin="16,0,0,0"
-                           Foreground="{DynamicResource TextSecondaryBrush}"/>
-            </Border>
-        </Grid>
-
-        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}"
-        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,1">
-            <Grid Margin="16,0,16,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.Column="0" Content="☰" Click="BurgerButton_Click"
-                FontSize="32" FontWeight="Bold" Background="Transparent"
-                BorderThickness="0" Width="60" Height="60" VerticalAlignment="Center"
-                Foreground="{DynamicResource PrimaryBrush}"/>
-
-                <!-- Toggle za jezik LEVO -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal"
-                    VerticalAlignment="Center" Margin="0,0,16,0">
-                    <Image Source="/Images/flags/SrFlag.png" Width="32" Height="22" Margin="0,0,6,0"/>
-                    <ToggleButton x:Name="LanguageToggleButton"
-                          Width="60" Height="30"
-                          Click="LanguageToggle_Click">
-                        <ToggleButton.Template>
-                            <ControlTemplate TargetType="ToggleButton">
-                                <Border x:Name="track" CornerRadius="15"
-                                Background="#B0BEC5" Width="60" Height="30">
-                                    <Border x:Name="thumb" Width="26" Height="26"
-                                    CornerRadius="13" Background="White"
-                                    HorizontalAlignment="Left" Margin="2,0,0,0"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter TargetName="track" Property="Background" Value="#0D47A1"/>
-                                        <Setter TargetName="thumb" Property="HorizontalAlignment" Value="Right"/>
-                                        <Setter TargetName="thumb" Property="Margin" Value="0,0,2,0"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-                    <Image Source="/Images/flags/EnFlag.png" Width="32" Height="22" Margin="6,0,0,0"/>
-                </StackPanel>
-
-                <TextBlock Grid.Column="2" Text="{DynamicResource Profile_Title}"
-                   FontSize="28" FontWeight="Bold"
-                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                   Foreground="{DynamicResource TextPrimaryBrush}"/>
-
-                <!-- Toggle za temu -->
-                <StackPanel Grid.Column="3" Orientation="Horizontal"
-                    VerticalAlignment="Center" Margin="0,0,16,0">
-                    <TextBlock Text="☀️" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                    <ToggleButton x:Name="ThemeToggleButton"
-                          Width="60" Height="30"
-                          Click="ThemeToggle_Click">
-                        <ToggleButton.Template>
-                            <ControlTemplate TargetType="ToggleButton">
-                                <Border x:Name="track" CornerRadius="15"
-                                Background="#B0BEC5" Width="60" Height="30">
-                                    <Border x:Name="thumb" Width="26" Height="26"
-                                    CornerRadius="13" Background="White"
-                                    HorizontalAlignment="Left" Margin="2,0,0,0"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsChecked" Value="True">
-                                        <Setter TargetName="track" Property="Background" Value="#0D47A1"/>
-                                        <Setter TargetName="thumb" Property="HorizontalAlignment" Value="Right"/>
-                                        <Setter TargetName="thumb" Property="Margin" Value="0,0,2,0"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </ToggleButton.Template>
-                    </ToggleButton>
-                    <TextBlock Text="🌙" FontSize="20" VerticalAlignment="Center" Margin="6,0,0,0"/>
-                </StackPanel>
-
-                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="👤" FontSize="32" Margin="0,0,10,0"/>
-                    <TextBlock x:Name="LoggedInUserTextBlock" FontSize="22"
-                       FontWeight="Bold" VerticalAlignment="Center"
-                       Foreground="{DynamicResource TextPrimaryBrush}"/>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="40,30,40,30" DataContext="{Binding TrustRecord}">
 
-                <TextBlock Text="👤" FontSize="80"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,10"/>
+                <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="80" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="{DynamicResource IconForegroundBrush}"/>
 
                 <TextBlock x:Name="UsernameText"
                            FontSize="28" FontWeight="Bold"
@@ -157,49 +37,37 @@
                             <TextBlock Text="{DynamicResource Profile_MemberSince}" FontSize="22"
                                        FontWeight="Bold" Width="300"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
-                            <TextBlock Text="{Binding JoinedAt}" FontSize="22"
-                                       FontWeight="Bold"
+                            <TextBlock Text="{Binding JoinedAt}" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="{DynamicResource Profile_EventsOrganized}" FontSize="22"
                                        FontWeight="Bold" Width="300"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
-                            <TextBlock Text="{Binding EventsOrganized}" FontSize="22"
-                                       FontWeight="Bold"
+                            <TextBlock Text="{Binding EventsOrganized}" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="{DynamicResource Profile_EventsVolunteered}" FontSize="22"
                                        FontWeight="Bold" Width="300"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
-                            <TextBlock Text="{Binding EventsVolunteered}" FontSize="22"
-                                       FontWeight="Bold"
+                            <TextBlock Text="{Binding EventsVolunteered}" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <TextBlock Text="{DynamicResource Profile_Neighborhood}" FontSize="22"
                                        FontWeight="Bold" Width="300"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
-                            <TextBlock x:Name="NeighborhoodNameText" FontSize="22"
-                                       FontWeight="Bold"
+                            <TextBlock x:Name="NeighborhoodNameText" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{DynamicResource Profile_TrustLevel}" FontSize="22"
-                                       FontWeight="Bold" Width="300"
-                                       VerticalAlignment="Center"
+                                       FontWeight="Bold" Width="300" VerticalAlignment="Center"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
-                            <Border CornerRadius="12"
-                                    Background="{Binding LevelBrush}"
-                                    Padding="14,4"
-                                    VerticalAlignment="Center">
-                                <TextBlock Text="{Binding LevelDisplay}"
-                                           FontSize="20" FontWeight="Bold"
+                            <Border CornerRadius="12" Background="{Binding LevelBrush}"
+                                    Padding="14,4" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding LevelDisplay}" FontSize="20" FontWeight="Bold"
                                            Foreground="White"/>
                             </Border>
                         </StackPanel>
@@ -213,22 +81,19 @@
                     <StackPanel HorizontalAlignment="Center">
                         <Canvas x:Name="PieCanvas" Width="220" Height="220"
                                 HorizontalAlignment="Center" Margin="0,0,0,16"/>
-
-                        <TextBlock Text="Organized vs Volunteered"
+                        <TextBlock Text="{DynamicResource Profile_OrganizedVsVolunteered}"
                                    FontSize="20" FontWeight="Bold"
-                                   HorizontalAlignment="Center"
-                                   Margin="0,0,0,16"
+                                   HorizontalAlignment="Center" Margin="0,0,0,16"
                                    Foreground="{DynamicResource TextPrimaryBrush}"/>
-
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
                             <Rectangle Width="20" Height="20" Fill="#0D47A1"
                                        VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="Organized" FontSize="18" FontWeight="Bold"
+                            <TextBlock Text="{DynamicResource Profile_Organized}" FontSize="18" FontWeight="Bold"
                                        VerticalAlignment="Center" Margin="0,0,20,0"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
                             <Rectangle Width="20" Height="20" Fill="#BBDEFB"
                                        VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="Volunteered" FontSize="18" FontWeight="Bold"
+                            <TextBlock Text="{DynamicResource Profile_Volunteered}" FontSize="18" FontWeight="Bold"
                                        VerticalAlignment="Center"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
                         </StackPanel>
@@ -239,7 +104,7 @@
         </ScrollViewer>
 
         <views:CitizenMenuView x:Name="CitizenMenu"
-                               Grid.RowSpan="4"
+                               Grid.RowSpan="2"
                                Visibility="Collapsed"
                                Panel.ZIndex="100"/>
     </Grid>

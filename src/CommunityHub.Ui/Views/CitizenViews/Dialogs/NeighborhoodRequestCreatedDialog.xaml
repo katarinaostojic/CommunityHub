@@ -25,7 +25,7 @@
 
             <DockPanel Grid.Row="0" Background="{DynamicResource SurfaceBrush}" LastChildFill="False">
                 <StackPanel Orientation="Horizontal" Margin="18,0,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="Request Created"
+                    <TextBlock Text="{DynamicResource Request_CreatedTitle}"
                                FontSize="30" FontWeight="Bold"
                                VerticalAlignment="Center"
                                Foreground="{DynamicResource TextPrimaryBrush}"/>
@@ -34,7 +34,6 @@
                                Foreground="{DynamicResource TextSecondaryBrush}"
                                VerticalAlignment="Center"/>
                 </StackPanel>
-
                 <Button x:Name="CloseButton"
                         Content="✕" Width="45" Height="45"
                         FontSize="24" FontWeight="Bold"
@@ -45,12 +44,12 @@
             </DockPanel>
 
             <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Your request has been successfully submitted."
+                <TextBlock Text="{DynamicResource Request_Submitted}"
                            FontSize="24" FontWeight="Bold"
                            TextWrapping="Wrap" HorizontalAlignment="Center"
                            Foreground="{DynamicResource TextPrimaryBrush}"
                            Margin="0,0,0,16"/>
-                <TextBlock Text="A coordinator will review your request shortly."
+                <TextBlock Text="{DynamicResource Request_ReviewSoon}"
                            FontSize="24" FontWeight="Bold"
                            TextWrapping="Wrap" HorizontalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
@@ -68,49 +67,46 @@
                     <RowDefinition Height="48"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0"
-                           Text="🏘️ Neighborhood:" FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock x:Name="NeighborhoodNameText"
-                           Grid.Row="0" Grid.Column="1"
-                           FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
+                <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
+                               VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="{DynamicResource Request_Neighborhood}" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
+                <TextBlock x:Name="NeighborhoodNameText" Grid.Row="0" Grid.Column="1"
+                           FontSize="22" FontWeight="Bold" VerticalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0"
-                           Text="👤 Citizen:" FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock x:Name="CitizenNameText"
-                           Grid.Row="1" Grid.Column="1"
-                           FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
+                <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
+                               VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="{DynamicResource Request_Citizen}" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
+                <TextBlock x:Name="CitizenNameText" Grid.Row="1" Grid.Column="1"
+                           FontSize="22" FontWeight="Bold" VerticalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0"
-                           Text="📅 Created on:" FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock x:Name="CreatedOnText"
-                           Grid.Row="2" Grid.Column="1"
-                           FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
+                <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
+                               VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="{DynamicResource Request_CreatedOn}" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
+                <TextBlock x:Name="CreatedOnText" Grid.Row="2" Grid.Column="1"
+                           FontSize="22" FontWeight="Bold" VerticalAlignment="Center"
                            Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <TextBlock Grid.Row="3" Grid.Column="0"
-                           Text="📌 Status:" FontSize="22" FontWeight="Bold"
-                           VerticalAlignment="Center"
-                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="&#xE734;" FontFamily="Segoe MDL2 Assets" FontSize="22" FontWeight="Bold"
+                               VerticalAlignment="Center" Foreground="{DynamicResource IconForegroundBrush}"/>
+                    <TextBlock Text="{DynamicResource Request_Status}" FontSize="22" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                </StackPanel>
                 <Border Grid.Row="3" Grid.Column="1"
-                        CornerRadius="12"
-                        Background="#F9A825"
-                        Padding="14,4"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center">
-                    <TextBlock x:Name="StatusText"
-                               FontSize="20" FontWeight="Bold"
-                               Foreground="White"/>
+                        CornerRadius="12" Background="#F9A825"
+                        Padding="14,4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock x:Name="StatusText" FontSize="20" FontWeight="Bold" Foreground="White"/>
                 </Border>
             </Grid>
 
@@ -120,26 +116,18 @@
                     <ColumnDefinition Width="40"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
-                <Button x:Name="GoToDashboardButton"
-                        Grid.Column="0"
+                <Button x:Name="GoToDashboardButton" Grid.Column="0"
                         Content="{DynamicResource Button_Dashboard}"
-                        FontSize="22" FontWeight="Bold"
-                        Height="60" Width="230"
+                        FontSize="22" FontWeight="Bold" Height="60" Width="230"
                         HorizontalAlignment="Left"
                         Background="{DynamicResource SurfaceBrush}"
                         Foreground="{DynamicResource TextPrimaryBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="1"/>
-
-                <Button x:Name="ViewMyRequestsButton"
-                        Grid.Column="2"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"/>
+                <Button x:Name="ViewMyRequestsButton" Grid.Column="2"
                         Content="{DynamicResource Button_ViewRequests}"
-                        FontSize="22" FontWeight="Bold"
-                        Height="60" Width="230"
+                        FontSize="22" FontWeight="Bold" Height="60" Width="230"
                         HorizontalAlignment="Right"
-                        Background="#0D47A1"
-                        Foreground="White" BorderThickness="0"/>
+                        Background="#0D47A1" Foreground="White" BorderThickness="0"/>
             </Grid>
         </Grid>
     </Border>

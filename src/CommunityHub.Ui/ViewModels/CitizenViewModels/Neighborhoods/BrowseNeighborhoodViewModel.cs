@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Application.DTOs.Neighborhoods;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using System.Collections.ObjectModel;
 
@@ -16,6 +17,7 @@ public class BrowseNeighborhoodViewModel : BaseViewModel
     {
         _neighborhoodService = neighborhoodService;
         LoadNeighborhoods();
+        LanguageManager.LanguageChanged += UpdateResultsTitle;
     }
 
     public ObservableCollection<NeighborhoodDto> FilteredNeighborhoods
@@ -74,8 +76,8 @@ public class BrowseNeighborhoodViewModel : BaseViewModel
 
     private void UpdateResultsTitle()
     {
-        string label = System.Windows.Application.Current.Resources["Browse_Title"]?.ToString()
-                       ?? "Browse Neighborhoods";
-        ResultsTitleText = $"{label} - {FilteredNeighborhoods.Count} results";
+        var title = ResourceHelper.Get("Browse_Title", "Browse Neighborhoods");
+        var results = ResourceHelper.Get("Lbl_Results", "results");
+        ResultsTitleText = $"{title} - {FilteredNeighborhoods.Count} {results}";
     }
 }

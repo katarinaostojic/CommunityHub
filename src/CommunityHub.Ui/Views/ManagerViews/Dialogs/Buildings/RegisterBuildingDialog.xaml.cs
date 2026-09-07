@@ -2,12 +2,13 @@
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Buildings;
 using CommunityHub.Application.Services.Entities.Shared;
+using CommunityHub.Ui.Helpers.Manager;
 using CommunityHub.Ui.Views.ManagerViews.Controls;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -30,6 +31,21 @@ public partial class RegisterBuildingDialog : Window
         _countryService = Injector.CreateInstance<CountryService>();
         LoadCountries();
         LoadCities();
+
+        StreetTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(StreetTextBox, "Street");
+        NumberTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(NumberTextBox, "Number");
+        SettlementTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(SettlementTextBox, "Settlement");
+        FloorsTextBox.PreviewMouseDown += (s, e) => OpenKeyboard(FloorsTextBox, "Number of Floors");
+
+        TooltipsManager.Apply(this);
+    }
+
+    private void OpenKeyboard(TextBox textBox, string fieldName)
+    {
+        _activeFloating?.Close();
+        _activeFloating = new FloatingKeyboardWindow(textBox, this, fieldName);
+        _activeFloating.Closed += (_, _) => _activeFloating = null;
+        _activeFloating.Show();
     }
 
     private void LoadCountries()
@@ -81,12 +97,16 @@ public partial class RegisterBuildingDialog : Window
 
         if (!int.TryParse(FloorsTextBox.Text, out int numberOfFloors) || numberOfFloors <= 0)
         {
-            MessageBox.Show("Please enter a valid number of floors.", "Error");
+            ShowFieldError(FloorsErrorText, "Please enter a valid number of floors.");
             return;
         }
 
+        HideFieldError(FloorsErrorText);
+
         for (int i = 1; i <= numberOfFloors; i++)
             FloorsStackPanel.Children.Add(CreateFloorRow(i));
+
+        TooltipsManager.Apply(this);
 
         Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, () =>
         {
@@ -102,11 +122,13 @@ public partial class RegisterBuildingDialog : Window
         Grid floorGrid = new Grid();
         floorGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(180) });
         floorGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        floorGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        floorGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         floorGrid.Margin = new Thickness(0, 10, 0, 10);
 
         TextBlock label = new TextBlock
         {
-            Text = $"* Floor {floorNumber} units (e.g. 1,2,3)",
+            Text = $"Floor {floorNumber} units (e.g. 1,2,3) *",
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = 14
         };
@@ -115,31 +137,38 @@ public partial class RegisterBuildingDialog : Window
         {
             Height = 35,
             FontSize = 14,
-            Tag = floorNumber
+            Tag = floorNumber,
+            ToolTip = "List unit numbers separated by commas, e.g. 1,2,3"
         };
-        textBox.PreviewMouseDown += TextBox_Click;
+        textBox.PreviewMouseDown += (s, e) => OpenKeyboard(textBox, $"Floor {floorNumber} units");
 
+        TextBlock errorText = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Color.FromRgb(0xE7, 0x4C, 0x3C)),
+            FontSize = 11,
+            Margin = new Thickness(2, 3, 0, 0),
+            Visibility = Visibility.Collapsed
+        };
+
+        Grid.SetRow(label, 0);
         Grid.SetColumn(label, 0);
+        Grid.SetRow(textBox, 0);
         Grid.SetColumn(textBox, 1);
+        Grid.SetRow(errorText, 1);
+        Grid.SetColumn(errorText, 1);
+
         floorGrid.Children.Add(label);
         floorGrid.Children.Add(textBox);
+        floorGrid.Children.Add(errorText);
 
         return floorGrid;
     }
 
-    private void TextBox_Click(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is TextBox tb)
-        {
-            _activeFloating?.Close();
-            _activeFloating = new FloatingKeyboardWindow(tb, this);
-            _activeFloating.Closed += (_, _) => _activeFloating = null;
-            _activeFloating.Show();
-        }
-    }
-
     private void Register_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
+
         if (!ValidateFields()) return;
         if (!ValidateFloors()) return;
 
@@ -164,40 +193,106 @@ public partial class RegisterBuildingDialog : Window
 
     private bool ValidateFields()
     {
-        if (!AreRequiredFieldsFilled())
+        ClearFieldErrors();
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(StreetTextBox.Text))
         {
-            MessageBox.Show("Please fill in all required fields.", "Error");
-            return false;
+            ShowFieldError(StreetErrorText, "Street is required.");
+            isValid = false;
         }
 
-        City selectedCity = (City)CityComboBox.SelectedItem;
-        if (_buildingService.BuildingExists(StreetTextBox.Text, NumberTextBox.Text, selectedCity.Id))
+        if (string.IsNullOrWhiteSpace(NumberTextBox.Text))
         {
-            MessageBox.Show("A building at this address already exists.", "Error");
+            ShowFieldError(NumberErrorText, "Number is required.");
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(SettlementTextBox.Text))
+        {
+            ShowFieldError(SettlementErrorText, "Settlement is required.");
+            isValid = false;
+        }
+
+        if (CountryComboBox.SelectedItem == null)
+        {
+            ShowFieldError(CountryErrorText, "Please select a country.");
+            isValid = false;
+        }
+
+        if (CityComboBox.SelectedItem == null)
+        {
+            ShowFieldError(CityErrorText, "Please select a city.");
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(FloorsTextBox.Text))
+        {
+            ShowFieldError(FloorsErrorText, "Number of floors is required.");
+            isValid = false;
+        }
+
+        if (!isValid)
+            return false;
+
+        City city = (City)CityComboBox.SelectedItem!;
+        if (_buildingService.BuildingExists(StreetTextBox.Text, NumberTextBox.Text, city.Id))
+        {
+            ShowFieldError(StreetErrorText, "A building at this address already exists.");
             return false;
         }
 
         return true;
-    }
-
-    private bool AreRequiredFieldsFilled()
-    {
-        return !string.IsNullOrWhiteSpace(StreetTextBox.Text) &&
-               !string.IsNullOrWhiteSpace(NumberTextBox.Text) &&
-               !string.IsNullOrWhiteSpace(SettlementTextBox.Text) &&
-               CityComboBox.SelectedItem != null &&
-               CountryComboBox.SelectedItem != null &&
-               !string.IsNullOrWhiteSpace(FloorsTextBox.Text);
     }
 
     private bool ValidateFloors()
     {
         if (FloorsStackPanel.Children.Count == 0)
         {
-            MessageBox.Show("Please confirm the number of floors first.", "Error");
+            ShowFieldError(FloorsErrorText, "Please confirm the number of floors first.");
             return false;
         }
-        return true;
+
+        bool isValid = true;
+
+        foreach (Grid floorGrid in FloorsStackPanel.Children.OfType<Grid>())
+        {
+            TextBox unitTextBox = (TextBox)floorGrid.Children[1];
+            TextBlock rowErrorText = (TextBlock)floorGrid.Children[2];
+
+            if (string.IsNullOrWhiteSpace(unitTextBox.Text))
+            {
+                ShowFieldError(rowErrorText, "Please enter at least one unit number for this floor.");
+                isValid = false;
+            }
+            else
+            {
+                HideFieldError(rowErrorText);
+            }
+        }
+
+        return isValid;
+    }
+
+    private void ShowFieldError(TextBlock errorText, string message)
+    {
+        errorText.Text = message;
+        errorText.Visibility = Visibility.Visible;
+    }
+
+    private void HideFieldError(TextBlock errorText)
+    {
+        errorText.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearFieldErrors()
+    {
+        HideFieldError(StreetErrorText);
+        HideFieldError(NumberErrorText);
+        HideFieldError(SettlementErrorText);
+        HideFieldError(CountryErrorText);
+        HideFieldError(CityErrorText);
+        HideFieldError(FloorsErrorText);
     }
 
     private void CreateFloorsAndUnits(long buildingId)
@@ -240,6 +335,8 @@ public partial class RegisterBuildingDialog : Window
 
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
         Close();
     }
 
@@ -254,8 +351,22 @@ public partial class RegisterBuildingDialog : Window
         if (dialog.ShowDialog() == true)
         {
             _selectedImagePaths.AddRange(dialog.FileNames);
-            ImagesPreview.ItemsSource = null;
-            ImagesPreview.ItemsSource = _selectedImagePaths;
+            RefreshImagesPreview();
         }
+    }
+
+    private void RemoveImage_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is string imagePath)
+        {
+            _selectedImagePaths.Remove(imagePath);
+            RefreshImagesPreview();
+        }
+    }
+
+    private void RefreshImagesPreview()
+    {
+        ImagesPreview.ItemsSource = null;
+        ImagesPreview.ItemsSource = _selectedImagePaths;
     }
 }

@@ -21,9 +21,9 @@ public class ProblemReportRowViewModel : BaseViewModel
 
     public string StatusDisplay => _report.Status switch
     {
-        ProblemReportStatus.Unresolved => "Unresolved",
-        ProblemReportStatus.PotentiallySolved => "Potentially solved",
-        ProblemReportStatus.Solved => "Solved",
+        ProblemReportStatus.Unresolved => "⚠ Unresolved",
+        ProblemReportStatus.PotentiallySolved => "🔍 Potentially solved",
+        ProblemReportStatus.Solved => "✓ Solved",
         _ => _report.Status.ToString()
     };
 

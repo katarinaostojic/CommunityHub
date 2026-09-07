@@ -37,6 +37,7 @@
         </Style>
 
         <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Width" Value="160"/>
             <Setter Property="Height" Value="30"/>
             <Setter Property="FontSize" Value="11"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -229,7 +230,8 @@
                                         <Border CornerRadius="12" Padding="12,4"
                                                 HorizontalAlignment="Right"
                                                 Background="{Binding StatusBackground}"
-                                                Margin="0,0,0,12">
+                                                Margin="0,0,0,12"
+                                                ToolTip="Confirmed once over half of the units report attendance">
                                             <TextBlock Text="{Binding StatusDisplay}"
                                                        FontSize="12" FontWeight="SemiBold"
                                                        Foreground="{Binding StatusForeground}"/>

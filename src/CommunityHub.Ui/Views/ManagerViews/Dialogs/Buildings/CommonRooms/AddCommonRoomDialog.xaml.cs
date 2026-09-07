@@ -1,11 +1,11 @@
 ﻿using CommunityHub.Application.Domain.Entities.Buildings.CommonRooms;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Buildings;
+using CommunityHub.Ui.Helpers.Manager;
 using CommunityHub.Ui.ViewModels.ManagerViewModels.Buildings;
 using CommunityHub.Ui.Views.ManagerViews.Controls;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace CommunityHub.Ui.Views.ManagerViews.Dialogs;
 
@@ -21,23 +21,24 @@ public partial class AddCommonRoomDialog : Window
         _building = building;
         _viewModel = viewModel;
 
+        for (int floor = 1; floor <= building.NumberOfFloors; floor++)
+            FloorComboBox.Items.Add(floor);
+
         Loaded += (s, e) =>
         {
-            NameTextBox.PreviewMouseDown += TextBox_Click;
-            DescriptionTextBox.PreviewMouseDown += TextBox_Click;
-            FloorTextBox.PreviewMouseDown += TextBox_Click;
+            NameTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(NameTextBox, "Name");
+            DescriptionTextBox.PreviewMouseDown += (s2, e2) => OpenKeyboard(DescriptionTextBox, "Description");
         };
+
+        TooltipsManager.Apply(this);
     }
 
-    private void TextBox_Click(object sender, MouseButtonEventArgs e)
+    private void OpenKeyboard(TextBox textBox, string fieldName)
     {
-        if (sender is TextBox tb)
-        {
-            _activeFloating?.Close();
-            _activeFloating = new FloatingKeyboardWindow(tb, this);
-            _activeFloating.Closed += (_, _) => _activeFloating = null;
-            _activeFloating.Show();
-        }
+        _activeFloating?.Close();
+        _activeFloating = new FloatingKeyboardWindow(textBox, this, fieldName);
+        _activeFloating.Closed += (_, _) => _activeFloating = null;
+        _activeFloating.Show();
     }
 
     private void AddButton_Click(object sender, RoutedEventArgs e)
@@ -49,7 +50,7 @@ public partial class AddCommonRoomDialog : Window
 
         try
         {
-            int floorNumber = int.Parse(FloorTextBox.Text.Trim());
+            int floorNumber = (int)FloorComboBox.SelectedItem;
             RentalType rentalType = RentalTypeComboBox.SelectedIndex == 0
                 ? RentalType.PerDay
                 : RentalType.MultiDay;
@@ -68,45 +69,65 @@ public partial class AddCommonRoomDialog : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ShowFieldError(NameErrorText, ex.Message);
         }
     }
 
     private bool ValidateFields()
     {
+        ClearFieldErrors();
+        bool isValid = true;
+
         if (string.IsNullOrWhiteSpace(NameTextBox.Text))
         {
-            MessageBox.Show("Please enter a name for the common room.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(NameErrorText, "Name is required.");
+            isValid = false;
         }
 
         if (string.IsNullOrWhiteSpace(DescriptionTextBox.Text))
         {
-            MessageBox.Show("Please enter a description.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(DescriptionErrorText, "Description is required.");
+            isValid = false;
         }
 
-        if (!int.TryParse(FloorTextBox.Text.Trim(), out _))
+        if (FloorComboBox.SelectedItem == null)
         {
-            MessageBox.Show("Please enter a valid floor number.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(FloorErrorText, "Please select a floor.");
+            isValid = false;
         }
 
         if (RentalTypeComboBox.SelectedItem == null)
         {
-            MessageBox.Show("Please select a rental type.",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
+            ShowFieldError(RentalTypeErrorText, "Please select a rental type.");
+            isValid = false;
         }
 
-        return true;
+        return isValid;
+    }
+
+    private void ShowFieldError(TextBlock errorText, string message)
+    {
+        errorText.Text = message;
+        errorText.Visibility = Visibility.Visible;
+    }
+
+    private void HideFieldError(TextBlock errorText)
+    {
+        errorText.Visibility = Visibility.Collapsed;
+    }
+
+    private void ClearFieldErrors()
+    {
+        HideFieldError(NameErrorText);
+        HideFieldError(DescriptionErrorText);
+        HideFieldError(FloorErrorText);
+        HideFieldError(RentalTypeErrorText);
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
+        _activeFloating?.Close();
+        _activeFloating = null;
         DialogResult = false;
         Close();
     }

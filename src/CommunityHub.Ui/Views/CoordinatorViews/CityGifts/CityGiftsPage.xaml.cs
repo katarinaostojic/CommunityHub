@@ -29,7 +29,9 @@ public partial class CityGiftsPage : Page
 
         if (!success)
         {
-            MessageBox.Show(error, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            gift.AppliedMessage = error ?? "Cannot apply for this gift.";
+            await Task.Delay(3000);
+            gift.AppliedMessage = string.Empty;
             return;
         }
 

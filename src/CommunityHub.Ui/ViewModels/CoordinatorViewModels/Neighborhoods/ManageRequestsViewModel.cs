@@ -85,7 +85,8 @@ public class ManageRequestsViewModel : BaseViewModel
         NeighborhoodAccessRequest? request = _requestService.GetById(vm.Id);
         if (request == null) throw new InvalidOperationException("Request not found.");
         _requestService.ApproveRequestWithMembership(request);
-        LoadRequests();
+        UpdateCounts();
+        RequestStatusSeriesCollection = BuildChart();
     }
 
     public void Reject(NeighborhoodAccessRequestCoordinatorViewModel vm, string? reason)
@@ -93,7 +94,8 @@ public class ManageRequestsViewModel : BaseViewModel
         NeighborhoodAccessRequest? request = _requestService.GetById(vm.Id);
         if (request == null) throw new InvalidOperationException("Request not found.");
         _requestService.RejectRequestForCoordinator(request, reason);
-        LoadRequests();
+        UpdateCounts();
+        RequestStatusSeriesCollection = BuildChart();
     }
 
     private void LoadRequests()

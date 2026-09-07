@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.Domain.Entities.Shared;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.DTOs.Neighborhoods;
 using System.Windows;
 using System.Windows.Media;
@@ -21,9 +22,9 @@ public class NeighborhoodAccessRequestViewModel : BaseViewModel
 
     public string StatusDisplay => _request.Status switch
     {
-        RequestStatus.PendingApproval => "Pending approval",
-        RequestStatus.Approved => "Approved",
-        RequestStatus.Rejected => "Rejected",
+        RequestStatus.PendingApproval => System.Windows.Application.Current.TryFindResource("Request_Status_Pending") as string ?? "Pending approval",
+        RequestStatus.Approved => System.Windows.Application.Current.TryFindResource("Request_Status_Approved") as string ?? "Approved",
+        RequestStatus.Rejected => System.Windows.Application.Current.TryFindResource("Request_Status_Rejected") as string ?? "Rejected",
         _ => "Unknown"
     };
 
@@ -41,4 +42,6 @@ public class NeighborhoodAccessRequestViewModel : BaseViewModel
     public bool HasRejectionReason => _request.HasRejectionReason;
     public Visibility RejectionVisibility => HasRejectionReason ? Visibility.Visible : Visibility.Collapsed;
     public string RejectionReason => _request.RejectionReason ?? string.Empty;
+    public void RefreshStatus() => OnPropertyChanged(nameof(StatusDisplay));
+
 }

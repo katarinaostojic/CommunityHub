@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using CommunityHub.Ui.Helpers.Citizen;
+
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
 public partial class JoinEventDialog : Window
@@ -39,8 +41,7 @@ public partial class JoinEventDialog : Window
         var selectedItemIds = GetSelectedItemIds();
         _eventsViewModel.RegisterVolunteer(_event.Id, _citizenId, selectedItemIds);
 
-        MessageBox.Show("You have successfully joined the event!", "Success",
-            MessageBoxButton.OK, MessageBoxImage.Information);
+        MsgHelper.Info("Msg_JoinedEvent", "Msg_Success");
         Close();
     }
 

@@ -1,10 +1,11 @@
 ﻿using CommunityHub.Application.Database.Repositories.Neighborhoods;
+using CommunityHub.Application.Database.Repositories.Neighborhoods.CityObjects;
 using CommunityHub.Application.DTOs.Neighborhoods.CityObjects;
 using CommunityHub.Application.Services.Entities.Neighborhoods.CityObjects;
 using CommunityHub.Ui.ViewModels.CoordinatorViewModels.Neighborhoods;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using CommunityHub.Application.Database.Repositories.Neighborhoods.CityObjects;
 
 namespace CommunityHub.Ui.Views.CoordinatorViews;
 
@@ -18,6 +19,11 @@ public partial class ReserveCityObjectPage : Page
         var cityObjectService = new CityObjectService(new CityObjectDbRepository());
         _viewModel = new ReserveCityObjectViewModel(cityObject, cityObjectService, neighborhoodId);
         DataContext = _viewModel;
+
+        FromCalendar.BlackoutDates.Add(
+        new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
+        ToCalendar.BlackoutDates.Add(
+            new CalendarDateRange(DateTime.MinValue, DateTime.Today.AddDays(-1)));
     }
 
     private void SearchSlotButton_Click(object sender, RoutedEventArgs e)
@@ -26,10 +32,10 @@ public partial class ReserveCityObjectPage : Page
         if (error != null)
         {
             ErrorText.Text = error;
-            ErrorBanner.Visibility = Visibility.Visible;
+            ErrorText.Visibility = Visibility.Visible;
             return;
         }
-        ErrorBanner.Visibility = Visibility.Collapsed;
+        ErrorText.Visibility = Visibility.Collapsed;
     }
 
     private void AlternativeSlot_Checked(object sender, RoutedEventArgs e)
@@ -58,7 +64,7 @@ public partial class ReserveCityObjectPage : Page
         catch (Exception ex)
         {
             ErrorText.Text = ex.Message;
-            ErrorBanner.Visibility = Visibility.Visible;
+            ErrorText.Visibility = Visibility.Visible;
         }
     }
 

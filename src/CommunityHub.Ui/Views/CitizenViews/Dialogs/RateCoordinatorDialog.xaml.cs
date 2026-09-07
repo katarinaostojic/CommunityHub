@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using CommunityHub.Application.Services.Entities.Neighborhoods.Reviews;
+using CommunityHub.Ui.Helpers.Citizen;
 using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
@@ -41,59 +34,87 @@ public partial class RateCoordinatorDialog : Window
     {
         RadioButton[] radios = { Radio1, Radio2, Radio3, Radio4, Radio5 };
         for (int i = 0; i < radios.Length; i++)
-        {
             if (radios[i].IsChecked == true)
                 return i + 1;
-        }
         return null;
     }
 
-    private string? GetTrimmedComment()
+    private string? GetTrimmedComment() =>
+        string.IsNullOrWhiteSpace(CommentTextBox.Text) ? null : CommentTextBox.Text.Trim();
+
+    private void Rating_Checked(object sender, RoutedEventArgs e)
     {
-        return string.IsNullOrWhiteSpace(CommentTextBox.Text)
-            ? null : CommentTextBox.Text.Trim();
+        RatingErrorText.Visibility = Visibility.Collapsed;
+
+        int rating = GetSelectedRating() ?? 0;
+        if (rating < 3)
+        {
+            CommentRequiredText.Text = ResourceHelper.Get("Rate_CommentRequired", "* Required for ratings below 3");
+            CommentRequiredText.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            CommentRequiredText.Visibility = Visibility.Collapsed;
+            CommentErrorText.Visibility = Visibility.Collapsed;
+            CommentTextBox.BorderBrush = (Brush)FindResource("BorderBrush");
+            CommentTextBox.BorderThickness = new Thickness(1);
+        }
     }
 
-    private bool ValidateRating(int? rating)
+    private void CommentTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (rating != null) return true;
-        MessageBox.Show("Molimo odaberite ocenu.", "Greška",
-            MessageBoxButton.OK, MessageBoxImage.Warning);
-        return false;
-    }
+        int? rating = GetSelectedRating();
+        if (rating == null || rating >= 3) return;
 
-    private bool ValidateComment(int rating, string? comment)
-    {
-        if (rating >= 3 || comment != null) return true;
-        CommentRequiredText.Visibility = Visibility.Visible;
-        MessageBox.Show("Za ocenu nižu od 3 morate ostaviti komentar.", "Greška",
-            MessageBoxButton.OK, MessageBoxImage.Warning);
-        return false;
+        bool hasComment = !string.IsNullOrWhiteSpace(CommentTextBox.Text);
+        if (hasComment)
+        {
+            CommentErrorText.Visibility = Visibility.Collapsed;
+            CommentTextBox.BorderBrush = new SolidColorBrush(Color.FromRgb(0x43, 0xA0, 0x47));
+            CommentTextBox.BorderThickness = new Thickness(2);
+        }
+        else
+        {
+            CommentTextBox.BorderBrush = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35));
+            CommentTextBox.BorderThickness = new Thickness(2);
+        }
     }
 
     private void SubmitButton_Click(object sender, RoutedEventArgs e)
     {
         int? rating = GetSelectedRating();
-        if (!ValidateRating(rating)) return;
+
+        if (rating == null)
+        {
+            RatingErrorText.Text = ResourceHelper.Get("Msg_SelectRating", "Please select a rating.");
+            RatingErrorText.Visibility = Visibility.Visible;
+            return;
+        }
 
         string? comment = GetTrimmedComment();
-        if (!ValidateComment(rating!.Value, comment)) return;
+
+        if (rating < 3 && comment == null)
+        {
+            CommentErrorText.Text = ResourceHelper.Get("Msg_CommentRequired", "Comment is required for ratings below 3.");
+            CommentErrorText.Visibility = Visibility.Visible;
+            CommentTextBox.BorderBrush = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35));
+            CommentTextBox.BorderThickness = new Thickness(2);
+            return;
+        }
 
         var (success, error) = _service.CreateReview(
             _citizenId, _coordinatorId, _neighborhoodId, rating.Value, comment);
 
         if (!success)
         {
-            MessageBox.Show(error, "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(error, MsgHelper.Get("Msg_Error", "Error"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         _viewModel.LoadReviews();
-        MessageBox.Show("Recenzija je uspešno dodata.", "Uspeh",
-            MessageBoxButton.OK, MessageBoxImage.Information);
+        MsgHelper.Info("Msg_ReviewAdded", "Msg_Success");
         Close();
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) => Close();
 }
-

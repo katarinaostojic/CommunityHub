@@ -66,6 +66,15 @@ public class CityGiftService
         if (!gift.CanApply(neighborhoodId, coordinatorNeighborhoodIds))
             return (false, "Cannot apply for this gift.");
 
+        // Provjeri da li je koordinator vec aplicirao za BILO KOJI poklon
+        var allGifts = _repository.GetAll();
+        foreach (var g in allGifts)
+        {
+            var apps = _repository.GetApplications(g.Id);
+            if (apps.Any(a => coordinatorNeighborhoodIds.Contains(a.NeighborhoodId)))
+                return (false, "You have already applied for another gift.");
+        }
+
         _repository.Apply(cityGiftId, coordinatorId, neighborhoodId);
         return (true, null);
     }
@@ -91,8 +100,7 @@ public class CityGiftService
             gift.Award(winnerId.Value);
             _repository.Award(gift.Id, winnerId.Value);
 
-            int categoryCount = 6;
-            decimal amountPerCategory = gift.AmountPerCategory(categoryCount);
+            int categoryCount = _repository.GetCategoryCount(); decimal amountPerCategory = gift.AmountPerCategory(categoryCount);
             _repository.AddDonationToCategories(winnerId.Value, amountPerCategory);
         }
     }

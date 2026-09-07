@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 
+using CommunityHub.Ui.Helpers.Citizen;
+
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
 public partial class VoteDateDialog : Window
@@ -63,8 +65,7 @@ public partial class VoteDateDialog : Window
 
         if (selectedDateStr == null)
         {
-            MessageBox.Show("Please select a date.", "Validation",
-                MessageBoxButton.OK, MessageBoxImage.Warning);
+            MsgHelper.Warn("Msg_SelectDate", "Msg_Validation");
             return;
         }
 

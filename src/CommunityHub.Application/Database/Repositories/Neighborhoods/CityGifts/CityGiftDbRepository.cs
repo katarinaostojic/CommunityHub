@@ -141,4 +141,11 @@ public class CityGiftDbRepository : BaseDbRepository, ICityGiftRepository
             Convert.ToBoolean(reader["is_awarded"]),
             (DateOnly)reader["created_at"]);
     }
+    public int GetCategoryCount()
+    {
+        using IDbConnection connection = PostgresConnection.CreateConnection();
+        IDbCommand command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(*) FROM donation_categories";
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
 }

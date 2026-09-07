@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Application.DTOs.Neighborhoods.Meetings;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
@@ -26,7 +27,13 @@ public class MeetingViewModel : BaseViewModel
     public string MeetingTime => _dto.MeetingTime;
     public string DateRangeStart => _dto.DateRangeStart;
     public string DateRangeEnd => _dto.DateRangeEnd;
-    public string StatusDisplay => _dto.StatusDisplay;
+    public string StatusDisplay => _dto.Status switch
+    {
+        "in_preparation" => System.Windows.Application.Current.TryFindResource("Meeting_Status_InPreparation") as string ?? "⏳ In Preparation",
+        "scheduled" => System.Windows.Application.Current.TryFindResource("Meeting_Status_Scheduled") as string ?? "✔ Scheduled",
+        "cancelled" => System.Windows.Application.Current.TryFindResource("Meeting_Status_Cancelled") as string ?? "✕ Cancelled",
+        _ => _dto.Status
+    };
     public string? ScheduledDate => _dto.ScheduledDate;
     public bool CanVote => _dto.CanVote;
     public bool HasVoted => _dto.HasVoted;
@@ -58,4 +65,6 @@ public class MeetingViewModel : BaseViewModel
                 (Color)ColorConverter.ConvertFromString(hex));
         }
     }
+    public void RefreshStatus() => OnPropertyChanged(nameof(StatusDisplay));
+
 }

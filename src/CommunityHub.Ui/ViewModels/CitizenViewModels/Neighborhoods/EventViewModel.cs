@@ -1,4 +1,5 @@
-﻿using CommunityHub.Application.DTOs.Neighborhoods.Events;
+﻿using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Application.DTOs.Neighborhoods.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -9,12 +10,13 @@ public class EventViewModel : BaseViewModel
 {
     private readonly EventDto _event;
 
-    private static readonly Dictionary<string, string> StatusDisplayMap = new()
+    private static string GetStatusDisplay(string status) => status switch
     {
-        ["preparation"] = "⏳ Preparation",
-        ["scheduled"] = "✔ Scheduled",
-        ["cancelled"] = "✕ Cancelled",
-        ["finished"] = "✔ Finished"
+        "preparation" => System.Windows.Application.Current.TryFindResource("Event_Status_Preparation") as string ?? "⏳ Preparation",
+        "scheduled" => System.Windows.Application.Current.TryFindResource("Event_Status_Scheduled") as string ?? "✔ Scheduled",
+        "cancelled" => System.Windows.Application.Current.TryFindResource("Event_Status_Cancelled") as string ?? "✕ Cancelled",
+        "finished" => System.Windows.Application.Current.TryFindResource("Event_Status_Finished") as string ?? "✔ Finished",
+        _ => status
     };
 
     private static readonly Dictionary<string, string> StatusColorMap = new()
@@ -46,8 +48,7 @@ public class EventViewModel : BaseViewModel
     public List<AttendanceItemViewModel> AttendanceItems =>
         _event.Registrations.Select(r => new AttendanceItemViewModel(r)).ToList();
 
-    public string StatusDisplay =>
-        StatusDisplayMap.TryGetValue(_event.Status, out var display) ? display : _event.Status;
+    public string StatusDisplay => GetStatusDisplay(_event.Status);
 
     public string StatusColor =>
         StatusColorMap.TryGetValue(_event.Status, out var color) ? color : "#7F8C8D";
@@ -64,4 +65,6 @@ public class EventViewModel : BaseViewModel
 
     public Visibility AttendanceVisibility => IsOrganizer && IsFinished
         ? Visibility.Visible : Visibility.Collapsed;
+    public void RefreshStatus() => OnPropertyChanged(nameof(StatusDisplay));
+
 }
