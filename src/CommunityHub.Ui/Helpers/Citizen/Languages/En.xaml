@@ -216,4 +216,8 @@
     <system:String x:Key="Request_CreatedOn">Created on:</system:String>
     <system:String x:Key="Request_Status">Status:</system:String>
     <system:String x:Key="Request_NoStreets">No street information available</system:String>
+    <system:String x:Key="Validate_SelectCategory">⚠ Please select a category.</system:String>
+    <system:String x:Key="Validate_InvalidAmount">⚠ Enter a valid number (e.g. 500 or 1500.50).</system:String>
+    <system:String x:Key="Validate_AmountTooLarge">⚠ Amount too large (max 10,000,000 RSD).</system:String>
+    <system:String x:Key="Status_Pending">Pending approval</system:String>
 </ResourceDictionary>

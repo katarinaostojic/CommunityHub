@@ -3,7 +3,6 @@ using System.Windows;
 using CommunityHub.Application.Domain.Entities.Shared;
 using CommunityHub.Application.Services.Entities.Neighborhoods;
 using CommunityHub.Ui.Helpers.Citizen;
-using CommunityHub.Ui.Helpers.Citizen;
 
 namespace CommunityHub.Ui.Views.CitizenViews;
 
@@ -60,11 +59,6 @@ public static class CitizenNavigationHelper
         if (nId == null) return;
         new BudgetPage(user, nId.Value, openMenuOnLoad: true).Show(); current.Close();
     }
-
-    /// <summary>
-    /// Navigira na stranicu iz NavigationEntry — koristi se za Back/Forward.
-    /// pushToHistory=false sprečava da se stranica ponovo doda u stack.
-    /// </summary>
 
     public static void NavigateToCoordinatorReviews(User user, long neighborhoodId, Window current)
     {

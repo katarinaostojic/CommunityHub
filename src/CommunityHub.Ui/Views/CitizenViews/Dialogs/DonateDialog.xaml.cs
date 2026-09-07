@@ -6,9 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CommunityHub.Application.Domain.Entities.Neighborhoods.Budget;
-using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
-
 using CommunityHub.Ui.Helpers.Citizen;
+using CommunityHub.Ui.ViewModels.CitizenViewModels.Neighborhoods;
 
 namespace CommunityHub.Ui.Views.CitizenViews.Dialogs;
 
@@ -16,7 +15,7 @@ public partial class DonateDialog : Window
 {
     private readonly BudgetViewModel _viewModel;
     private List<DonationCategory> _categories = new();
-    private bool _userInteracted = false; // live validacija se aktivira tek kad korisnik počne da piše
+    private bool _userInteracted = false;
 
     public DonateDialog(BudgetViewModel viewModel)
     {
@@ -46,7 +45,7 @@ public partial class DonateDialog : Window
     {
         if (!_userInteracted) return;
         bool ok = CategoryComboBox.SelectedIndex >= 0;
-        CategoryErrorText.Text = ok ? "" : "⚠ Molimo odaberite kategoriju.";
+        CategoryErrorText.Text = ok ? "" : ResourceHelper.Get("Validate_SelectCategory", "⚠ Please select a category.");
         CategoryErrorText.Visibility = ok ? Visibility.Collapsed : Visibility.Visible;
         UpdateDonateButtonState();
     }
@@ -54,33 +53,32 @@ public partial class DonateDialog : Window
     private void DonationDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
     {
         if (!_userInteracted) return;
-        bool ok = ValidateDate(showError: true);
+        ValidateDate(showError: true);
         UpdateDonateButtonState();
     }
 
-    // Vraća true ako je iznos validan
     private bool ValidateAmount(bool showError)
     {
         string text = AmountTextBox?.Text ?? "";
         if (string.IsNullOrWhiteSpace(text))
         {
-            if (showError) ShowAmountError("⚠ Iznos ne sme biti prazan.");
+            if (showError) ShowAmountError(ResourceHelper.Get("Validate_Required", "⚠ Cannot be empty."));
             return false;
         }
         if (!decimal.TryParse(text.Replace(",", "."),
             NumberStyles.Any, CultureInfo.InvariantCulture, out decimal amount))
         {
-            if (showError) ShowAmountError("⚠ Unesite ispravan decimalni broj (npr. 500 ili 1500.50).");
+            if (showError) ShowAmountError(ResourceHelper.Get("Validate_InvalidAmount", "⚠ Enter a valid number (e.g. 500 or 1500.50)."));
             return false;
         }
         if (amount <= 0)
         {
-            if (showError) ShowAmountError("⚠ Iznos mora biti veći od 0.");
+            if (showError) ShowAmountError(ResourceHelper.Get("Validate_PositiveNumber", "⚠ Enter a positive number."));
             return false;
         }
         if (amount > 10_000_000)
         {
-            if (showError) ShowAmountError("⚠ Iznos je prevelik (max 10,000,000 RSD).");
+            if (showError) ShowAmountError(ResourceHelper.Get("Validate_AmountTooLarge", "⚠ Amount too large (max 10,000,000 RSD)."));
             return false;
         }
         if (showError) HideAmountError();
@@ -89,13 +87,26 @@ public partial class DonateDialog : Window
 
     private bool ValidateDate(bool showError)
     {
-        bool ok = DonationDatePicker?.SelectedDate != null;
-        if (showError)
+        if (DonationDatePicker?.SelectedDate == null)
         {
-            DateErrorText.Text = ok ? "" : "⚠ Molimo odaberite datum.";
-            DateErrorText.Visibility = ok ? Visibility.Collapsed : Visibility.Visible;
+            if (showError)
+            {
+                DateErrorText.Text = ResourceHelper.Get("Validate_SelectDate", "⚠ Please select a date.");
+                DateErrorText.Visibility = Visibility.Visible;
+            }
+            return false;
         }
-        return ok;
+        if (DonationDatePicker.SelectedDate.Value.Date < DateTime.Today)
+        {
+            if (showError)
+            {
+                DateErrorText.Text = ResourceHelper.Get("Validate_PastDate", "⚠ Date cannot be in the past.");
+                DateErrorText.Visibility = Visibility.Visible;
+            }
+            return false;
+        }
+        if (showError) DateErrorText.Visibility = Visibility.Collapsed;
+        return true;
     }
 
     private bool ValidateAll()
@@ -106,7 +117,7 @@ public partial class DonateDialog : Window
 
         if (!categoryOk)
         {
-            CategoryErrorText.Text = "⚠ Molimo odaberite kategoriju.";
+            CategoryErrorText.Text = ResourceHelper.Get("Validate_SelectCategory", "⚠ Please select a category.");
             CategoryErrorText.Visibility = Visibility.Visible;
         }
 
@@ -117,7 +128,7 @@ public partial class DonateDialog : Window
     {
         bool allValid = ValidateAmount(showError: false)
             && CategoryComboBox.SelectedIndex >= 0
-            && DonationDatePicker?.SelectedDate != null;
+            && ValidateDate(showError: false);
         DonateButton.Opacity = allValid ? 1.0 : 0.5;
     }
 
@@ -137,11 +148,10 @@ public partial class DonateDialog : Window
     private static void HighlightField(TextBox tb, bool isValid)
     {
         tb.BorderBrush = isValid
-            ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x43, 0xA0, 0x47)) // zelena
-            : new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xE5, 0x39, 0x35)); // crvena
+            ? new SolidColorBrush(Color.FromRgb(0x43, 0xA0, 0x47))
+            : new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35));
         tb.BorderThickness = new Thickness(2);
     }
-
 
     private void DonateButton_Click(object sender, RoutedEventArgs e)
     {

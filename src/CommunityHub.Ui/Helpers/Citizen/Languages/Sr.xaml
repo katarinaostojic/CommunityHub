@@ -216,4 +216,8 @@
     <system:String x:Key="Request_CreatedOn">Datum podnošenja:</system:String>
     <system:String x:Key="Request_Status">Status:</system:String>
     <system:String x:Key="Request_NoStreets">Nema informacija o ulicama</system:String>
+    <system:String x:Key="Validate_SelectCategory">⚠ Molimo odaberite kategoriju.</system:String>
+    <system:String x:Key="Validate_InvalidAmount">⚠ Unesite ispravan broj (npr. 500 ili 1500.50).</system:String>
+    <system:String x:Key="Validate_AmountTooLarge">⚠ Iznos je prevelik (max 10.000.000 RSD).</system:String>
+    <system:String x:Key="Status_Pending">Na čekanju</system:String>
 </ResourceDictionary>
