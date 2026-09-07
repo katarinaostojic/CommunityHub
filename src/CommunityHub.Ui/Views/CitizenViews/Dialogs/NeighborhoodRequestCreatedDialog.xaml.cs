@@ -1,4 +1,5 @@
 ﻿using CommunityHub.Application.Domain.Entities.Shared;
+using CommunityHub.Ui.Helpers.Citizen;
 using System;
 using System.Windows;
 
@@ -16,7 +17,7 @@ public partial class NeighborhoodRequestCreatedDialog : Window
         NeighborhoodNameText.Text = neighborhoodName;
         CitizenNameText.Text = _user.Username;
         CreatedOnText.Text = DateTime.Now.ToString("dd.MM.yyyy.");
-        StatusText.Text = "Pending approval";
+        StatusText.Text = ResourceHelper.Get("Status_Pending", "Pending approval");
 
         CloseButton.Click += CloseButton_Click;
         GoToDashboardButton.Click += GoToDashboardButton_Click;
