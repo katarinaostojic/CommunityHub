@@ -23,16 +23,24 @@ Nikola Stanojević
 - **Version Control:** Git / GitHub
 
 ## Project Structure
+
+```
 CommunityHub/
 ├── src/
-│ ├── CommunityHub.Application/ # Domain model, business logic, database access
-│ │ ├── Database/
-│ │ │ ├── Repositories/ # Repository classes (ADO.NET)
-│ │ │ └── Scripts/ # database.sql, seed.sql
-│ │ ├── Domain/ # Entities and business rules
-│ │ └── appsettings.json # Database connection config
-│ └── CommunityHub.Ui/ # WPF views, view models
+│   ├── CommunityHub.Application/
+│   │   ├── Database/
+│   │   │   ├── Repositories/       # ADO.NET repository classes
+│   │   │   └── Scripts/            # database.sql, seed.sql
+│   │   ├── Domain/                 # Entities and business rules
+│   │   ├── Dtos/                   # Data Transfer Objects
+│   │   ├── appsettings.json
+│   │   └── Injector.cs             # Manual dependency injection
+│   └── CommunityHub.Ui/
+│       ├── Views/                  # XAML views
+│       ├── ViewModels/             # MVVM view models
+│       └── App.xaml
 └── CommunityHub.slnx
+```
 
 
 ## How to Run
