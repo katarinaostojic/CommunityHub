@@ -1,122 +1,87 @@
-Ovaj repozitorijum sadrži početni projekat za izradu desktop aplikacije sa pristupom bazi podataka. Projekat koristi .NET 10 i WPF (Windows Presentation Foundation) za korisnički interfejs i PostgreSQL za skladištenje podataka.
+# CommunityHub — Building & Neighborhood Management System
 
-## Struktura Projekta
+A desktop application for managing residential buildings and neighborhood-level civic coordination, developed as a project for the course **Software Specification and Modeling (RA)** at the Faculty of Technical Sciences, 2025/2026.
 
-Projekat je organizovan u dva glavna dela:
+## Team
+Nenad Veselinović
 
-```
+Katarina Ostojić
+
+Tamara Rikanović
+
+Nikola Stanojević
+
+## Technology Stack
+
+- **Language:** C#
+- **Framework:** .NET 10
+- **UI Framework:** WPF (Windows Presentation Foundation)
+- **Architecture:** MVVM (Model-View-ViewModel), layered architecture (Domain / Application / UI)
+- **Dependency Injection:** Manual DI via a custom `Injector` class
+- **Persistence:** PostgreSQL via ADO.NET
+- **Reporting:** QuestPDF (PDF report generation)
+- **Version Control:** Git / GitHub
+
+## Project Structure
 CommunityHub/
 ├── src/
-│   ├── CommunityHub.Application/ # Poslovna logika i pristup bazi
-│   └── CommunityHub.Ui/          # Korisnički interfejs (WPF)
+│ ├── CommunityHub.Application/ # Domain model, business logic, database access
+│ │ ├── Database/
+│ │ │ ├── Repositories/ # Repository classes (ADO.NET)
+│ │ │ └── Scripts/ # database.sql, seed.sql
+│ │ ├── Domain/ # Entities and business rules
+│ │ └── appsettings.json # Database connection config
+│ └── CommunityHub.Ui/ # WPF views, view models
 └── CommunityHub.slnx
-```
 
-### CommunityHub.Application
 
-Projekat koji sadrži domenski model, poslovnu logiku i klase za pristup bazi podataka.
+## How to Run
 
-#### Database/
-- **PostgresConnection.cs** - Statička klasa za kreiranje konekcije na bazu
-  - Čita konekcioni string za pristup bazi podataka iz `appsettings.json`
-  - Metoda `CreateConnection()` se poziva od strane repozitorijumskih klasa i vraća otvoren IDbConnection
-  - Ovu klasu ne treba menjati
+### Prerequisites
 
-#### Database/Repositories/
-Repozitorijumske klase koje interaguju sa bazom podatka.
+1. **.NET 10 SDK** installed
+2. **PostgreSQL** installed and running on `localhost:5432`
+3. A database named `communityhub` created
+4. Schema and seed data loaded via **pgAdmin** by running `database.sql` and `seed.sql` (in that order)
 
-- **UserDbRepository.cs** - Primer repozitorijuma za dobavljanje podataka o korisnicima.
-  - `GetIdByCredentials(username, password)` - Vraća ID korisnika ili -1 ako ne postoji
-  - `GetWithPosts(userId)` - Učitava korisnika sa svim njegovim objavama koristeći SQL JOIN
+### Running the Application
 
-#### Database/Scripts/
-Skripte za definisanje šeme baze podataka i početnih torki radi jednostavnijeg testiranja softvera.
+1. Open `CommunityHub.slnx` in Visual Studio
+2. Set `CommunityHub.Ui` as the startup project
+3. Run the application (`F5`)
+4. Log in with a test user (see `seed.sql`)
 
-- **database.sql** - SQL skripta za kreiranje tabela
-  - Tabela `users` - Korisnički podaci
-  - Tabela `posts` - Objave korisnika
-  - **Pokrenuti pre prvog startovanja aplikacije!**
+## Features
 
-- **seed.sql** - SQL skripta za popunjavanje testnim podacima
-  - 8 testnih korisnika (marko/marko123, ana/ana123, itd.)
-  - 20 testnih objava raspoređenih između korisnika
-  - **Pokrenuti nakon database.sql!**
+The system supports four user roles: **Building Manager**, **Tenant**, **Neighborhood Coordinator**, and **Citizen**, each with a dedicated set of functionalities.
 
-#### Domain/
-Model podataka i poslovne logike koja radi nad tim podacima.
+### Core Entities
+- **Building** – address, neighborhood, location, floors, apartments, images
+- **Common Room** – name, description, floor, rental type (single-day / multi-day)
+- **Ad** – bulletin board post (offering/requesting help), category, date range, status
+- **Problem Report** – description, priority, status, reporting tenant
+- **Assembly** – scheduled resident meeting, topics, attendance tracking
+- **Neighborhood** – budget categories, donations, community events
 
-- **User.cs** - Domenski model korisnika
-  - Svojstva: Id, Username, Password, Name, Surname, BirthDay, Posts
-  - Metoda `AddPost(post)` - Povezuje objavu sa korisnikom
-  - **Obratiti pažnju:** Sva svojstva imaju `private set` za kontrolu pristupa
+### My Contribution — Tenant Role
+- **Common room rentals:** browse buildings, submit rental requests for shared facilities, view and manage request status
+- **Bulletin board:** create and browse ads (offering/requesting help), match by category and date range, archive ads
+- **Problem reporting:** report building issues with priority and description, track resolution status
+- **Resident assembly attendance:** view scheduled assemblies, propose topics, confirm attendance
+- **PDF export:** generate reports for tenant-facing data using QuestPDF
 
-- **Post.cs** - Domenski model objave
-  - Svojstva: Id, Title, Content, CreatedAt, User
-  - **Obratiti pažnju:** `User` je referenca na vlasnika objave
+### Architecture Highlights
+- Domain logic (validation, status transitions, availability checks) encapsulated in entity classes
+- Clean separation between domain logic and UI-layer display formatting
+- DTO layer for data exchange between Application and UI layers
+- Manual dependency injection via a custom `Injector` class
 
-#### appsettings.json
-Konfiguracioni fajl sa podacima za pristup bazi.
+## Common Errors & Solutions
 
-### CommunityHub.Ui
+### "Connection refused"
+- **Cause:** PostgreSQL isn't running, or not on `localhost:5432`
+- **Fix:** Start the PostgreSQL service or check the port in `appsettings.json`
 
-WPF projekat koji sadrži sve prozore i korisničku interakciju.
-
-#### App.xaml / App.xaml.cs
-- Ulazna tačka aplikacije
-- `StartupUri="/Views/LogInForm.xaml"` - Prvi prozor koji se otvara
-
-#### Views/
-- **LogInForm.xaml** - Forma za prijavu korisnika
-- **LogInForm.xaml.cs** - Code-behind logika
-  - Poziva `UserDbRepository.GetIdByCredentials()` pri kliku na dugme
-  - Ako korisnik postoji, otvara `HomeWindow` i zatvara login formu
-  - Ako ne postoji, prikazuje poruku o grešci
-
-- **HomeWindow.xaml** - Početna stranica nakon prijave
-- **HomeWindow.xaml.cs** - Code-behind logika
-  - **Obratiti pažnju:** Prima `userId` u konstruktoru
-  - Dugme "Profil" otvara ProfileWindow
-  - Dugme "Odjavi se" vraća na LogInForm
-
-- **ProfileWindow.xaml** - Profil korisnika sa objavama
-  - **Obratiti pažnju:** Koristi ItemsControl sa DataTemplate za prikaz objava
-- **ProfileWindow.xaml.cs** - Code-behind logika
-  - Poziva `UserDbRepository.GetWithPosts()` da učita podatke
-  - Povezuje Posts listu sa ItemsControl kroz ItemsSource
-
-## Pokretanje Projekta
-
-### Preduslovi
-
-1. **.NET 10 SDK** instaliran
-2. **PostgreSQL** instaliran i pokrenut na localhost:5432
-3. **Kreirana baza podataka** sa imenom `communityhub`
-4. **Definisanje šeme i početnih podataka** kroz pgAdmin alat puštanjem `database.sql` i `seed.sql` skripti.
-
-Za korake 2-4 instaliracij PostgreSQL i upoznaj se sa pgAdmin alatom. Za instalaciju je potrebno:
-
-1. Preuzeti instalaciju najnovije verzije sa <a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads" target="_blank">sledećeg linka</a>, gde biraš instalaciju za svoj operativni sistem (npr. Windows x86-64).
-2. Pokrenuti i kompletirati proces instalacije. Preporuka je da korisničko ime i lozinka budu `postgres`, a port `5432`.
-
-Uz PostgresSQL bazu podataka dobijaš i **pgAdmin** aplikaciju kroz koju možeš da formiraš i sprovodiš SQL naredbe. <a href="https://youtu.be/Q3yDPIEV1R4" target="_blank"><b>Sledeći video</b></a> demonstrira kako se kreira baza podataka i tabele i izvršavaju SQL naredbe.
-
-### Pokretanje Aplikacije
-
-1. Otvorite `CommunityHub.slnx` u Visual Studio
-2. Postavite `CommunityHub.Ui` kao StartUp project
-3. Pokrenite aplikaciju (F5)
-4. Prijavite se sa nekim od korisnika (npr. "ana", "ana123")
-
-## Česte Greške i Rešenja
-
-### Greška: "Connection refused"
-- **Uzrok:** PostgreSQL nije pokrenut ili ne radi na localhost:5432
-- **Rešenje:** Pokrenite PostgreSQL servis ili proverite port u appsettings.json
-
-### Greška: "Relation 'users' does not exist"
-- **Uzrok:** Database skripta nije pokrenuta
-- **Rešenje:** Pokrenite `database.sql` koristeći pgAdmin
-
-### Greška: "Invalid username or password"
-- **Uzrok:** Seed skripta nije pokrenuta ili korisnički podaci ne postoje
-- **Rešenje:** Pokrenite `seed.sql` koristeći pgAdmin
+### "Relation 'X' does not exist"
+- **Cause:** `database.sql` hasn't been run
+- **Fix:** Run `database.sql` via pgAdmin
